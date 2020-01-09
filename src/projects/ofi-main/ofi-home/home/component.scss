@@ -1,0 +1,92 @@
+.wrapper.wrapper-content {
+    padding: 0px 15px;
+}
+
+.panel-body {
+    background-color: #FFFFFF;
+    border: 1px solid #F0F0F0;
+    padding: 10px;
+    border-radius: 4px;
+    margin: .5%;
+}
+
+.home-button {
+    margin: 10px 0;
+    width: 100%;
+    max-width: none;
+    height: 100px;
+    line-height: 50px;
+    color: #FFFFFF;
+    border: none;
+    font-size: 25px;
+    -webkit-transition: background-color 0.3s, color 0.3s;
+    -moz-transition: background-color 0.3s, color 0.3s;
+    -o-transition: background-color 0.3s, color 0.3s;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.home-button:hover,
+.home-button:focus,
+.home-button:active {
+    color: #e8e8e8;
+    box-shadow: none !important;
+}
+
+.home-button i {
+    font-size: 45px;
+}
+
+.home-button.red {
+    background-color: #dd6464;
+}
+
+.home-button.red:hover, .home-button.red:active, .home-button.red:focus {
+    background-color: #c45757;
+}
+
+.home-button.green {
+    background-color: #b6dd6f;
+}
+
+.home-button.green:hover, .home-button.green:active, .home-button.green:focus {
+    background-color: #a9d163;
+}
+
+.home-button.yellow {
+    background-color: #eec353;
+}
+
+.home-button.yellow:hover, .home-button.yellow:active, .home-button.yellow:focus {
+    background-color: #e4ba4c;
+}
+
+.home-button.blue {
+    background-color: #64bae4;
+}
+
+.home-button.blue:hover, .home-button.blue:active, .home-button.blue:focus {
+    background-color: #63b7e2;
+}
+
+.home-buttons {
+    padding: 20px;
+    padding-bottom: 0px;
+
+    app-dashboard {
+        .grid {
+            height: 160px;
+        }
+    }
+}
+
+:host ::ng-deep {
+    .nav {
+        background: blue;
+        display: none !important;
+    }
+
+    clr-tab-content {
+        border-top-left-radius: 4px !important;
+    }
+}
+

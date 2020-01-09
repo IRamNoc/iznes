@@ -1,0 +1,1627 @@
+<div class="header-breadcrumbs fundCreateComponent">
+    <h1>
+        <i class="fa fa-bars"></i>
+        <span *ngIf="!param">{{ 'Add New Fund' | translate }}</span>
+        <span *ngIf="param">{{ 'Fund' | translate }}: {{ fundForm.controls['fundName'].value }}</span>
+    </h1>
+</div>
+
+<div class="padding fundCreateComponent"></div>
+
+<clr-tabs class="fundCreateComponent">
+    <clr-tab>
+        <button clrTabLink id="standardform">
+            <i class="fa fa-bars"></i> {{ 'Fund' | translate }}
+        </button>
+
+        <clr-tab-content *clrIfActive>
+
+            <!-- Button container -->
+            <div *ngIf="viewMode === 'FUND'" class="row tab-header-container">
+                <div class="form-group">
+                    <button *ngIf="param" class="btn btn-default" id="auditTrailButton" (click)="auditTrail(param)">
+                        {{ 'Audit Trail' | translate }}
+                    </button>
+                    <button *ngIf="param && !isAdmin()" class="btn btn-primary" id="duplicateButton" (click)="duplicate(param)">
+                        {{ 'Duplicate Fund' | translate }}
+                    </button>
+                    <ng-select *ngIf="!param"
+                                id="fund-prefill-select"
+                                [items]="fundListItems"
+                                [allowClear]="true"
+                                [placeholder]="translate.translate('Duplicate from an existing Fund')"
+                                [formControl]="fundControl"
+                                [isDisabled]="isAdmin()">
+                    </ng-select>
+                </div>
+            </div>
+
+            <div *ngIf="viewMode === 'UMBRELLA'" class="umbrellaForm">
+                <h3>{{ 'Please fill in the following information to create a new Fund' | translate }}:</h3>
+
+                <form [formGroup]="umbrellaForm" (ngSubmit)="submitUmbrellaForm()">
+                    <section class="form-block">
+                        <div class="row">
+                            <div class="form-group required-field col-sm-3">
+                                <label class="control-label" for="fund-umbrellaControl-select-1">{{ 'Is this Fund part of an Umbrella Fund?' | translate }}</label>
+                                <ng-select id="fund-umbrellaControl-select-1"
+                                            [containerWidth]="'100%'"
+                                            [items]="umbrellaItems"
+                                            [allowClear]="false"
+                                            [placeholder]="translate.translate('Select or type an Umbrella Fund name')"
+                                            [formControl]="umbrellaControl"
+                                            [isDisabled]="isAdmin()">
+                                </ng-select>
+                            </div>
+
+                            <div class="form-group col-sm-3 btn-container">
+                                <p>
+                                    {{ 'or' | translate }}
+                                    <a id="fund-add-new-umbrella-btn" [routerLink]="['/product-module/product/umbrella-fund/new']"
+                                        [queryParams]="{fromFund: 'true', umbrella : null}" queryParamsHandling="merge">{{ 'Add New Umbrella Fund' | translate }}</a>
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="row" *ngIf="selectedUmbrella == 0">
+                            <div class="col-sm-12">
+                                <p>{{ 'The Fund is not part of an Umbrella Fund.' | translate }}</p>
+                            </div>
+                        </div>
+
+                        <section class="form-block" *ngIf="selectedUmbrella > 0">
+                            <div class="row">
+                                <div class="form-group col-sm-6">
+                                    <label class="control-label" for="umbrellaFundName">{{ 'Umbrella Fund Name' | translate }}</label>
+                                    <input type="text"
+                                            name="umbrellaFundName"
+                                            id="umbrellaFundName"
+                                            formControlName="umbrellaFundName"
+                                            [disabled]="isAdmin()">
+                                </div>
+                                <div class="form-group col-sm-6">
+                                    <label class="control-label" for="umbrellaLei">{{ 'Legal Entity Identifier (LEI)' | translate }}</label>
+                                    <input type="text"
+                                            name="umbrellaLei"
+                                            id="umbrellaLei"
+                                            formControlName="umbrellaLei"
+                                            [disabled]="isAdmin()">
+                                </div>
+                                <div class="form-group col-sm-6">
+                                    <label class="control-label" for="umbrellaFundDomicile">{{ 'Umbrella Fund Domicile (Country)' | translate }}</label>
+                                    <input type="text"
+                                            name="umbrellaFundDomicile"
+                                            id="umbrellaFundDomicile"
+                                            formControlName="umbrellaFundDomicile"
+                                            [disabled]="isAdmin()">
+                                </div>
+                            </div>
+                        </section>
+
+                        <div class="row">
+                            <p><strong>- {{ 'or' | translate }} -</strong></p>
+                        </div>
+
+                        <div class="row">
+                            <div class="form-group col-sm-3">
+                                <label class="control-label" for="fund-prefill-select">{{ 'Duplicate an existing Fund' | translate }}</label>
+                                <ng-select id="fund-prefill-select"
+                                            [containerWidth]="'100%'"
+                                            [items]="fundListItems"
+                                            [allowClear]="true"
+                                            [placeholder]="translate.translate('Duplicate from an existing Fund')"
+                                            [formControl]="fundControl"
+                                            [isDisabled]="isAdmin()">
+                                </ng-select>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="form-group col-sm-12 submit-container">
+                                <button id="fund-cancelUmbrella-btn" type="button" class="btn btn-default" (click)="onClickBack()">{{ 'Cancel' | translate }}</button>
+                                <button id="fund-submitUmbrella-btn" type="submit" class="btn btn-primary" [disabled]="!umbrellaForm.valid">{{ 'Next' | translate }}</button>
+                            </div>
+                        </div>
+
+                    </section>
+                </form>
+            </div>
+
+            <form [formGroup]="fundForm" (ngSubmit)="submitFundForm()" *ngIf="viewMode === 'FUND'" class="fundForm">
+                <div class="well">
+                    <!-- Panel header -->
+                    <div class="row panel-header">
+                        <div class="col-xs-12">
+                            <a id="fundsUmbrellaFundHeading" href="#" (click)="panels[0].open = !panels[0].open; $event.preventDefault();">
+                                <i class="fa fa-chevron-right" [class.rotate]="panels[0].open"></i>
+
+                                <h2>
+                                    <ng-container *ngIf="isUmbrellaSelected()">
+                                        {{ 'Umbrella Fund: @umbrellaFund@' | translate: { 'umbrellaFund': umbrellaControl.value[0].text } }}
+                                    </ng-container>
+
+                                    <ng-container *ngIf="!isUmbrellaSelected()">
+                                        {{ 'No Umbrella Fund' | translate }}
+                                    </ng-container>
+                                </h2>
+
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Panel body -->
+                    <div class="row panel-body" [class.hidden]="!panels[0].open">
+
+                        <form [formGroup]="umbrellaEditForm" class="umbrellaEditForm">
+                            <div class="well">
+                                <!-- Panel header -->
+                                <div class="row panel-header">
+                                    <div class="col-xs-12">
+                                        <a id="fundsChooseAnotherFund" href="#" (click)="panels[0][0].open = !panels[0][0].open; $event.preventDefault();">
+                                            <i class="fa fa-chevron-right" [class.rotate]="panels[0][0].open"></i>
+                                            <h2>{{ 'Choose another Umbrella Fund:' | translate }}</h2>
+                                        </a>
+                                    </div>
+                                </div>
+
+                                <!-- Panel body -->
+                                <div class="panel-body" [class.hidden]="!panels[0][0].open">
+                                    <section class="form-block" *ngIf="isUmbrellaSelected()">
+                                        <div class="row">
+                                            <div class="form-group col-sm-6">
+                                                <label class="control-label" for="umbrellaEditLei">{{ 'Legal Entity Identifier (LEI)' | translate }}</label>
+                                                <input type="text"
+                                                        name="umbrellaEditLei"
+                                                        id="umbrellaEditLei"
+                                                        formControlName="umbrellaEditLei"
+                                                        [disabled]="isAdmin()">
+                                            </div>
+                                            <div class="form-group col-sm-6">
+                                                <label class="control-label" for="umbrellaEditFundDomicile">{{ 'Umbrella Fund Domicile (Country)' | translate }}</label>
+                                                <input type="text"
+                                                        name="umbrellaEditFundDomicile"
+                                                        id="umbrellaEditFundDomicile"
+                                                        formControlName="umbrellaEditFundDomicile"
+                                                        [disabled]="isAdmin()">
+                                            </div>
+                                        </div>
+                                    </section>
+                                    <section class="form-block">
+                                        <div class="row">
+                                            <div id="fund-umbrellaControl-select-2Div" class="form-group col-sm-6">
+                                                <label class="control-label" for="fund-umbrellaControl-select-2">{{ 'Click here to select another Umbrella Fund for this Fund' | translate }}
+                                                </label>
+                                                <ng-select id="fund-umbrellaControl-select-2"
+                                                            [items]="umbrellaItems"
+                                                            [allowClear]="false"
+                                                            [placeholder]="translate.translate('Select or type an Umbrella Fund')"
+                                                            [formControl]="umbrellaControl"
+                                                            [isDisabled]="isAdmin()">
+                                                </ng-select>
+                                            </div>
+                                        </div>
+                                    </section>
+                                </div>
+                            </div>
+
+                            <div class="well" *ngIf="isUmbrellaSelected()">
+                                <!-- Panel header -->
+                                <div class="row panel-header">
+                                    <div class="col-xs-12">
+                                        <a id="fundsUmbrellaFundMainInformation" href="#" (click)="panels[0][1].open = !panels[0][1].open; $event.preventDefault();">
+                                            <i class="fa fa-chevron-right" [class.rotate]="panels[0][1].open"></i>
+                                            <h2>{{ 'Main Information' | translate }}</h2>
+                                        </a>
+                                    </div>
+                                </div>
+
+                                <!-- Panel body -->
+                                <div class="panel-body" [class.hidden]="!panels[0][1].open">
+                                    <div class="row">
+                                        <div class="form-group col-sm-6">
+                                            <label for="uf_umbrellaFundName">{{ 'Umbrella Fund Name' | translate }}</label>
+                                            <div>
+                                                <input type="text"
+                                                        id="uf_umbrellaFundName"
+                                                        class="form-control"
+                                                        formControlName="umbrellaFundName"
+                                                        [disabled]="isAdmin()">
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-sm-6">
+                                            <label for="uf_lei">{{ 'Legal Entity Identifier (LEI)' | translate }}</label>
+                                            <div>
+                                                <input type="text"
+                                                        id="uf_lei"
+                                                        class="form-control"
+                                                        formControlName="legalEntityIdentifier"
+                                                        [disabled]="isAdmin()">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="form-group col-sm-6">
+                                            <label for="uf_registerOffice">{{ 'Name of the Registered Office of the Umbrella Fund' | translate }}</label>
+                                            <div>
+                                                <input type="text"
+                                                        id="uf_registerOffice"
+                                                        class="form-control"
+                                                        formControlName="registerOffice"
+                                                        [disabled]="isAdmin()">
+                                            </div>
+                                        </div>
+
+                                        <div class="w-100"></div>
+
+                                        <div class="form-group col-sm-6">
+                                            <label for="uf_registerOfficeAddress">{{ 'Address of the Registered Office of the Umbrella Fund' | translate }}</label>
+                                            <div>
+                                                <input type="text"
+                                                        id="uf_registerOfficeAddress"
+                                                        class="form-control"
+                                                        formControlName="registerOfficeAddress"
+                                                        [disabled]="isAdmin()">
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-sm-6">
+                                            <label for="uf_registerOfficeAddressLine2">{{ 'Address Line 2' | translate }}</label>
+                                            <div>
+                                                <input type="text"
+                                                        id="uf_registerOfficeAddressLine2"
+                                                        class="form-control"
+                                                        formControlName="registerOfficeAddressLine2"
+                                                        [disabled]="isAdmin()">
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group col-sm-4">
+                                            <label for="uf_registerOfficeAddressZipCode">{{ 'ZIP Code' | translate }}</label>
+                                            <div>
+                                                <input type="text"
+                                                        id="uf_registerOfficeAddressZipCode"
+                                                        class="form-control"
+                                                        formControlName="registerOfficeAddressZipCode"
+                                                        [disabled]="isAdmin()">
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-sm-4">
+                                            <label for="uf_registerOfficeAddressCity">{{ 'City' | translate }}</label>
+                                            <div>
+                                                <input type="text"
+                                                        id="uf_registerOfficeAddressCity"
+                                                        class="form-control"
+                                                        formControlName="registerOfficeAddressCity"
+                                                        [disabled]="isAdmin()">
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-sm-4">
+                                            <label for="uf_registerOfficeAddressCountry">{{ 'Country' | translate }}</label>
+                                            <div>
+                                                <input type="text"
+                                                        id="uf_registerOfficeAddressCountry"
+                                                        class="form-control"
+                                                        formControlName="registerOfficeAddressCountry"
+                                                        [disabled]="isAdmin()">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="form-group col-sm-6">
+                                            <label for="uf_domicile">{{ 'Umbrella Fund Domicile (Country)' | translate }}</label>
+                                            <div>
+                                                <input type="text"
+                                                        id="uf_domicile"
+                                                        class="form-control"
+                                                        formControlName="domicile"
+                                                        [disabled]="isAdmin()">
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-sm-6">
+                                            <label for="uf_umbrellaFundCreationDate">{{ 'Umbrella Fund Creation Date' | translate }}</label>
+
+                                            <div class="input-group date-pick-wrapper">
+                                                <span class="fa fa-calendar" aria-hidden="true"></span>
+                                                <input id="uf_umbrellaFundCreationDate"
+                                                        formControlName="umbrellaFundCreationDate"
+                                                        autocomplete="off"
+                                                        [dpDayPicker]="configDate"
+                                                        [placeholder]="translate.translate('Choose a date')"
+                                                        mode="day"
+                                                        theme="dp-material"
+                                                        [disabled]="isAdmin()">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="form-group col-sm-6">
+                                            <label for="uf_managementCompany">{{ 'Management Company' | translate }}</label>
+                                            <div>
+                                                <input type="text"
+                                                        id="uf_managementCompany"
+                                                        class="form-control"
+                                                        formControlName="managementCompanyID"
+                                                        [disabled]="isAdmin()">
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-sm-6">
+                                            <label for="uf_fundAdministrator">{{ 'Fund Administrator' | translate }}</label>
+                                            <div>
+                                                <input type="text"
+                                                        id="uf_fundAdministrator"
+                                                        class="form-control"
+                                                        formControlName="fundAdministratorID"
+                                                        [disabled]="isAdmin()">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="form-group col-sm-6">
+                                            <label for="uf_custodian">{{ 'Custodian Bank' | translate }}</label>
+                                            <div>
+                                                <input type="text"
+                                                        id="uf_custodian"
+                                                        class="form-control"
+                                                        formControlName="custodianBankID"
+                                                        [disabled]="isAdmin()">
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-sm-6">
+                                            <label class="control-label" for="uf_investmentAdvisor">{{ 'Investment Advisor' | translate }}</label>
+                                            <input type="text"
+                                                    name="uf_investmentAdvisor"
+                                                    id="uf_investmentAdvisor"
+                                                    [formControl]="umbrellaEditForm.controls['investmentAdvisorID']"
+                                                    [disabled]="isAdmin()">
+                                            <span class="field-error" *ngIf="umbrellaEditForm.controls['investmentAdvisorID'].hasError('required') && umbrellaEditForm.controls['investmentAdvisorID'].touched">{{ 'Incorrect Entry' | translate }}</span>
+                                        </div>
+                                        <div class="form-group col-sm-6">
+                                            <label for="uf_payingAgent">{{ 'Paying Agent' | translate }}</label>
+                                            <div>
+                                                <ng-select id="uf_payingAgent"
+                                                            [items]="payingAgentItems"
+                                                            [allowClear]="true"
+                                                            [multiple]="true"
+                                                            [isDisabled]="umbrellaEditForm.controls['payingAgentID'] || isAdmin()"
+                                                            [placeholder]="translate.translate('Select')"
+                                                            [formControl]="umbrellaEditForm.controls['payingAgentID']">
+                                                </ng-select>
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-sm-6" *ngIf="umbrellaEditForm.controls['transferAgentID'].value">
+                                            <label>{{ 'Transfer Agent' | translate }}</label>
+                                            <div>
+                                                <input type="text"
+                                                        id="uf_transferAgentID"
+                                                        class="form-control"
+                                                        formControlName="transferAgentID"
+                                                        [disabled]="isAdmin()">
+                                            </div>
+
+                                        </div>
+                                        <div class="form-group col-sm-6" *ngIf="umbrellaEditForm.controls['centralisingAgentID'].value">
+                                            <label>{{ 'Centralising Agent' | translate }}</label>
+                                            <div>
+                                                <input type="text"
+                                                        id="uf_centralisingAgentID"
+                                                        class="form-control"
+                                                        formControlName="centralisingAgentID"
+                                                        [disabled]="isAdmin()">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="well" *ngIf="isUmbrellaSelected()">
+                                <!-- Panel header -->
+                                <div class="row panel-header">
+                                    <div class="col-xs-12">
+                                        <a id="fundsUmbrellaFundsOptionalInformation" href="#" (click)="panels[0][2].open = !panels[0][2].open; $event.preventDefault();">
+                                            <i class="fa fa-chevron-right" [class.rotate]="panels[0][2].open"></i>
+                                            <h2>{{ 'Optional Information' | translate }}</h2>
+                                        </a>
+                                    </div>
+                                </div>
+
+                                <!-- Panel body -->
+                                <div class="panel-body" [class.hidden]="!panels[0][2].open">
+                                    <div class="row">
+                                        <div class="form-group col-sm-6">
+                                            <label for="uf_giin">{{ 'Global Intermediary Identification Number (GIIN)' | translate }}</label>
+                                            <div>
+                                                <input type="text"
+                                                        id="uf_giin"
+                                                        class="form-control"
+                                                        formControlName="giin"
+                                                        [disabled]="isAdmin()">
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-sm-6">
+                                            <label for="uf_delegatedManagementCompany">{{ 'Delegated Management Company' | translate }}</label>
+                                            <div>
+                                                <input type="text"
+                                                        id="uf_delegatedManagementCompany"
+                                                        class="form-control"
+                                                        formControlName="delegatedManagementCompanyID"
+                                                        [disabled]="isAdmin()">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="form-group col-sm-6">
+                                            <label for="uf_auditor">{{ 'Auditor' | translate }}</label>
+                                            <div>
+                                                <input type="text"
+                                                        id="uf_auditor"
+                                                        class="form-control"
+                                                        formControlName="auditorID"
+                                                        [disabled]="isAdmin()">
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-sm-6">
+                                            <label for="uf_taxAuditor">{{ 'Tax Auditor' | translate }}</label>
+                                            <div>
+                                                <input type="text"
+                                                        id="uf_taxAuditor"
+                                                        class="form-control"
+                                                        formControlName="taxAuditorID"
+                                                        [disabled]="isAdmin()">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="form-group col-sm-6">
+                                            <label for="uf_principalPromoter">{{ 'Principal Promoter' | translate }}</label>
+                                            <div>
+                                                <ng-select id="uf_principalPromoter"
+                                                            [items]="principalPromoterItems"
+                                                            [allowClear]="true"
+                                                            [multiple]="true"
+                                                            [isDisabled]="umbrellaEditForm.controls['principlePromoterID'].disabled || isAdmin()"
+                                                            [placeholder]="translate.translate('Select')"
+                                                            [formControl]="umbrellaEditForm.controls['principlePromoterID']">
+                                                </ng-select>
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-sm-6">
+                                            <label for="uf_legalAdvisor">{{ 'Legal Advisor' | translate }}</label>
+                                            <div>
+                                                <input type="text"
+                                                        id="uf_legalAdvisor"
+                                                        class="form-control"
+                                                        formControlName="legalAdvisorID"
+                                                        [disabled]="isAdmin()">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="form-group col-sm-6">
+                                            <label for="uf_directors">{{ 'Directors' | translate }}</label>
+                                            <div>
+                                                <input type="text"
+                                                        id="uf_directors"
+                                                        class="form-control"
+                                                        formControlName="directors"
+                                                        [disabled]="isAdmin()">
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-sm-6">
+                                            <label class="control-label" for="uf_internalReference">{{ 'Internal Reference' | translate }}</label>
+                                            <input type="text"
+                                                    id="uf_internalReference"
+                                                    formControlName="internalReference"
+                                                    maxlength="50"
+                                                    [disabled]="isAdmin()">
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="form-group col-sm-6">
+                                            <label class="control-label" for="uf_additionalNotes">{{ 'Additional Notes' | translate }}</label>
+                                            <textarea id="uf_additionalNotes"
+                                                        formControlName="additionalNotes"
+                                                        maxlength="500"
+                                                        [disabled]="isAdmin()">
+                                            </textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+
+                <div class="well">
+                    <!-- Panel header -->
+                    <div class="row panel-header">
+                        <div class="col-xs-12">
+                            <a href="#" (click)="panels[1].open = !panels[1].open; $event.preventDefault();">
+                                <i class="fa fa-chevron-right" [class.rotate]="panels[1].open"></i>
+                                <h2>
+                                    {{ 'Fund: @fundName@' | translate: { 'fundName': fundForm.controls['fundName'].value } }}
+                                </h2>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Panel body -->
+                    <div class="panel-body" [class.hidden]="!panels[1].open">
+                        <div class="row">
+                            <div class="col-xs-12">
+
+                                <div class="well">
+                                    <!-- Panel header -->
+                                    <div class="row panel-header">
+                                        <div class="col-xs-12">
+                                            <a href="#" (click)="panels[1][0].open = !panels[1][0].open; $event.preventDefault();">
+                                                <i class="fa fa-chevron-right" [class.rotate]="panels[1][0].open">
+                                                </i>
+                                                <h2>{{ 'Main Information' | translate }}</h2>
+                                            </a>
+                                        </div>
+                                    </div>
+
+                                    <!-- Panel body -->
+                                    <div class="panel-body" [class.hidden]="!panels[1][0].open">
+                                        <div class="row">
+                                            <div class="form-group required-field col-sm-6">
+                                                <label class="control-label">{{ 'Fund Structure' | translate }}</label>
+                                                <div class="radio-inline disabled">
+                                                    <input type="radio"
+                                                            name="isFundStructure"
+                                                            id="isFundStructure1"
+                                                            formControlName="isFundStructure"
+                                                            value="{{enums.isFundStructure.FUND}}"
+                                                            [disabled]="isAdmin()">
+                                                    <label for="isFundStructure1">{{ 'Single fund Structure' | translate }}</label>
+                                                </div>
+                                                <div class="radio-inline disabled">
+                                                    <input type="radio"
+                                                            name="isFundStructure"
+                                                            id="isFundStructure2"
+                                                            formControlName="isFundStructure"
+                                                            value="{{enums.isFundStructure.UMBRELLA}}"
+                                                            [disabled]="isAdmin()">
+                                                    <label for="isFundStructure2">{{ 'Fund Umbrella Structure' | translate }}</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="form-group required-field col-sm-6">
+                                                <div>
+                                                    <label class="control-label" for="fundName">{{ 'Fund Name' | translate }}</label>
+                                                    <input type="text"
+                                                            name="fundName"
+                                                            id="fundName"
+                                                            formControlName="fundName"
+                                                            maxlength="100"
+                                                            [disabled]="isAdmin()">
+                                                    <span *ngIf="fundForm.controls['fundName'].touched && fundForm.controls['fundName'].hasError('required')"
+                                                        class="field-error">{{ 'Field is required' | translate }}</span>
+                                                    <span *ngIf="fundForm.controls['fundName'].touched && fundForm.controls['fundName'].hasError('pattern')"
+                                                        class="field-error">{{ 'Incorrect Entry' | translate }}</span>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group col-sm-6">
+                                                <label class="control-label" for="legalEntityIdentifier">{{ 'Legal Entity Identifier (LEI)' | translate }}</label>
+                                                <div class="lei">
+                                                    <label class="switch">
+                                                        <input type="checkbox"
+                                                                class="form-control"
+                                                                id="switchActiveShares"
+                                                                [ngModel]="isLeiVisible"
+                                                                [ngModelOptions]="{standalone: true}"
+                                                                (click)="toggleLeiSwitch(!isLeiVisible)"
+                                                                [disabled]="isAdmin()">
+                                                        <span class="slider round"></span>
+                                                    </label>
+                                                    <div *ngIf="isLeiVisible">
+                                                        <input type="text"
+                                                                name="legalEntityIdentifier"
+                                                                id="legalEntityIdentifier"
+                                                                formControlName="legalEntityIdentifier"
+                                                                maxlength="20"
+                                                                [disabled]="isAdmin()">
+                                                        <span *ngIf="fundForm.controls['legalEntityIdentifier'].touched && fundForm.controls['legalEntityIdentifier'].hasError('pattern')"
+                                                            class="field-error">{{ 'LEI must meet ISO 17442 format' | translate }}</span>
+                                                        <span *ngIf="fundForm.controls['legalEntityIdentifier'].touched && fundForm.controls['legalEntityIdentifier'].hasError('isAlreadyExisting')"
+                                                            class="field-error">{{ 'LEI is already existing' | translate }}</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="form-group col-sm-6">
+                                                <label for="registerOffice">{{ 'Name of the Registered Office of the Fund' | translate }}</label>
+                                                <div>
+                                                    <input type="text"
+                                                            id="registerOffice"
+                                                            class="form-control"
+                                                            formControlName="registerOffice"
+                                                            [disabled]="isAdmin()">
+                                                    <span *ngIf="fundForm.controls['registerOffice'].touched && fundForm.controls['registerOffice'].hasError('swiftNameAddress')"
+                                                        class="field-error">{{ 'Should be within 35 characters: number, letter or -?:()' | translate }}</span>
+                                                </div>
+                                            </div>
+
+                                            <div class="w-100"></div>
+
+                                            <div class="form-group col-sm-6">
+                                                <label for="registerOfficeAddress">{{ 'Address of the Registered Office of the Fund' | translate }}</label>
+                                                <div>
+                                                    <input type="text"
+                                                            id="registerOfficeAddress"
+                                                            class="form-control"
+                                                            formControlName="registerOfficeAddress"
+                                                            [disabled]="isAdmin()">
+                                                    <span *ngIf="fundForm.controls['registerOfficeAddress'].touched && fundForm.controls['registerOfficeAddress'].hasError('swiftNameAddress')"
+                                                        class="field-error">{{ 'Should be within 35 characters: number, letter or -?:()' | translate }}</span>
+                                                </div>
+                                            </div>
+                                            <div class="form-group col-sm-6">
+                                                <label for="registerOfficeAddressLine2">{{ 'Address Line 2' | translate }}</label>
+                                                <div>
+                                                    <input type="text" id="registerOfficeAddressLine2" class="form-control" formControlName="registerOfficeAddressLine2" [disabled]="isAdmin()">
+                                                    <span *ngIf="fundForm.controls['registerOfficeAddressLine2'].touched && fundForm.controls['registerOfficeAddressLine2'].hasError('swiftNameAddress')"
+                                                          class="field-error">{{ 'Should be within 35 characters: number, letter or -?:()' | translate }}</span>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group col-sm-4">
+                                                <label for="registerOfficeAddressZipCode">{{ 'ZIP Code' | translate }}</label>
+                                                <div>
+                                                    <input type="text" id="registerOfficeAddressZipCode" class="form-control" formControlName="registerOfficeAddressZipCode" [disabled]="isAdmin()">
+                                                    <span *ngIf="fundForm.controls['registerOfficeAddressZipCode'].touched && fundForm.controls['registerOfficeAddressZipCode'].hasError('swiftNameAddress')"
+                                                          class="field-error">{{ 'Should be within 35 characters: number, letter or -?:()' | translate }}</span>
+                                                </div>
+                                            </div>
+                                            <div class="form-group col-sm-4">
+                                                <label for="registerOfficeAddressCity">{{ 'City' | translate }}</label>
+                                                <div>
+                                                    <input type="text" id="registerOfficeAddressCity" class="form-control" formControlName="registerOfficeAddressCity" [disabled]="isAdmin()">
+                                                    <span *ngIf="fundForm.controls['registerOfficeAddressCity'].touched && fundForm.controls['registerOfficeAddressCity'].hasError('swiftNameAddress')"
+                                                          class="field-error">{{ 'Should be within 35 characters: number, letter or -?:()' | translate }}</span>
+                                                </div>
+                                            </div>
+                                            <div class="form-group col-sm-4">
+                                                <label for="registerOfficeAddressCountry">{{ 'Country' | translate }}</label>
+                                                <div>
+                                                    <ng-select id="registerOfficeAddressCountry"
+                                                                [items]="domicileItems"
+                                                                [allowClear]="true"
+                                                                [placeholder]="translate.translate('Select')"
+                                                                [formControl]="fundForm.controls['registerOfficeAddressCountry']"
+                                                                [isDisabled]="isAdmin()">
+                                                    </ng-select>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="form-group required-field col-sm-6">
+                                                <div>
+                                                    <label class="control-label" for="domicile">{{ 'Fund Domicile (Country)' | translate }}</label>
+                                                    <ng-select id="domicile"
+                                                                [items]="domicileItems"
+                                                                [allowClear]="true"
+                                                                [placeholder]="translate.translate('Select')"
+                                                                [formControl]="fundForm.controls['domicile']"
+                                                                [isDisabled]="isAdmin()">
+                                                    </ng-select>
+                                                    <span class="field-error" *ngIf="fundForm.controls['domicile'].hasError('required') && fundForm.controls['domicile'].touched">{{ 'Field
+                                                        is required' | translate }}</span>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group col-sm-6">
+                                                <label class="control-label" for="tradingAccount">{{ 'Trading Account' | translate }}</label>
+                                                <input type="text"
+                                                        name="tradingAccount"
+                                                        id="tradingAccount"
+                                                        formControlName="tradingAccount"
+                                                        [disabled]="isAdmin()">
+                                                <span *ngIf="fundForm.controls['tradingAccount'].touched && fundForm.controls['tradingAccount'].hasError('pattern')"
+                                                    class="field-error">{{ 'Incorrect Account' | translate }}</span>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="form-group col-sm-6">
+                                                <div *ngIf="isHomeCountryLegalTypeVisible()">
+                                                    <label class="control-label" for="homeCountryLegalType">{{ 'Home Country Legal Type of Fund' | translate }}</label>
+                                                    <ng-select id="homeCountryLegalType"
+                                                                [items]="homeCountryLegalTypeItems"
+                                                                [allowClear]="true"
+                                                                [placeholder]="translate.translate('Select')"
+                                                                [formControl]="fundForm.controls['homeCountryLegalType']"
+                                                                [isDisabled]="isAdmin()">
+                                                    </ng-select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="form-group required-field col-sm-6">
+                                                <label class="control-label">{{ 'Is EU Directive Relevant?' | translate }}</label>
+                                                <div class="radio-inline">
+                                                    <input type="radio"
+                                                            name="isEuDirective"
+                                                            id="isEuDirective1"
+                                                            formControlName="isEuDirective"
+                                                            value="{{enums.isEuDirective.YES}}"
+                                                            [disabled]="isAdmin()">
+                                                    <label for="isEuDirective1">{{ 'Yes' | translate }}</label>
+                                                </div>
+                                                <div class="radio-inline">
+                                                    <input type="radio"
+                                                            name="isEuDirective"
+                                                            id="isEuDirective2"
+                                                            formControlName="isEuDirective"
+                                                            value="{{enums.isEuDirective.NO}}"
+                                                            [disabled]="isAdmin()">
+                                                    <label for="isEuDirective2">{{ 'No' | translate }}</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row" *ngIf="fundForm.controls['isEuDirective'].value === enums.isEuDirective.YES.toString()">
+                                            <div class="form-group required-field col-sm-6">
+                                                <div>
+                                                    <label class="control-label" for="typeOfEuDirective">{{ 'Type of EU Directive' | translate }}</label>
+                                                    <ng-select id="typeOfEuDirective"
+                                                                [items]="typeOfEuDirectiveItems"
+                                                                [allowClear]="true"
+                                                                [placeholder]="translate.translate('Select')"
+                                                                [formControl]="fundForm.controls['typeOfEuDirective']"
+                                                                [isDisabled]="isAdmin()">
+                                                    </ng-select>
+                                                    <span class="field-error" *ngIf="fundForm.controls['typeOfEuDirective'].hasError('required') && fundForm.controls['typeOfEuDirective'].touched">{{ 'Field is required' | translate }}</span>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group required-field col-sm-6">
+                                                <div *ngIf="fundForm.controls['isEuDirective'].value === enums.isEuDirective.YES.toString() && getEuDirectiveType() === enums.typeOfEuDirective.UCITS">
+                                                    <label class="control-label" for="UcitsVersion">{{ 'UCITS Version' | translate }}</label>
+                                                    <ng-select id="UcitsVersion"
+                                                                [items]="UcitsVersionItems"
+                                                                [allowClear]="true"
+                                                                [placeholder]="translate.translate('Select')"
+                                                                [formControl]="fundForm.controls['UcitsVersion']"
+                                                                [isDisabled]="isAdmin()">
+                                                    </ng-select>
+                                                    <span class="field-error" *ngIf="fundForm.controls['UcitsVersion'].hasError('required') && fundForm.controls['UcitsVersion'].touched">
+                                                        {{ 'Field is required' | translate }}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="form-group required-field col-sm-6">
+                                                <div>
+                                                    <label class="control-label" for="legalForm">{{ 'Legal Form of the Fund' | translate }}</label>
+                                                    <ng-select id="legalForm"
+                                                                [items]="legalFormItems"
+                                                                [allowClear]="true"
+                                                                [placeholder]="translate.translate('Select')"
+                                                                [formControl]="fundForm.controls['legalForm']"
+                                                                [isDisabled]="isAdmin()">
+                                                    </ng-select>
+                                                    <span class="field-error" *ngIf="fundForm.controls['legalForm'].hasError('required') && fundForm.controls['legalForm'].touched">{{ 'Field
+                                                        is required' | translate }}</span>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group required-field col-sm-6">
+                                                <div *ngIf="isNationalNomenclatureOfLegalFormVisible()">
+                                                    <label class="control-label" for="nationalNomenclatureOfLegalForm">
+                                                        {{ 'National Nomenclature of Legal Fund' | translate }}</label>
+                                                    <ng-select id="nationalNomenclatureOfLegalForm"
+                                                                [items]="nationalNomenclatureOfLegalFormItems"
+                                                                [allowClear]="true"
+                                                                [placeholder]="translate.translate('Select')"
+                                                                [formControl]="fundForm.controls['nationalNomenclatureOfLegalForm']"
+                                                                [isDisabled]="isAdmin()">
+                                                    </ng-select>
+                                                    <span class="field-error" *ngIf="fundForm.controls['nationalNomenclatureOfLegalForm'].hasError('required') && fundForm.controls['nationalNomenclatureOfLegalForm'].touched">{{ 'Field is required' | translate }}</span>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group col-sm-6">
+                                                <label class="control-label" for="fundCreationDate">{{ 'Fund Creation Date (YYYY-MM-DD)' | translate }}</label>
+                                                <div class="input-group">
+                                                    <span class="fa fa-calendar" aria-hidden="true"></span>
+                                                    <input id="fundCreationDate"
+                                                            formControlName="fundCreationDate"
+                                                            autocomplete="off"
+                                                            [dpDayPicker]="configDate"
+                                                            [placeholder]="translate.translate('Choose a date')"
+                                                            mode="day"
+                                                            theme="dp-material"
+                                                            [disabled]="isAdmin()">
+                                                </div>
+                                                <span *ngIf="fundForm.controls['fundCreationDate'].touched && fundForm.controls['fundCreationDate'].hasError('pattern')"
+                                                    class="field-error">{{ 'Incorrect Date' | translate }}</span>
+                                            </div>
+
+                                            <div class="form-group col-sm-6">
+                                                <label class="control-label" for="fundLaunchDate">{{ 'Fund Launch Date (YYYY-MM-DD)' | translate }}</label>
+                                                <div class="input-group">
+                                                    <span class="fa fa-calendar" aria-hidden="true"></span>
+                                                    <input id="fundLaunchDate"
+                                                            formControlName="fundLaunchDate"
+                                                            [dpDayPicker]="configDate"
+                                                            [placeholder]="translate.translate('Choose a date')"
+                                                            mode="day"
+                                                            theme="dp-material"
+                                                            [disabled]="isAdmin()">
+                                                </div>
+                                                <span *ngIf="fundForm.controls['fundLaunchDate'].touched && fundForm.controls['fundLaunchDate'].hasError('pattern')"
+                                                    class="field-error">{{ 'Incorrect Date' | translate }}</span>
+                                            </div>
+
+                                            <div class="form-group required-field col-sm-6">
+                                                <div>
+                                                    <label class="control-label" for="fundCurrency">{{ 'Fund Currency' | translate }}</label>
+                                                    <ng-select id="fundCurrency"
+                                                                [items]="fundCurrencyItems"
+                                                                [allowClear]="true"
+                                                                [placeholder]="translate.translate('Select')"
+                                                                [formControl]="fundForm.controls['fundCurrency']"
+                                                                [isDisabled]="isAdmin()">
+                                                    </ng-select>
+                                                    <span class="field-error" *ngIf="fundForm.controls['fundCurrency'].hasError('required') && fundForm.controls['fundCurrency'].touched">
+                                                        {{ 'Field is required' | translate }}</span>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group required-field col-sm-6">
+                                                <label class="control-label">{{ 'Open-ended or Close-ended Fund Structure' | translate }}</label>
+                                                <div class="radio-inline">
+                                                    <input type="radio"
+                                                            name="openOrCloseEnded"
+                                                            id="openOrCloseEnded1"
+                                                            formControlName="openOrCloseEnded"
+                                                            value="{{enums.openOrCloseEnded.OPEN_ENDED}}"
+                                                            [disabled]="isAdmin()">
+                                                    <label for="openOrCloseEnded1">{{ 'Open-ended' | translate }}</label>
+                                                </div>
+                                                <div class="radio-inline">
+                                                    <input type="radio"
+                                                            name="openOrCloseEnded"
+                                                            id="openOrCloseEnded2"
+                                                            formControlName="openOrCloseEnded"
+                                                            value="{{enums.openOrCloseEnded.CLOSE_ENDED}}"
+                                                            [disabled]="isAdmin()">
+                                                    <label for="openOrCloseEnded2">{{ 'Close-ended' | translate }}</label>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group col-sm-6">
+                                                <label class="control-label" for="fiscalYearEnd">{{ 'Fiscal Year End (MM-DD)' | translate }}</label>
+                                                <div class="input-group hideWeekdays">
+                                                    <span class="fa fa-calendar" aria-hidden="true"></span>
+                                                    <input id="fiscalYearEnd"
+                                                            formControlName="fiscalYearEnd"
+                                                            [dpDayPicker]="configMonthDay"
+                                                            [placeholder]="translate.translate('Choose a date')"
+                                                            mode="day"
+                                                            theme="dp-material"
+                                                            [disabled]="isAdmin()">
+                                                </div>
+                                                <span *ngIf="fundForm.controls['fiscalYearEnd'].touched && fundForm.controls['fiscalYearEnd'].hasError('pattern')"
+                                                    class="field-error">{{ 'Incorrect date' | translate }}</span>
+                                            </div>
+
+                                            <div class="form-group required-field col-sm-6">
+                                                <label class="control-label">{{ 'Is Fund of Funds' | translate }}</label>
+                                                <div class="radio-inline">
+                                                    <input type="radio" name="isFundOfFund" id="isFundOfFund1"
+                                                        formControlName="isFundOfFund" value="{{enums.isFundOfFund.YES}}" [disabled]="isAdmin()">
+                                                    <label for="isFundOfFund1">{{ 'Yes' | translate }}</label>
+                                                </div>
+                                                <div class="radio-inline">
+                                                    <input type="radio" name="isFundOfFund" id="isFundOfFund2"
+                                                        formControlName="isFundOfFund" value="{{enums.isFundOfFund.NO}}" [disabled]="isAdmin()">
+                                                    <label for="isFundOfFund2">{{ 'No' | translate }}</label>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group required-field col-sm-6">
+                                                <div>
+                                                    <label class="control-label" for="managementCompanyID">{{ 'Management Company' | translate }}</label>
+                                                    <ng-select id="managementCompanyID"
+                                                                [items]="managementCompanyItems"
+                                                                [allowClear]="true"
+                                                                [placeholder]="translate.translate('Select')"
+                                                                [formControl]="fundForm.controls['managementCompanyID']"
+                                                                [isDisabled]="isAdmin()">
+                                                    </ng-select>
+                                                    <span class="field-error" *ngIf="fundForm.controls['managementCompanyID'].hasError('required') && fundForm.controls['managementCompanyID'].touched">{{ 'Field is required' | translate }}</span>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group required-field col-sm-6">
+                                                <div>
+                                                    <label class="control-label" for="fundAdministrator">{{ 'Fund Administrator' | translate }}</label>
+                                                    <ng-select id="fundAdministrator"
+                                                                [items]="fundAdministratorItems"
+                                                                [allowClear]="true"
+                                                                [placeholder]="translate.translate('Select')"
+                                                                [formControl]="fundForm.controls['fundAdministratorID']"
+                                                                [isDisabled]="isAdmin()">
+                                                    </ng-select>
+                                                    <span class="field-error" *ngIf="fundForm.controls['fundAdministratorID'].hasError('required') && fundForm.controls['fundAdministratorID'].touched">{{ 'Field is required' | translate }}</span>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group required-field col-sm-6">
+                                                <div>
+                                                    <label class="control-label" for="custodianBank">{{ 'Custodian Bank' | translate }}</label>
+                                                    <ng-select id="custodianBank"
+                                                                [items]="custodianBankItems"
+                                                                [allowClear]="true"
+                                                                [placeholder]="translate.translate('Select')"
+                                                                [formControl]="fundForm.controls['custodianBankID']"
+                                                                [isDisabled]="isAdmin()">
+                                                    </ng-select>
+                                                    <span class="field-error" *ngIf="fundForm.controls['custodianBankID'].hasError('required') && fundForm.controls['custodianBankID'].touched">
+                                                        {{ 'Field is required' | translate }}</span>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group col-sm-6">
+                                                <label class="control-label" for="investmentManager">{{ 'Investment Manager' | translate }}</label>
+                                                <ng-select id="investmentManager"
+                                                            [items]="investmentManagerItems"
+                                                            [allowClear]="true"
+                                                            [placeholder]="translate.translate('Select')"
+                                                            [formControl]="fundForm.controls['investmentManagerID']"
+                                                            [isDisabled]="isAdmin()">
+                                                </ng-select>
+                                            </div>
+
+                                            <div class="form-group col-sm-6">
+                                                <label class="control-label" for="principalPromoter">{{ 'Principal Promoter' | translate }}</label>
+                                                <ng-select id="principalPromoter"
+                                                            [items]="principalPromoterItems"
+                                                            [allowClear]="true"
+                                                            [multiple]="true"
+                                                            [placeholder]="translate.translate('Select')"
+                                                            [formControl]="fundForm.controls['principlePromoterID']"
+                                                            [isDisabled]="isAdmin()">
+                                                </ng-select>
+                                            </div>
+
+                                            <div class="form-group col-sm-6">
+                                                <label class="control-label" for="payingAgent">{{ 'Paying Agent' | translate }}</label>
+                                                <ng-select id="payingAgent"
+                                                            [items]="payingAgentItems"
+                                                            [allowClear]="true"
+                                                            [multiple]="true"
+                                                            [placeholder]="translate.translate('Select')"
+                                                            [formControl]="fundForm.controls['payingAgentID']"
+                                                            [isDisabled]="isAdmin()">
+                                                </ng-select>
+                                            </div>
+
+                                            <div class="form-group col-sm-6">
+                                                <label class="control-label" for="fundManagers">{{ 'Fund Managers' | translate }}</label>
+                                                <input type="text"
+                                                        name="fundManagers"
+                                                        id="fundManagers"
+                                                        formControlName="fundManagers"
+                                                        [disabled]="isAdmin()">
+                                                <span class="field-error" *ngIf="fundForm.controls['fundManagers'].hasError('required') && fundForm.controls['fundManagers'].touched">{{ 'Incorrect
+                                                    Entry' | translate}}</span>
+                                            </div>
+
+                                            <div class="form-group col-sm-6" *ngIf="isTransferAgentActive()">
+                                                <div>
+                                                    <label class="control-label" for="transferAgent">{{ 'Transfer Agent' | translate }}</label>
+                                                    <ng-select id="transferAgent"
+                                                                [items]="transferAgentItems"
+                                                                [allowClear]="true"
+                                                                [placeholder]="translate.translate('Select')"
+                                                                [formControl]="fundForm.controls['transferAgentID']"
+                                                                [isDisabled]="isAdmin()">
+                                                    </ng-select>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group col-sm-6" *ngIf="isCentralizingAgentActive()">
+                                                <div>
+                                                    <label class="control-label" for="centralizingAgent">{{ 'Centralizing Agent' | translate }}</label>
+                                                    <ng-select id="centralizingAgent"
+                                                                [items]="centralizingAgentItems"
+                                                                [allowClear]="true"
+                                                                [placeholder]="translate.translate('Select')"
+                                                                [formControl]="fundForm.controls['centralizingAgentID']"
+                                                                [isDisabled]="isAdmin()">
+                                                    </ng-select>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group col-sm-6">
+                                                <label class="control-label">{{ 'Is Dedicated Fund' | translate }}</label>
+                                                <div class="radio-inline">
+                                                    <input type="radio"
+                                                            name="isDedicatedFund"
+                                                            id="isDedicatedFund1"
+                                                            formControlName="isDedicatedFund"
+                                                            value="{{enums.isDedicatedFund.YES}}"
+                                                            [disabled]="isAdmin()">
+                                                    <label for="isDedicatedFund1">{{ 'Yes' | translate }}</label>
+                                                </div>
+                                                <div class="radio-inline">
+                                                    <input type="radio"
+                                                            name="isDedicatedFund"
+                                                            id="isDedicatedFund2"
+                                                            formControlName="isDedicatedFund"
+                                                            value="{{enums.isDedicatedFund.NO}}"
+                                                            [disabled]="isAdmin()">
+                                                    <label for="isDedicatedFund2">{{ 'No' | translate }}</label>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group required-field col-sm-6">
+                                                <div>
+                                                    <label class="control-label" for="portfolioCurrencyHedge">{{ 'Portfolio Currency Hedge' | translate }}</label>
+                                                    <ng-select id="portfolioCurrencyHedge"
+                                                                [items]="portfolioCurrencyHedgeItems"
+                                                                [allowClear]="true"
+                                                                [placeholder]="translate.translate('Select')"
+                                                                [formControl]="fundForm.controls['portfolioCurrencyHedge']"
+                                                                [isDisabled]="isAdmin()">
+                                                    </ng-select>
+                                                    <span class="field-error" *ngIf="fundForm.controls['portfolioCurrencyHedge'].hasError('required') && fundForm.controls['portfolioCurrencyHedge'].touched">{{ 'Field is required' | translate }}</span>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group required-field col-sm-6">
+                                                <div>
+                                                    <label class="control-label" for="classification">{{ 'Classification' | translate }}</label>
+                                                    <ng-select id="classification"
+                                                                [items]="classificationItems"
+                                                                [allowClear]="true"
+                                                                [placeholder]="translate.translate('Select a classification')"
+                                                                [formControl]="fundForm.controls['classification']"
+                                                                [isDisabled]="isAdmin()">
+                                                    </ng-select>
+                                                    <span class="field-error" *ngIf="fundForm.controls['classification'].hasError('required') && fundForm.controls['classification'].touched">{{'Field is required' | translate }}</span>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group col-sm-6">
+                                                <label class="control-label" for="investmentObjective">{{ 'Investment Objective' | translate }}</label>
+                                                <textarea name="investmentObjective" id="investmentObjective"
+                                                    formControlName="investmentObjective" [disabled]="isAdmin()"></textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="well">
+                                    <!-- Panel header -->
+                                    <div class="row panel-header">
+                                        <div class="col-xs-12">
+                                            <a href="#" (click)="panels[1][1].open = !panels[1][1].open; $event.preventDefault();">
+                                                <i class="fa fa-chevron-right" [class.rotate]="panels[1][1].open"></i>
+                                                <h2>{{ 'Holiday Management' | translate }}</h2>
+                                            </a>
+                                        </div>
+                                    </div>
+
+                                    <!-- Panel body -->
+                                    <div class="panel-body" [class.hidden]="!panels[1][1].open">
+                                        <div class="form-group col-sm-12">
+                                            <label class="control-label">{{ 'Use Default Holiday Management Configuration?' | translate }}
+                                                <i>{{ '(Can be found in My Products > Configuration)' | translate }}</i>
+                                            </label>
+                                            <div class="radio-inline">
+                                                <input type="radio"
+                                                        name="useDefaultHolidayMgmt"
+                                                        id="useDefaultHolidayMgmtYes"
+                                                        formControlName="useDefaultHolidayMgmt"
+                                                        value="{{enums.useDefaultHolidayMgmt.YES}}"
+                                                        [disabled]="isAdmin()">
+                                                <label for="useDefaultHolidayMgmtYes">{{ 'Yes' | translate }}</label>
+                                            </div>
+                                            <div class="radio-inline">
+                                                <input type="radio"
+                                                        name="useDefaultHolidayMgmt"
+                                                        id="useDefaultHolidayMgmtNo"
+                                                        formControlName="useDefaultHolidayMgmt"
+                                                        value="{{enums.useDefaultHolidayMgmt.NO}}"
+                                                        [disabled]="isAdmin()">
+                                                <label for="useDefaultHolidayMgmtNo">{{ 'No' | translate }}</label>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group col-sm-12">
+                                            <date-picker-extended
+                                                [hidden]="!showHolidayMgmtConfig()"
+                                                [dates]="fundForm.value.holidayMgmtConfig"
+                                                (datesEmitter)="setHolidayMgmtConfig($event)"
+                                                [disabled]="isAdmin()">
+                                            </date-picker-extended>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="well">
+                                    <!-- Panel header -->
+                                    <div class="row panel-header">
+                                        <div class="col-xs-12">
+                                            <a href="#" (click)="panels[1][2].open = !panels[1][2].open; $event.preventDefault();">
+                                                <i class="fa fa-chevron-right" [class.rotate]="panels[1][2].open"></i>
+                                                <h2>{{ 'Optional Information' | translate }}</h2>
+                                            </a>
+                                        </div>
+                                    </div>
+
+                                    <!-- Panel body -->
+                                    <div class="panel-body" [class.hidden]="!panels[1][2].open">
+                                        <div class="row">
+                                            <div class="form-group col-sm-6">
+                                                <label class="control-label" for="globalIntermediaryIdentification">{{ 'Global Intermediary Identification Number (GIIN)' | translate }}</label>
+                                                <input type="text"
+                                                        name="globalIntermediaryIdentification" id="globalIntermediaryIdentification"
+                                                        formControlName="globalIntermediaryIdentification"
+                                                        maxlength="19"
+                                                        [disabled]="isAdmin()">
+                                                <span *ngIf="fundForm.controls['globalIntermediaryIdentification'].touched && fundForm.controls['globalIntermediaryIdentification'].hasError('pattern')" class="field-error">{{ 'Accepted format: [6x A-Z0-9].[5x A-Z0-9].[2x
+                                                    A-Z].[3x 0-9]' | translate }}</span>
+                                            </div>
+
+                                            <div class="form-group col-sm-6">
+                                                <label class="control-label" for="delegatedManagementCompany">{{ 'Delegated Management Company' | translate }}</label>
+                                                <ng-select id="delegatedManagementCompany"
+                                                            [items]="managementCompanyItems"
+                                                            [allowClear]="true"
+                                                            [placeholder]="translate.translate('Select')"
+                                                            [formControl]="fundForm.controls['delegatedManagementCompany']"
+                                                            [isDisabled]="isAdmin()">
+                                                </ng-select>
+                                            </div>
+
+                                            <div class="form-group col-sm-6">
+                                                <label class="control-label" for="investmentAdvisor">{{ 'Investment Advisor' | translate }}</label>
+                                                <input type="text"
+                                                        name="investmentAdvisor"
+                                                        id="investmentAdvisor"
+                                                        [formControl]="fundForm.controls['investmentAdvisorID']"
+                                                        [disabled]="isAdmin()">
+                                                <span class="field-error" *ngIf="fundForm.controls['investmentAdvisorID'].hasError('required') && fundForm.controls['investmentAdvisorID'].touched">
+                                                    {{ 'Incorrect Entry' | translate }}</span>
+                                            </div>
+
+                                            <div class="form-group col-sm-6">
+                                                <label class="control-label" for="auditor">{{ 'Auditor' | translate }}</label>
+                                                <ng-select id="auditor"
+                                                            [items]="auditorItems"
+                                                            [allowClear]="true"
+                                                            [placeholder]="translate.translate('Select')"
+                                                            [formControl]="fundForm.controls['auditorID']"
+                                                            [isDisabled]="isAdmin()">
+                                                </ng-select>
+                                            </div>
+
+                                            <div class="form-group col-sm-6">
+                                                <label class="control-label" for="taxAuditor">{{ 'Tax Auditor' | translate }}</label>
+                                                <ng-select id="taxAuditor"
+                                                            [items]="taxAuditorItems"
+                                                            [allowClear]="true"
+                                                            [placeholder]="translate.translate('Select')"
+                                                            [formControl]="fundForm.controls['taxAuditorID']"
+                                                            [disabled]="isAdmin()">
+                                                </ng-select>
+                                            </div>
+
+                                            <div class="form-group col-sm-6">
+                                                <label class="control-label" for="legalAdvisor">{{ 'Legal Advisor' | translate }}</label>
+                                                <ng-select id="legalAdvisor"
+                                                            [items]="legalAdvisorItems"
+                                                            [allowClear]="true"
+                                                            [placeholder]="translate.translate('Select')"
+                                                            [formControl]="fundForm.controls['legalAdvisorID']"
+                                                            [isDisabled]="isAdmin()">
+                                                </ng-select>
+                                            </div>
+
+                                            <div class="form-group col-sm-6">
+                                                <label class="control-label" for="directors">{{ 'Directors' | translate }}</label>
+                                                <input type="text"
+                                                        name="directors"
+                                                        id="directors"
+                                                        formControlName="directors"
+                                                        [disabled]="isAdmin()">
+                                            </div>
+
+                                            <div class="form-group col-sm-6">
+                                                <label class="control-label">{{ 'Has Embedded Derivatives' | translate }}</label>
+                                                <div class="radio-inline">
+                                                    <input type="radio"
+                                                            name="hasEmbeddedDirective"
+                                                            id="hasEmbeddedDirective1"
+                                                            formControlName="hasEmbeddedDirective"
+                                                            value="{{enums.hasEmbeddedDirective.YES}}"
+                                                            [disabled]="isAdmin()">
+                                                    <label for="hasEmbeddedDirective1">{{ 'Yes' | translate }}</label>
+                                                </div>
+                                                <div class="radio-inline">
+                                                    <input type="radio"
+                                                            name="hasEmbeddedDirective"
+                                                            id="hasEmbeddedDirective2"
+                                                            formControlName="hasEmbeddedDirective"
+                                                            value="{{enums.hasEmbeddedDirective.NO}}"
+                                                            [disabled]="isAdmin()">
+                                                    <label for="hasEmbeddedDirective2">{{ 'No' | translate }}</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="form-group col-sm-6">
+                                                <label class="control-label">{{ 'Has Capital Preservation' | translate }}</label>
+                                                <div class="radio-inline">
+                                                    <input type="radio"
+                                                            name="hasCapitalPreservation"
+                                                            id="hasCapitalPreservation1"
+                                                            formControlName="hasCapitalPreservation"
+                                                            value="{{enums.hasCapitalPreservation.YES}}"
+                                                            [disabled]="isAdmin()">
+                                                    <label for="hasCapitalPreservation1">{{ 'Yes' | translate }}</label>
+                                                </div>
+                                                <div class="radio-inline">
+                                                    <input type="radio"
+                                                            name="hasCapitalPreservation"
+                                                            id="hasCapitalPreservation2"
+                                                            formControlName="hasCapitalPreservation"
+                                                            value="{{enums.hasCapitalPreservation.NO}}"
+                                                            [disabled]="isAdmin()">
+                                                    <label for="hasCapitalPreservation2">{{ 'No' | translate }}</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row" *ngIf="fundForm.controls['hasCapitalPreservation'].value === enums.hasCapitalPreservation.YES.toString()">
+                                            <div class="form-group col-sm-6">
+                                                <label class="control-label" for="capitalPreservationLevel">{{ 'Capital Preservation Level' | translate }}</label>
+                                                <input type="number"
+                                                        name="capitalPreservationLevel"
+                                                        id="capitalPreservationLevel"
+                                                        formControlName="capitalPreservationLevel"
+                                                        [disabled]="isAdmin()">
+                                            </div>
+
+                                            <div class="form-group col-sm-6">
+                                                <label class="control-label" for="capitalPreservationPeriod">{{ 'Capital Preservation Period' | translate }}</label>
+                                                <ng-select id="capitalPreservationPeriod"
+                                                            [items]="capitalPreservationPeriodItems"
+                                                            [allowClear]="true"
+                                                            [placeholder]="translate.translate('Select')"
+                                                            [formControl]="fundForm.controls['capitalPreservationPeriod']"
+                                                            [isDisabled]="isAdmin()">
+                                                </ng-select>
+                                            </div>
+                                        </div>
+
+                                        <div class="row" *ngIf="isFundCapitalisationDateVisible">
+                                            <div class="form-group col-sm-6"></div>
+
+                                            <div class="form-group col-sm-6">
+                                                <label class="control-label" for="capitalisationDate">{{ 'Fund Capitalisation Date (YYYY-MM-DD)' | translate }}</label>
+                                                <div class="input-group">
+                                                    <span class="fa fa-calendar" aria-hidden="true"></span>
+                                                    <input id="capitalisationDate"
+                                                            formControlName="capitalisationDate"
+                                                            [dpDayPicker]="configDate"
+                                                            [placeholder]="translate.translate('Choose a date')"
+                                                            mode="day"
+                                                            theme="dp-material"
+                                                            [disabled]="isAdmin()">
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="form-group col-sm-6">
+                                                <label class="control-label">{{ 'Has CPPI' | translate }}</label>
+                                                <div class="radio-inline">
+                                                    <input type="radio"
+                                                            name="hasCppi" id="hasCppi1"
+                                                            formControlName="hasCppi"
+                                                            value="{{enums.hasCppi.YES}}"
+                                                            [disabled]="isAdmin()">
+                                                    <label for="hasCppi1">{{ 'Yes' | translate }}</label>
+                                                </div>
+                                                <div class="radio-inline">
+                                                    <input type="radio"
+                                                            name="hasCppi"
+                                                            id="hasCppi2"
+                                                            formControlName="hasCppi"
+                                                            value="{{enums.hasCppi.NO}}"
+                                                            [disabled]="isAdmin()">
+                                                    <label for="hasCppi2">{{ 'No' | translate }}</label>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group col-sm-6">
+                                                <div *ngIf="fundForm.controls['hasCppi'].value === enums.hasCppi.YES.toString()">
+                                                    <label class="control-label" for="cppiMultiplier">{{ 'CPPI Multiplier' | translate }}</label>
+                                                    <input type="number"
+                                                            name="cppiMultiplier"
+                                                            id="cppiMultiplier"
+                                                            formControlName="cppiMultiplier"
+                                                            [disabled]="isAdmin()">
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group col-sm-6">
+                                                <label class="control-label">{{ 'Has Hedge Fund Strategy' | translate }}</label>
+                                                <div class="radio-inline">
+                                                    <input type="radio"
+                                                            name="hasHedgeFundStrategy"
+                                                            id="hasHedgeFundStrategy1"
+                                                            formControlName="hasHedgeFundStrategy"
+                                                            value="{{enums.hasHedgeFundStrategy.YES}}"
+                                                            [disabled]="isAdmin()">
+                                                    <label for="hasHedgeFundStrategy1">{{ 'Yes' | translate }}</label>
+                                                </div>
+                                                <div class="radio-inline">
+                                                    <input type="radio"
+                                                            name="hasHedgeFundStrategy"
+                                                            id="hasHedgeFundStrategy2"
+                                                            formControlName="hasHedgeFundStrategy"
+                                                            value="{{enums.hasHedgeFundStrategy.NO}}"
+                                                            [disabled]="isAdmin()">
+                                                    <label for="hasHedgeFundStrategy2">{{ 'No' | translate }}</label>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group col-sm-6">
+                                                <label class="control-label">{{ 'Is Leveraged' | translate }}</label>
+                                                <div class="radio-inline">
+                                                    <input type="radio"
+                                                            name="isLeveraged"
+                                                            id="isLeveraged1"
+                                                            formControlName="isLeveraged"
+                                                            value="{{enums.isLeveraged.YES}}"
+                                                            [disabled]="isAdmin()">
+                                                    <label for="isLeveraged1">{{ 'Yes' | translate }}</label>
+                                                </div>
+                                                <div class="radio-inline">
+                                                    <input type="radio"
+                                                            name="isLeveraged"
+                                                            id="isLeveraged2"
+                                                            formControlName="isLeveraged"
+                                                            value="{{enums.isLeveraged.NO}}"
+                                                            [disabled]="isAdmin()">
+                                                    <label for="isLeveraged2">{{ 'No' | translate }}</label>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group col-sm-6">
+                                                <label class="control-label">{{ 'Has 130/30 Strategy' | translate }}</label>
+                                                <div class="radio-inline">
+                                                    <input type="radio"
+                                                            name="has130Or30Strategy"
+                                                            id="has130Or30Strategy1"
+                                                            formControlName="has130Or30Strategy"
+                                                            value="{{enums.has130_30Strategy.YES}}"
+                                                            [disabled]="isAdmin()">
+                                                    <label for="has130Or30Strategy1">{{ 'Yes' | translate }}</label>
+                                                </div>
+                                                <div class="radio-inline">
+                                                    <input type="radio"
+                                                            name="has130Or30Strategy"
+                                                            id="has130Or30Strategy2"
+                                                            formControlName="has130Or30Strategy"
+                                                            value="{{enums.has130_30Strategy.NO}}"
+                                                            [disabled]="isAdmin()">
+                                                    <label for="has130Or30Strategy2">{{ 'No' | translate }}</label>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group col-sm-6">
+                                                <label class="control-label">{{ 'Is Fund Targeting Environmental or Social Objectives (EOS)' | translate }}</label>
+                                                <div class="radio-inline">
+                                                    <input type="radio"
+                                                            name="isFundTargetingEos"
+                                                            id="isFundTargetingEos1"
+                                                            formControlName="isFundTargetingEos"
+                                                            value="{{enums.isFundTargetingEos.YES}}"
+                                                            [disabled]="isAdmin()">
+                                                    <label for="isFundTargetingEos1">{{ 'Yes' | translate }}</label>
+                                                </div>
+                                                <div class="radio-inline">
+                                                    <input type="radio"
+                                                            name="isFundTargetingEos"
+                                                            id="isFundTargetingEos2"
+                                                            formControlName="isFundTargetingEos"
+                                                            value="{{enums.isFundTargetingEos.NO}}"
+                                                            [disabled]="isAdmin()">
+                                                    <label for="isFundTargetingEos2">{{ 'No' | translate }}</label>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group col-sm-6">
+                                                <label class="control-label">{{ 'Is Fund Targeting Socially Responsible Investment (SRI)' | translate }}</label>
+                                                <div class="radio-inline">
+                                                    <input type="radio"
+                                                            name="isFundTargetingSri"
+                                                            id="isFundTargetingSri1"
+                                                            formControlName="isFundTargetingSri"
+                                                            value="{{enums.isFundTargetingSri.YES}}"
+                                                            [disabled]="isAdmin()">
+                                                    <label for="isFundTargetingSri1">{{ 'Yes' | translate }}</label>
+                                                </div>
+                                                <div class="radio-inline">
+                                                    <input type="radio"
+                                                            name="isFundTargetingSri"
+                                                            id="isFundTargetingSri2"
+                                                            formControlName="isFundTargetingSri"
+                                                            value="{{enums.isFundTargetingSri.NO}}"
+                                                            [disabled]="isAdmin()">
+                                                    <label for="isFundTargetingSri2">{{ 'No' | translate }}</label>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group col-sm-6">
+                                                <label class="control-label">{{ 'Is Passive Fund' | translate }}</label>
+                                                <div class="radio-inline">
+                                                    <input type="radio"
+                                                            name="isPassiveFund"
+                                                            id="isPassiveFund1"
+                                                            formControlName="isPassiveFund"
+                                                            value="{{enums.isPassiveFund.YES}}"
+                                                            [disabled]="isAdmin()">
+                                                    <label for="isPassiveFund1">{{ 'Yes' | translate }}</label>
+                                                </div>
+                                                <div class="radio-inline">
+                                                    <input type="radio"
+                                                            name="isPassiveFund"
+                                                            id="isPassiveFund2"
+                                                            formControlName="isPassiveFund"
+                                                            value="{{enums.isPassiveFund.NO}}"
+                                                            [disabled]="isAdmin()">
+                                                    <label for="isPassiveFund2">{{ 'No' | translate }}</label>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group col-sm-6">
+                                                <label class="control-label">{{ 'Has Security Lending' | translate }}</label>
+                                                <div class="radio-inline">
+                                                    <input type="radio"
+                                                            name="hasSecurityLending"
+                                                            id="hasSecurityLending1"
+                                                            formControlName="hasSecurityLending"
+                                                            value="{{enums.hasSecurityLending.YES}}"
+                                                            [disabled]="isAdmin()">
+                                                    <label for="hasSecurityLending1">{{ 'Yes' | translate }}</label>
+                                                </div>
+                                                <div class="radio-inline">
+                                                    <input type="radio"
+                                                            name="hasSecurityLending"
+                                                            id="hasSecurityLending2"
+                                                            formControlName="hasSecurityLending"
+                                                            value="{{enums.hasSecurityLending.NO}}"
+                                                            [disabled]="isAdmin()">
+                                                    <label for="hasSecurityLending2">{{ 'No' | translate }}</label>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group checkbox-container col-sm-6">
+                                                <label class="control-label">{{ 'Has Swap' | translate }}</label>
+                                                <div class="radio-inline">
+                                                    <input type="radio"
+                                                            name="hasSwap"
+                                                            id="hasSwap1"
+                                                            formControlName="hasSwap"
+                                                            value="{{enums.hasSwap.YES}}"
+                                                            [disabled]="isAdmin()">
+                                                    <label for="hasSwap1">{{ 'Yes' | translate }}</label>
+                                                </div>
+                                                <div class="radio-inline">
+                                                    <input type="radio"
+                                                            name="hasSwap"
+                                                            id="hasSwap2"
+                                                            formControlName="hasSwap"
+                                                            value="{{enums.hasSwap.NO}}"
+                                                            [disabled]="isAdmin()">
+                                                    <label for="hasSwap2">{{ 'No' | translate }}</label>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group checkbox-container col-sm-6">
+                                                <label class="control-label">{{ 'Has Duration Hedge' | translate }}</label>
+                                                <div class="radio-inline">
+                                                    <input type="radio"
+                                                            name="hasDurationHedge"
+                                                            id="hasDurationHedge1"
+                                                            formControlName="hasDurationHedge"
+                                                            value="{{enums.hasDurationHedge.YES}}"
+                                                            [disabled]="isAdmin()">
+                                                    <label for="hasDurationHedge1">{{ 'Yes' | translate }}</label>
+                                                </div>
+                                                <div class="radio-inline">
+                                                    <input type="radio"
+                                                            name="hasDurationHedge"
+                                                            id="hasDurationHedge2"
+                                                            formControlName="hasDurationHedge"
+                                                            value="{{enums.hasDurationHedge.NO}}"
+                                                            [disabled]="isAdmin()">
+                                                    <label for="hasDurationHedge2">{{ 'No' | translate }}</label>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group col-sm-6">
+                                                <label class="control-label" for="internalReference">{{ 'Internal Reference' | translate }}</label>
+                                                <input type="text"
+                                                        name="internalReference"
+                                                        id="internalReference"
+                                                        formControlName="internalReference"
+                                                        maxlength="50"
+                                                        [disabled]="isAdmin()">
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="form-group col-sm-6">
+                                                <label class="control-label" for="additionalNotes">{{ 'Additional Notes' | translate }}</label>
+                                                <textarea name="additionalNotes"
+                                                            id="additionalNotes"
+                                                            class="form-control"
+                                                            formControlName="additionalNotes"
+                                                            maxlength="500"
+                                                            [disabled]="isAdmin()">
+                                                </textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <br>
+
+                <div *ngIf="param && !isAdmin() && !hasPermissionUpdateFund" class="alert alert-warning">
+                    <div class="alert-items">
+                        <div class="alert-item static">
+                            <div class="alert-icon-wrapper">
+                                <clr-icon class="alert-icon" shape="exclamation-triangle"></clr-icon>
+                            </div>
+                            <span class="alert-text">
+                                {{ 'Please contact the administrator to request permission to update a Fund' | translate }}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <br />
+
+                <div class="form-group col-sm-6">
+                    <button id="fund-cancelfund-btn"
+                            type="button"
+                            class="btn btn-default"
+                            (click)="onClickBack()">
+                            {{ (!isAdmin() ? 'Cancel' : 'Close') | translate}}
+                    </button>
+
+                    <button *ngIf="(currDraft == 1 || !param) && !isAdmin()"
+                            id="fund-savedraftfund-btn"
+                            type="button"
+                            class="btn btn-primary"
+                            (click)="saveDraft()">
+                            <i class="fa fa-save"></i> {{ (!param ? 'Save Draft' : 'Update Draft') | translate }}
+                    </button>
+
+                    <button *ngIf="!isAdmin()"
+                            id="fund-submitfund-btn"
+                            type="submit"
+                            class="btn btn-primary"
+                            [disabled]="!fundForm.valid || (param && !hasPermissionUpdateFund)">
+                            <i class="fa fa-save"></i> {{ !param || currDraft == 1 ? 'Save' : 'Update' }}
+                    </button>
+                </div>
+            </form>
+        </clr-tab-content>
+    </clr-tab>
+</clr-tabs>

@@ -1,0 +1,266 @@
+<clr-modal [(clrModalOpen)]="open" [clrModalSize]="'xl'">
+
+    <div class="modal-title">{{name}}</div>
+    <div class="modal-body">
+        <form>
+            <div class="row">
+                <div class="form-group col-sm-4">
+                    <label>
+                        {{'Type of the stakeholder' | translate}}
+                    </label>
+
+                    <div class="radio-inline opt-btn-element">
+                        <input type="radio" value="legalPerson" [checked]="stakeholder.type === 'legalPerson'" disabled>
+                        <label>{{'Legal person' | translate}}</label>
+                    </div>
+                    <div class="radio-inline opt-btn-element">
+                        <input type="radio" value="naturalPerson" [checked]="stakeholder.type === 'naturalPerson'" disabled>
+                        <label>{{'Natural person' | translate}}</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="form-group col-sm-6">
+                    <label class="control-label">{{'Relation Type' | translate}}</label>
+                    <input type="text" disabled [value]="stakeholder.relationType">
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="form-group col-sm-6">
+                    <label class="control-label">{{'Linked Entity' | translate}}</label>
+                    <input *ngIf="stakeholder.parent !== -1" type="text" disabled [value]="stakeholder.parent">
+                    <input *ngIf="stakeholder.parent === -1" type="text" disabled [value]="registeredCompanyName">
+                </div>
+
+                <div class="form-group col-sm-6">
+                    <label class="control-label">{{'Holding type' | translate}}</label>
+                    <input type="text" disabled [value]="stakeholder.holdingType">
+                </div>
+            </div>
+
+            <div *ngIf="stakeholder.type === 'legalPerson'">
+
+                <div class="row">
+                    <div class="form-group col-sm-6">
+                        <label class="control-label">{{'Registered company name or legal name' | translate}}</label>
+                        <input type="text" disabled [value]="stakeholder.legalName">
+                    </div>
+                    <div class="form-group col-sm-6">
+                        <label class="control-label">{{'LEI Code' | translate}}</label>
+                        <input type="text" disabled [value]="stakeholder.leiCode">
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group col-sm-6">
+                        <label class="control-label">{{'Stakeholder Address' | translate}}</label>
+                        <input type="text" disabled [value]="stakeholder.address">
+                    </div>
+                    <div class="form-group col-sm-6">
+                        <label class="control-label">&nbsp;</label>
+                        <input type="text" placeholder="{{'Address line 2'}}" disabled [value]="stakeholder.address2">
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group col-sm-6">
+                        <label class="control-label">{{'ZIP Code' | translate}}</label>
+                        <input type="text" disabled [value]="stakeholder.zipCode">
+                    </div>
+                    <div class="form-group col-sm-6">
+                        <label class="control-label">{{'City' | translate}}</label>
+                        <input type="text" disabled [value]="stakeholder.city">
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group col-sm-6">
+                        <label class="control-label">{{'Country' | translate}}</label>
+                        <input type="text" disabled [value]="stakeholder.country">
+                    </div>
+                    <div class="form-group col-sm-6">
+                        <label class="control-label">{{'Country of tax residence' | translate}}</label>
+                        <input type="text" disabled [value]="stakeholder.countryTaxResidence">
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group col-sm-6">
+                        <label class="control-label">{{'Nationality' | translate}}</label>
+                        <input type="text" disabled [value]="stakeholder.nationality">
+                    </div>
+                    <div class="form-group col-sm-6">
+                        <label class="control-label">{{'KBIS document' | translate}}</label>
+                        <setl-file-viewer *ngIf="stakeholder.fileHash" [fileHash]="stakeholder.fileHash" [viewType]="2" [secure]="true"></setl-file-viewer>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group col-sm-6">
+                        <label class="control-label">{{'National Identification Number Type' | translate}}</label>
+                        <input type="text" disabled [value]="stakeholder.nationalIdNumberType">
+                    </div>
+
+                    <div *ngIf="stakeholder.nationalIdNumberType === 'Other'" class="form-group col-sm-6">
+                        <label class="control-label">{{'Your Number Type' | translate}}</label>
+                        <input type="text" disabled [value]="stakeholder.otherNationalIdNumberType">
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group col-sm-6">
+                        <label class="control-label">{{'National Identification Number' | translate}}</label>
+                        <input type="text" disabled [value]="stakeholder.nationalIdNumberText">
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group col-sm-6">
+                        <label>{{'Holding percentage' | translate}}</label>
+                        <input type="text" disabled [value]="stakeholder.holdingPercentage">
+                    </div>
+
+                    <div class="form-group col-sm-6">
+                        <label>{{'Voting percentage' | translate}}</label>
+                        <input type="text" disabled [value]="stakeholder.votingPercentage">
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group col-sm-6">
+                        <label>{{'Does the stakeholder exercise control?' | translate}}</label>
+                        <div class="toggle-switch">
+                            <input type="checkbox" disabled [checked]="stakeholder.exerciseControl">
+                            <label></label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div *ngIf="stakeholder.type === 'naturalPerson'">
+
+                <div class="row">
+                    <div class="form-group col-sm-6">
+                        <label class="control-label">{{'First name' | translate}}</label>
+                        <input type="text" disabled [value]="stakeholder.firstName">
+                    </div>
+                    <div class="form-group col-sm-6">
+                        <label class="control-label">{{'Last name' | translate}}</label>
+                        <input type="text" disabled [value]="stakeholder.lastName">
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group col-sm-6">
+                        <label class="control-label">{{'Stakeholder Address' | translate}}</label>
+                        <input type="text" disabled [value]="stakeholder.address">
+                    </div>
+
+                    <div class="form-group col-sm-6">
+                        <label class="control-label">&nbsp;</label>
+                        <input type="text" disabled [value]="stakeholder.address2">
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group col-sm-6">
+                        <label class="control-label">{{'ZIP Code' | translate}}</label>
+                        <input type="text" disabled [value]="stakeholder.zipCode">
+                    </div>
+                    <div class="form-group col-sm-6">
+                        <label class="control-label">{{'City' | translate}}</label>
+                        <input type="text" disabled [value]="stakeholder.city">
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group col-sm-6">
+                        <label class="control-label">{{'Country' | translate}}</label>
+                        <input type="text" disabled [value]="stakeholder.country">
+                    </div>
+                    <div class="form-group col-sm-6">
+                        <label class="control-label">{{'Country of tax residence' | translate}}</label>
+                        <input type="text" disabled [value]="stakeholder.countryTaxResidence">
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group col-sm-6">
+                        <label class="control-label">{{'Nationality' | translate}}</label>
+                        <input type="text" disabled [value]="stakeholder.nationality">
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group col-sm-6">
+                        <label class="control-label">{{'Date of birth' | translate}}</label>
+                        <input type="text" disabled [value]="stakeholder.dateOfBirth">
+                    </div>
+
+                    <div class="form-group col-sm-6">
+                        <label class="control-label">{{'City of birth' | translate}}</label>
+                        <input type="text" disabled [value]="stakeholder.cityOfBirth">
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group col-sm-6">
+                        <label class="control-label">{{'Country of birth' | translate}}</label>
+                        <input type="text" disabled [value]="stakeholder.countryOfBirth">
+                    </div>
+
+                    <div class="form-group col-sm-6">
+                        <label class="control-label">{{'Identity proof document' | translate}}</label>
+                        <setl-file-viewer *ngIf="stakeholder.fileHash" [fileHash]="stakeholder.fileHash" [viewType]="2" [secure]="true"></setl-file-viewer>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group col-sm-6">
+                        <label>{{'Holding percentage' | translate}}</label>
+                        <input type="text" disabled [value]="stakeholder.holdingPercentage">
+                    </div>
+
+                    <div class="form-group col-sm-6">
+                        <label>{{'Voting percentage' | translate}}</label>
+                        <input type="text" disabled [value]="stakeholder.votingPercentage">
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group col-sm-6">
+                        <label>{{'Does the stakeholder exercise control?' | translate}}</label>
+                        <div class="toggle-switch">
+                            <input type="checkbox" disabled [checked]="stakeholder.exerciseControl">
+                            <label></label>
+                        </div>
+                    </div>
+                    <div class="form-group col-sm-6">
+                        <label>{{'Is the stakeholder a legal representative?' | translate}}</label>
+                        <div class="toggle-switch">
+                            <input type="checkbox" disabled [checked]="stakeholder.isLegalRepresentative">
+                            <label></label>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-sm-6">
+                        <label>{{'Is the stakeholder a politically exposed person?' | translate}}</label>
+                        <div class="toggle-switch">
+                            <input type="checkbox" disabled [checked]="stakeholder.isPoliticallyExposed">
+                            <label></label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <div class="modal-footer">
+        <button class="btn" (click)="closeModal()">
+            {{'Close' | translate}}
+        </button>
+    </div>
+</clr-modal>

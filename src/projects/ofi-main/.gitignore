@@ -1,0 +1,8 @@
+ofi-product/fund-share/helper/dist/
+ofi-product/fund-share/helper/node_modules
+node_modules
+package-lock.json
+
+*.css.map
+*.css
+/.idea

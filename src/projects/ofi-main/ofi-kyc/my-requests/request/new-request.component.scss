@@ -1,0 +1,12 @@
+.info {
+    color : #8C8C8C;
+    text-align: center;
+
+    span{
+        font-size : calc(0.5rem - 1px);
+    }
+}
+
+/deep/ h4.step-title {
+    margin: 24px 0 0 24px;
+}

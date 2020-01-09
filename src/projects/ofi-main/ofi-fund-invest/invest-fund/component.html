@@ -1,0 +1,717 @@
+<form (ngSubmit)="handleOrderConfirmation()" [formGroup]="form" [class.error]="!form.valid && form.touched"  (keydown.enter)="$event.preventDefault()">
+    <div class="form-horizontal">
+        <h2>{{getOrderTypeTitle()}}</h2>
+        {{getOrderTypeSubTitle()}}
+
+        <button type="button" class="btn resetButton" (click)="resetForm(form)">{{ 'Reset Order Information' | translate }}</button>
+
+        <div class="well">
+            <!-- Panel header -->
+            <div class="row panel-header">
+                <div class="col-xs-6" style="margin-bottom:15px;">
+                    <a href="#" (click)="panels[1] = !panels[1]; $event.preventDefault();">
+                        <i class="fa fa-chevron-right" [class.rotate]="panels[1]"></i>
+                        <h2>{{ 'Date Information' | translate }}</h2>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Panel body -->
+            <div class="panel-body" [class.hidden]="!panels[1]">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label class="control-label">
+                               {{ 'Order Date' | translate }}
+                            </label>
+                            <div class="input-group date-pick-wrapper">
+                                <span class="fa fa-calendar" aria-hidden="true"></span>
+
+                                <input [value]="today"
+                                        [placeholder]="translate.translate('Choose a date')"
+                                        mode="day"
+                                        theme="dp-material"
+                                        [ngStyle]="{'width':'100%'}"
+                                        disabled>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label class="control-label required-field">
+                               {{ 'Cut-off Date' | translate }}
+                            </label>
+
+                            <div class="input-group date-pick-wrapper">
+                                <span class="fa fa-calendar" aria-hidden="true"></span>
+
+                                <input id="cutoffdate"
+                                        formControlName="cutoffDate"
+                                        autocomplete="off"
+                                        [dpDayPicker]="configDateCutoff"
+                                        [placeholder]="translate.translate('Choose a date')"
+                                        mode="day"
+                                        theme="dp-material"
+                                        [ngStyle]="{'width':'100%'}"
+                                        [readonly]="doValidate"
+                                        autocomplete="off"
+                                        (dateChange)="newOrderChangeUpdateEvent('cutoff', $event)">
+                            </div>
+                            <span *ngIf="cutoffDate.hasError('required') && cutoffDate.touched" class="field-error">{{ 'Field is required' | translate }}</span>
+                            <span *ngIf="cutoffDate.hasError('tooLate')" class="field-error">{{ 'Cut-off has been reached' | translate }}</span>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label class="control-label required-field">
+                                {{ 'NAV Date' | translate }}
+                            </label>
+
+                            <div class="input-group date-pick-wrapper">
+                                <span class="fa fa-calendar" aria-hidden="true"></span>
+
+                                <input id="valuationdate"
+                                        formControlName="valuationDate"
+                                        autocomplete="off"
+                                        [dpDayPicker]="configDateValuation"
+                                        [placeholder]="translate.translate('Choose a date')"
+                                        mode="day"
+                                        theme="dp-material"
+                                        [ngStyle]="{'width':'100%'}"
+                                        [readonly]="doValidate"
+                                        autocomplete="off"
+                                        (dateChange)="newOrderChangeUpdateEvent('valuation', $event)">
+                            </div>
+                            <span *ngIf="valuationDate.hasError('required') && valuationDate.touched" class="field-error">{{ 'Field is required' | translate }}</span>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label class="control-label required-field">
+                                {{ 'Settlement Date' | translate }}
+                            </label>
+                            <div>
+                                <div class="input-group date-pick-wrapper">
+                                    <span class="fa fa-calendar" aria-hidden="true"></span>
+
+                                    <input id="settlementdate"
+                                            formControlName="settlementDate"
+                                            autocomplete="off"
+                                            [dpDayPicker]="configDateSettlement"
+                                            [placeholder]="translate.translate('Choose a date')"
+                                            mode="day"
+                                            theme="dp-material"
+                                            [ngStyle]="{'width':'100%'}"
+                                            [readonly]="doValidate"
+                                            autocomplete="off"
+                                            (dateChange)="newOrderChangeUpdateEvent('settlement', $event)">
+                                </div>
+                                <span *ngIf="settlementDate.hasError('required') && settlementDate.touched" class="field-error">{{ 'Field is required' | translate }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="well">
+            <!-- Panel header -->
+            <div class="row panel-header">
+                <div class="col-xs-6" style="margin-bottom:15px;">
+                    <a href="#" (click)="panels[2] = !panels[2]; $event.preventDefault();">
+                        <i class="fa fa-chevron-right" [class.rotate]="panels[2]"></i>
+                        <h2>{{ 'Order Information' | translate }}</h2>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Panel body -->
+            <div class="panel-body" [class.hidden]="!panels[2]">
+                <div class="row">
+                    <div class="col-sm-6" #subportfolio>
+                        <div class="form-group">
+                            <label class="control-label required-field" for="subportfolio">
+                               {{ 'Investment Portfolio' | translate }}
+                            </label>
+                            <div>
+                                <ng-select id="subportfolio"
+                                            [class.error]="!form.controls['address'].valid && form.controls['address'].touched"
+                                            [items]="addressList"
+                                            [allowClear]="false"
+                                            [placeholder]="translate.translate('Select an investment porfolio')"
+                                            formControlName="address"
+                                            (selected)="handleSelectedAddress($event)">
+                                </ng-select>
+                            </div>
+                            <span *ngIf="address.hasError('required') && address.touched" class="field-error">{{ 'Field is required' | translate }}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label class="control-label">
+                                {{ 'Order Type' | translate }}
+                            </label>
+                            <div>
+                                <input type="text" class="form-control" [value]="orderTypeLabel" [readonly]="true">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-6 choice" *ngIf="allowAmountAndQuantity">
+                        <label>
+                            <clr-icon shape="exclamation-circle" class="is-info"></clr-icon>
+                            {{ 'You can either @action@ by amount or unit for this asset' | translate: { 'action': getOrderTypeTitle(false).toLowerCase() } }}
+                        </label>
+
+                        <div class="btn-group">
+                            <div class="radio btn">
+                                <input type="radio"
+                                        id="btn-radio-quantity"
+                                        (click)="actionBy = 'q'"
+                                        [checked]="actionBy === 'q'">
+                                <label for="btn-radio-quantity">{{ 'Quantity' | translate }}</label>
+                            </div>
+                            <div class="radio btn">
+                                <input type="radio"
+                                        id="btn-radio-amount"
+                                        (click)="actionBy = 'a'"
+                                        [checked]="actionBy === 'a'">
+                                <label for="btn-radio-amount">{{ 'Amount' | translate }}</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <ng-container *ngIf=" type !== 'sellbuy' ">
+                    <ng-container *ngTemplateOutlet="orderValueInputs; context: {orderType: type}"></ng-container>
+                </ng-container>
+
+                <ng-container *ngIf=" type === 'sellbuy' ">
+                    <ng-container *ngTemplateOutlet="orderValueInputs; context: {orderType: 'redeem'}"></ng-container>
+                    <ng-container *ngTemplateOutlet="orderValueInputs; context: {orderType: 'subscribe'}"></ng-container>
+                </ng-container>
+
+                <div class="row">{{ 'Comment:' | translate }}</div>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <textarea class="form-control" formControlName="comment" autocomplete="off"></textarea>
+                            <span *ngIf="comment.hasError('maxlength') && comment.touched" class="field-error">
+                                {{ 'Comment must be @commentMaxLength@ characters long' | translate:
+                                { 'commentMaxLength': form.controls['comment'].getError('maxlength').requiredLength } }}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="well">
+            <!-- Panel header -->
+            <div class="row panel-header">
+                <div class="col-sm-12">
+                    <a href="#" (click)="panels[3] = !panels[3]; $event.preventDefault();">
+                        <i class="fa fa-chevron-right" [class.rotate]="panels[3]"></i>
+                        <h2>{{ 'General Investment Information' | translate }}</h2>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Panel body -->
+            <div class="panel-body" [class.hidden]="!panels[3]">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label class="control-label">
+                                {{ 'Asset Management Company' | translate }}
+                            </label>
+                            <div>
+                                <input type="text" class="form-control" [value]="shareData.companyName" [readonly]="true">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="well">
+                        <!-- Panel header -->
+                        <div class="row panel-header">
+                            <div class="col-sm-12" style="margin-bottom:15px;">
+                                <a href="#" (click)="panels[4] = !panels[4]; $event.preventDefault();">
+                                    <i class="fa fa-chevron-right" [class.rotate]="panels[4]"></i>
+                                    <h2>{{ 'Costs & Charges' | translate }}</h2>
+                                </a>
+                            </div>
+                        </div>
+
+                        <!-- Panel body -->
+                        <div class="panel-body" [class.hidden]="!panels[4]">
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label class="control-label">
+                                            {{ 'One-off Charges' | translate }}
+                                        </label>
+                                        <div>
+                                            <input type="text"
+                                                    class="form-control"
+                                                    [value]="moneyValuePipe.transform(feeFrontend.mifiidChargesOneOff, 2) + '%'"
+                                                    [readonly]="true">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label class="control-label">
+                                            {{ 'On-going Charges' | translate }}
+                                        </label>
+                                        <div>
+                                            <input type="text"
+                                                    class="form-control"
+                                                    [value]="moneyValuePipe.transform(feeFrontend.mifiidChargesOngoing, 2) + '%'"
+                                                    [readonly]="true">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label class="control-label">
+                                            {{ 'Costs related to transactions initiated' | translate }}
+                                        </label>
+                                        <div>
+                                            <input type="text"
+                                                    class="form-control"
+                                                    [value]="moneyValuePipe.transform(feeFrontend.mifiidTransactionCosts, 2) + '%'"
+                                                    [readonly]="true">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label class="control-label">
+                                            {{ 'Charges related to ancillary services' | translate }}
+                                        </label>
+                                        <div>
+                                            <input type="text"
+                                                    class="form-control"
+                                                    [value]="moneyValuePipe.transform(feeFrontend.mifiidServicesCosts, 2) + '%'"
+                                                    [readonly]="true">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label class="control-label">
+                                            {{ 'Incidental Costs' | translate }}
+                                        </label>
+                                        <div>
+                                            <input type="text"
+                                                    class="form-control"
+                                                    [value]="moneyValuePipe.transform(feeFrontend.mifiidIncidentalCosts, 2) + '%'"
+                                                    [readonly]="true">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label class="control-label">
+                                            {{ 'IZNES Fee - Investor: Percentage of the average annual outstandings kept in the register' | translate }}
+                                        </label>
+                                        <div>
+                                            <input type="text"
+                                                    class="form-control"
+                                                    [value]="moneyValuePipe.transform((feeFrontend.classificationFee * 100), fundClassifications[fundClassificationId].dp) + '%'"
+                                                    [readonly]="true">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label class="control-label">
+                                            {{metadata.feeLabel}}
+                                        </label>
+                                        <div>
+                                            <input type="text"
+                                                    class="form-control"
+                                                    formControlName="feeControl"
+                                                    [value]="moneyValuePipe.transform((feePercentage * 100),2) + '%' "
+                                                    [readonly]="true">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="well">
+            <!-- Panel header -->
+            <div class="row panel-header">
+                <div class="col-sm-12" style="margin-bottom:15px;">
+                    <a href="#" (click)="panels[5] = !panels[5]; $event.preventDefault();">
+                        <i class="fa fa-chevron-right" [class.rotate]="panels[5]"></i>
+                        <h2>{{ 'Product Information' | translate }}</h2>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Panel body -->
+            <div class="panel-body" [class.hidden]="!panels[5]">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label class="control-label">
+                                {{ 'NAV' | translate }}
+                            </label>
+                            <div>
+                                <input type="text"
+                                        class="form-control"
+                                        [value]="navStr"
+                                        [readonly]="true">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label class="control-label">
+                                {{ 'Last NAV Date' | translate }}
+                            </label>
+                            <div>
+                                <input type="text"
+                                        class="form-control"
+                                        [value]="this.latestNavDateFormated()"
+                                        [readonly]="true">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label class="control-label">
+                                {{ 'ISIN' | translate }}
+                            </label>
+                            <div>
+                                <input type="text"
+                                        class="form-control"
+                                        [value]="shareData.isin"
+                                        [readonly]="true">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label class="control-label">
+                                {{ 'Share Name' | translate }}
+                            </label>
+                            <div>
+                                <input type="text"
+                                        class="form-control"
+                                        [value]="shareData.fundShareName"
+                                        [readonly]="true">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label class="control-label">
+                                {{ 'Classification' | translate }}
+                            </label>
+                            <div>
+                                <input type="text"
+                                        class="form-control"
+                                        [value]="fundClassifications[fundClassificationId].text"
+                                        [readonly]="true">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label class="control-label">
+                                {{ 'Asset Class' | translate }}
+                            </label>
+                            <div>
+                                <input type="text"
+                                        class="form-control"
+                                        [value]="shareData.shareClassCode"
+                                        [readonly]="true">
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label class="control-label">
+                                {{ 'SRRI' | translate }}
+                            </label>
+                            <div>
+                                <input type="text"
+                                        class="form-control"
+                                        [value]="shareData.keyFactOptionalData.srri || '' "
+                                        [readonly]="true">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label class="control-label">
+                               {{ 'SRI' | translate }}
+                            </label>
+                            <div>
+                                <input type="text"
+                                        class="form-control"
+                                        [value]="shareData.keyFactOptionalData.sri || '' "
+                                        [readonly]="true">
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label class="control-label">
+                                {{ 'Share Currency' | translate }}
+                            </label>
+                            <div>
+                                <input type="text" class="form-control" [value]="currency" [readonly]="true">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label class="control-label">
+                                {{ 'Decimalization' | translate }}
+                            </label>
+                            <div>
+                                <input type="text"
+                                        class="form-control"
+                                        [value]="shareData.maximumNumDecimal"
+                                        [readonly]="true">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="well">
+            <!-- Panel header -->
+            <div class="row panel-header">
+                <div class="col-xs-6" style="margin-bottom:15px;">
+                    <a href="#" (click)="panels[6] = !panels[6]; $event.preventDefault();">
+                        <i class="fa fa-chevron-right" [class.rotate]="panels[6]"></i>
+                        <h2>{{ 'Disclaimer' | translate }}</h2>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Panel body -->
+            <div class="panel-body" [class.hidden]="!panels[6]" class="mb-1">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <input id="checkbox"
+                                    clrCheckbox
+                                    class="form-check-input"
+                                    style="margin-top: 10px; margin-right: 10px;"
+                                    type="checkbox"
+                                    formControlName="disclaimer"
+                                    [attr.disabled]="allowCheckDisclaimer"
+                                    value="false">
+                            <label class="form-check-label" for="checkbox">{{ 'I confirm that I have read and understood the latest version of the Key Investor Information Document (KIID) for the fund share I am considering investing in.' | translate }}
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-sm-12">
+                        <div class="mb-1">
+                            <span style="margin-right: 5px">{{ 'The lastest version of the KIID can be accessed via here' | translate }}</span>
+                            <setl-file-viewer [fileHash]="getKiidFileHash()" [viewType]="1" style="display: inline-block; cursor: pointer;"></setl-file-viewer>
+                            <br>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="form-group button-group">
+                <div class="col-sm-12">
+                    <button (click)="handleClose()" class="btn btn-secondary">{{ 'Cancel' | translate }}</button>
+                    <button type="submit" class="btn btn-primary" *ngIf="type === 'subscribe'" [attr.disabled]="allowToPlaceOrder">
+                        <i class="fa fa-sign-in"></i>
+                        {{ 'Place Order' | translate }}
+                    </button>
+                    <button type="submit" class="btn btn-primary" *ngIf="type === 'redeem'" [attr.disabled]="allowToPlaceOrder">
+                        <i class="fa fa-sign-out"></i>
+                        {{ 'Place Order' | translate }}
+                    </button>
+
+                    <button type="submit" class="btn btn-primary" *ngIf="type === 'sellbuy'" [attr.disabled]="allowToPlaceOrder">
+                        <i class="fa fa-circle-o-notch"></i>
+                        {{ 'Place Order' | translate }}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <ng-template #orderValueInputs let-orderType="orderType">
+
+        <div class="row">
+            <ng-container *ngIf=" orderType === 'subscribe' ">
+                <p>{{ 'Please type below a quantity or an amount to subscribe' | translate }}</p></ng-container>
+            <ng-container *ngIf=" orderType === 'redeem' ">
+                <p>{{ 'Please type below a quantity or an amount to redeem' | translate }}</p></ng-container>
+
+            <span class="text-warning" *ngIf="isKnownNav()">&nbsp;(Using known nav)</span><span class="text-warning" *ngIf="!isKnownNav()">&nbsp;(Using unknown nav)</span>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="form-group quantity-container">
+                    <label class="control-label required-field" for="quantity">
+                        {{ 'Quantity' | translate }}
+                    </label>
+                    <div [class]="orderType === 'redeem' ? 'quantity-group' : ''">
+                        <input #quantityInput [attr.disabled]="allowQuantity"
+                                type="text"
+                                id="quantity"
+                                class="form-control"
+                                formControlName="quantity"
+                                (focus)="subscribeForChange('quantity')"
+                                (blur)="unSubscribeForChange()"
+                                appNumberFormatter="{{shareData.maximumNumDecimal}}"
+                                [fractionSize]="shareData.maximumNumDecimal"
+                                autocomplete="off">
+                        <button *ngIf="orderType === 'redeem'" class="btn btn-primary" (click)="redeemAll($event)">
+                            {{ 'Redeem All' | translate }}
+                        </button>
+                    </div>
+                    <span *ngIf="quantity.hasError('required') && quantity.touched" class="field-error">{{ 'Field is required' | translate }}</span>
+                    <span *ngIf="quantity.hasError('invalidNumber') && !quantity.hasError('required') && quantity.touched" class="field-error">{{ 'Field is invalid' | translate }}</span>
+                    <span *ngIf="!isValidOrderValue() && quantity.touched" class="field-error">{{ 'Less than minimum order value' | translate }}</span>
+                    <span *ngIf="orderType === 'redeem' && isRedeemTooMuch && (quantity.touched || amount.touched)" class="field-error">{{ 'Insufficient balance to redeem' | translate }}</span>
+                    <span *ngIf="redeemedAll && !addressSelected" class="field-error">{{ 'Please select an Investment Portfolio' | translate }}</span>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <label class="control-label required-field" for="amount">
+                        {{ 'Amount' | translate }}
+                    </label>
+                    <div>
+                        <input [attr.disabled]="allowAmount"
+                                id="amount"
+                                type="text"
+                                class="form-control"
+                                formControlName="amount"
+                                (focus)="subscribeForChange('amount')"
+                                (blur)="roundAmount();"
+                                appNumberFormatter="2"
+                                [fractionSize]="2"
+                                autocomplete="off">
+                    </div>
+                    <span *ngIf="amountTooBig" class="field-error">{{ 'Warning: be aware the order amount exceeds 15 million' | translate }}</span>
+                    <span *ngIf="amount.hasError('required') && amount.touched" class="field-error">{{ 'Field is required' | translate }}</span>
+                    <span *ngIf="amount.hasError('invalidNumber') && !amount.hasError('required') && amount.touched" class="field-error">{{ 'Amount must be a number' | translate }}</span>
+                    <span *ngIf="!isValidOrderValue() && amount.touched" class="field-error">{{ 'Amount must not be less than minimum order value' | translate }}</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <label class="control-label">
+                        {{ 'Fee Amount' | translate }}
+                    </label>
+                    <div>
+                        <input type="text"
+                                class="form-control"
+                                formControlName="feeAmount"
+                                readonly>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <label class="control-label">
+                        {{ 'Net Amount' | translate }}
+                    </label>
+                    <div>
+                        <ng-container *ngIf=" orderType === 'subscribe' ">
+                            <input type="text" class="form-control" formControlName="netAmountSub" readonly>
+                        </ng-container>
+
+                        <ng-container *ngIf=" orderType === 'redeem' ">
+                            <input type="text" class="form-control" formControlName="netAmountRedeem" readonly>
+                        </ng-container>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </ng-template>
+</form>
+
+<clr-modal *ngIf="kiidModal.isOpen" class="kiidModal" [(clrModalOpen)]="kiidModal.isOpen" [clrModalSize]="'xl'" [clrModalClosable]="false">
+    <div class="modal-title">
+        <div class="alert alert-success">
+            <div class="alert-items">
+                <div class="alert-item static">
+                    <div class="alert-icon-wrapper">
+                        <clr-icon class="alert-icon" shape="check-circle"></clr-icon>
+                    </div>
+                    <span class="alert-text">
+                        {{ 'File \'@kiidModal.filename@\' is verified' | translate: { 'kiidModal.filename': kiidModal.filename } }}
+                        <br/>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-body">
+        <div class="modal-body fileviewer-main" *ngIf="kiidModal.url">
+            <iframe class="fileviewer-contents" [src]="kiidModal.url"></iframe>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <form class="form-block">
+            <div class="form-group">
+                <input type="checkbox" clrCheckbox
+                    name="kiidCheckbox"
+                    id="kiidCheckbox"
+                    #kiidModalCheckbox>
+                    {{ 'I have read the document and want to place an order' | translate }}>
+            </div>
+        </form>
+        <button type="button" class="btn btn-primary" [disabled]="!kiidModalCheckbox.checked" (click)="onValidateKiid()">{{type}}</button>
+    </div>
+</clr-modal>

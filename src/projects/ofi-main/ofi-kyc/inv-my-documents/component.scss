@@ -1,0 +1,85 @@
+.title{
+  line-height: 1;
+  margin-bottom: 3px;
+
+  strong{
+    display: block;
+    padding-bottom: 2px;
+  }
+
+  .saved{
+    white-space: nowrap;
+    display: block;
+    height: 0;
+
+    color: #62A420;
+
+    i{
+      margin-left: 2px;
+    }
+  }
+}
+
+.switch-container {
+  position: absolute;
+  display: inline-block;
+  margin-top: 4px;
+  cursor:pointer;
+}
+.slider {
+  left: 0;
+  top: 5px;
+}
+.upload-btn-wrapper {
+  position: relative;
+  overflow: hidden;
+  display: inline-block;
+  cursor:pointer;
+}
+
+.btn {
+  border: 1px dashed gray;
+  color: gray;
+  background-color: white;
+  padding: 4px 10px;
+  border-radius: 8px;
+  font-size: .8em;
+  line-height: 0;
+  cursor:pointer;
+}
+.upload-btn-wrapper input[type=file] {
+  font-size: 100px;
+  position: absolute;
+  left: 0;
+  top: 6px;
+  height: 36px;
+  opacity: 0;
+  cursor:pointer;
+}
+.upload-btn-wrapper:hover .btn {
+  border: 1px dashed white;
+  color: white;
+  background-color: rgba(0, 0, 0, 0.35);
+}
+
+.label clr-icon {
+  cursor: pointer;
+}
+
+.tableUpload{
+  width: 100%;
+  margin-bottom: 10px;
+}
+.tableUpload td {
+  background-color: white;
+}
+.tableUpload td:first-child {
+  width: 90%;
+}
+.tableUpload td:nth-child(2) {
+  vertical-align: middle;
+}
+.switch-container {
+  position: inherit;
+  padding-left: 6px;
+}

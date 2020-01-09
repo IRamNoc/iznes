@@ -1,0 +1,384 @@
+<!-- Breadcrumbs. -->
+<div class="header-breadcrumbs">
+    <h1>
+        <i class="fa fa-shopping-basket"></i>{{ '@routeOption@: @shareName@ (@isin@)' | translate: { 'routeOption': routeOption, 'shareName': shareName, 'isin': isin } }}
+    </h1>
+</div>
+
+<!-- Subscription/Redemption tab -->
+<clr-tabs>
+    <clr-tab>
+        <button clrTabLink id="subscriptionRedemptionTab">{{ routeOption | translate }}</button>
+
+        <clr-tab-content *clrIfActive>{{ 'Please fill in the following information to @subtitleLabel@ a new share:' | translate: { 'subtitleLabel': subtitleLabel } }}
+
+            <form [formGroup]="placeOrdersFormGroup" (ngSubmit)="handleSubmitButtonClick()">
+                <section class="form-group">
+                    <!-- General investment information -->
+                    <div class="well">
+                        <div class="row panel-header">
+                            <h4 class="col-sm-12" (click)="isGenInvestAccordionOpened = !isGenInvestAccordionOpened; $event.preventDefault();">
+                                <i class="fa fa-chevron-down" [class.reverse]="isGenInvestAccordionOpened"></i>
+                                {{ 'General Investment Information' | translate }}
+                            </h4>
+                        </div>
+
+                        <div class="row panel-body" [class.hidden]="!isGenInvestAccordionOpened">
+                            <div class="col-sm-6">
+                                <!-- Asset management company -->
+                                <label for="assetManagementCompany">{{ 'Asset Management Company' | translate }}</label>
+
+                                <input id="assetManagementCompany" 
+                                        class="form-control"
+                                        type="text" 
+                                        formControlName="assetManagementCompany">
+                            </div>
+
+                            <!-- Investment portfolio -->
+                            <div class="col-sm-6">
+                                <label for="investmentPortfolio">{{ 'Investment Portfolio' | translate }}</label>
+
+                                <div class="form-control">
+                                    <div class="form-group col-sm-6">
+                                        <ng-select id="investmentPortfolio" 
+                                                    [placeholder]="translate.translate('Select an investment portfolio')" 
+                                                    [items]="investmentPortfolioItems" 
+                                                    [allowClear]="true" 
+                                                    [formControl]="placeOrdersFormGroup.controls['investmentPortfolio']" 
+                                                    (selected)="handleDropdownItemSelect($event)">
+                                        </ng-select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Entry/exit fees -->
+                            <div class="col-sm-6">
+                                <label for="entryExitFees">
+                                    {{ '@entryExitFeesLabel@ fees' | translate: { 'entryExitFeesLabel': entryExitFeesLabel } }}</label>
+                                <input id="entryExitFees" class="form-control" type="number" formControlName="entryExitFees">
+                            </div>
+
+                            <!-- MiFID -->
+                            <div class="well">
+                                <div class="row panel-header">
+                                    <h4 class="col-sm-12" (click)="isMifidAccordionOpened = !isMifidAccordionOpened; $event.preventDefault();">
+                                        <i class="fa fa-chevron-down" [class.reverse]="isMifidAccordionOpened"></i>{{ 'MiFID II Costs & Charges' | translate }}
+                                    </h4>
+                                </div>
+
+                                <div class="row panel-body" [class.hidden]="!isMifidAccordionOpened">
+                                    <!-- One-off charges -->
+                                    <div class="col-sm-6">
+                                        <label for="oneOffCharges">{{ 'One-off Charges' | translate }}</label>
+                                        <input id="oneOffCharges" 
+                                                class="form-control" 
+                                                type="number" 
+                                                formControlName="oneOffCharges">
+                                    </div>
+
+                                    <!-- On-going charges -->
+                                    <div class="col-sm-6">
+                                        <label for="onGoingCharges">{{ 'On-going Charges' | translate }}</label>
+                                        <input id="onGoingCharges" 
+                                                class="form-control" 
+                                                type="number" 
+                                                formControlName="onGoingCharges">
+                                    </div>
+
+                                    <!-- Costs related to transactions initiated -->
+                                    <div class="col-sm-6">
+                                        <label for="costsTransactionsInitiated">{{ 'Costs related to transactions initiated' | translate }}</label>
+
+                                        <input id="costsTransactionsInitiated" 
+                                                class="form-control" 
+                                                type="number" 
+                                                formControlName="costsTransactionsInitiated">
+                                    </div>
+
+                                    <!-- Charges related to anciliary services -->
+                                    <div class="col-sm-6">
+                                        <label for="chargesAnciliaryServices">{{ 'Charges related to anciliary services' | translate }}</label>
+
+                                        <input id="chargesAnciliaryServices" 
+                                                class="form-control" 
+                                                type="number" 
+                                                formControlName="chargesAnciliaryServices">
+                                    </div>
+
+                                    <!-- Incidental costs -->
+                                    <div class="col-sm-6">
+                                        <label for="incidentalCosts">{{ 'Incidental Costs' | translate }}</label>
+                                        <input id="incidentalCosts" 
+                                                class="form-control" 
+                                                type="number" 
+                                                formControlName="incidentalCosts">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Product information accordion -->
+                    <div class="well">
+                        <!-- Panel header -->
+                        <div class="row panel-header">
+                            <h4 class="col-sm-12" (click)="isProductInfoAccordionOpened = !isProductInfoAccordionOpened; $event.preventDefault();">
+                                <i class="fa fa-chevron-down" [class.reverse]="isProductInfoAccordionOpened"></i>{{ 'Product Information' | translate }}
+                            </h4>
+                        </div>
+
+                        <!-- Panel body -->
+                        <div class="row panel-body" [class.hidden]="!isProductInfoAccordionOpened">
+                            <!-- ISIN -->
+                            <div class="col-sm-6">
+                                <label for="isin">{{ 'ISIN' | translate }}</label>
+                                <input id="isin" class="form-control" type="text" formControlName="isin">
+                            </div>
+
+                            <!-- Share name -->
+                            <div class="col-sm-6">
+                                <label for="shareName">{{ 'Share Name' | translate }}</label>
+                                <input id="shareName" class="form-control" type="text" formControlName="shareName">
+                            </div>
+
+                            <!-- Asset class -->
+                            <div class="col-sm-6">
+                                <label for="assetClass">{{ 'Asset Class' | translate }}</label>
+                                <input id="assetClass" class="form-control" type="text" formControlName="assetClass">
+                            </div>
+
+                            <!-- SRRI -->
+                            <div class="col-sm-6">
+                                <label for="srri">{{ 'SRRI' | translate }}</label>
+                                <input id="srri" class="form-control" type="text" formControlName="srri">
+                            </div>
+
+                            <!-- SRI -->
+                            <div class="col-sm-6">
+                                <label for="sri">{{ 'SRI' | translate }}</label>
+                                <input id="sri" class="form-control" type="text" formControlName="sri">
+                            </div>
+
+                            <!-- Share Currency -->
+                            <div class="col-sm-6">
+                                <label for="shareCurrency">{{ 'Share Currency' | translate }}</label>
+                                <input id="shareCurrency" class="form-control" type="text" formControlName="shareCurrency">
+                            </div>
+
+                            <!-- NAV -->
+                            <div class="col-sm-6">
+                                <label for="nav">{{ 'NAV' | translate }}</label>
+                                <input id="nav" class="form-control" type="text" formControlName="nav">
+                            </div>
+
+                            <!-- NAV date -->
+                            <div class="col-sm-6">
+                                <label for="navDate">{{ 'NAV Date' | translate }}</label>
+
+                                <div class="input-group date-pick-wrapper">
+                                    <span class="fa fa-calendar" aria-hidden="true"></span>
+                                    <input id="navDate" 
+                                            [placeholder]="translate.translate('Choose a date')" 
+                                            formControlName="navDate" 
+                                            [dpDayPicker]="datePickerConfig" 
+                                            mode="day" 
+                                            theme="dp-material">
+                                </div>
+                            </div>
+
+                            <!-- Decimalization -->
+                            <div class="col-sm-6">
+                                <label for="decimalization">{{ 'Decimalization' | translate }}</label>
+                                <input id="decimalization" class="form-control" type="text" formControlName="decimalization">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Dates information accordion -->
+                    <div class="well">
+                        <!-- Panel header -->
+                        <div class="row panel-header">
+                            <h4 class="col-sm-12" (click)="isDatesInfoAccordionOpened = !isDatesInfoAccordionOpened; $event.preventDefault();">
+                                <i class="fa fa-chevron-down" [class.reverse]="isDatesInfoAccordionOpened"></i>{{ 'Dates Information' | translate }}
+                            </h4>
+                        </div>
+
+                        <!-- Panel body -->
+                        <div class="row panel-body" [class.hidden]="!isDatesInfoAccordionOpened">
+                            <!-- Order Date -->
+                            <div class="col-sm-6">
+                                <label for="orderDate">{{ 'Order Date' | translate }}</label>
+
+                                <div class="input-group date-pick-wrapper">
+                                    <span class="fa fa-calendar" aria-hidden="true"></span>
+                                    <input id="orderDate" 
+                                            [placeholder]="translate.translate('Choose a date')" 
+                                            formControlName="orderDate" 
+                                            [dpDayPicker]="datePickerConfig" 
+                                            mode="day" 
+                                            theme="dp-material">
+                                </div>
+                            </div>
+
+                            <!-- Cut-off Date -->
+                            <div class="col-sm-6">
+                                <label for="cutOffDate">{{'Cut-off Date' | translate}}</label>
+
+                                <div class="input-group date-pick-wrapper">
+                                    <span class="fa fa-calendar" aria-hidden="true"></span>
+                                    <input id="cutOffDate" 
+                                            [placeholder]="translate.translate('Choose a date')" 
+                                            formControlName="cutOffDate" 
+                                            [dpDayPicker]="datePickerConfig" 
+                                            mode="day" 
+                                            theme="dp-material">
+                                </div>
+                            </div>
+
+                            <!-- NAV Date -->
+                            <div class="col-sm-6">
+                                <label for="dateInfoNavDate">{{ 'NAV Date' | translate }}</label>
+
+                                <div class="input-group date-pick-wrapper">
+                                    <span class="fa fa-calendar" aria-hidden="true"></span>
+                                    <input id="dateInfoNavDate" 
+                                            [placeholder]="translate.translate('Choose a date')" formControlName="dateInfoNavDate" 
+                                            [dpDayPicker]="datePickerConfig" 
+                                            mode="day" 
+                                            theme="dp-material">
+                                </div>
+                            </div>
+
+                            <!-- Settlement Date -->
+                            <div class="col-sm-6">
+                                <label for="settlementDate">{{ 'Settlement Date' | translate }}</label>
+
+                                <div class="input-group date-pick-wrapper">
+                                    <span class="fa fa-calendar" aria-hidden="true"></span>
+                                    <input id="settlementDate" 
+                                            [placeholder]="translate.translate('Choose a date')" formControlName="settlementDate" 
+                                            [dpDayPicker]="datePickerConfig" 
+                                            mode="day" 
+                                            theme="dp-material">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Order information accordion -->
+                    <div class="well">
+                        <!-- Panel header -->
+                        <div class="row panel-header">
+                            <h4 class="col-sm-12" (click)="isOrderInfoAccordionOpened = !isOrderInfoAccordionOpened; $event.preventDefault();">
+                                <i class="fa fa-chevron-down" [class.reverse]="isOrderInfoAccordionOpened"></i>{{ 'Order Information' | translate }}
+                            </h4>
+                        </div>
+
+                        <!-- Panel body -->
+                        <div class="row panel-body" [class.hidden]="!isOrderInfoAccordionOpened">
+                            <!-- Order Reference -->
+                            <div class="col-sm-6">
+                                <label for="orderReference">{{ 'Order Reference' | translate }}</label>
+                                <input id="orderReference" 
+                                        class="form-control" 
+                                        type="text" 
+                                        formControlName="orderReference">
+                            </div>
+
+                            <!-- Order Type -->
+                            <div class="col-sm-6">
+                                <label for="orderType">{{ 'Order Type' | translate }}</label>
+                                <input id="orderType" 
+                                        class="form-control" 
+                                        type="text" 
+                                        formControlName="orderType">
+                            </div>
+
+                            <span class="col-sm-12">{{ 'Please type below a quantity or an amount' | translate }}</span>
+
+                            <!-- Quantity -->
+                            <div class="col-sm-6">
+                                <label for="quantity">{{ 'Quantity' | translate }}</label>
+                                <input id="quantity" 
+                                        class="form-control" 
+                                        type="number" 
+                                        formControlName="quantity">
+                            </div>
+
+                            <!-- Amount -->
+                            <div class="col-sm-6">
+                                <label for="amount">{{ 'Amount' | translate }}</label>
+                                <input id="amount" 
+                                        class="form-control" 
+                                        type="number" 
+                                        formControlName="amount">
+                            </div>
+
+                            <!-- Comment -->
+                            <div class="col-sm-12">
+                                <label for="comment">{{ 'Comment' | translate }}</label>
+                                <textarea id="comment" 
+                                            class="form-control" 
+                                            [placeholder]="translate.translate('Please feel free to type any comment here')" formControlName="comment">
+                                </textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Checkbox -->
+                    <div class="form-group col-sm-12">
+                        <div class="form-check">
+                            <input id="checkbox" 
+                                    class="form-check-input" 
+                                    type="checkbox" 
+                                    formControlName="isDisclaimerChecked" 
+                                    value="false">
+
+                            <label class="form-check-label" for="checkbox">{{ 'I confirm that I have read and understood the latest version of the Key Investor Information Document (KIID) for the fund share I am considering investing in.' | translate }}</label>
+                        </div>
+
+                        <div class="form-block">{{ 'The latest version of the KIID can be accessed via the link below: @link@' | translate: { 'link': link } }}</div>
+                    </div>
+
+                    <!-- Cancel and save buttons -->
+                    <div class="form-group col-sm-12">
+                        <button id="cancelButton" type="button" class="btn btn-light" (click)="handleCancelButtonClick()">{{ 'Cancel' | translate }}</button>
+
+                        <button id="saveButton" 
+                                type="submit" 
+                                class="btn btn-primary" 
+                                [disabled]="!placeOrdersFormGroup.controls['isDisclaimerChecked'].value">
+                                {{ 'Save' | translate }}</button>
+                    </div>
+                </section>
+            </form>
+        </clr-tab-content>
+    </clr-tab>
+</clr-tabs>
+
+<!-- Confirmation modal -->
+<clr-modal [(clrModalOpen)]="isConfirmModalOpened" [clrModalClosable]="false">
+    <div class="modal-title">
+        <h4 class="modal-title-text">
+            {{ 'Order confirmation' | translate }}
+        </h4>
+    </div>
+
+    <div class="modal-body text-center">
+        <p>{{ 'Please check information about your order before confirm it:' | translate }}</p>
+        <p><i class="fa fa-exclamation-triangle modal-icon text-muted text-danger"></i></p>
+        <p>{{ 'Investment Portfolio: @selectedDropdownItem@' | translate: { 'selectedDropdownItem': selectedDropdownItem } }}</p>
+        <p>{{ 'Share Name: @placeOrdersFormGroup.controls[\'shareName\'].value@' | translate: { 'placeOrdersFormGroup.controls[\'shareName\'].value': placeOrdersFormGroup.controls['shareName'].value } }}</p>
+        <p>{{ 'ISIN: @placeOrdersFormGroup.controls[\'isin\'].value@' | translate: { 'placeOrdersFormGroup.controls[\'isin\'].value': placeOrdersFormGroup.controls['isin'].value } }}</p>
+        <p>{{ 'Currency: @placeOrdersFormGroup.controls[\'shareCurrency\'].value@' | translate: { 'placeOrdersFormGroup.controls[\'shareCurrency\'].value': placeOrdersFormGroup.controls['shareCurrency'].value } }}</p>
+        <p>{{ 'Quantity: @placeOrdersFormGroup.controls[\'quantity\'].value@' | translate: { 'placeOrdersFormGroup.controls[\'quantity\'].value': placeOrdersFormGroup.controls['quantity'].value } }}</p>
+        <p>{{ 'Amount: @placeOrdersFormGroup.controls[\'amount\'].value@' | translate: { 'placeOrdersFormGroup.controls[\'amount\'].value': placeOrdersFormGroup.controls['amount'].value } }}</p>
+        <p>{{ 'Settlement Date: @placeOrdersFormGroup.controls[\'settlementDate\'].value@' | translate: {'placeOrdersFormGroup.controls[\'settlementDate\'].value': placeOrdersFormGroup.controls['settlementDate'].value } }}</p>
+    </div>
+
+    <div class="modal-footer text-center">
+        <button id="modalCancelButton" type="button" class="btn btn-outline-info" (click)="handleModalCancelButtonClick()">{{ 'Cancel' | translate }}</button>
+
+        <button id="modalConfirmButton" type="button" class="btn btn-primary" (click)="handleModalConfirmButtonClick()">{{ 'Confirm' | translate }}</button>
+    </div>
+</clr-modal>

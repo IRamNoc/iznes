@@ -1,0 +1,15 @@
+input[disabled] {
+    background-color: #f9f9f9 !important;
+    border: 1px solid #dadada !important;
+    opacity: 1 !important;
+}
+
+.input-group > .disabled {
+    background-color: #f9f9f9;
+}
+
+.modal-body {
+    form {
+        padding: 20px!important;
+    }
+}

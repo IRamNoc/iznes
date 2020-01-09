@@ -1,0 +1,72 @@
+<div class="header-breadcrumbs">
+    <h1><i class="fa fa-book"></i> {{ 'Historical Orders' | translate }}</h1>
+</div>
+
+<div class="wrapper wrapper-content">
+
+    <clr-tabs>
+        <clr-tab>
+            <button clrTabLink><i class="fa {{tabDetail.title.icon}}"></i> {{tabDetail.title.text}}</button>
+            <clr-tab-content *clrIfActive="true">
+                <!-- NAV list tab. -->
+                <ng-container>
+                    <ng-container *ngTemplateOutlet="navListTab"></ng-container>
+                </ng-container>
+            </clr-tab-content>
+        </clr-tab>
+    </clr-tabs>
+
+    <!-- Nav Data Table. -->
+    <ng-template #navListTab>
+        <div class="panel-body">
+            <form [formGroup]="searchForm">
+                <div class="form-horizontal">
+                    <div class="row">
+                        <div class="form-group col-sm-4">
+                            <label class="control-label">
+                                {{ 'Download' | translate }}
+                            </label>
+                            <div>
+                                <button class="btn btn-primary" (click)="getCsvReport()">
+                                    {{ 'Historical Orders' | translate }}
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="form-group col-sm-4">
+                            <label class="control-label">
+                                {{ 'Date From' | translate }}
+                            </label>
+                            <div class="input-group date-pick-wrapper">
+                                <span class="fa fa-calendar" aria-hidden="true"></span>
+                                <input formControlName="navDateFrom" 
+                                        [dpDayPicker]="configDate" 
+                                        [placeholder]="translate.translate('Choose a date from')" 
+                                        mode="day" 
+                                        theme="dp-material" 
+                                        [ngStyle]="{'width':'100%'}" 
+                                        [readonly]="true">
+                            </div>
+                        </div>
+
+                        <div class="form-group col-sm-4">
+                            <label class="control-label">
+                                {{ 'Date To' | translate }}
+                            </label>
+                            <div class="input-group date-pick-wrapper">
+                                <span class="fa fa-calendar" aria-hidden="true"></span>
+                                <input formControlName="navDateTo" 
+                                        [dpDayPicker]="configDate" 
+                                        [placeholder]="translate.translate('Choose a date to')" 
+                                        mode="day" 
+                                        theme="dp-material" 
+                                        [ngStyle]="{'width':'100%'}" 
+                                        [readonly]="true">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </ng-template>
+</div>

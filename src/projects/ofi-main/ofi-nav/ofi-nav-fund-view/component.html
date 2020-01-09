@@ -1,0 +1,281 @@
+<div class="header-breadcrumbs" *ngIf="navFund">
+    <h1 id="NAV-ShareName-Title">
+        <i class="fa fa-ellipsis-h"></i>{{ 'Net Asset Value: @navFund.fundShareName@' | translate: {
+        'navFund.fundShareName': navFund.fundShareName } }}
+    </h1>
+    {{ 'View and manage NAV\'s for a share.' | translate }}
+</div>
+
+<clr-tabs>
+    <clr-tab>
+        <button id="netAssetValueTab" clrTabLink>
+            <i class="fa fa-th-list"></i>{{ 'View' | translate }}
+        </button>
+
+        <clr-tab-content *clrIfActive="true">
+            <!-- Button container -->
+            <div *ngIf="!(hasPermissionCreateNav && hasPermissionUpdateNav) && !isIznesAdmin" class="alert alert-warning">
+                <div class="alert-items">
+                    <div class="alert-item static">
+                        <div class="alert-icon-wrapper">
+                            <clr-icon class="alert-icon" shape="exclamation-triangle"></clr-icon>
+                        </div>
+                        <span class="alert-text">
+                            {{ 'Please contact the administrator to request permission to upload NAVs' | translate }}
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="form-group button-container">
+                    <button *ngIf="!isIznesAdmin"
+                            class="btn btn-primary"
+                            id="uploadDetailNavFileButton"
+                            [disabled]="!(hasPermissionCreateNav && hasPermissionUpdateNav)"
+                            (click)="isNavUploadModalDisplayed = true">
+                        {{ 'Upload NAVs' | translate }}
+                    </button>
+
+                    <button class="btn btn-primary" (click)="exportCSV()">{{ 'Export List as CSV' | translate }}</button>
+                </div>
+            </div>
+
+            <div class="hr-line-dashed"></div>
+
+            <form *ngIf="navFund">
+                <div class="row">
+                    <div class="form-group col-sm-3">
+                        <label class="control-label" for="shareName">{{ 'Share Name' | translate }}</label>
+                        <input type="text" id="shareName" name="shareName" value="{{navFund.fundShareName}}" readonly>
+                    </div>
+
+                    <div class="form-group col-sm-3">
+                        <label class="control-label" for="isin">{{ 'ISIN' | translate }}</label>
+                        <input type="text" id="isin" name="isin" value="{{navFund.isin}}" readonly>
+                    </div>
+
+                    <div class="form-group col-sm-5">
+                        <label class="control-label" for="amCompany">{{ 'Asset Management Company' | translate }}</label>
+                        <input type="text" id="amCompany" name="amCompany" value="{{navFund.asm}}" readonly>
+                    </div>
+                </div>
+
+                <div class="hr-line-dashed"></div>
+                <span class="text-badge">{{ 'Current NAV Information' | translate }}</span>
+
+                <div class="row">
+                    <div class="form-group col-sm-2">
+                        <label class="control-label" for="currentDate">{{ 'Date' | translate }}</label>
+                        <input type="text" id="currentDate" name="currentDate" value="{{currentDate}}" readonly>
+                    </div>
+
+                    <div class="form-group col-sm-2">
+                        <label class="control-label" for="navCurrency">{{ 'NAV Currency' | translate }}</label>
+                        <input type="text" id="navCurrency" name="navCurrency" value="{{getCurrencyString(navFund.currency)}} ({{getCurrencySymbol(navFund.currency)}})"
+                            readonly>
+                    </div>
+
+                    <div class="form-group col-sm-2">
+                        <label class="control-label" for="nav">{{ 'NAV' | translate }}</label>
+                        <input type="text" id="nav" name="nav" value="{{ navFund.nav !== null ? navToFrontEndString(navFund.nav) : 'Pending'}}"
+                            readonly>
+                    </div>
+
+                    <div class="form-group col-sm-2">
+                        <label class="control-label" for="numberofshare">{{ 'Number of Shares' | translate }}</label>
+                        <input type="text" id="numberofshare" name="numberofshare" value="{{ navToFrontEndString(navFund.numberOfShares) }}" readonly>
+                    </div>
+
+                    <div class="form-group col-sm-2">
+                        <label class="control-label" for="aum">{{ 'AUM' | translate }}</label>
+                        <input type="text" id="aum" name="aum" value="{{ navToFrontEndString(navFund.shareAum) }}" readonly>
+                    </div>
+                </div>
+            </form>
+
+            <div class="hr-line-dashed"></div>
+            <span class="text-badge">{{ 'NAV History' | translate }}</span>
+
+            <form [formGroup]="navHistoryForm" (keydown.enter)="$event.preventDefault()">
+                <div class="form-horizontal">
+                    <div class="row">
+                        <div class="form-group col-sm-2">
+                            <label class="control-label" for="navDateFrom">{{ 'Date From' | translate }}</label>
+                            <div class="input-group date-pick-wrapper">
+                                <span class="fa fa-calendar"></span>
+                                <input id="navDateFrom" name="navDateFrom" [placeholder]="translate.translate('Select date')"
+                                    formControlName="navDateFrom" [dpDayPicker]="dateFromConfig" mode="day" theme="dp-material">
+                            </div>
+                        </div>
+
+                        <div class="form-group col-sm-2">
+                            <label class="control-label" for="navDateTo">{{ 'Date To' | translate }}</label>
+                            <div class="input-group date-pick-wrapper">
+                                <span class="fa fa-calendar"></span>
+                                <input id="navDateTo" name="navDateTo" [placeholder]="translate.translate('Select date')"
+                                    formControlName="navDateTo" [dpDayPicker]="dateToConfig" mode="day" theme="dp-material">
+                            </div>
+                        </div>
+
+                        <div class="form-group col-sm-1 text-center">
+                            <label class="control-label">&nbsp;</label>
+                            <div><strong>{{ '- or -' | translate }}</strong></div>
+                        </div>
+
+                        <div class="form-group col-sm-3">
+                            <label class="control-label" for="searchDatePeriod">{{ 'Date Period' | translate }}</label>
+                            <ng-select id="searchDatePeriod" class="fluid-width" [items]="datePeriodItems"
+                                formControlName="datePeriod" [allowClear]="true" [placeholder]="translate.translate('Select date period')">
+                            </ng-select>
+                        </div>
+
+                        <div class="form-group col-sm-4 add-new-nav">
+                            <label class="control-label">&nbsp;</label>
+                            <button *ngIf="!isIznesAdmin"
+                                    class="btn btn-primary"
+                                    [disabled]="!hasPermissionCreateNav"
+                                    (click)="addNav()"
+                                    id="Add-New-NAV">
+                                    {{ 'Add New NAV' | translate }}</button>
+                            <button class="btn"
+                                    (click)="goToAuditTrail()"
+                                    id="NAV-Audit-Trail">
+                                    {{ 'NAV Audit Trail' | translate }}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+            <div *ngIf="!isIznesAdmin && (!hasPermissionCreateNav || !hasPermissionUpdateNav || !hasPermissionDeleteNav)" class="alert alert-warning">
+                <div class="alert-items">
+                    <div class="alert-item static">
+                        <div class="alert-icon-wrapper">
+                            <clr-icon class="alert-icon" shape="exclamation-triangle"></clr-icon>
+                        </div>
+                        <span class="alert-text">
+                            {{ getPermissionMessage() }}
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <clr-datagrid #dataGrid>
+                <clr-dg-column class="col-date col-min-width" id="NAV-Date">{{ 'NAV Date' | translate }}</clr-dg-column>
+                <clr-dg-column class="col-date col-min-width" id="Publication-Date">{{ 'Publication Date' | translate
+                    }}
+                </clr-dg-column>
+                <clr-dg-column class="col-currency col-min-width" id="NAV-CCY">{{ 'NAV CCY' | translate }}</clr-dg-column>
+                <clr-dg-column class="col-min-width right" id="NAV">{{ 'NAV' | translate }}</clr-dg-column>
+                <clr-dg-column class="col-min-width right" id="Number-Of-Shares">{{ 'Number of Shares' | translate }}</clr-dg-column>
+                <clr-dg-column class="col-min-width right" id="Share-AUM">{{ 'Share AUM' | translate }}</clr-dg-column>
+                <clr-dg-column class="col-min-width" id="Coupons">{{ 'Coupons' | translate }}</clr-dg-column>
+                <clr-dg-column class="col-status col-min-width" id="Status">{{ 'Status' | translate }}</clr-dg-column>
+                <clr-dg-column *ngIf="!isIznesAdmin" class="actions col-min-width right" id="Actions">{{ 'Actions' |
+                    translate }}</clr-dg-column>
+
+                <clr-dg-row *clrDgItems="let item of navFundHistory; let i = index" id="{{'product-nav-history-row' + i}}">
+                    <clr-dg-cell id="{{'nav-history-row'+i+'-col-date'}}" class="col-date">{{item.navDate}}</clr-dg-cell>
+                    <clr-dg-cell id="{{'nav-history-row'+i+'-col-pub-date'}}" class="col-date">{{item.navPubDate}}</clr-dg-cell>
+                    <clr-dg-cell id="{{'nav-history-row'+i+'-col-currency'}}" class="col-currency">{{'@getCurrencyString(item.currency)@'
+                        | translate: {'getCurrencyString(item.currency)': getCurrencyString(item.currency)} }}</clr-dg-cell>
+                    <clr-dg-cell class="right">
+                        <span [hidden]="isNavNull(item.nav)">{{navToFrontEndString(item.nav)}}</span>
+                        <span [hidden]="!isNavNull(item.nav)" class="label label-warning">{{ 'Pending' | translate }}</span>
+                    </clr-dg-cell>
+                    <clr-dg-cell id="{{'nav-history-row'+i+'-col-number-of-shares'}}" class="right">{{ navToFrontEndString(item.shares) }}</clr-dg-cell>
+                    <clr-dg-cell id="{{'nav-history-row'+i+'-share-aum'}}" class="right">{{ navToFrontEndString(item.shareAum) }}</clr-dg-cell>
+                    <clr-dg-cell id="{{'nav-history-row'+i+'-coupons'}}"></clr-dg-cell>
+                    <clr-dg-cell class="col-status">
+                        <span [ngSwitch]="item.status">
+                            <span *ngSwitchCase="-1">
+                                <span class="label label-success" id="{{'NAV-Validated-' + i}}">{{ 'Validated' |
+                                    translate }}</span>
+                            </span>
+                            <span *ngSwitchCase="1">
+                                <span class="label label-warning" id="{{'NAV-Estimated-' + i}}">{{ 'Estimated' |
+                                    translate }}</span>
+                            </span>
+                            <span *ngSwitchCase="2">
+                                <span class="label label-warning" id="{{'NAV-Technical-' + i}}">{{ 'Technical' |
+                                    translate }}</span>
+                            </span>
+                            <span *ngSwitchCase="3">
+                                <span class="label label-danger" id="{{'NAV-Cancelled-' + i}}">{{ 'Cancelled' |
+                                    translate }}</span>
+                            </span>
+                        </span>
+                    </clr-dg-cell>
+                    <clr-dg-cell *ngIf="!isIznesAdmin" class="actions right">
+                        <div class="btn-group btn-sm">
+                            <button id="{{'Edit-NAV-' + i}}"
+                                    class="btn btn-success btn-sm"
+                                    style="margin-right: 0px;"
+                                    (click)="editNav(item)"
+                                    [disabled]="!hasPermissionUpdateNav || (item.status == 3)">
+                                <i class="fa fa-edit"></i> {{ 'Edit NAV' | translate }}
+                            </button>
+                            <button id="{{'Delete-NAV-' + i}}"
+                                    class="btn btn-danger btn-sm"
+                                    (click)="cancelNav(item)"
+                                    [disabled]="!hasPermissionDeleteNav || (item.status == -1 && item.navUsed == 1) || item.status == 3">
+                                <i class="fa fa-remove"></i> {{ 'Delete NAV' | translate }}
+                            </button>
+                        </div>
+                    </clr-dg-cell>
+                </clr-dg-row>
+
+                <clr-dg-footer>{{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
+
+                    <clr-dg-pagination #pagination [clrDgPageSize]="10"></clr-dg-pagination>
+                </clr-dg-footer>
+            </clr-datagrid>
+
+            <form>
+                <div class="row">
+                    <div class="form-block form-group col-sm-6">
+                        <button (click)="navigateToNavList()" class="btn btn-secondary" id="NAV-Close">{{ 'Close'
+                            | translate }}</button>
+                    </div>
+                </div>
+            </form>
+        </clr-tab-content>
+    </clr-tab>
+</clr-tabs>
+
+<app-nav-add></app-nav-add>
+
+<!-- NAV upload modal -->
+<clr-modal [(clrModalOpen)]="isNavUploadModalDisplayed" [clrModalSize]="'sm'" [clrModalClosable]="false">
+    <h3 class="modal-title" *ngIf="navFund">
+        {{ 'Upload NAVs for @navFund.fundShareName@' | translate: {'navFund.fundShareName': navFund.fundShareName} }}
+    </h3>
+
+    <div class="modal-body">
+        <form>
+            <section class="form-block">
+                <div class="form-group col-sm-12">
+                    <label class="control-label" for="detailNavCsvFile">{{ 'File to upload: ' | translate }}</label>
+                    <input #detailNavCsvFile id="detailNavCsvFile" name="detailNavCsvFile" type="file" accept="text/csv"
+                        (change)="navCsvFile = $event.target.files[0]">
+                </div>
+            </section>
+        </form>
+    </div>
+
+    <div class="modal-footer">
+        <button id='detailNavModalCancelButton' type="button" class="btn btn-outline" [disabled]="!hasResult" (click)="resetNavUploadModal()">
+            {{ 'Cancel' | translate }}
+        </button>
+
+        <button *ngIf='hasResult' id='detailNavModalSubmitButton' type="button" class="btn btn-success" (click)="handleUploadNavSubmitClick()"
+            [disabled]="!navCsvFile">
+            {{ 'Upload' | translate }}
+        </button>
+
+        <div *ngIf='!hasResult' class="btn btn-success">
+            <i class="fa fa-spinner fa-spin"></i>
+        </div>
+    </div>
+</clr-modal>

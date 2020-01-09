@@ -1,0 +1,61 @@
+h1 {
+    align-self: flex-start;
+}
+
+clr-tab-content > p {
+    margin-bottom: 12px;
+}
+
+.form-block {
+    margin-top: 30px;
+}
+
+.confirm-container {
+    text-align: center;
+    width: 100%;
+    border: 1px solid #dce1eb;
+    border-radius: 12px;
+    padding: 20px;
+}
+
+div.confirm-container, div.opt-btn-container {
+    display: flex;
+    /*justify-content: center;*/
+    align-items: center;
+    margin-top: 12px;
+    padding: 12px;
+}
+
+div.opt-btn-context {
+    height: 32px;
+    padding: 6px;
+}
+
+.opt-btn-context > p {
+    display: inline;
+}
+
+.confirm-container button {
+    width: 150px;
+}
+
+div.radio-inline.opt-btn-element {
+    display: inline-block;
+    width: 150px;
+}
+
+.text-input-list {
+    width: 100%;
+    border: 1px solid #dce1eb;
+    border-radius: 12px;
+}
+
+.highlight {
+    background-color: rgba(86, 164, 223, 0.2);
+    border-radius: 6px;
+    padding: 6px;
+}
+
+.confirmed-container p {
+    text-indent: 12px;
+}

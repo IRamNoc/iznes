@@ -1,0 +1,246 @@
+<div class="header-breadcrumbs">
+    <h1>
+        <i class="fa fa-file-text-o"></i>
+        <span *ngIf="investor">{{ 'KYC Documents Approval: @investor.companyName.value@' | translate: { 'investor.companyName.value': investor.companyName.value } }}</span>
+    </h1>
+</div>
+
+<clr-tabs *ngIf="investor">
+    <clr-tab>
+        <button clrTabLink id="waitingApprovalTab">
+            <i class="fa fa-bars"></i>{{ 'KYC Documents & Client Folder' | translate }}
+        </button>
+
+        <clr-tab-content *clrIfActive>
+
+            <div *ngIf="alreadyCompleted">
+                <p>
+                    {{ '@investor.companyName.value@ says that they have already done the KYC process with your company.' | translate: { 'investor.companyName.value': investor.companyName.value } }}
+                </p>
+                <p>
+                    {{ 'Please confirm here if these KYC documents have been previously filled up by your client @investor.companyName.value@ and validated.' | translate: { 'investor.companyName.value': investor.companyName.value } }}
+                </p>
+                <p>
+                    <strong>
+                        {{ 'If this is not the case or you wish to have the KYC information on IZNES regarding this client anyway, then you can ask the investor to fill in his information by clicking on' | translate }}:
+                    </strong>
+                    <button class="btn btn-primary baseline" style="margin-left: 10px;" (click)="openCompleteKycModal()">
+                        {{ 'Complete KYC on IZNES' | translate }}
+                    </button>
+                </p>
+
+                <!-- Investor informations block -->
+                <app-text-input-list [title]="'Professional Investor Details'" [content]="investor"></app-text-input-list>
+
+                <div class="hr-line-dashed"></div>
+            </div>
+
+            <div *ngIf="!alreadyCompleted" class="mb-1">
+                <p>
+                    {{ 'Please find below the information filled in by @companyName@ during their request' | translate : { 'companyName': investor.companyName.value } }}
+                </p>
+
+                <div class="hr-line-dashed"></div>
+                <h2>{{ 'Professional Investor Details' | translate }}</h2>
+
+                <!-- Investor informations block -->
+                <div class="well">
+                    <div class="row panel-header">
+                        <div class="col-xs-12">
+                            <a href="#" (click)="isProOpen = !isProOpen; $event.preventDefault();">
+                                <i class="fa fa-chevron-right" [class.rotate]="isProOpen"></i>
+                                <h2>{{' General Information' | translate }}</h2>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="row panel-body" [class.hidden]="!isProOpen">
+                        <div class="col-xs-12">
+                            <app-text-input-list [content]="investor"></app-text-input-list>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mb-1">
+                <!-- Kyc details block -->
+                <kyc-details [kycID]="kycId"></kyc-details>
+            </div>
+
+            <!-- Waiting for approval form -->
+            <div *ngIf="initialStatusId !== -1">
+                <h2>{{ 'KYC Documents Confirmation' | translate }}</h2>
+
+                <form [formGroup]="waitingApprovalFormGroup" (ngSubmit)="handleSubmitButtonClick()">
+                    <section class="form-block">
+                        <p>
+                            <strong>{{ 'Please confirm that you validate your client\'s KYC documents' | translate }} </strong>
+                        </p>
+
+                        <div *ngIf="!canUpdateKyc">
+                            <div class="alert alert-warning">
+                                <div class="alert-items">
+                                    <div class="alert-item static">
+                                        <div class="alert-icon-wrapper">
+                                            <clr-icon class="alert-icon" shape="exclamation-triangle"></clr-icon>
+                                        </div>
+                                        <span class="alert-text">
+                                            {{ 'Please contact the administrator to request permission to validate KYC documents' | translate }}
+                                            <br />
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Radio buttons -->
+                        <div class="statuses col-sm-12">
+                            <div class="status col-sm-2" *ngFor="let status of statuses">
+                                <span class="statusRadio">
+                                    <input id="{{status.id}}"
+                                            type="radio"
+                                            formControlName="status"
+                                            [value]="status.value"
+                                            [checked]="status.value === statusId"
+                                            (change)="handleStatusChange()"
+                                            [attr.disabled]="(!canUpdateKyc || !readyToUpdate) ? 'true' : null">
+                                </span>
+
+                                <span class="statusLabel">
+                                    <label for="{{status.id}}">{{status.label}}</label>
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- Checkbox -->
+                        <div class="form-group col-sm-12">
+                            <div class="form-check" *ngIf="waitingApprovalFormGroup.controls['status'].value === APPROVED_STATUS">
+
+                                <input id="checkbox"
+                                        class="form-check-input"
+                                        type="checkbox"
+                                        formControlName="isKycAccepted"
+                                        value="false"
+                                        [attr.disabled]="!canUpdateKyc ? 'true' : null">&nbsp;
+                                <label class="form-check-label" for="checkbox">{{ 'We hereby validate that this client has fully completed the KYC documents with us, and is authorised to trade with us.' | translate }}</label>
+                            </div>
+                        </div>
+
+                        <!-- Additional text -->
+                        <div class="form-group col-sm-12" *ngIf="waitingApprovalFormGroup.controls['status'].value !== APPROVED_STATUS">
+                            <!-- Reject -->
+                            <textarea *ngIf="waitingApprovalFormGroup.controls['status'].value === REJECTED_STATUS && initialStatusId != -2"
+                                    id="rejectText"
+                                    class="form-control"
+                                    [placeholder]="translate.translate('Please indicate here why you would like to reject this application. This will be sent as a message to your client on the IZNES platform.')"
+                                    formControlName="additionalText">
+                            </textarea>
+                            <!-- Ask for more info -->
+                            <textarea *ngIf="waitingApprovalFormGroup.controls['status'].value === ASK_FOR_MORE_INFO_STATUS"
+                                        id="askMoreInfoText"
+                                        class="form-control"
+                                        [placeholder]="translate.translate('Please ask for more information here. This will be sent as a message to your client on the IZNES platform.')" formControlName="additionalText">
+                            </textarea>
+                        </div>
+
+                        <!-- Back and submit buttons -->
+                        <div class="form-group col-sm-12">
+                            <button id="backButton" type="button" class="btn btn-light" (click)="handleBackButtonClick()">{{ 'Back' | translate }}</button>
+
+                            <button *ngIf="hasPermissionCanManageAllClientFile" type="button" class="btn btn-primary" (click)="downloadClientFile()">{{'Download Client File' | translate}}</button>
+
+                            <button id="submitButton" type="submit" class="btn btn-primary" [disabled]="handleSubmitButtonDisabled()">{{ 'Validate' | translate }}
+                            </button>
+                        </div>
+                    </section>
+                </form>
+            </div>
+
+            <div *ngIf="initialStatusId === -1" class="form-group col-sm-12">
+                <button id="backButton" type="button" class="btn btn-light" (click)="handleBackButtonClick()">{{ 'Back' | translate }}</button>
+                <button *ngIf="hasPermissionCanManageAllClientFile" type="button" class="btn btn-primary" (click)="downloadClientFile()">{{'Download Client File' | translate}}</button>
+            </div>
+        </clr-tab-content>
+    </clr-tab>
+</clr-tabs>
+
+<clr-modal [(clrModalOpen)]="completeKycModal">
+    <h3 class="modal-title">{{ 'Complete KYC on IZNES' | translate }}</h3>
+    <div class="modal-body">
+        <div class="f-modal-alert">
+            <div class="f-modal-icon f-modal-warning scaleWarning">
+                <span class="f-modal-body pulseWarningIns"></span>
+                <span class="f-modal-dot pulseWarningIns"></span>
+            </div>
+        </div>
+
+        <p>
+            {{ 'By confirming this pop up, a message and an email will be sent to @investor.companyName.value@ in order to let them complete their KYC information on IZNES.' | translate: { 'investor.companyName.value': investor.companyName.value } }}
+        </p>
+
+        <p>
+            <strong>
+                {{ 'Be aware that until @investor.companyName.value@ fill in their information, you won\'t be able to accept this investor\'s request and attribute shares\' authorisation.' | translate: { 'investor.companyName.value': investor.companyName.value } }}
+            </strong>
+        </p>
+
+        <p>
+            {{ 'If you want you are able to join a message to this request:' | translate }}
+        </p>
+
+        <form>
+            <section class="form-block">
+                <div class="form-group col-sm-12">
+                    <textarea class="form-control" [(ngModel)]="message" name="message"></textarea>
+                </div>
+            </section>
+        </form>
+
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-outline mr-1" (click)="completeKycModal = false">{{ 'Cancel' | translate }}</button>
+        <button type="button" class="btn btn-success" (click)="saveCompleteKycModal(message)">{{ 'Confirm' | translate }}</button>
+    </div>
+</clr-modal>
+
+<clr-modal [(clrModalOpen)]="approveKycModal">
+    <h3 class="modal-title">{{'Classification Change Warning' | translate}}</h3>
+
+    <div class="modal-body">
+        <div class="f-modal-alert">
+            <div class="f-modal-icon f-modal-warning scaleWarning">
+                <span class="f-modal-body pulseWarningIns"></span>
+                <span class="f-modal-dot pulseWarningIns"></span>
+            </div>
+        </div>
+
+        <p *ngIf="optOptions.investorStatus !== investorStatusList.nonPro"
+           [innerHTML]="translate.translate('Please be aware that @company@ was classified as <strong>professional investor</strong> and has opted for a <strong>non professional investor</strong> classification.', {'company': investor.companyName.value})">
+        </p>
+        <p *ngIf="optOptions.investorStatus === investorStatusList.nonPro"
+           [innerHTML]="translate.translate('Please be aware that @company@ was classified as <strong>non professional investor</strong> and has asked for a <strong>professional investor</strong> classification.', {'company': investor.companyName.value} )">
+        </p>
+
+        <p>
+            {{'Do you wish to accept this request taking into account this classification change?' | translate}}
+        </p>
+
+        <div>
+            <label>
+                <input type="radio" name="accept" [value]="true" [(ngModel)]="optOptions.choice" />&nbsp;
+                <span [innerHTML]="translate.translate('Yes, I accept this <strong>with</strong> classification change</span>')"></span>
+            </label>
+        </div>
+
+        <div>
+            <label>
+                <input type="radio" name="accept" [value]="false" [(ngModel)]="optOptions.choice" />&nbsp;
+                <span [innerHTML]="translate.translate('Yes, I accept this <strong>without</strong> classification change</span>')"></span>
+            </label>
+        </div>
+    </div>
+
+    <div class="modal-footer">
+        <button type="button" class="btn btn-outline mr-1" (click)="approveKycModal = false">{{'Cancel' | translate}}</button>
+        <button [disabled]="optOptions.choice === null" type="button" class="btn btn-success" (click)="onApproveKyc()">{{'Confirm' | translate}}</button>
+    </div>
+</clr-modal>

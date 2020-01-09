@@ -1,0 +1,13 @@
+[beneficiary-line] { cursor: pointer; }
+
+.right { text-align: right; }
+
+table { table-layout: fixed; }
+
+tbody tr:not(.empty):hover { background-color: #E9E9E9; }
+
+.empty td { padding: 30px; }
+
+.actions-header {
+    width: 46px;
+}

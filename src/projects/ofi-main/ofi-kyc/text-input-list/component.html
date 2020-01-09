@@ -1,0 +1,14 @@
+<div class="text-input-list">
+    <h2>{{ title | translate }}</h2>
+    <form [formGroup]="contentForm" *ngIf="getContentKeys().length">
+        <section class="form-block">
+            <div class="row">
+                <div class="form-group col-sm-6" *ngFor="let field of getContentKeys()">
+                    <label class="control-label" for="{{field}}">{{content[field].label}}</label>
+                    <input type="text" name="{{field}}" id="{{field}}" formControlName="{{field}}">
+                </div>
+            </div>
+        </section>
+    </form>
+    <p *ngIf="additionnalText">{{ additionnalText | translate }}</p>
+</div>

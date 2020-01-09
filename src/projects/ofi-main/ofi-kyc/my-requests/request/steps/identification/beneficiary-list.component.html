@@ -1,0 +1,95 @@
+<form [formGroup]="form" id="step-stakeholder-information" (ngSubmit)="handleSubmit($event)">
+
+    <div class="kyc-container sm">
+        <h2>{{'Stakeholders - Shareholders and Beneficiaries' | translate}}</h2>
+
+        <div *ngIf="!isNowCP" class="text-container">
+            <p>{{"Please provide information about any legal entity or natural person, directly or indirectly, holding more than 10% of your company's shares or voting rights, as well as any legal entity or natural person exercising control or decision-making influence over the company (example: legal representatives)." | translate}}
+            </p>
+        </div>
+
+        <div *ngIf="isNowCP" class="text-container">
+            <p>{{'Please provide information on any legal or natural person holding, directly or indirectly, more than 10% of the shares or voting rights in your company (i.e., by going through the entire chain of holdings), as well as on any legal or natural person exercising control or decision-making influence over the company (example: legal representatives).' | translate}}</p>
+
+            <p>{{ 'Note that, in any case, you must at least complete the identity of a legal representative.' | translate }}</p>
+        </div>
+
+        <div class="alert alert-info mt-1" role="alert">
+            <div class="alert-items">
+                <div class="alert-item static">
+                    <div class="alert-icon-wrapper">
+                        <clr-icon class="alert-icon" shape="info-circle"></clr-icon>
+                    </div>
+                    <span class="alert-text">{{ 'Be aware that the first stakeholder you need to add is a level 1 stakeholder, i.e. he has a direct holding of your company.' | translate }}</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="my-1">
+            <button type="button" class="btn btn-primary m-0" (click)="addStakeholder(); $event.preventDefault()" [disabled]="isFormReadonly" (keydown)="stopTabbing($event)">
+                <clr-icon shape="plus-circle"></clr-icon>
+                {{'Add Stakeholder' | translate}}
+            </button>
+        </div>
+
+        <table class="table">
+            <thead>
+            <tr>
+                <th>{{'Type' | translate}}</th>
+                <th>{{'Name' | translate}}</th>
+                <th>{{'Relation Type' | translate}}</th>
+                <th>{{'Linked Entity' | translate}}</th>
+                <th>{{'Country of tax residence' | translate}}</th>
+                <th>{{'Nationality' | translate}}</th>
+                <th>{{'Holding percentage' | translate}}</th>
+                <th>{{'Holding type' | translate}}</th>
+                <th>{{'Voting percentage' | translate}}</th>
+                <th *ngIf="!isFormReadonly" class="actions-header"></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr beneficiary-line *ngFor="let stakeholder of listStakeholders; index as i" [stakeholder]="stakeholder" (action)="handleAction($event, i)" (click)="viewStakeholder(i)" [parent]="getParent(i)" [registeredCompanyName]="registeredCompanyNameStr" [readOnly]="isFormReadonly"></tr>
+            <tr class="empty" *ngIf="!form.controls.length">
+                <td colspan="8">
+                    {{'No data for the moment, please add at least one stakeholder.' | translate}}
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        <p class="field-error" *ngIf="hasError('length')">
+            {{'Please add at least one stakeholder' | translate}}
+        </p>
+        <p class="field-error" *ngIf="hasError('invalid')">
+            {{'Please make sure all stakeholder information has been entered' | translate}}
+        </p>
+
+        <clr-modal [(clrModalOpen)]="openModal" [clrModalSize]="'xl'" *ngIf="mode && selectedStakeholder">
+
+            <h3 class="modal-title fa">
+                <i class="fa" [ngClass]="getIcon()"></i>
+                {{getTitle()}}
+            </h3>
+
+            <div (click)="$event.stopPropagation()" class="modal-body" beneficiary [form]="selectedStakeholder" [index]="selectedStakeholderIndex" [parents]="parents" [registeredCompanyName]="registeredCompanyNameStr" [disabled]="mode === 'view' ? true : null" (refresh)="askRefresh()">
+            </div>
+
+            <div class="modal-footer">
+                <div *ngIf="mode === 'add'">
+                    <button type="button" class="btn btn-outline mr-1" (click)="closeModal(true)">{{'Cancel' | translate}}</button>
+                    <button type="button" class="btn btn-primary" (click)="closeModal()" [disabled]="!canDoUpdate()">{{'Add' | translate}}</button>
+                </div>
+                <div *ngIf="mode === 'edit'">
+                    <button type="button" class="btn btn-outline mr-1" (click)="closeModal(true)">{{'Cancel' | translate}}</button>
+                    <button type="button" class="btn btn-primary" (click)="closeModal()" [disabled]="!canDoUpdate()">{{'Update' | translate}}</button>
+                </div>
+                <div *ngIf="mode === 'view'">
+                    <button type="button" class="btn btn-outline mr-1" (click)="closeModal(true)">{{'Close' | translate}}</button>
+                </div>
+            </div>
+
+        </clr-modal>
+    </div>
+
+    <input type="submit" class="hidden" />
+</form>

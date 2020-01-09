@@ -1,0 +1,319 @@
+<div class="header-breadcrumbs">
+    <h1>
+        <i class="fa fa-bar-chart"></i> {{ 'Product Characteristics ' | translate }}: {{currentProduct.fundShareName}}
+    </h1>
+</div>
+
+<clr-tabs>
+    <clr-tab>
+        <button clrTabLink id="modal">
+            <i class="fa fa-bars"></i> {{ 'Product Characteristics' | translate }}
+        </button>
+
+        <clr-tab-content *clrIfActive>
+            <div class="tab-header">
+                <p>{{ 'Please find below the main information regarding @currentProduct.fundShareName@' | translate: {'currentProduct.fundShareName':
+                    currentProduct.fundShareName} }}</p>
+                <button id="more-details-btn" class="btn btn-default" (click)="onClickMoreDetails()">{{ 'More details' | translate }}</button>
+            </div>
+
+            <div class="well">
+                <!-- Panel header -->
+                <div class="row panel-header">
+                    <div class="col-xs-12">
+                        <a href="#" (click)="panels[1] = !panels[1]; $event.preventDefault();">
+                            <i class="fa fa-chevron-right" [class.rotate]="panels[1]"></i>
+                            <h2>{{ 'Presentation' | translate }}</h2>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Panel body -->
+                <div class="panel-body" [class.hidden]="!panels[1]">
+
+                    <section class="form-block">
+                        <clr-datagrid>
+                            <clr-dg-column class="col-xs-6">{{ 'Information' | translate }}</clr-dg-column>
+                            <clr-dg-column class="col-xs-6">{{ 'Value' | translate }}</clr-dg-column>
+
+                            <clr-dg-row *ngIf="currentProduct.umbrellaFundName">
+                                <clr-dg-cell class="col-xs-6">{{ 'Umbrella Name' | translate }}</clr-dg-cell>
+                                <clr-dg-cell class="col-xs-6">{{currentProduct.umbrellaFundName}}</clr-dg-cell>
+                            </clr-dg-row>
+
+                            <clr-dg-row>
+                                <clr-dg-cell class="col-xs-6">{{ 'Fund Name' | translate }}</clr-dg-cell>
+                                <clr-dg-cell class="col-xs-6">{{currentProduct.fundName}}</clr-dg-cell>
+                            </clr-dg-row>
+
+                            <clr-dg-row>
+                                <clr-dg-cell class="col-xs-6">{{ 'Share Name' | translate }}</clr-dg-cell>
+                                <clr-dg-cell class="col-xs-6">{{currentProduct.fundShareName}}</clr-dg-cell>
+                            </clr-dg-row>
+
+                            <clr-dg-row>
+                                <clr-dg-cell class="col-xs-6">{{ 'ISIN' | translate }}</clr-dg-cell>
+                                <clr-dg-cell class="col-xs-6">{{currentProduct.isin}}</clr-dg-cell>
+                            </clr-dg-row>
+
+                            <clr-dg-row>
+                                <clr-dg-cell class="col-xs-6">{{ 'Share Class Launch Date' | translate }}</clr-dg-cell>
+                                <clr-dg-cell class="col-xs-6">{{currentProduct.launchDate}}</clr-dg-cell>
+                            </clr-dg-row>
+
+                            <clr-dg-row>
+                                <clr-dg-cell class="col-xs-6">{{ 'Initial NAV' | translate }}</clr-dg-cell>
+                                <clr-dg-cell class="col-xs-6">{{currentProduct.initialNav}}</clr-dg-cell>
+                            </clr-dg-row>
+
+                            <clr-dg-row>
+                                <clr-dg-cell class="col-xs-6">{{ 'Latest NAV' | translate }}</clr-dg-cell>
+                                <clr-dg-cell class="col-xs-6">{{currentProduct.latestNav}}</clr-dg-cell>
+                            </clr-dg-row>
+
+                            <clr-dg-row>
+                                <clr-dg-cell class="col-xs-6">{{ 'Fund Managers (Name)' | translate }}</clr-dg-cell>
+                                <clr-dg-cell class="col-xs-6">{{currentProduct.fundManagers || 'Not Available'}}</clr-dg-cell>
+                            </clr-dg-row>
+
+                            <clr-dg-row>
+                                <clr-dg-cell class="col-xs-6">{{ 'SRRI' | translate }}</clr-dg-cell>
+                                <clr-dg-cell class="col-xs-6">{{currentProduct.srri || 'Not Available'}}</clr-dg-cell>
+                            </clr-dg-row>
+
+                            <clr-dg-row>
+                                <clr-dg-cell class="col-xs-6">{{ 'SRI' | translate }}</clr-dg-cell>
+                                <clr-dg-cell class="col-xs-6">{{currentProduct.sri || 'Not Available'}}</clr-dg-cell>
+                            </clr-dg-row>
+
+                            <clr-dg-row>
+                                <clr-dg-cell class="col-xs-6">{{ 'AMF CLassification' | translate }}</clr-dg-cell>
+                                <clr-dg-cell class="col-xs-6">{{'Not Available'}}</clr-dg-cell>
+                            </clr-dg-row>
+
+                            <clr-dg-row>
+                                <clr-dg-cell class="col-xs-6">{{ 'Legal Form' | translate }}</clr-dg-cell>
+                                <clr-dg-cell class="col-xs-6">{{currentProduct.legalForm}}</clr-dg-cell>
+                            </clr-dg-row>
+
+                            <clr-dg-row>
+                                <clr-dg-cell class="col-xs-6">{{ 'Investment Horizon In Months' | translate }}</clr-dg-cell>
+                                <clr-dg-cell class="col-xs-6">{{currentProduct.recommendedHoldingPeriod || 'Not Available'}}</clr-dg-cell>
+                            </clr-dg-row>
+
+                        </clr-datagrid>
+                    </section>
+                </div>
+            </div>
+
+            <div class="well">
+                <!-- Panel header -->
+                <div class="row panel-header">
+                    <div class="col-xs-12">
+                        <a href="#" (click)="panels[2] = !panels[2]; $event.preventDefault();">
+                            <i class="fa fa-chevron-right" [class.rotate]="panels[2]"></i>
+                            <h2>{{ 'Characteristics & Fees' | translate }}</h2>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Panel body -->
+                <div class="panel-body" [class.hidden]="!panels[2]">
+                    <section class="form-block">
+                        <clr-datagrid>
+                            <clr-dg-column class="col-xs-6">{{ 'Information' | translate }}</clr-dg-column>
+                            <clr-dg-column class="col-xs-6">{{'Value' | translate}}</clr-dg-column>
+
+                            <clr-dg-row>
+                                <clr-dg-cell class="col-xs-6">{{ 'Share Currency' | translate }}</clr-dg-cell>
+                                <clr-dg-cell class="col-xs-6">{{currentProduct.shareClassCurrency}}</clr-dg-cell>
+                            </clr-dg-row>
+
+                            <clr-dg-row>
+                                <clr-dg-cell class="col-xs-6">{{ 'Valuation Frequency (NAV)' | translate }}</clr-dg-cell>
+                                <clr-dg-cell class="col-xs-6">{{currentProduct.valuationFrequency}}</clr-dg-cell>
+                            </clr-dg-row>
+
+                            <clr-dg-row>
+                                <clr-dg-cell class="col-xs-6">{{ 'Is Master vs Feeder' | translate }}</clr-dg-cell>
+                                <clr-dg-cell class="col-xs-6">{{currentProduct.status}}</clr-dg-cell>
+                            </clr-dg-row>
+
+                            <clr-dg-row>
+                                <clr-dg-cell class="col-xs-6">{{ 'Result Affectation' | translate }}</clr-dg-cell>
+                                <clr-dg-cell class="col-xs-6">{{currentProduct.distributionPolicy || 'Not Available'}}</clr-dg-cell>
+                            </clr-dg-row>
+
+                            <clr-dg-row>
+                                <clr-dg-cell class="col-xs-6">{{ 'Management Fee Maximum' | translate }}</clr-dg-cell>
+                                <clr-dg-cell class="col-xs-6">{{'@currentProduct.maxManagementFee@ %' | translate: {'currentProduct.maxManagementFee':
+                                    currentProduct.maxManagementFee} }}</clr-dg-cell>
+                            </clr-dg-row>
+
+                            <clr-dg-row>
+                                <clr-dg-cell class="col-xs-6">{{ 'Subscription Fee Maximum' | translate }}</clr-dg-cell>
+                                <clr-dg-cell class="col-xs-6">{{'@currentProduct.maxSubscriptionFee@ %' | translate: {'currentProduct.maxSubscriptionFee':
+                                    currentProduct.maxSubscriptionFee} }}</clr-dg-cell>
+                            </clr-dg-row>
+
+                            <clr-dg-row>
+                                <clr-dg-cell class="col-xs-6">{{ 'Redemption Fee Maximum' | translate }}</clr-dg-cell>
+                                <clr-dg-cell class="col-xs-6">{{'@currentProduct.maxRedemptionFee@ %' | translate: {'currentProduct.maxRedemptionFee':
+                                    currentProduct.maxRedemptionFee} }}</clr-dg-cell>
+                            </clr-dg-row>
+
+                        </clr-datagrid>
+                    </section>
+                </div>
+            </div>
+
+            <div class="well">
+                <!-- Panel header -->
+                <div class="row panel-header">
+                    <div class="col-xs-12">
+                        <a href="#" (click)="panels[3] = !panels[3]; $event.preventDefault();">
+                            <i class="fa fa-chevron-right" [class.rotate]="panels[3]"></i>
+                            <h2>{{ 'Subscription & Redemption Method' | translate }}</h2>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Panel body -->
+                <div class="panel-body" [class.hidden]="!panels[3]">
+
+                    <section class="form-block">
+                        <clr-datagrid>
+                            <clr-dg-column class="col-xs-6">{{ 'Information' | translate }}</clr-dg-column>
+                            <clr-dg-column class="col-xs-6">{{ 'Value' | translate }}</clr-dg-column>
+
+                            <clr-dg-row>
+                                <clr-dg-cell class="col-xs-6">{{ 'Subscription Trade Cycle Period' | translate }}</clr-dg-cell>
+                                <clr-dg-cell class="col-xs-6">{{currentProduct.subscriptionTradeCyclePeriod}}</clr-dg-cell>
+                            </clr-dg-row>
+
+                            <clr-dg-row>
+                                <clr-dg-cell class="col-xs-6">{{ 'Subscription Cut-off Time' | translate }}</clr-dg-cell>
+                                <clr-dg-cell class="col-xs-6">{{currentProduct.subscriptionCutOffTime}}</clr-dg-cell>
+                            </clr-dg-row>
+
+                            <clr-dg-row>
+                                <clr-dg-cell class="col-xs-6">{{ 'NAV Period For Subscription' | translate }}</clr-dg-cell>
+                                <clr-dg-cell class="col-xs-6">{{currentProduct.navPeriodForSubscription}}</clr-dg-cell>
+                            </clr-dg-row>
+
+                            <clr-dg-row>
+                                <clr-dg-cell class="col-xs-6">{{ 'Settlement Period For Subscription' | translate }}</clr-dg-cell>
+                                <clr-dg-cell class="col-xs-6">{{currentProduct.subscriptionSettlementPeriod}}</clr-dg-cell>
+                            </clr-dg-row>
+
+                            <clr-dg-row>
+                                <clr-dg-cell class="col-xs-6">{{ 'Subscription Category' | translate }}</clr-dg-cell>
+                                <clr-dg-cell class="col-xs-6">{{currentProduct.subscriptionCategory}}</clr-dg-cell>
+                            </clr-dg-row>
+
+                            <clr-dg-row>
+                                <clr-dg-cell class="col-xs-6">{{ 'Minimal Initial Subscription In Amount' | translate }}</clr-dg-cell>
+                                <clr-dg-cell class="col-xs-6">{{currentProduct.minInitialSubscriptionInAmount}}</clr-dg-cell>
+                            </clr-dg-row>
+
+                            <clr-dg-row>
+                                <clr-dg-cell class="col-xs-6">{{ 'Minimal Initial Subscription In Shares' | translate }}</clr-dg-cell>
+                                <clr-dg-cell class="col-xs-6">{{currentProduct.minInitialSubscriptionInShare}}</clr-dg-cell>
+                            </clr-dg-row>
+
+                            <clr-dg-row>
+                                <clr-dg-cell class="col-xs-6">{{ 'Redemption Trade Cycle Period' | translate }}</clr-dg-cell>
+                                <clr-dg-cell class="col-xs-6">{{currentProduct.redemptionTradeCyclePeriod}}</clr-dg-cell>
+                            </clr-dg-row>
+
+                            <clr-dg-row>
+                                <clr-dg-cell class="col-xs-6">{{ 'Redemption Cut-off Time' | translate }}</clr-dg-cell>
+                                <clr-dg-cell class="col-xs-6">{{currentProduct.redemptionCutOffTime}}</clr-dg-cell>
+                            </clr-dg-row>
+
+                            <clr-dg-row>
+                                <clr-dg-cell class="col-xs-6">{{ 'NAV Period For Redemption' | translate }}</clr-dg-cell>
+                                <clr-dg-cell class="col-xs-6">{{currentProduct.navPeriodForRedemption}}</clr-dg-cell>
+                            </clr-dg-row>
+
+                            <clr-dg-row>
+                                <clr-dg-cell class="col-xs-6">{{ 'Settlement For Redemption' | translate }}</clr-dg-cell>
+                                <clr-dg-cell class="col-xs-6">{{currentProduct.redemptionSettlementPeriod}}</clr-dg-cell>
+                            </clr-dg-row>
+
+                            <clr-dg-row>
+                                <clr-dg-cell class="col-xs-6">{{ 'Redemption Category' | translate }}</clr-dg-cell>
+                                <clr-dg-cell class="col-xs-6">{{currentProduct.redemptionCategory}}</clr-dg-cell>
+                            </clr-dg-row>
+
+                            <clr-dg-row>
+                                <clr-dg-cell class="col-xs-6">{{ 'Minimal Initial Redemption In Amount' | translate }}</clr-dg-cell>
+                                <clr-dg-cell class="col-xs-6">{{currentProduct.minSubsequentRedemptionInAmount}}</clr-dg-cell>
+                            </clr-dg-row>
+
+                            <clr-dg-row>
+                                <clr-dg-cell class="col-xs-6">{{ 'Minimal Initial Redemption In Shares' | translate }}</clr-dg-cell>
+                                <clr-dg-cell class="col-xs-6">{{currentProduct.minSubsequentRedemptionInShare}}</clr-dg-cell>
+                            </clr-dg-row>
+
+                            <clr-dg-row>
+                                <clr-dg-cell class="col-xs-6">{{ 'Decimalisation' | translate }}</clr-dg-cell>
+                                <clr-dg-cell class="col-xs-6">{{currentProduct.maximumNumDecimal}}</clr-dg-cell>
+                            </clr-dg-row>
+
+                        </clr-datagrid>
+                    </section>
+
+                </div>
+            </div>
+
+            <div class="well">
+                <!-- Panel header -->
+                <div class="row panel-header">
+                    <div class="col-xs-12">
+                        <a href="#" (click)="panels[4] = !panels[4]; $event.preventDefault();">
+                            <i class="fa fa-chevron-right" [class.rotate]="panels[4]"></i>
+                            <h2>{{ 'Regulatory & Reports Documents' | translate }}</h2>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Panel body -->
+                <div class="panel-body" [class.hidden]="!panels[4]">
+                    <form>
+                        <div class="row">
+                            <div class="col-xs-6" *ngIf="currentProduct.prospectus.hash">
+                                <label class="control-label">{{ 'Prospectus' | translate }}</label>
+                                <div class="filedrop-wrapper">
+                                    <setl-file-drop class="form-control" 
+                                                    id="{{currentProduct.prospectus.fileID}}" 
+                                                    [inline]="true" 
+                                                    [preset]="currentProduct.prospectus"
+                                                    ngDefaultControl>
+                                    </setl-file-drop>
+                                    <setl-file-viewer [fileHash]="currentProduct.prospectus.hash"></setl-file-viewer>
+                                </div>
+                            </div>
+
+                            <div class="col-xs-6" *ngIf="currentProduct.kiid.hash">
+                                <label class="control-label">{{ 'KIID' | translate }}</label>
+                                <div class="filedrop-wrapper">
+                                    <setl-file-drop class="form-control" 
+                                                    id="{{currentProduct.kiid.fileID}}" 
+                                                    [inline]="true" 
+                                                    [preset]="currentProduct.kiid" ngDefaultControl>
+                                    </setl-file-drop>
+                                    <setl-file-viewer [fileHash]="currentProduct.kiid.hash"></setl-file-viewer>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="form-group col-sm-6">
+                <button id="close-btn" type="button" class="btn btn-default" (click)="onClickBack()">{{ 'Close' | translate }}</button>
+            </div>
+        </clr-tab-content>
+    </clr-tab>
+</clr-tabs>

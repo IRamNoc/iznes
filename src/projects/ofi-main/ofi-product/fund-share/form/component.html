@@ -1,0 +1,533 @@
+<div class="header-breadcrumbs">
+    <h1>
+        <i class="fa fa-bars"></i>
+        <span>{{ (isCreate() || currDraft == 1 ? 'Add New Share' : 'View Share') | translate }}</span>
+    </h1>
+</div>
+
+<clr-tabs *ngIf="loadUI()">
+    <clr-tab>
+        <button clrTabLink id="tabFundShareButton">{{ 'Shares' | translate }}</button>
+        <clr-tab-content class="outer">
+            <div *ngIf="!isRead()" class="row tab-header-container">
+                <div class="col-sm-6">
+                    <p>{{ (isCreate() || currDraft == 1 ? 'Please fill in the following information to create a new Share.': 'Amend the following information to update this share.') | translate }}</p>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group btn-container">
+                        <button class="btn btn-default" (click)="goToAuditTrail()" *ngIf="!isCreate()">{{ 'Share Audit Trail' | translate }}</button>
+                        <button class="btn btn-default" (click)="duplicateShare()" *ngIf="!isCreate()">{{ 'Duplicate Share' | translate }}</button>
+                        <ng-select *ngIf="isCreate()"
+                                    id="share-prefill-select"
+                                    [items]="shareListItems"
+                                    [allowClear]="true"
+                                    [placeholder]="translate.translate('Duplicate from an existing Share')"
+                                    [formControl]="shareControl">
+                        </ng-select>
+                    </div>
+                </div>
+            </div>
+            <div *ngIf="isAdmin()" class="row tab-header-container">
+                <div class="col-sm-6"></div>
+                <div class="col-sm-6">
+                    <div class="form-group btn-container">
+                        <button class="btn btn-default" (click)="goToAuditTrail()">{{ 'Share Audit Trail' | translate }}</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="well" *ngIf="hasUmbrellaFund()">
+                <div class="row panel-header">
+                    <div class="col-sm-12">
+                        <a href="#" (click)="openPanel(panels['umbrella']['root'], $event)">
+                            <i class="fa fa-chevron-right" [class.rotate]="isPanelOpen(panels['umbrella']['root'])"></i>
+                            <h2 id="toggleFund">{{ 'Umbrella Fund ' | translate }}: {{ umbrellaFundName }}</h2>
+                        </a>
+                    </div>
+                </div>
+                <div class="row panel-body" *ngIf="panels['umbrella']['root']['open']" [class.hidden]="!isPanelOpen(panels['umbrella']['root'])">
+                    <div class="well">
+                        <div class="row panel-header">
+                            <div class="col-sm-12">
+                                <a href="#" (click)="openPanel(panels['umbrella']['main'], $event)">
+                                    <i class="fa fa-chevron-right" [class.rotate]="isPanelOpen(panels['umbrella']['main'])"></i>
+                                    <h2 id="toggleFund">{{' Main Information' | translate }}</h2>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="row panel-body" *ngIf="panels['umbrella']['main']['open']" [class.hidden]="!isPanelOpen(panels['umbrella']['main'])">
+                            <app-dynamic-form [presetForm]="model.umbrella.formObj" [presetFormKeys]="model.umbrella.formKeysObj" [presetFormModel]="model.umbrella"></app-dynamic-form>
+                        </div>
+                    </div>
+
+                    <div class="well">
+                        <div class="row panel-header">
+                            <div class="col-sm-12">
+                                <a href="#" (click)="openPanel(panels['umbrella']['optionnal'], $event)">
+                                    <i class="fa fa-chevron-right" [class.rotate]="isPanelOpen(panels['umbrella']['optionnal'])"></i>
+                                    <h2 id="toggleFund">{{ 'Optional Information' | translate }}</h2>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="row panel-body" *ngIf="panels['umbrella']['optionnal']['open']" [class.hidden]="!isPanelOpen(panels['umbrella']['optionnal'])">
+                            <app-dynamic-form [presetForm]="model.umbrellaOptionnal.formObj" [presetFormKeys]="model.umbrellaOptionnal.formKeysObj"  [presetFormModel]="model.umbrellaOptionnal"></app-dynamic-form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="well" *ngIf="model.fund">
+                <div class="row panel-header">
+                    <div class="col-sm-12">
+                        <a href="#" (click)="openPanel(panels['fund']['root'], $event)">
+                            <i class="fa fa-chevron-right" [class.rotate]="isPanelOpen(panels['fund']['root'])"></i>
+                            <h2 id="toggleFund">{{ 'Fund' | translate }}: {{ fundName }}</h2>
+                        </a>
+                    </div>
+                </div>
+                <div class="row panel-body" [class.hidden]="!isPanelOpen(panels['fund']['root'])">
+                    <!-- fund selector -->
+                    <div *ngIf="!isRead()" class="well selectFundFormContainer">
+                        <div class="row panel-header">
+                            <div class="col-sm-12">
+                                <a href="#" (click)="openPanel(panels['fund']['select'], $event)">
+                                    <i class="fa fa-chevron-right" [class.rotate]="isPanelOpen(panels['fund']['select'])"></i>
+                                    <h2 id="toggleFund">{{ 'Choose Another Fund' | translate }}: {{ fundName }}
+                                    </h2>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="row panel-body" *ngIf="panels['fund']['select']['open']" [class.hidden]="!isPanelOpen(panels['fund']['select'])">
+                            <form [formGroup]="selectFundForm" class="selectFund">
+                                <section class="form-block">
+                                    <div class="row">
+                                        <div class="form-group col-sm-6">
+                                            <label class="control-label" for="lei">{{ 'Legal Entity Identifier (LEI)' | translate }}</label>
+                                            <input class="form-control" type="text" id="lei" name="lei" formControlName="lei">
+                                        </div>
+                                        <div class="form-group col-sm-6">
+                                            <label class="control-label" for="domicile">{{ 'Umbrella Fund Domicile (Country)' | translate }}</label>
+                                            <input class="form-control" type="text" id="domicile" name="domicile" formControlName="domicile">
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="form-group col-sm-6">
+                                            <label class="control-label" for="selectFund">{{ 'Click here to select another Fund for this Share' | translate }}</label>
+                                            <ng-select class="form-control"
+                                                        id="selectFund"
+                                                        [items]="fundListItems"
+                                                        placeholder=""
+                                                        [formControl]="selectFundForm.controls['fund']"
+                                                        [required]="true">
+                                            </ng-select>
+                                        </div>
+                                    </div>
+                                </section>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- fund data -->
+                    <div class="well">
+                        <div class="row panel-header">
+                            <div class="col-sm-12">
+                                <a href="#" (click)="openPanel(panels['fund']['main'], $event)">
+                                    <i class="fa fa-chevron-right" [class.rotate]="isPanelOpen(panels['fund']['main'])"></i>
+                                    <h2 id="toggleFund">{{ 'Main Information' | translate }}
+                                    </h2>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="row panel-body" *ngIf="panels['fund']['main']['open']" [class.hidden]="!isPanelOpen(panels['fund']['main'])">
+                            <app-dynamic-form [presetForm]="model.fund.formObj" [presetFormKeys]="model.fund.formKeysObj" [presetFormModel]="model.fund"></app-dynamic-form>
+                        </div>
+                    </div>
+
+                    <div class="well">
+                        <div class="row panel-header">
+                            <div class="col-sm-12">
+                                <a href="#" (click)="openPanel(panels['fund']['holiday'], $event)">
+                                    <i class="fa fa-chevron-right" [class.rotate]="isPanelOpen(panels['fund']['holiday'])"></i>
+                                    <h2 id="toggleFund">{{ 'Holiday Information' | translate }}
+                                    </h2>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="row panel-body" *ngIf="panels['fund']['holiday']['open']" [class.hidden]="!isPanelOpen(panels['fund']['holiday'])">
+                            <app-dynamic-form #fundHolidayInput [presetForm]="model.fundHoliday.formObj" [presetFormKeys]="model.fundHoliday.formKeysObj"  [presetFormModel]="model.fundHoliday"></app-dynamic-form>
+                        </div>
+                    </div>
+
+                    <div class="well">
+                        <div class="row panel-header">
+                            <div class="col-sm-12">
+                                <a href="#" (click)="openPanel(panels['fund']['optionnal'], $event)">
+                                    <i class="fa fa-chevron-right" [class.rotate]="isPanelOpen(panels['fund']['optionnal'])"></i>
+                                    <h2 id="toggleFund">{{ 'Optional Information' | translate }}</h2>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="row panel-body" *ngIf="panels['fund']['optionnal']['open']" [class.hidden]="!isPanelOpen(panels['fund']['optionnal'])">
+                            <app-dynamic-form [presetForm]="model.fundOptionnal.formObj" [presetFormKeys]="model.fundOptionnal.formKeysObj"  [presetFormModel]="model.fundOptionnal"></app-dynamic-form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <clr-tabs #tabsRef>
+                <clr-tab>
+                    <button clrTabLink id="tabKeyFactsButton">{{ 'Key Facts' | translate }}
+                        <span class="required" [hidden]="model.keyFacts.mandatory.isValid()">*</span>
+                    </button>
+                    <clr-tab-content *clrIfActive>
+                        <div class="well">
+                            <div class="row panel-header">
+                                <div class="col-xs-6">
+                                    <a href="#" (click)="openPanel(panels['keyFacts'].status, $event)">
+                                        <i class="fa fa-chevron-right" [class.rotate]="isPanelOpen(panels['keyFacts'].status)"></i>
+                                        <h2 id="toggleKeyFactsStatus">{{ 'Key Facts: Share Status' | translate }}</h2>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="row panel-body" [class.hidden]="!isPanelOpen(panels['keyFacts'].status)">
+                                <app-dynamic-form class="share-status" [presetForm]="model.keyFacts.status.formObj" [presetFormKeys]="model.keyFacts.status.formKeysObj" [presetFormModel]="model.keyFacts.status"></app-dynamic-form>
+                                <div class="share-status-warning" [hidden]="!showShareClosedWarning()">
+                                    <i class="fa fa-warning"></i>
+                                    {{ 'The share will be / is closed, and unavailable to investors, with the selected status.' | translate }}
+                                </div>
+                            </div>
+
+                            <div class="row panel-header">
+                                <div class="col-xs-6">
+                                    <a href="#" (click)="openPanel(panels['keyFacts'].mandatory, $event)">
+                                        <i class="fa fa-chevron-right" [class.rotate]="isPanelOpen(panels['keyFacts'].mandatory)"></i>
+                                        <h2 id="toggleKeyFactsMandatory">{{ 'Key Facts: Main Information' | translate }}</h2>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="row panel-body" *ngIf="panels['keyFacts'].mandatory.open" [class.hidden]="!isPanelOpen(panels['keyFacts'].mandatory)">
+                                <app-dynamic-form [presetForm]="model.keyFacts.mandatory.formObj" [presetFormKeys]="model.keyFacts.mandatory.formKeysObj"  [presetFormModel]="model.keyFacts.mandatory"></app-dynamic-form>
+                            </div>
+
+                            <div class="row panel-header">
+                                <div class="col-xs-6">
+                                    <a href="#" (click)="openPanel(panels['keyFacts'].optional, $event)">
+                                        <i class="fa fa-chevron-right" [class.rotate]="isPanelOpen(panels['keyFacts'].optional)"></i>
+                                        <h2 id="toggleKeyFactsOptional">{{ 'Key Facts: Optional Information' | translate }}</h2>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="row panel-body" *ngIf="panels['keyFacts'].optional.open" [class.hidden]="!isPanelOpen(panels['keyFacts'].optional)">
+                                <app-dynamic-form [presetForm]="model.keyFacts.optional.formObj" [presetFormKeys]="model.keyFacts.optional.formKeysObj"  [presetFormModel]="model.keyFacts.optional"></app-dynamic-form>
+                            </div>
+                        </div>
+                    </clr-tab-content>
+                </clr-tab>
+
+                <clr-tab>
+                    <button clrTabLink id="tabCharacteristicsButton">{{ 'Characteristics' | translate }}
+                        <span class="required" [hidden]="model.characteristic.mandatory.isValid()">*</span>
+                    </button>
+                    <clr-tab-content *clrIfActive>
+                        <div class="well">
+                            <div class="row panel-header">
+                                <div class="col-xs-6">
+                                    <a href="#" (click)="openPanel(panels['characteristic'].mandatory, $event)">
+                                        <i class="fa fa-chevron-right" [class.rotate]="isPanelOpen(panels['characteristic'].mandatory)"></i>
+                                        <h2 id="toggleCharacteristicMandatory">{{ 'Characteristics: Main Information' | translate }}</h2>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="row panel-body" *ngIf="panels['characteristic'].mandatory.open" [class.hidden]="!isPanelOpen(panels['characteristic'].mandatory)">
+                                <app-dynamic-form [presetForm]="model.characteristic.mandatory.formObj" [presetFormKeys]="model.characteristic.mandatory.formKeysObj"  [presetFormModel]="model.characteristic.mandatory"></app-dynamic-form>
+                            </div>
+                        </div>
+                    </clr-tab-content>
+                </clr-tab>
+
+                <clr-tab>
+                    <button clrTabLink id="tabCalendarButton">{{ 'Calendar' | translate }}
+                        <span class="required" [hidden]="model.calendarSubscription.mandatory.isValid() && model.calendarRedemption.mandatory.isValid() && model.calendarSubscription.subscriptionTradeCycle.isValid() && model.calendarRedemption.redemptionTradeCycle.isValid()">*
+                        </span>
+                    </button>
+                    <clr-tab-content *clrIfActive>
+                        <div class="well">
+                            <div class="row panel-header">
+                                <div class="col-xs-6">
+                                    <h2>{{ 'Calendar Information' | translate }}</h2>
+                                </div>
+                            </div>
+                            <div class="row panel-body">
+                                <div class="subscription-container">
+                                    <h3><i class="fa fa-sign-in subscription-icon"></i>{{ 'SUBSCRIPTION' | translate | uppercase }}</h3>
+                                    <div class="subscription-section">
+                                        <p><strong>{{ 'Cut-off Date Settings' | translate }}</strong></p>
+                                        <app-ofi-am-trade-cycle #tradeCycleSubscription [tradeType]="'Subscription'" [model]="model.calendarSubscription.subscriptionTradeCycle" (modelEmitter)="calendarSubscriptionModelEvent()"></app-ofi-am-trade-cycle>
+
+                                        <app-dynamic-form [presetForm]="model.calendarSubscription.mandatory.formObj" [presetFormKeys]="model.calendarSubscription.mandatory.formKeysObj"  [presetFormModel]="model.calendarSubscription.mandatory"></app-dynamic-form>
+                                    </div>
+                                </div>
+
+                                <div class="redemption-container">
+                                    <h3><i class="fa fa-sign-out redemption-icon"></i>{{ 'REDEMPTION' | translate | uppercase }}</h3>
+                                    <div class="redemption-section">
+                                        <p><strong>{{ 'Cut-off Date Settings' | translate }}</strong></p>
+                                        <app-ofi-am-trade-cycle #tradeCycleRedemption [tradeType]="'Redemption'" [model]="model.calendarRedemption.redemptionTradeCycle" (modelEmitter)="calendarRedemptionModelEvent()"></app-ofi-am-trade-cycle>
+
+                                        <app-dynamic-form [presetForm]="model.calendarRedemption.mandatory.formObj" [presetFormKeys]="model.calendarRedemption.mandatory.formKeysObj"  [presetFormModel]="model.calendarRedemption.mandatory"></app-dynamic-form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </clr-tab-content>
+                </clr-tab>
+
+                <clr-tab>
+                    <button clrTabLink id="tabFeesButton">{{ 'Fees' | translate }}
+                        <span class="required" [hidden]="model.fees.mandatory.isValid()">*</span>
+                    </button>
+                    <clr-tab-content *clrIfActive>
+                        <div class="well">
+                            <div class="row panel-header">
+                                <div class="col-xs-6">
+                                    <a href="#" (click)="openPanel(panels['fees'].mandatory, $event)">
+                                        <i class="fa fa-chevron-right" [class.rotate]="isPanelOpen(panels['fees'].mandatory)"></i>
+                                        <h2 id="toggleFeesMandatory">{{ 'Fees: Main Information' | translate }}</h2>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="row panel-body" *ngIf="panels['fees'].mandatory.open" [class.hidden]="!isPanelOpen(panels['fees'].mandatory)">
+                                <app-dynamic-form [presetForm]="model.fees.mandatory.formObj" [presetFormKeys]="model.fees.mandatory.formKeysObj"  [presetFormModel]="model.fees.mandatory"></app-dynamic-form>
+                            </div>
+
+                            <div class="row panel-header">
+                                <div class="col-xs-6">
+                                    <a href="#" (click)="openPanel(panels['fees'].optional, $event)">
+                                        <i class="fa fa-chevron-right" [class.rotate]="isPanelOpen(panels['fees'].optional)"></i>
+                                        <h2 id="toggleFeesOptional">{{ 'Fees: Optional Information' | translate }}</h2>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="row panel-body" *ngIf="panels['fees'].optional.open" [class.hidden]="!isPanelOpen(panels['fees'].optional)">
+                                <app-dynamic-form [presetForm]="model.fees.optional.formObj" [presetFormKeys]="model.fees.optional.formKeysObj"  [presetFormModel]="model.fees.optional"></app-dynamic-form>
+                            </div>
+                        </div>
+                    </clr-tab-content>
+                </clr-tab>
+
+                <clr-tab>
+                    <button clrTabLink id="tabProfileButton">{{ 'Profile' | translate }}
+                        <span class="required" [hidden]="model.profile.mandatory.isValid()">*</span>
+                    </button>
+                    <clr-tab-content *clrIfActive>
+                        <div class="well">
+                            <div class="row panel-header">
+                                <div class="col-xs-6">
+                                    <a href="#" (click)="openPanel(panels['profile'].mandatory, $event)">
+                                        <i class="fa fa-chevron-right" [class.rotate]="isPanelOpen(panels['profile'].mandatory)"></i>
+                                        <h2 id="toggleProfileMandatory">{{ 'Profile: Main Information' | translate }}</h2>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="row panel-body" *ngIf="panels['profile'].mandatory.open" [class.hidden]="!isPanelOpen(panels['profile'].mandatory)">
+                                <app-dynamic-form [presetForm]="model.profile.mandatory.formObj" [presetFormKeys]="model.profile.mandatory.formKeysObj"  [presetFormModel]="model.profile.mandatory"></app-dynamic-form>
+                            </div>
+
+                            <div class="row panel-header">
+                                <div class="col-xs-6">
+                                    <a href="#" (click)="openPanel(panels['profile'].optional, $event)">
+                                        <i class="fa fa-chevron-right" [class.rotate]="isPanelOpen(panels['profile'].optional)"></i>
+                                        <h2 id="toggleProfileOptional">{{ 'Profile: Optional Information' | translate }}</h2>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="row panel-body" *ngIf="panels['profile'].optional.open" [class.hidden]="!isPanelOpen(panels['profile'].optional)">
+                                <app-dynamic-form [presetForm]="model.profile.optional.formObj" [presetFormKeys]="model.profile.optional.formKeysObj"  [presetFormModel]="model.profile.optional"></app-dynamic-form>
+                            </div>
+                        </div>
+                    </clr-tab-content>
+                </clr-tab>
+
+                <clr-tab>
+                    <button clrTabLink id="tabRespresentationButton">{{ 'Representation' | translate }}</button>
+                    <clr-tab-content *clrIfActive>
+                        <div class="well">
+                            <div class="row panel-header">
+                                <div class="col-xs-6">
+                                    <a href="#" (click)="openPanel(panels['representation'].optional, $event)">
+                                        <i class="fa fa-chevron-right" [class.rotate]="isPanelOpen(panels['representation'].optional)"></i>
+                                        <h2 id="toggleRepresentationOptional">{{ 'Representation: Optional Information' | translate }}</h2>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="row panel-body" *ngIf="panels['representation'].optional.open" [class.hidden]="!isPanelOpen(panels['representation'].optional)">
+                                <app-dynamic-form [presetForm]="model.representation.optional.formObj" [presetFormKeys]="model.representation.optional.formKeysObj"  [presetFormModel]="model.representation.optional"></app-dynamic-form>
+                            </div>
+                        </div>
+                    </clr-tab-content>
+                </clr-tab>
+
+                <clr-tab>
+                    <button clrTabLink id="tabFTaxationButton">{{ 'Taxation' | translate }}
+
+                    </button>
+                    <clr-tab-content *clrIfActive>
+                        <div class="well">
+                            <div class="row panel-header">
+                                <div class="col-xs-6">
+                                    <a href="#" (click)="openPanel(panels['taxation'].optional, $event)">
+                                        <i class="fa fa-chevron-right" [class.rotate]="isPanelOpen(panels['taxation'].optional)"></i>
+                                        <h2 id="toggleTaxationOptional">{{ 'Taxation: Optional Information' | translate }}</h2>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="row panel-body" *ngIf="panels['taxation'].optional.open" [class.hidden]="!isPanelOpen(panels['taxation'].optional)">
+                                <app-dynamic-form [presetForm]="model.taxation.optional.formObj" [presetFormKeys]="model.taxation.optional.formKeysObj"  [presetFormModel]="model.taxation.optional"></app-dynamic-form>
+                            </div>
+                        </div>
+                    </clr-tab-content>
+                </clr-tab>
+
+                <clr-tab>
+                    <button clrTabLink id="tabListingButton">{{ 'Listing' | translate }}</button>
+                    <clr-tab-content *clrIfActive>
+                        <div class="well">
+                            <div class="row panel-header">
+                                <div class="col-xs-6">
+                                    <a href="#" (click)="openPanel(panels['listing'].optional, $event)">
+                                        <i class="fa fa-chevron-right" [class.rotate]="isPanelOpen(panels['listing'].optional)"></i>
+                                        <h2 id="toggleListingOptional">{{ 'Listing: Optional Information' | translate }}</h2>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="row panel-body" *ngIf="panels['listing'].optional.open" [class.hidden]="!isPanelOpen(panels['listing'].optional)">
+                                <app-dynamic-form [presetForm]="model.listing.optional.formObj" [presetFormKeys]="model.listing.optional.formKeysObj"  [presetFormModel]="model.listing.optional"></app-dynamic-form>
+                            </div>
+                        </div>
+                    </clr-tab-content>
+                </clr-tab>
+
+                <clr-tab>
+                    <button clrTabLink id="tabPRIIPButton">{{ 'PRIIPS' | translate }}</button>
+                    <clr-tab-content *clrIfActive>
+                        <div class="well">
+                            <div class="row panel-header">
+                                <div class="col-xs-6">
+                                    <a href="#" (click)="openPanel(panels['priip'].optional, $event)">
+                                        <i class="fa fa-chevron-right" [class.rotate]="isPanelOpen(panels['priip'].optional)"></i>
+                                        <h2 id="togglePriipOptional">{{ 'PRIIPS: Optional Information' | translate }}</h2>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="row panel-body" *ngIf="panels['priip'].optional.open" [class.hidden]="!isPanelOpen(panels['priip'].optional)">
+                                <app-dynamic-form [presetForm]="model.priip.optional.formObj" [presetFormKeys]="model.priip.optional.formKeysObj"  [presetFormModel]="model.priip.optional"></app-dynamic-form>
+                            </div>
+                        </div>
+                    </clr-tab-content>
+                </clr-tab>
+
+                <clr-tab>
+                    <button clrTabLink id="tabSolvencyButton">{{ 'Solvency II' | translate }}</button>
+                    <clr-tab-content *clrIfActive>
+                        <div class="well">
+                            <div class="row panel-header">
+                                <div class="col-xs-6">
+                                    <a href="#" (click)="openPanel(panels['solvency'].optional, $event)">
+                                        <i class="fa fa-chevron-right" [class.rotate]="isPanelOpen(panels['solvency'].optional)"></i>
+                                        <h2 id="toggleSolvencyOptional">{{ 'Solvency II: Optional Information' | translate }}</h2>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="row panel-body" *ngIf="panels['solvency'].optional.open" [class.hidden]="!isPanelOpen(panels['solvency'].optional)">
+                                <app-dynamic-form [presetForm]="model.solvency.optional.formObj" [presetFormKeys]="model.solvency.optional.formKeysObj"  [presetFormModel]="model.solvency.optional"></app-dynamic-form>
+                            </div>
+                        </div>
+                    </clr-tab-content>
+                </clr-tab>
+
+                <clr-tab>
+                    <button clrTabLink id="tabDocumentsButton">{{ 'Documents' | translate }}
+                        <span class="required" [hidden]="model.documents.mandatory.isValid()">*</span>
+                    </button>
+                    <clr-tab-content *clrIfActive>
+                        <div class="well">
+                            <div class="row panel-header">
+                                <div class="col-xs-6">
+                                    <a href="#" (click)="openPanel(panels['documents'].mandatory, $event)">
+                                        <i class="fa fa-chevron-right" [class.rotate]="isPanelOpen(panels['documents'].mandatory)"></i>
+                                        <h2 id="toggleDocumentsMandatory">{{ 'Documents: Main Information' | translate }}</h2>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="row panel-body" *ngIf="panels['documents'].mandatory.open" [class.hidden]="!isPanelOpen(panels['documents'].mandatory)">
+                                <app-dynamic-form #documentsMandatory [presetForm]="model.documents.mandatory.formObj" [presetFormKeys]="model.documents.mandatory.formKeysObj"  [presetFormModel]="model.documents.mandatory"></app-dynamic-form>
+                            </div>
+
+                            <div class="row panel-header">
+                                <div class="col-xs-6">
+                                    <a href="#" (click)="openPanel(panels['documents'].optional, $event)">
+                                        <i class="fa fa-chevron-right" [class.rotate]="isPanelOpen(panels['documents'].optional)"></i>
+                                        <h2 id="toggleDocumentsOptional">{{ 'Documents: Optional Information' | translate }}</h2>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="row panel-body" *ngIf="panels['documents'].optional.open" [class.hidden]="!isPanelOpen(panels['documents'].optional)">
+                                <app-dynamic-form #documentsOptional [presetForm]="model.documents.optional.formObj" [presetFormKeys]="model.documents.optional.formKeysObj"  [presetFormModel]="model.documents.optional"></app-dynamic-form>
+                            </div>
+                        </div>
+                    </clr-tab-content>
+                </clr-tab>
+
+                <div class="form-group previous-next">
+                    <div class="buttons">
+                        <button class="btn btn-default" id="previousTab" (click)="previousTab()" [disabled]="hidePreviousTabButton()">{{ 'Previous' | translate }}</button>
+                        <button class="btn btn-default" id="nextTab" (click)="nextTab()" [disabled]="hideNextTabButton()">
+                            {{ 'Next' | translate }}</button>
+                    </div>
+                </div>
+            </clr-tabs>
+
+
+            <div *ngIf="!(isCreate() || currDraft == 1) && !hasPermissionUpdateFundShare && !isAdmin()" class="alert alert-warning">
+                <div class="alert-items">
+                    <div class="alert-item static">
+                        <div class="alert-icon-wrapper">
+                            <clr-icon class="alert-icon" shape="exclamation-triangle"></clr-icon>
+                        </div>
+                        <span class="alert-text">
+                            {{ 'Please contact the administrator to request permission to update a Share' | translate }}
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <br />
+
+            <div class="form-group">
+                <button (click)="cancelFundShare()"
+                        class="btn btn-default action-button cancel"
+                        id="cancelFundShareBottom">
+                        {{ isAdmin() ? 'Close' : isRead() ? 'Back' : 'Cancel' | translate }}
+                </button>
+
+                <button *ngIf="isCreate() || currDraft == 1"
+                        id="saveDraftFundShareBottom"
+                        type="button"
+                        class="btn btn-primary"
+                        (click)="saveDraft()">
+                        <i class="fa fa-save"></i>
+                        {{ (isCreate() ? 'Save Draft' : 'Update Draft') | translate }}
+                </button>
+
+                <button *ngIf="!isRead()"
+                        type="button"
+                        class="btn btn-primary action-button save"
+                        id="saveFundShareBottom"
+                        (click)="saveFundShare()"
+                        [disabled]="!model.isValid() || (!(isCreate() || currDraft == 1) && !hasPermissionUpdateFundShare)">
+                        <i class="fa fa-save"></i>
+                        {{ (isCreate() || currDraft == 1 ? 'Create Share' : 'Update Share') | translate }}
+                </button>
+            </div>
+
+        </clr-tab-content>
+    </clr-tab>
+</clr-tabs>

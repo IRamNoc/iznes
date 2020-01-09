@@ -1,0 +1,19 @@
+{
+    "name": "helper",
+    "version": "1.0.0",
+    "description": "The distributed version is in [fund-share-helper-dist](http://si-nexus01.dev.setl.io/OFI_Modules/fund-share-helper-dist)",
+    "main": "index.js",
+    "scripts": {
+        "test": "cd ../../../ && npm test"
+    },
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+        "immutable": "^3.8.1",
+        "moment": "2.18.1",
+        "moment-business-days": "^1.0.6"
+    },
+    "devDependencies": {
+        "ts-node": "^6.0.0"
+    }
+}

@@ -1,0 +1,48 @@
+.filedrop-wrapper {
+    display: flex;
+    width: 95%;
+
+    /deep/ .drop-file-wrapper { padding: 0; }
+
+    setl-file-drop {
+        display: block;
+        flex: 1 1 auto;
+        z-index: 0;
+    }
+
+    setl-file-viewer {
+        flex: 0 0 100px;
+        z-index: 1;
+    }
+
+    setl-file-viewer /deep/ > div > .btn {
+        border-bottom-left-radius: 0;
+        border-top-left-radius: 0;
+        height: 40px;
+        margin: 0 0;
+        width: 100%;
+        z-index: 1;
+    }
+}
+
+.phone-input-container {
+    width: 97.5%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: nowrap;
+}
+
+.phone-input-container > div:first-child {
+    box-sizing: border-box;
+    margin-right: 10px;
+    width: 90%;
+}
+
+.phone-input-container > div:nth-child(1) {
+    width: 100%;
+}
+
+.address {
+    width: 100%;
+}

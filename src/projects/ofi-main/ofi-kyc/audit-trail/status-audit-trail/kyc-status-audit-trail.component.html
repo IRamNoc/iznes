@@ -1,0 +1,54 @@
+<div class="status-header">
+    <div>
+        <h2>{{ 'Request Status Audit Trail' | translate }}</h2>
+        <p>{{ 'Please find below the audit trail regarding the status of your request' | translate }}:</p>
+    </div>
+    <button class="btn btn-primary" (click)="exportCsv()">{{ 'Export Status Audit Trail' | translate }}</button>
+</div>
+
+<clr-datagrid class="expandable" clrDgSortIcon>
+    <clr-dg-column [clrDgField]="'oldStatus.label'" clrDgSortIcon>
+        {{ 'Old Status' | translate }}
+        <span class="column-label"></span>
+    </clr-dg-column>
+    <clr-dg-column [clrDgField]="'newStatus.label'" clrDgSortIcon>
+        {{ 'New Status' | translate }}
+        <span class="column-label"></span>
+    </clr-dg-column>
+    <clr-dg-column [clrDgField]="'modifiedBy'" clrDgSortIcon>
+        {{ 'Modified By' | translate }}
+        <span class="column-label"></span>
+    </clr-dg-column>
+    <clr-dg-column [clrDgField]="'dateEntered'" clrDgSortIcon>
+        {{ 'Date' | translate }}
+        <span class="column-label"></span>
+    </clr-dg-column>
+
+    <clr-dg-row *clrDgItems="let item of statusAuditItems">
+        <clr-dg-cell>
+            <span class="label label-{{item.oldStatus.type}}">{{item.oldStatus.label}}</span>
+        </clr-dg-cell>
+        <clr-dg-cell>
+            <span class="label label-{{item.newStatus.type}}">{{item.newStatus.label}}</span>
+        </clr-dg-cell>
+        <clr-dg-cell>{{item.modifiedBy}}</clr-dg-cell>
+        <clr-dg-cell>{{item.dateEntered}}</clr-dg-cell>
+
+        <ng-container ngProjectAs="clr-dg-row-detail" *ngIf="item.message">
+            <clr-dg-row-detail *clrIfExpanded>
+                <div class="additionalInfos">
+                    <div class="row">
+                        <div class="form-group col-sm-12">
+                            <p>{{ 'Here is the message associated with the status change' | translate }}:</p>
+                            <textarea readonly>{{item.message}}</textarea>
+                        </div>
+                    </div>
+                </div>
+            </clr-dg-row-detail>
+        </ng-container>
+    </clr-dg-row>
+
+    <clr-dg-footer>
+        <clr-dg-pagination #pagination [clrDgPageSize]="5"></clr-dg-pagination>
+    </clr-dg-footer>
+</clr-datagrid>

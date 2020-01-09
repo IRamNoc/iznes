@@ -1,0 +1,318 @@
+<div class="header-breadcrumbs">
+    <h1 id="sub-portfolio"><i class="fa fa-id-badge"></i> {{ 'Sub-portfolio' | translate }}</h1>
+</div>
+
+<div class="wrapper wrapper-content">
+    <clr-tabs>
+        <clr-tab>
+            <button clrTabLink><i class="fa {{ this.tabDetail[0]['title'].icon }}"></i> {{
+                this.tabDetail[0]['title'].text }}
+            </button>
+            <clr-tab-content *clrIfActive="true">
+                <!-- Address list tab. -->
+                <ng-container>
+                    <ng-container
+                        *ngTemplateOutlet="addressListTab; context: {'formControl': this.tabDetail[0]['formControl']}">
+                    </ng-container>
+                </ng-container>
+            </clr-tab-content>
+        </clr-tab>
+    </clr-tabs>
+
+    <!-- Address Data Table. -->
+    <ng-template #addressListTab let-formControl="formControl">
+        <div class="panel-body">
+
+            <div align="right">
+                <button id="btn-add-new-subportfolio" class="btn btn-success" (click)="toggleFormModal();">
+                    <i class="fa fa-plus"></i> {{ 'Add New Sub-portfolio' | translate }}
+                </button>
+            </div>
+
+            <clr-datagrid>
+                <clr-dg-column [clrDgField]="'label'" [clrDgSortOrder]="1" clrDgSortIcon>
+                    <span>{{ 'Sub-portfolio Name' | translate }}</span>
+                    <span class="column-label"></span>
+                </clr-dg-column>
+                <clr-dg-column [clrDgField]="'accountLabel'" clrDgSortIcon>
+                    <span>{{ 'Account Label' | translate }}</span>
+                    <span class="column-label"></span>
+                </clr-dg-column>
+                <clr-dg-column [clrDgField]="'iban'" clrDgSortIcon>
+                    <span class="clr-sort-label">{{ 'IBAN' | translate }}</span>
+                    <span class="column-label"></span>
+                </clr-dg-column>
+                <clr-dg-column [clrDgField]="'bic'" clrDgSortIcon>
+                    <span class="clr-sort-label">{{ 'BIC' | translate }}</span>
+                    <span class="column-label"></span>
+                </clr-dg-column>
+                <clr-dg-column id="subportfolios-col-actions" class="right">
+                    <span>{{ 'Actions' | translate }}</span>
+                </clr-dg-column>
+
+                <clr-dg-row *clrDgItems="let address of addressList;">
+                    <clr-dg-cell class="clickable" (click)="showAddress = true; currentAddress = address.addr">
+                        {{ address.label }}
+                    </clr-dg-cell>
+                    <clr-dg-cell>
+                        {{ address.accountLabel }}
+                    </clr-dg-cell>
+                    <clr-dg-cell>
+                        {{ address.iban }}
+                    </clr-dg-cell>
+                    <clr-dg-cell>
+                        {{ address.bic }}
+                    </clr-dg-cell>
+                    <clr-dg-cell class="actions">
+                        <div class="btn-group btn-sm">
+                            <button (click)="handleEdit(address.addr)" class="btn btn-success">
+                                <i class="fa fa-edit"></i> <span>{{ 'Edit' | translate }}</span>
+                            </button>
+                            <button (click)="handleDelete(address.addr)" class="btn btn-danger">
+                                <i class="fa fa-trash-o"></i> <span>{{ 'Delete' | translate }}</span>
+                            </button>
+                        </div>
+                    </clr-dg-cell>
+                </clr-dg-row>
+
+                <clr-dg-footer>
+                    {{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
+                    <clr-dg-pagination #pagination [clrDgPageSize]="10"></clr-dg-pagination>
+                </clr-dg-footer>
+            </clr-datagrid>
+        </div>
+    </ng-template>
+</div>
+
+<clr-modal [(clrModalOpen)]="showFormModal" [clrModalSize]="'xl'" id="subportfolio-form-modal">
+    <h3 id="override_header" class="modal-title">{{ (editForm ? 'Edit Sub-portfolio' : 'Create New Sub-portfolio') |
+        translate }}</h3>
+    <div class="modal-body">
+        <form class="p-0" [formGroup]="this.tabDetail[0]['formControl']">
+            <div class="row">
+                <div *ngIf="editForm" class="form-group col-sm-6">
+                    <label class="control-label">
+                        {{ 'Hash Identifier Code' | translate}}
+                    </label>
+                    <input type="text" formControlName="hashIdentifierCode" class="form-control">
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-sm-6">
+                    <label class="control-label">
+                        {{ 'Investor Reference' | translate}}
+                    </label>
+                    <input type="text" formControlName="investorReference"
+                        placeholder="{{ 'Reference used by the Asset Managers' | translate }}" class="form-control"
+                        maxlength="255">
+                    <span class="field-error">{{ getFormError('investorReference') }}</span>
+                </div>
+                <div class="form-group col-sm-6">
+                    <label class="control-label required-field">
+                        {{ 'Account Label' | translate}}
+                    </label>
+                    <input type="text" formControlName="accountLabel"
+                        placeholder="{{ 'Official account name' | translate }}" class="form-control" maxlength="255">
+                    <span class="field-error">{{ getFormError('accountLabel') }}</span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-sm-6">
+                    <label class="control-label required-field">
+                        {{ 'Account Currency' | translate}}
+                    </label>
+                    <ng-select [items]="currenciesItems" formControlName="accountCurrency"
+                        placeholder="{{' Please select a currency' | translate}}">
+                    </ng-select>
+                    <span class="field-error">{{ getFormError('accountCurrency') }}</span>
+                </div>
+                <div class="form-group col-sm-6">
+                    <label class="control-label required-field">
+                        {{ 'Sub-portfolio Name' | translate}}
+                    </label>
+                    <input type="text" placeholder="{{ 'Name of your sub-portfolio' | translate }}" class="form-control"
+                        formControlName="label" maxlength="200">
+                    <span class="field-error">{{ getFormError('label') }}</span>
+                </div>
+                <div class="form-group col-sm-6">
+                    <label class="control-label required-field">
+                        {{ 'Establishment Name' | translate}}
+                    </label>
+                    <input type="text" placeholder="{{ 'Name of your bank establishment' | translate }}"
+                        class="form-control" formControlName="establishmentName" maxlength="45">
+                    <span class="field-error">{{ getFormError('establishmentName') }}</span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-sm-6">
+                    <label class="control-label required-field">
+                        {{ 'Establishment Address' | translate}}
+                    </label>
+                    <input type="text" placeholder="{{ 'Address of your bank establishment' | translate }}"
+                        class="form-control" formControlName="addressLine1" maxlength="255">
+                    <span class="field-error">{{ getFormError('addressLine1') }}</span>
+                </div>
+                <div class="form-group col-sm-6">
+                    <label class="control-label">
+                        &nbsp;
+                    </label>
+                    <input type="text" placeholder="{{ 'Address line 2' | translate }}" class="form-control"
+                        formControlName="addressLine2" maxlength="255">
+                    <span class="field-error">{{ getFormError('addressLine2') }}</span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-sm-4">
+                    <label class="control-label required-field">
+                        {{ 'ZIP Code' | translate }}
+                    </label>
+                    <input type="text" placeholder="{{ 'Zip Code' | translate }}" class="form-control"
+                        formControlName="zipCode" maxlength="10">
+                    <span class="field-error">{{ getFormError('zipCode') }}</span>
+                </div>
+                <div class="form-group col-sm-4">
+                    <label class="control-label required-field">
+                        {{ 'City' | translate }}
+                    </label>
+                    <input type="text" placeholder="{{ 'City' | translate }}" class="form-control"
+                        formControlName="city" maxlength="45">
+                    <span class="field-error">{{ getFormError('city') }}</span>
+                </div>
+                <div class="form-group col-sm-4 required-field">
+                    <label class="control-label required-field">{{ 'Country' | translate }}</label>
+                    <ng-select [items]="countries" formControlName="country"
+                        placeholder="{{' Please select a country' | translate}}">
+                    </ng-select>
+                    <span class="field-error">{{ getFormError('country') }}</span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-sm-6">
+                    <label class="control-label required-field">
+                        {{ 'Account Owner' | translate}}
+                    </label>
+                    <input type="text" formControlName="accountOwner"
+                        placeholder="{{ 'Name of the beneficiary' | translate }}" class="form-control" maxlength="255">
+                    <span class="field-error">{{ getFormError('accountOwner') }}</span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-sm-6">
+                    <label class="control-label required-field">
+                        {{ 'Owner Address' | translate}}
+                    </label>
+                    <input type="text" placeholder="{{ 'Address of your owner' | translate }}" class="form-control"
+                        formControlName="ownerAddressLine1" maxlength="255">
+                    <span class="field-error">{{ getFormError('ownerAddressLine1') }}</span>
+                </div>
+                <div class="form-group col-sm-6">
+                    <label class="control-label">
+                        &nbsp;
+                    </label>
+                    <input type="text" placeholder="{{ 'Address line 2' | translate }}" class="form-control"
+                        formControlName="ownerAddressLine2" maxlength="255">
+                    <span class="field-error">{{ getFormError('ownerAddressLine2') }}</span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-sm-4">
+                    <label class="control-label required-field">
+                        {{ 'Owner ZIP Code' | translate }}
+                    </label>
+                    <input type="text" placeholder="{{ 'Zip Code' | translate }}" class="form-control"
+                        formControlName="ownerZipCode" maxlength="10">
+                    <span class="field-error">{{ getFormError('ownerZipCode') }}</span>
+                </div>
+                <div class="form-group col-sm-4">
+                    <label class="control-label required-field">
+                        {{ 'Owner City' | translate }}
+                    </label>
+                    <input type="text" placeholder="{{ 'City' | translate }}" class="form-control"
+                        formControlName="ownerCity" maxlength="45">
+                    <span class="field-error">{{ getFormError('ownerCity') }}</span>
+                </div>
+                <div class="form-group col-sm-4 required-field">
+                    <label class="control-label required-field">{{ 'Owner Country' | translate }}</label>
+                    <ng-select [items]="countries" formControlName="ownerCountry"
+                        placeholder="{{' Please select a country' | translate}}">
+                    </ng-select>
+                    <span class="field-error">{{ getFormError('ownerCountry') }}</span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-sm-6 required-field">
+                    <label class="control-label required-field">{{ 'IBAN' | translate }}</label>
+                    <input type="text" placeholder="{{ 'Cash account IBAN number' | translate }}" class="form-control"
+                        formControlName="iban" maxlength="34">
+                    <span class="field-error">{{ getFormError('iban') }}</span>
+                </div>
+                <div class="form-group col-sm-6 required-field">
+                    <label class="control-label required-field">{{ 'BIC' | translate }}</label>
+                    <input type="text" placeholder="{{ 'Cash account BIC number' | translate }}" class="form-control"
+                        formControlName="bic" maxlength="45">
+                    <span class="field-error">{{ getFormError('bic') }}</span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-sm-6">
+                    <label class="control-label">{{ 'Security Account' | translate }}</label>
+                    <input type="text" placeholder="{{ 'Security account number without the Bank code and the RIB Key' | translate }}" class="form-control"
+                        formControlName="securityAccount" maxlength="16">
+                </div>
+                <div class="form-group col-sm-6">
+                    <label class="control-label">{{ 'Cash Account' | translate }}</label>
+                    <input type="text" placeholder="{{ 'Cash account number without the Bank code and the RIB Key' | translate }}" class="form-control"
+                        formControlName="cashAccount" maxlength="16">
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-sm-6">
+                    <label class="control-label">
+                        {{ 'Notes' | translate}}
+                    </label>
+                    <textarea id="subportfolio-textarea" type="text" formControlName="notes" class="form-control"
+                        maxlength="500"></textarea>
+                    <span class="field-error">{{ getFormError('notes') }}</span>
+                </div>
+                <div class="form-group col-sm-6 filedrop-wrapper">
+                    <label class="control-label required-field">
+                        {{ 'Bank Identification Statement' | translate}}
+                    </label>
+                    <setl-file-drop #fileDrop [inline]="true" [formControl]="file.control" [preset]="file.fileData"
+                        (onDrop)="onDropFile($event)" ngDefaultControl></setl-file-drop>
+                    <setl-file-viewer *ngIf="file.fileData && file.fileData.hash" [fileHash]="file.fileData.hash"></setl-file-viewer>
+                    <span class="field-error">{{ getFormError('bankIdentificationStatement') }}</span>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button id="override_cancel" type="button" class="btn btn-warning margin-right-10" (click)="toggleFormModal();">
+            {{ 'Cancel' | translate }}
+        </button>
+        <button id="override_save" type="button" class="btn btn-success"
+            (click)="editForm ? updateSubPortfolio() : saveSubPortfolio();"
+            [disabled]="!tabDetail[0]['formControl'].valid">
+            {{ (editForm ? 'Update' : 'Create') | translate }}
+        </button>
+    </div>
+</clr-modal>
+
+<clr-modal [(clrModalOpen)]="showAddress">
+    <h3 id="override_header" class="modal-title">{{ 'Sub-portfolio Address' | translate }}</h3>
+    <div class="modal-body">
+        <div class="row">
+            <div class="col-sm-4">
+                {{ 'Blockchain Address' | translate }}:
+            </div>
+            <div class="col-sm-8">
+                {{ currentAddress }}
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button id="override_cancel" type="button" class="btn btn-primary" (click)="showAddress = false">
+            {{ 'Close' | translate }}
+        </button>
+    </div>
+</clr-modal>

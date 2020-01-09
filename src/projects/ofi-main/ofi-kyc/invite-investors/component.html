@@ -1,0 +1,215 @@
+<!-- Breadcrumbs. -->
+<div class="header-breadcrumbs">
+    <h1 id="ofi-kyc-invite-investors">
+        <i class="fa fa-user-plus"></i> {{ 'Client Referential: Invite Investors to IZNES' | translate }}</h1>
+</div>
+
+<!-- Main content. -->
+<div class="wrapper wrapper-content">
+    <div class="row">
+        <div class="col-sm-12">
+            <p>{{ 'Please provide the email address(es) of the Investors you would like to invite to IZNES.' | translate }}
+                <br>
+                <span class="text-danger">
+                    {{ 'Please note that the people you add will all be Super Admins within their company.' | translate }}
+                </span>
+            </p>
+        </div>
+    </div>
+
+    <form [formGroup]="invitationForm" novalidate (ngSubmit)="save(invitationForm.value)">
+        <section class="form-block" formArrayName="investors">
+            <div class="investorBlock" *ngFor="let investor of getControls(invitationForm, 'investors'); let i = index">
+                <div [formGroup]="investor">
+                    <div class="row">
+                        <div class="form-group col-sm-6">
+                            <label class="required-field" for="kyc_email_{{i}}">{{ 'Email Address' | translate }}</label>
+                            <input type="text"
+                                id="kyc_email_{{i}}"
+                                class="form-control"
+                                formControlName="email"
+                                maxlength="70">
+                            <div *ngIf="investor.get('email').touched && investor.get('email').hasError('required')" class="field-error">
+                                {{ 'Field is required' | translate }}
+                            </div>
+                            <div *ngIf="investor.get('email').touched && investor.get('email').hasError('pattern')" class="field-error">
+                                {{ 'Invalid email' | translate }}
+                            </div>
+                            <div *ngIf="!investor.get('email').hasError('pattern') && investor.get('email').hasError('notUnique')" class="field-error">
+                                {{ 'Email already used for invitation' | translate }}
+                            </div>
+                        </div>
+
+                        <div class="form-group col-sm-6">
+                            <label class="required-field" for="kyc_language_{{i}}">{{ 'Language' | translate }}</label>
+
+                            <div>
+                                <ng-select
+                                    id="kyc_language_{{i}}"
+                                    class="form-control"
+                                    [items]="languages"
+                                    [allowClear]="true"
+                                    [placeholder]="translate.translate('Select')"
+                                    formControlName="language"
+                                    [ngStyle]="{'padding':'6px 0'}"
+                                    [containerWidth]="'95%'">
+                                </ng-select>
+
+                                <div *ngIf="investor.get('language').hasError('required') && investor.get('language').touched" class="field-error">
+                                    {{ 'Field is required' | translate }}
+                                </div>
+                            </div>
+
+                            <i
+                                class="fa fa-times-circle text-warning"
+                                *ngIf="i > 0" id="btnKycRemoveInvestor_{{i}}"
+                                (click)="removeInvestor(invitationForm, i)"
+                                [ngStyle]="{'cursor':'pointer','margin-left':'14px','font-size':'18px','position':'absolute','right':'0'}">
+                            </i>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group col-sm-6">
+                            <label for="kyc_clientReference_{{i}}">{{ 'Client Reference (optional)' | translate }}</label>
+                            <input type="text"
+                                id="kyc_clientReference_{{i}}"
+                                class="form-control"
+                                formControlName="clientReference">
+                        </div>
+
+                        <div class="form-group col-sm-6">
+                            <label class='required-field' for="kyc_investorType_{{i}}">
+                                {{ 'Investor Type' | translate }}
+                            </label>
+
+                            <ng-select
+                                id="kyc_investorType_{{i}}"
+                                class="form-control"
+                                [items]="investorTypes"
+                                [allowClear]="true"
+                                [placeholder]="translate.translate('Select')"
+                                formControlName="investorType"
+                                [ngStyle]="{'padding':'6px 0'}"
+                                [containerWidth]="'95%'">
+                            </ng-select>
+
+                            <div *ngIf="investor.get('investorType').hasError('required') && investor.get('investorType').touched" class="field-error">
+                                {{ 'Field is required' | translate }}
+                            </div>
+
+                            <div *ngIf="isRetailInvestor(investor.get('investorType')) && investor.get('investorType').touched" class="field-error">
+                                {{ 'IZNES is not supporting retail investors for now' | translate }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group col-sm-6">
+                            <label for="kyc_firstName_{{i}}">{{ 'First Name (optional)' | translate }}</label>
+                            <input type="text" id="kyc_firstName_{{i}}" class="form-control" formControlName="firstName">
+                        </div>
+
+                        <div class="form-group col-sm-6">
+                            <label for="kyc_lastName_{{i}}">{{ 'Last Name (optional)' | translate }}</label>
+                            <input type="text" id="kyc_lastName_{{i}}" class="form-control" formControlName="lastName">
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group col-sm-12">
+                            <label for="kyc_message_{{i}}">{{ 'Message (optional)' | translate }}</label>
+                            <textarea type="text"
+                                id="kyc_message_{{i}}"
+                                class="form-control"
+                                style="width:98%"
+                                formControlName="message"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="form-group col-sm-12">
+                    <button id="btnKycAddInvestor" type="button" class="btn btn-success" (click)="addInvestor(invitationForm)">
+                        <i class="fa fa-plus"></i> {{ 'Add Another Email Invitation' | translate }}
+                    </button>
+                </div>
+            </div>
+            <div class="text-center">
+                <button id="btnKycClose" type="button" class="btn btn-info" (click)="goBack()">{{ 'Close' | translate }}</button>
+
+                <button id="btnKycSubmit" type="submit" class="btn btn-primary" [disabled]="!invitationForm.valid">
+                    <i class="fa fa-save"></i>
+                    <span *ngIf="!hasMultipleInvites">{{ 'Send Email Invitation' | translate }}</span>
+                    <span *ngIf="hasMultipleInvites">{{' Send Email Invitations' | translate }}</span>
+                </button>
+            </div>
+        </section>
+    </form>
+</div>
+
+<div class="well">
+    <!-- Panel header -->
+    <div class="row panel-header">
+        <div class="col-xs-6">
+            <a href="#" (click)="panel.open = !panel.open; $event.preventDefault();">
+                <i class="fa fa-chevron-right" [class.rotate]="panel.open"></i>
+                <h2>{{panel.title}}</h2>
+            </a>
+        </div>
+        <div class="col-xs-6 text-right">
+        </div>
+    </div>
+
+    <!-- Panel body -->
+    <div class="row panel-body" [class.hidden]="!panel.open">
+        <div class="col-xs-12">
+            <p class="subhead">{{ 'Please find below invitations that have been sent to investors:' | translate }}</p>
+
+            <clr-datagrid #dataGrid>
+                <clr-dg-column [clrDgField]="'inviteSent'">{{ 'Date Sent' | translate }}</clr-dg-column>
+                <clr-dg-column [clrDgField]="'tokenUsedAt'">{{ 'Invitation Status' | translate }}</clr-dg-column>
+                <clr-dg-column [clrDgField]="'email'">{{ 'Email Address' | translate }}</clr-dg-column>
+                <clr-dg-column [clrDgField]="'companyName'">{{ 'Company Name' | translate }}</clr-dg-column>
+                <clr-dg-column [clrDgField]="'lastName'">{{ 'Last Name' | translate }}</clr-dg-column>
+                <clr-dg-column [clrDgField]="'firstName'">{{ 'First Name' | translate }}</clr-dg-column>
+                <clr-dg-column [clrDgField]="'invitedBy'">{{ 'Invitation Sent By' | translate }}</clr-dg-column>
+                <clr-dg-column [clrDgField]="'kycStarted'">{{ 'Date KYC Started' | translate }}</clr-dg-column>
+                <clr-dg-column [clrDgField]="'initationLink'">{{ 'Invitation Link' | translate }}</clr-dg-column>
+                <clr-dg-column [clrDgField]="'status'">{{ 'KYC Status' | translate }}</clr-dg-column>
+
+                <clr-dg-row *clrDgItems="let item of inviteItems">
+                    <clr-dg-cell>{{item.inviteSent}}</clr-dg-cell>
+                    <clr-dg-cell>
+                        <span *ngIf="item.tokenUsedAt">
+                            {{ 'Invitation used' | translate }} -
+                            {{item.tokenUsedAt}}
+                        </span>
+                        <span *ngIf="!item.tokenUsedAt">
+                            {{ 'Invitation not used' | translate }}
+                        </span>
+                    </clr-dg-cell>
+                    <clr-dg-cell>{{item.email}}</clr-dg-cell>
+                    <clr-dg-cell>{{item.companyName}}</clr-dg-cell>
+                    <clr-dg-cell>{{item.lastName}}</clr-dg-cell>
+                    <clr-dg-cell>{{item.firstName}}</clr-dg-cell>
+                    <clr-dg-cell>{{item.invitedBy}}</clr-dg-cell>
+                    <clr-dg-cell>{{item.kycStarted}}</clr-dg-cell>
+                    <clr-dg-cell class="action">
+                        <button class="btn btn-primary btn-sm" (click)="copyToClipboard(item.invitationLink)">
+                            <i class="fa fa-copy"></i> {{ 'Copy Link' | translate }}
+                        </button>
+                    </clr-dg-cell>
+                    <clr-dg-cell>
+                        <span class="label label-{{enums.status[item.status].type}}">{{enums.status[item.status].label}}</span>
+                    </clr-dg-cell>
+                </clr-dg-row>
+
+                <clr-dg-footer>{{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
+                    <clr-dg-pagination #pagination [clrDgPageSize]="10"></clr-dg-pagination>
+                </clr-dg-footer>
+            </clr-datagrid>
+        </div>
+    </div>
+</div>

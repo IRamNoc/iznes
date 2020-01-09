@@ -1,0 +1,50 @@
+<div class="kyc-header">
+    <ng-container *ngIf="onboardingMode">{{ 'Onboarding' | translate }}</ng-container>
+    <ng-container *ngIf="!onboardingMode">{{ 'Make New Request' | translate }}</ng-container>
+    <button *ngIf="formSteps && formSteps.position !== 0" class="btn btn-sm" (click)="handleAction({ type: 'close' })">{{ 'Save and Exit' | translate }}</button>
+</div>
+
+<form-steps *ngIf="stepsConfig" [onboarding]="onboardingMode" [stepsConfig]="stepsConfig" (action)="handleAction($event)" [@toggle]="animating" (@toggle.done)="applyFullForm()">
+    <form-step>
+        <kyc-step-select-amc #step [form]="forms.get('selection')" [onboarding]="onboardingMode" (registered)="registered($event)" [disabled]="currentCompletedStep" (submitEvent)="handleSubmit($event)" [duplicate]="duplicate"></kyc-step-select-amc>
+    </form-step>
+    <form-step *ngIf="fullForm">
+        <kyc-step-introduction #step (submitEvent)="handleSubmit($event)"></kyc-step-introduction>
+    </form-step>
+    <form-step *ngIf="fullForm">
+        <!--PARENT STEP-->
+    </form-step>
+        <form-step *ngIf="fullForm">
+            <general-information #step [isFormReadonly]="isFormReadonly" [parentForm]="forms.get('identification').get('generalInformation')" [completedStep]="currentCompletedStep" (submitEvent)="handleSubmit($event)"></general-information>
+        </form-step>
+        <form-step *ngIf="fullForm">
+            <company-information #step [isFormReadonly]="isFormReadonly" [form]="forms.get('identification').get('companyInformation')" [completedStep]="currentCompletedStep" (submitEvent)="handleSubmit($event)"></company-information>
+        </form-step>
+        <form-step *ngIf="fullForm">
+            <beneficiary-list #step [isFormReadonly]="isFormReadonly" [form]="forms.get('identification').get('beneficiaries').get('beneficiaries')" [generalInformationForm]="forms.get('identification').get('generalInformation')" [completedStep]="currentCompletedStep" (submitEvent)="handleSubmit($event)"></beneficiary-list>
+        </form-step>
+        <form-step *ngIf="fullForm">
+            <banking-information #step [isFormReadonly]="isFormReadonly" [form]="forms.get('identification').get('bankingInformation')" [completedStep]="currentCompletedStep" (submitEvent)="handleSubmit($event)"></banking-information>
+        </form-step>
+        <form-step *ngIf="fullForm">
+            <classification-information #step [isFormReadonly]="isFormReadonly" [form]="forms.get('identification').get('classificationInformation')" [completedStep]="currentCompletedStep" [enabled]="checkCompletion()" [investorType]="investorType" (submitEvent)="handleSubmit($event)"></classification-information>
+        </form-step>
+    <form-step *ngIf="fullForm">
+        <!--PARENT STEP-->
+    </form-step>
+        <form-step *ngIf="fullForm">
+            <investment-nature #step [form]="forms.get('riskProfile').get('investmentNature')" [completedStep]="currentCompletedStep" (submitEvent)="handleSubmit($event)"></investment-nature>
+        </form-step>
+        <form-step *ngIf="fullForm">
+            <investment-objective #step [form]="forms.get('riskProfile').get('investmentObjective')" [formConstraint]="forms.get('riskProfile').get('investmentConstraint')" [completedStep]="currentCompletedStep" (submitEvent)="handleSubmit($event)"></investment-objective>
+        </form-step>
+        <form-step *ngIf="fullForm">
+            <investment-constraint #step [form]="forms.get('riskProfile').get('investmentConstraint')" [formObjective]="forms.get('riskProfile').get('investmentObjective')" [completedStep]="currentCompletedStep" (submitEvent)="handleSubmit($event)"></investment-constraint>
+        </form-step>
+    <form-step *ngIf="fullForm">
+        <kyc-step-documents #step [isFormReadonly]="isFormReadonly" [form]="forms.get('documents')" [documents]="documents" (submitEvent)="handleSubmit($event)"></kyc-step-documents>
+    </form-step>
+    <form-step>
+        <kyc-step-validation #step [form]="forms.get('validation')" (submitEvent)="handleSubmit($event)" [hasClientFile]="hasClientFile"></kyc-step-validation>
+    </form-step>
+</form-steps>

@@ -1,0 +1,46 @@
+.add-new-nav {
+    justify-content: flex-end;
+}
+
+.add-new-nav .btn:last-child {
+    margin-right: -10px;
+}
+
+.datagrid-cell {
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
+}
+
+.col-status {
+    //width: 100px !important;
+}
+
+.col-date {
+    //width: 95px !important;
+}
+
+.col-currency {
+    //width: 50px !important;
+}
+
+.export-nav {
+    display: flex;
+    justify-content: flex-end;
+    padding: 1.5em 0 0 0;
+}
+
+.export-nav button {
+    float: right;
+    margin: 0;
+}
+
+.button-container {
+    display: flex;
+    justify-content: flex-end;
+    width: 100%;
+}
+
+.col-min-width {
+    min-width: 133px !important;
+}

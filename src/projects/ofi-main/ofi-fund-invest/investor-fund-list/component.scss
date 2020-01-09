@@ -1,0 +1,106 @@
+.text-green{
+    color: green;
+}
+.text-green:hover{
+    color: white;
+    background-color: green;
+}
+.text-red{
+    color: #cc0000;
+}
+.text-red:hover{
+    color: white;
+    background-color: #cc0000;
+}
+.text-yellow{
+    color: #cccc00;
+}
+.text-yellow:hover{
+    color: white;
+    background-color: #cccc00;
+}
+
+.text-green-title{
+    color: green;
+}
+.text-red-title{
+    color: #cc0000;
+}
+.text-yellow-title{
+    color: #cccc00;
+}
+.text-orange-title{
+    color: #ffb100;
+}
+
+.search {
+    position: relative;
+    float: right;
+    text-align: right;
+    padding: 20px; }
+.search button {
+    background: transparent;
+    cursor: pointer;
+    border-radius: 0px 3px 3px 0px;
+    height: 34px;
+    border-left: 0;
+    transition: color .5s ease; }
+.search button:hover i {
+    color: #333; }
+.search button i {
+    color: #777; }
+.search .search-filter {
+    opacity: 0;
+    font-size: 12px;
+    float: left;
+    margin-right: 20px;
+    padding: 3px 10px;
+    background: #57a5e3;
+    color: white;
+    border-radius: 5px;
+    position: relative;
+    top: 2px;
+    transition: opacity .5s ease; }
+.search .search-filter.show {
+    opacity: 1; }
+.search .search-filter:hover {
+    text-decoration: line-through;
+    background: #e3625c; }
+.search .search-filter a {
+    color: white;
+    text-decoration: none; }
+.search .search-filter a:hover {
+    text-decoration: none; }
+.search .search-filter i {
+    color: white; }
+.search input {
+    background: white;
+    border: 1px solid #dadada !important;
+    line-height: 30px;
+    height: 34px !important;
+    border-radius: 3px 0px 0px 3px;
+    font-size: 12px;
+    float: left;
+    display: block;
+    padding: 3px 10px; }
+.search input:focus {
+    border-color: #2199e8; }
+
+.searchCross {
+    position: absolute;
+    cursor: pointer;
+    right: 55px;
+    top: 31px; }
+
+.message_list_menu {
+    float: left;
+    width: 100%;
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.action-width {
+    width: 340px!important;
+}

@@ -1,0 +1,371 @@
+<div class="header-breadcrumbs">
+    <h1><i class="fa fa-university"></i> {{ 'Management Company' | translate }}</h1>
+</div>
+
+<clr-tabs>
+    <clr-tab *ngIf="!isAssetManager">
+        <button id="mcTabList" clrTabLink (click)="resetForm()">
+            <i class="fa fa-th-list"></i> {{ 'List' | translate }}
+        </button>
+        <clr-tab-content *clrIfActive="showSearchTab">
+            <section class="form-block">
+
+                <clr-datagrid>
+                    <clr-dg-column [clrDgField]="'companyName'">
+                        {{ 'Management Company Name' | translate }}
+                    </clr-dg-column>
+                    <clr-dg-column [clrDgField]="'lei'">{{ 'LEI' | translate }}</clr-dg-column>
+                    <clr-dg-column [clrDgField]="'country'">{{ 'Country' | translate }}</clr-dg-column>
+                    <clr-dg-column>{{ 'Action' | translate }}</clr-dg-column>
+
+                    <clr-dg-row *clrDgItems="let managementCompany of managementCompanyList">
+                        <clr-dg-cell>{{managementCompany.companyName}}</clr-dg-cell>
+                        <clr-dg-cell>{{managementCompany.lei}}</clr-dg-cell>
+                        <clr-dg-cell>{{getCountryName(managementCompany.country)}}</clr-dg-cell>
+                        <clr-dg-cell>
+                            <div class="btn-group btn-sm">
+                                <button id="mcBtnEditMc" class="btn" (click)="editCompany(managementCompany)">
+                                    <i class="fa fa-edit"></i></button>
+                                <button id="mcBtnDeleteMc" class="btn" (click)="companyToDelete = managementCompany; showConfirmModal = true;">
+                                    <i class="fa fa-trash"></i>
+                                </button>
+                            </div>
+                        </clr-dg-cell>
+                    </clr-dg-row>
+
+                    <clr-dg-footer>
+                        {{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
+                        <clr-dg-pagination #pagination [clrDgPageSize]="10"></clr-dg-pagination>
+                    </clr-dg-footer>
+                </clr-datagrid>
+
+            </section>
+        </clr-tab-content>
+    </clr-tab>
+    <clr-tab>
+        <div *ngIf="!editForm; else editMcFTemplate">
+            <button id="mcTabAddNewMc" clrTabLink (click)="resetForm()"><i class="fa fa-plus"></i>
+                {{ 'New Management Company' | translate }}
+            </button>
+        </div>
+        <ng-template #editMcFTemplate>
+            <button id="mcTabEditMc" clrTabLink><i class="fa fa-pencil"></i>
+                {{ 'Edit Management Company' | translate }}
+            </button>
+        </ng-template>
+        <clr-tab-content *clrIfActive="editForm">
+            <!-- MANAGEMENT COMPANY FORMS -->
+            <form [formGroup]="managementCompanyForm" novalidate (ngSubmit)="save()">
+                <section class="form-block">
+                    <div *ngIf="!editForm;" class="row">
+                        <div class="form-group col-sm-6">
+                            <label class="control-label">{{ 'Is NowCP' | translate }}</label>
+                            <label class="switch">
+                                <input type="checkbox"
+                                       class="form-control"
+                                       formControlName="isNowCp"
+                                       id="isNowCp">
+                                <span class="slider round"></span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group required-field col-sm-6">
+                            <label class="control-label" for="companyName">
+                                {{ 'Management Company Name' | translate }}
+                            </label>
+                            <input type="text" id="companyName" class="form-control" formControlName="companyName"
+                                placeholder="{{ 'Please fill in the company name or legal name' | translate }}">
+                            <span *ngIf="managementCompanyForm.controls.companyName.hasError('required') && managementCompanyForm.controls.companyName.touched"
+                                class="field-error">{{ 'Field is required' | translate }}</span>
+                        </div>
+                        <div class="form-group required-field col-sm-6">
+                            <label class="control-label" for="emailAddress">
+                                {{ 'Email Address of the Super Admin' | translate }}
+                            </label>
+                            <input type="text" id="emailAddress" class="form-control" formControlName="emailAddress"
+                                placeholder="{{ 'Please fill in the email address of the super admin of the company' | translate }}">
+                            <span *ngIf="managementCompanyForm.controls.emailAddress.hasError('required') && managementCompanyForm.controls.emailAddress.touched"
+                                class="field-error">{{ 'Field is required' | translate }}</span>
+                        </div>
+                        <div class="form-group required-field col-sm-6">
+                            <label class="control-label" for="legalFormName">
+                                {{ 'Legal Form' | translate }}
+                            </label>
+                            <ng-select [items]="legalFormList" [allowClear]="true" placeholder="{{ 'Select legal form' | translate }}"
+                                [containerWidth]="'95%'" formControlName="legalFormName">
+                            </ng-select>
+                            <span *ngIf="managementCompanyForm.controls.legalFormName.hasError('required') && managementCompanyForm.controls.legalFormName.touched"
+                                class="field-error">{{ 'Field is required' | translate }}</span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group required-field col-sm-6">
+                            <label class="control-label" for="taxResidence">
+                                {{ 'Country of Tax Residence' | translate }}
+                            </label>
+                            <ng-select [items]="countries" [allowClear]="true" [containerWidth]="'95%'" placeholder="{{ 'Select country' | translate }}"
+                                formControlName="taxResidence">
+                            </ng-select>
+                            <span *ngIf="managementCompanyForm.controls.taxResidence.hasError('required') && managementCompanyForm.controls.taxResidence.touched"
+                                class="field-error">{{ 'Field is required' | translate }}</span>
+                        </div>
+                        <div class="form-group required-field col-sm-6">
+                            <label class="control-label" for="supervisoryAuthority">
+                                {{ 'Supervisory Authority' | translate }}
+                            </label>
+                            <input type="text" id="supervisoryAuthority" class="form-control" formControlName="supervisoryAuthority"
+                                placeholder="{{ 'If non applicable please fill in the value &#34;N/A&#34; here' | translate }}">
+                            <span *ngIf="managementCompanyForm.controls.supervisoryAuthority.hasError('required') && managementCompanyForm.controls.supervisoryAuthority.touched"
+                                class="field-error">{{ 'Field is required' | translate }}</span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group required-field col-sm-6">
+                            <label class="control-label" for="rcsMatriculation">
+                                {{ 'RCS Matriculation' | translate }}
+                            </label>
+                            <input type="text" id="rcsMatriculation" class="form-control" formControlName="rcsMatriculation"
+                                placeholder="{{ 'If non applicable please fill in the value &#34;N/A&#34; here' | translate }}">
+                            <span *ngIf="managementCompanyForm.controls.rcsMatriculation.hasError('required') && managementCompanyForm.controls.rcsMatriculation.touched"
+                                class="field-error">{{ 'Field is required' | translate }}</span>
+                        </div>
+                        <div class="form-group required-field col-sm-6">
+                            <label class="control-label" for="numSiretOrSiren">
+                                {{ 'Identification Number (SIRET / SIREN)' | translate }}
+                            </label>
+                            <input type="text" id="numSiretOrSiren" class="form-control" formControlName="numSiretOrSiren"
+                                placeholder="{{ 'If non applicable please fill in the value &#34;N/A&#34; here' | translate }}">
+                            <span *ngIf="managementCompanyForm.controls.numSiretOrSiren.hasError('required') && managementCompanyForm.controls.numSiretOrSiren.touched"
+                                class="field-error">{{ 'Field is required' | translate }}</span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group required-field col-sm-6">
+                            <label class="control-label" for="shareCapital">
+                                {{ 'Share Capital' | translate }}
+                            </label>
+                            <input type="text" id="shareCapital" class="form-control" formControlName="shareCapital"
+                                placeholder="&euro;">
+                            <span *ngIf="managementCompanyForm.controls.shareCapital.hasError('required') && managementCompanyForm.controls.shareCapital.touched"
+                                class="field-error">{{ 'Field is required' | translate }}</span>
+                            <span *ngIf="!managementCompanyForm.controls.shareCapital.hasError('required') && managementCompanyForm.controls.shareCapital.hasError('invalid') && managementCompanyForm.controls.shareCapital.touched"
+                                class="field-error">{{ 'Value must be numeric' | translate }}</span>
+                        </div>
+                        <div class="form-group required-field col-sm-6">
+                            <label class="control-label" for="lei">
+                                {{ 'LEI Code' | translate }}
+                            </label>
+                            <input type="text" id="lei" class="form-control" formControlName="lei" placeholder="{{ 'Please fill in the LEI code of the management company' | translate }}">
+                            <span *ngIf="managementCompanyForm.controls.lei.hasError('required') && managementCompanyForm.controls.lei.touched"
+                                class="field-error">{{ 'Field is required' | translate }}</span>
+                            <span *ngIf="!managementCompanyForm.controls.lei.hasError('required') && managementCompanyForm.controls.lei.hasError('pattern') && managementCompanyForm.controls.lei.touched"
+                                class="field-error">{{ 'LEI must be ISO 17442 standard' | translate }}</span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group required-field col-sm-6">
+                            <label class="control-label" for="bic">
+                                {{ 'BIC Code' | translate }}
+                            </label>
+                            <input type="text" id="bic" class="form-control" formControlName="bic" placeholder="{{ 'Please fill in the BIC code of the management company' | translate }}">
+                            <span *ngIf="managementCompanyForm.controls.bic.hasError('required') && managementCompanyForm.controls.bic.touched"
+                                class="field-error">{{ 'Field is required' | translate }}</span>
+                            <span *ngIf="managementCompanyForm.controls.bic.hasError('bic') && managementCompanyForm.controls.bic.touched"
+                                  class="field-error">{{ 'BIC must be 11 characters, ISO 9362, if 9 to 11 are empty then put "XXX"' | translate }}</span>
+                        </div>
+                        <div class="form-group col-sm-6">
+                            <label class="control-label" for="giin">
+                                {{ 'GIIN Code' | translate }}
+                            </label>
+                            <input type="text" id="giin" class="form-control" formControlName="giinCode" placeholder="{{ 'GIIN Code' | translate }}">
+                            <span *ngIf="managementCompanyForm.controls.giinCode.hasError('pattern') && managementCompanyForm.controls.giinCode.touched"
+                                class="field-error">{{ 'Invalid GIIN Code' | translate }}</span>
+                        </div>
+                        <div class="form-group col-sm-6"></div>
+                    </div>
+                    <div class="row address">
+                        <div class="form-group required-field col-sm-6">
+                            <label class="control-label" for="postalAddressLine1">
+                                {{ 'Registered Company’s Headquarters Address' | translate }}
+                            </label>
+                            <input type="text" id="postalAddressLine1" class="form-control" formControlName="postalAddressLine1"
+                                placeholder="{{ 'Address of the management company headquarters' | translate }}">
+                            <span *ngIf="managementCompanyForm.controls.postalAddressLine1.hasError('required') && managementCompanyForm.controls.postalAddressLine1.touched"
+                                class="field-error">{{ 'Field is required' | translate }}</span>
+                        </div>
+                        <div class="form-group col-sm-6">
+                            <label class="control-label" for="postalAddressLine2">
+                                {{ 'Address Line 2' | translate }}
+                            </label>
+                            <input type="text" id="postalAddressLine2" class="form-control" formControlName="postalAddressLine2">
+                            <span *ngIf="managementCompanyForm.controls.postalAddressLine2.hasError('required') && managementCompanyForm.controls.postalAddressLine2.touched"
+                                class="field-error">{{ 'Field is required' | translate }}</span>
+                        </div>
+                        <div class="form-group required-field col-sm-4">
+                            <label class="control-label" for="postalCode">
+                                {{ 'ZIP Code' | translate }}
+                            </label>
+                            <input type="text" id="postalCode" class="form-control" formControlName="postalCode"
+                                placeholder="{{ 'ZIP Code' | translate }}">
+                            <span *ngIf="managementCompanyForm.controls.postalCode.hasError('required') && managementCompanyForm.controls.postalCode.touched"
+                                class="field-error">{{ 'Field is required' | translate }}</span>
+                        </div>
+                        <div class="form-group required-field col-sm-4">
+                            <label class="control-label" for="city">
+                                {{ 'City' | translate }}
+                            </label>
+                            <input type="text" id="city" class="form-control" formControlName="city" placeholder="{{ 'City' | translate }}">
+                            <span *ngIf="managementCompanyForm.controls.city.hasError('required') && managementCompanyForm.controls.city.touched"
+                                class="field-error">{{ 'Field is required' | translate }}</span>
+                        </div>
+                        <div class="form-group required-field col-sm-4">
+                            <label class="control-label" for="country">
+                                {{ 'Country' | translate }}
+                            </label>
+                            <ng-select [items]="countries" [allowClear]="true" placeholder="{{ 'Select country' | translate }}"
+                                formControlName="country" [containerWidth]="'92.5%'"></ng-select>
+                            <span *ngIf="managementCompanyForm.controls.country.hasError('required') && managementCompanyForm.controls.country.touched"
+                                class="field-error">{{ 'Field is required' | translate }}</span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group required-field col-sm-6">
+                            <label class="control-label" for="commercialContact">
+                                <span>{{ 'Commercial Contact' | translate }}</span>
+                            </label>
+                            <input type="text" id="commercialContact" class="form-control" formControlName="commercialContact"
+                                placeholder="{{ 'If non applicable please fill in the value &#34;N/A&#34; here' | translate }}">
+                            <span *ngIf="managementCompanyForm.controls.commercialContact.hasError('required') && managementCompanyForm.controls.commercialContact.touched"
+                                class="field-error">{{ 'Field is required' | translate }}</span>
+                        </div>
+                        <div class="form-group required-field col-sm-6">
+                            <label class="control-label" for="operationalContact">
+                                {{ 'Operational Contact' | translate }}
+                            </label>
+                            <input type="text" id="operationalContact" class="form-control" formControlName="operationalContact"
+                                placeholder="{{ 'If non applicable please fill in the value &#34;N/A&#34; here' | translate }}">
+                            <span *ngIf="managementCompanyForm.controls.operationalContact.hasError('required') && managementCompanyForm.controls.operationalContact.touched"
+                                class="field-error">{{ 'Field is required' | translate }}</span>
+                        </div>
+                        <div class="form-group col-sm-6"></div>
+                    </div>
+                    <div class="row">
+
+                        <div class="form-group required-field col-sm-6">
+                            <label class="control-label" for="directorContact">
+                                {{ 'Director Contact' | translate }}
+                            </label>
+                            <input type="text" id="directorContact" class="form-control" formControlName="directorContact"
+                                placeholder="{{ 'If non applicable please fill in the value &#34;N/A&#34; here' | translate }}">
+                            <span *ngIf="managementCompanyForm.controls.directorContact.hasError('required') && managementCompanyForm.controls.directorContact.touched"
+                                class="field-error">{{ 'Field is required' | translate }}</span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group required-field col-sm-6">
+                            <label for="mc_websiteurl" class="control-label">
+                                {{ 'Management Company Website Address' | translate }}
+                            </label>
+                            <input type="text" id="mc_websiteUrl" class="form-control" formControlName="websiteUrl"
+                                placeholder="{{ 'Website address' | translate }}">
+                            <span *ngIf="managementCompanyForm.controls['websiteUrl'].hasError('required') && managementCompanyForm.controls['websiteUrl'].touched"
+                                class="field-error">{{ 'Field is required' | translate }}</span>
+                        </div>
+                        <div class="form-group required-field col-sm-6">
+                            <label for="mc_phoneNumber" class="control-label">
+                                {{ 'Management Company Phone Number' | translate }}
+                            </label>
+                            <div class="phone-input-container">
+                                <div>
+                                    <ng-select id="kyc_additionnal_phoneCode" [items]="phoneNumbersCountryCodes"
+                                        [formControl]="managementCompanyForm.controls.phoneNumberPrefix" placeholder="{{ 'Select phone numer' | translate }}"
+                                        [containerWidth]="'100%'">
+                                    </ng-select>
+                                    <span *ngIf="managementCompanyForm.controls['phoneNumberPrefix'].hasError('required') && managementCompanyForm.controls['phoneNumberPrefix'].touched"
+                                        class="field-error">{{ 'Field is required' | translate }}</span>
+                                </div>
+
+                                <div>
+                                    <input type="text" id="kyc_additionnal_phoneNumber" class="form-control"
+                                        placeholder="{{ 'Please fill in the commercial phone number of the management company' | translate }}"
+                                        [formControl]="managementCompanyForm.controls.phoneNumber">
+                                    <span *ngIf="managementCompanyForm.controls['phoneNumber'].hasError('required') && managementCompanyForm.controls['phoneNumber'].touched"
+                                        class="field-error">{{ 'Field is required' | translate }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-sm-6">
+                            <label for="mc_signature" class="required-field">
+                                {{ 'Document Signature to be displayed on the Certification of Book Entry' | translate
+                                }}
+                            </label>
+                            <div class="filedrop-wrapper">
+                                <input type="hidden" class="form-control" formControlName="signature">
+                                <setl-file-drop class="form-control" id="mc_signature" [formControl]="managementCompanyForm.controls['signature']"
+                                    (onDrop)="onDropFile($event, 'signature')" [preset]="{ name: fileMetadata.getTitle('signature'), fileBase64: fileMetadata.getHash('signature') }"
+                                    [inline]="true" [usePreview]="true" [allowFileTypes]="['image/png', 'image/jpeg']"
+                                    ngDefaultControl></setl-file-drop>
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-6">
+                            <label for="mc_logo" class="required-field">
+                                {{ 'Document Logo of the Management Company' | translate }}
+                            </label>
+                            <div class="filedrop-wrapper">
+                                <input type="hidden" class="form-control" formControlName="logo">
+                                <setl-file-drop class="form-control" id="mc_logo" [formControl]="managementCompanyForm.controls['logo']"
+                                    (onDrop)="onDropFile($event, 'logo')" [preset]="{ name: fileMetadata.getTitle('logo'), fileBase64: fileMetadata.getHash('logo') }"
+                                    [inline]="true" [usePreview]="true" [allowFileTypes]="['image/png', 'image/jpeg']"
+                                    ngDefaultControl></setl-file-drop>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-sm-12">
+                            <button id="mcBtnSubmitForm" type="submit" class="btn btn-primary">
+                                <div *ngIf="!editForm; else editMcFBtSubmit">
+                                    <i class="fa fa-save"></i> {{ 'Save' | translate }}
+                                </div>
+                                <ng-template #editMcFBtSubmit>
+                                    <i class="fa fa-save"></i> {{ 'Update' | translate }}
+                                </ng-template>
+                            </button>
+                            <button id="mcBtnResetForm" *ngIf="!editForm" type="reset" class="btn btn-info">{{ 'Reset'
+                                | translate }}</button>
+                        </div>
+                    </div>
+                </section>
+            </form>
+        </clr-tab-content>
+    </clr-tab>
+</clr-tabs>
+
+<!--CUSTOM TEXT MODALS-->
+<clr-modal [(clrModalOpen)]="showModal">
+    <h3 class="modal-title text-success"><i class="fa fa-info-circle" aria-hidden="true"></i> {{modalTitle}}</h3>
+    <div class="modal-body text-success text-center">
+        <p>{{modalText}}</p>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-outline" (click)="showModal = false">{{ 'Close' | translate }}</button>
+    </div>
+</clr-modal>
+
+<!--CONFIRM MODALS-->
+<clr-modal [(clrModalOpen)]="showConfirmModal">
+    <h3 class="modal-title">{{ 'Deleting Management Company' | translate }}</h3>
+    <div class="modal-body">
+        <p>{{ 'Are you sure you want to delete' | translate }}:<br />
+            <strong>{{companyToDelete && companyToDelete.companyName}}</strong>
+        </p>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-outline" id="mcConfirmModalBtnYes" (click)="confirmModal(0)">{{ 'No' |
+            translate }}</button>
+        <button type="button" class="btn btn-primary" id="mcConfirmModalBtnNo" (click)="confirmModal(1)">{{ 'Yes' |
+            translate }}</button>
+    </div>
+</clr-modal>

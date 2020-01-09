@@ -1,0 +1,151 @@
+<div *ngIf="multiple">
+    <div class="row panel-header">
+        <div class="col-sm-12">
+            <a href="#" (click)="open = !open; $event.preventDefault();">
+                <i class="fa fa-chevron-right" [class.rotate]="open"></i>
+                <h2>{{amc.companyName}}</h2>
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="panel-body form" [class.hidden]="!open" [ngClass]="{'nature pl-1': multiple}" [formGroup]="form">
+    <div class="checkbox-group" formGroupName="financialAssetManagementMethod">
+        <div class="row col-sm-12">
+            <div class="form-group required-field col-sm-12">
+                <label class="control-label">{{ 'Financial Asset Management Method' | translate }}</label>
+            </div>
+        </div>
+
+        <div class="row col-sm-12 form-group">
+            <div class="col-sm-12">
+                <span class="checkbox-inline">
+                    <input type="checkbox" id="internalManagement-{{index}}" formControlName="internalManagement">
+                    <label for="internalManagement-{{index}}">
+                        {{ 'Internal Management' | translate }}
+                    </label>
+                </span>
+            </div>
+        </div>
+
+        <div class="row col-sm-12 form-group">
+            <div class="col-sm-12">
+                <span class="checkbox-inline">
+                    <input type="checkbox" id="withAdviceOfAuthorisedThirdPartyInstitution-{{index}}"
+                        formControlName="withAdviceOfAuthorisedThirdPartyInstitution">
+                    <label for="withAdviceOfAuthorisedThirdPartyInstitution-{{index}}">
+                        {{ 'With the advice of an authorised third party institution' | translate }}
+                    </label>
+                </span>
+            </div>
+        </div>
+
+        <div class="row col-sm-12 form-group">
+            <div class="col-sm-12">
+                <span class="checkbox-inline">
+                    <input type="checkbox" id="mandateEntrustedToManagers-{{index}}" formControlName="mandateEntrustedToManagers">
+                    <label for="mandateEntrustedToManagers-{{index}}">
+                        {{ 'By mandate(s) entrusted to a manager(s)' | translate }}
+                    </label>
+                </span>
+            </div>
+        </div>
+
+        <div class="row col-sm-6 form-group required-field">
+            <div class="col-sm-6">
+                <div class="force-display-error field-error text-left"
+                    *ngIf="form.get('financialAssetManagementMethod').touched && form.get('financialAssetManagementMethod').status === 'INVALID'">
+                    {{ 'Select at least one' | translate }}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="checkbox-group" formGroupName="frequencyFinancialTransactions">
+        <div class="row col-sm-12">
+            <div class="form-group required-field col-sm-12 mt-2">
+                <label class="required-field">{{ 'Frequency of financial transactions' | translate }}</label>
+            </div>
+        </div>
+
+        <ng-container *ngFor="let frequency of frequencyList; let i = index">
+            <div class="row col-sm-12 form-group required">
+                <ng-container *ngTemplateOutlet="checkboxGridFrequency; context: {'item': frequencyList[i * 2], 'index': i }">
+                </ng-container>
+                <ng-container *ngTemplateOutlet="checkboxGridFrequency; context: {'item': frequencyList[(i * 2) + 1], 'index': i }">
+                </ng-container>
+            </div>
+        </ng-container>
+
+        <div class="row col-sm-6 form-group required-field">
+            <div class="col-sm-6">
+                <div class="force-display-error field-error text-left"
+                *ngIf="form.get('frequencyFinancialTransactions').touched && form.get('frequencyFinancialTransactions').status === 'INVALID'">{{ 'Select at least one' | translate }}</div>
+            </div>
+        </div>
+
+        <!-- Template is placed here because formControlName must be nested within formGroupName which in turn must be nested within formGroup -->
+        <ng-template #checkboxGridFrequency let-item="item" let-index="index">
+            <div class="col-sm-3" *ngIf="item">
+                <div class="checkbox-inline">
+                    <input type="checkbox"
+                            id="{{ item.id }}-{{ index }}"
+                            formControlName="{{ item.id }}"
+                            (click)="form.get(['frequencyFinancialTransactions', item.id]).markAsTouched()">
+                    <label for="{{ item.id }}-{{ index }}">
+                        {{ item.text | translate }}
+                    </label>
+                </div>
+            </div>
+        </ng-template>
+    </div>
+
+    <div class="checkbox-group mt-2" formGroupName="investmentvehiclesAlreadyUsed">
+        <div class="row col-sm-12">
+            <div class="form-group required-field col-sm-12">
+                <label class="required-field">{{ 'Investment vehicles already used' | translate }}</label>
+            </div>
+        </div>
+
+        <ng-container *ngFor="let item of investmentVehicleList; let i = index">
+            <div class="row col-sm-12 form-group required">
+                <ng-container *ngTemplateOutlet="checkboxGridVehicle; context: {'item': investmentVehicleList[i * 2], 'index': i }">
+                </ng-container>
+                <ng-container *ngTemplateOutlet="checkboxGridVehicle; context: {'item': investmentVehicleList[(i * 2) + 1], 'index': i }">
+                </ng-container>
+            </div>
+        </ng-container>
+
+        <div class="col-sm-6 form-group required-field">
+            <div class="col-sm-6">
+                <div class="force-display-error field-error text-left"
+                    *ngIf="form.get('investmentvehiclesAlreadyUsed').touched && form.get('investmentvehiclesAlreadyUsed').status === 'INVALID'">{{ 'Select at least one' | translate }}</div>
+                </div>
+        </div>
+
+        <!-- Template is placed here because formControlName must be nested within formGroupName which in turn must be nested within formGroup -->
+        <ng-template #checkboxGridVehicle let-item="item" let-index="index">
+            <div class="col-sm-3" *ngIf="item">
+                <div class="checkbox-inline">
+                    <input type="checkbox"
+                            id="{{ item.id }}-{{ index }}"
+                            formControlName="{{ item.id }}"
+                            (click)="form.get(['investmentvehiclesAlreadyUsed', item.id]).markAsTouched()">
+                    <label for="{{ item.id }}-{{ index }}">
+                        {{ item.text | translate }}
+                    </label>
+                </div>
+            </div>
+        </ng-template>
+    </div>
+
+    <div class="checkbox-group">
+        <div class="row col-sm-12">
+            <div class="row col-sm-4 form-group required-field" *ngIf="!isDisabled('investmentvehiclesAlreadyUsedSpecification')">
+                <label for="investmentvehiclesAlreadyUsedSpecification">{{ 'Please specify' | translate }}</label>
+                <input type="text" formControlName="investmentvehiclesAlreadyUsedSpecification">
+                <span class="field-error" *ngIf="hasError('investmentvehiclesAlreadyUsedSpecification', ['required'])">{{ 'Field is required' | translate }}</span>
+            </div>
+        </div>
+    </div>
+</div>
