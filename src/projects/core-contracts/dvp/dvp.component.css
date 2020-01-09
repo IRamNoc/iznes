@@ -1,0 +1,68 @@
+:host form .form-group input {
+    margin-bottom: 0;
+    margin-top: 0;
+    width: 360px;
+}
+
+:host form .form-group .field-error {
+    width: 360px;
+}
+
+:host form .form-group input[type=checkbox] {
+    width: auto;
+}
+
+:host .form-block {
+    margin-bottom: 1.5em;
+}
+
+:host .contract-party {
+    border-top: 1px dotted #CCC;
+    padding-top: 20px;
+}
+
+:host .contract-party .party-title {
+    background: rgb(45, 113, 180);
+    border-radius: 2px;
+    color: #FFF;
+    font-size: 0.8em;
+    margin-bottom: 10px;
+    padding: 0 7px;
+}
+
+/* side by side display */
+:host .contract-party-container {
+    border: 1px solid #DDD;
+    border-radius: 3px;
+    min-height: 400px;
+    margin: 2em 0 1em 0;
+    position: relative;
+}
+
+:host .contract-party-container .toggle-asset {
+    margin-bottom: 0;
+}
+
+:host .contract-party-container .toggle-asset input {
+    margin-right: 4px;
+}
+
+:host .contract-party-container .contract-party {
+    border-top: none;
+    padding: 1em 1.5em 0;
+}
+
+:host .icon-wrapper {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    font-size: 3em;
+}
+
+:host /deep/ .contract-party-container .ui-select-container.dropdown {
+    background: #FFF;
+}
+
+.time-picker {
+    width: 316px!important;
+}

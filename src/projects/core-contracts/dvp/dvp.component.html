@@ -1,0 +1,127 @@
+<div class="header-breadcrumbs">
+    <h1>
+        <i class="fa fa-file-text-o"></i>
+        <span>{{ 'DVP' | translate }}</span>
+    </h1>
+</div>
+
+<clr-tabs>
+    <clr-tab>
+        <button clrTabLink clrTabLinkId="link1">
+            <i class="fa fa-file-text-o"></i>
+            <span>{{ 'DVP' | translate }} </span>
+        </button>
+
+        <clr-tab-content *clrIfActive>
+            <form [formGroup]="createContractForm" (ngSubmit)="createContract()">
+                <section class="form-block">
+                    <div class="form-group col-sm-4">
+                        <label class="control-label required-field" for="contract_creator">
+                            <span>{{ 'Contract Creator Address' | translate }}</span>
+                        </label>
+
+                        <ng-select id="contract_creator"
+                                   [items]="walletAddressSelectItems"
+                                   [allowClear]="true"
+                                   placeholder="{{ 'Select Creator Address' | translate }}"
+                                   [formControl]="createContractForm.controls['creator']"
+                        >
+                        </ng-select>
+
+                        <span *ngIf="createContractForm.controls['creator'].hasError('required') && createContractForm.controls['creator'].touched" class="field-error">{{ 'Field is required' | translate }}</span>
+                    </div>
+
+                    <div class="form-group col-sm-4">
+                        <label class="control-label required-field" for="contract_expiry_date">
+                            <span>{{ 'Expiry Date' | translate }}</span>
+                        </label>
+
+                        <input type="text" id="contract_expiry_date" autocomplete="off"
+                               [formControl]="createContractForm.controls['expireDate']"
+                               [dpDayPicker]="configDatePicker"
+                               placeholder="{{ 'Expiry Date' | translate }}"
+                               mode="day"
+                               theme="dp-material"/>
+                        <span *ngIf="createContractForm.controls['expireDate'].hasError('pattern') && createContractForm.controls['expireDate'].touched"
+                              class="field-error">{{ 'Invalid date. Format must be YYYY-MM-DD.' | translate }}</span>
+                        <span *ngIf="createContractForm.controls['expireDate'].hasError('required') && createContractForm.controls['expireDate'].touched"
+                              class="field-error">{{ 'Field is required' | translate }}</span>
+                    </div>
+
+                    <div class="form-group col-sm-4">
+                        <label class="control-label required-field" for="contract_expiry_time">
+                            <span>{{ 'Expiry Time' | translate }}</span>
+                        </label>
+
+                        <div class="input-group">
+                            <span class="fa fa-clock-o" aria-hidden="true"></span>
+                            <input type="text" autocomplete="off" id="contract_expiry_time" formControlName="expireTime" [dpDayPicker]="configTimePicker" mode="time" theme="dp-material" class="time-picker">
+                            <span *ngIf="createContractForm.controls['expireTime'].hasError('required') && createContractForm.controls['expireTime'].touched"
+                              class="field-error time-picker">{{ 'Field is required' | translate }}</span>
+                        </div>
+                    </div>
+                </section>
+
+                <div class="contract-party-container row">
+                    <ng-container *ngFor="let party of parties; let idx = index;">
+                        <section formGroupName="{{party.id}}" class="form-block contract-party col-md-4">
+                            <span class="text-badge">{{party.title}}</span>
+
+                            <div class="form-group col-sm-10">
+                                <various-address-select
+                                    [formControl]="createContractForm.controls[party.id].controls['address']"
+                                    [relationshipArray]="walletRelationships"
+                                    [ownWalletAddressArray]="walletAddressSelectItems"
+                                    [required]="true">
+                                </various-address-select>
+                                <div class="field-error">{{ 'Field is required' | translate }}</div>
+                            </div>
+
+                            <div class="form-group col-sm-10 toggle-asset" *ngIf="party.toggleAssetReturn">
+                                <label class="control-label" for="{{party.id}}_return_asset">
+                                    <input type="checkbox" name="{{party.id}}_return_asset" id="{{party.id}}_return_asset" formControlName="return_asset">{{ 'Send Asset in Return?' | translate }}
+                                </label>
+                            </div>
+
+                            <div *ngIf="isReturnAssetEnabled(party)">
+                                <div class="form-group col-sm-10">
+                                    <label class="control-label required-field" for="{{party.id}}_asset">
+                                        <span>{{ 'Asset' | translate }}</span>
+                                    </label>
+
+                                    <ng-select id="{{party.id}}_asset"
+                                               [items]="allInstrumentList"
+                                               [allowClear]="true"
+                                               placeholder="{{ 'Select Issuer' | translate }}"
+                                               [formControl]="createContractForm.controls[party.id].controls['asset']">
+                                    </ng-select>
+
+                                    <span *ngIf="createContractForm.controls[party.id].controls['asset'].hasError('required') && createContractForm.controls[party.id].controls['asset'].touched"
+                                          class="field-error">{{ 'Field is required' | translate }}</span>
+                                </div>
+
+                                <div class="form-group col-sm-10">
+                                    <label class="control-label required-field" for="{{party.id}}_amount">
+                                        <span>{{ 'Amount' | translate }}</span>
+                                    </label>
+
+                                    <input formControlName="amount" type="number" name="{{party.id}}_amount" id="{{party.id}}_amount" required/>
+
+                                    <span *ngIf="createContractForm.controls[party.id].controls['amount'].hasError('required') && createContractForm.controls[party.id].controls['amount'].touched" class="field-error">{{ 'Field is required' | translate }}</span>
+                                </div>
+                            </div>
+                        </section>
+                        <div class="col-sm-2 icon-wrapper" *ngIf="idx === 0">
+                            <i class="fa fa-exchange" [hidden]="!isReturnAssetEnabled(parties[1])"></i>
+                            <i class="fa fa-long-arrow-right" [hidden]="isReturnAssetEnabled(parties[1])"></i>
+                        </div>
+                    </ng-container>
+
+                </div>
+
+                <button type="submit" class="btn btn-primary" [disabled]="createContractForm.invalid">{{ 'Create DVP Contract' | translate }}</button>
+
+            </form>
+        </clr-tab-content>
+    </clr-tab>
+</clr-tabs>
