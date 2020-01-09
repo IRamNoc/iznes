@@ -1,0 +1,224 @@
+<div class="header-breadcrumbs">
+    <h1><i class="fa fa-code-fork"></i> {{ 'Wallet Nodes' | translate }}</h1>
+</div>
+
+<div class="wrapper wrapper-content">
+    <clr-tabs *ngIf="tabsControl.length">
+        <clr-tab *ngFor="let tabdata of tabsControl; let id = index">
+            <button clrTabLink id="link{{id}}" [innerHTML]="tabdata.title"></button>
+            <clr-tab-content *clrIfActive="tabdata.active">
+                <!-- Wallet nodes list tab -->
+                <ng-container *ngIf="id === 0">
+                    <ng-container *ngTemplateOutlet="walletNodesListTab"></ng-container>
+                </ng-container>
+
+                <!-- Wallet nodes add tab -->
+                <ng-container *ngIf="id === 1">
+                    <ng-container
+                            *ngTemplateOutlet="staticAddTab; context: {'formControl': tabdata.formControl, 'tabid': id}"></ng-container>
+                </ng-container>
+
+                <!-- Wallet nodes edit tab -->
+                <ng-container *ngIf="id >= 2">
+                    <ng-container
+                            *ngTemplateOutlet="dynamicEditTab; context: {'formControl': tabdata.formControl, 'tabid': id}"></ng-container>
+                </ng-container>
+            </clr-tab-content>
+        </clr-tab>
+    </clr-tabs>
+
+    <!-- Wallet Nodes Data Table -->
+    <ng-template #walletNodesListTab>
+        <div class="panel-body">
+            <datagrid-list
+                [fieldsModel]="walletNodesFieldsModel"
+                [listData]="walletNodesList"
+                [listActions]="walletNodesListActions"
+                [filters]="walletNodesListFilters"
+                (action)="onAction($event)">
+            </datagrid-list>
+        </div>
+    </ng-template>
+
+    <!-- Wallet Nodes Add Form -->
+    <ng-template #staticAddTab let-formControl="formControl" let-tabid="tabid">
+        <div class="user-tab-panel-body panel-body">
+            <form (ngSubmit)="handleChecks(tabid, 'add')" [formGroup]="formControl">
+                <div class="row">
+                    <div class="form-group col-sm-6">
+                        <label class="control-label required-field" for="walletNodeName">
+                            {{ 'Node Name' | translate }}
+                        </label>
+
+                        <input type="text" id="walletNodeName"
+                                class="form-control"
+                                formControlName="walletNodeName"
+                                placeholder="{{ 'Wallet Node Name' | translate }}"/>
+
+                        <div *ngIf="!formControl.controls['walletNodeName'].valid && formControl.controls['walletNodeName'].touched" class="field-error">{{ 'Field is required' | translate }}</div>
+                    </div>
+
+                    <div class="form-group col-sm-6">
+                        <label class="control-label required-field" for="nodeAddress">
+                            {{ 'Node Address' | translate }}
+                        </label>
+
+                        <input type="text"
+                                id="nodeAddress"
+                                class="form-control"
+                                formControlName="nodeAddress"
+                                placeholder="{{ 'Wallet Node Address' | translate }}"/>
+
+                        <div *ngIf="!formControl.controls['nodeAddress'].valid && formControl.controls['nodeAddress'].touched" class="field-error">{{ 'Field is required' | translate}}</div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group col-sm-6">
+                        <label class="control-label">
+                            {{ 'Node Path' | translate }}
+                        </label>
+
+                        <input type="text"
+                                id="nodePath"
+                                class="form-control"
+                                formControlName="nodePath"
+                                placeholder="{{ 'Wallet Node Path' | translate }}"/>
+                    </div>
+
+                    <div class="form-group col-sm-6">
+                        <label class="control-label required-field" for="nodePort">
+                           {{ 'Node Port' | translate }}
+                        </label>
+
+                        <input type="number"
+                                id="nodePort"
+                                class="form-control"
+                                formControlName="nodePort"
+                                placeholder="{{ 'Wallet Node Port' | translate }}"/>
+
+                        <div *ngIf="!formControl.controls['nodePort'].valid && formControl.controls['nodePort'].touched" class="field-error">{{ 'Field must be a number of less than 12 digits' | translate }}</div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-sm-12">
+                        <label class="control-label required-field" for="walletNodeChain">
+                            {{ 'Chain' | translate }}
+                        </label>
+
+                        <div class="ngSelectFix" id="walletNodeChain">
+                            <ng-select [items]="chainsListOptions"
+                                        placeholder="{{ 'Select Chain' | translate }}"
+                                        formControlName="chainId"></ng-select>
+
+                            <div *ngIf="!formControl.controls['chainId'].valid && formControl.controls['chainId'].touched" class="field-error">{{ 'Field is required' | translate }}</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group col-sm-12">
+                        <div class="form-group col-sm-12">
+                            <button id="walletNodeBtnSubmitForm" type="submit" class="btn btn-primary"
+                                    [disabled]="!formControl.valid && !isDebug">
+                                    <i class="fa fa-save"></i> {{ 'Save' | translate }}
+                            </button>
+                            <button id="walletNodeBtnResetForm"
+                                    type="reset" class="btn btn-info">{{ 'Clear' | translate }}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+            </form>
+        </div>
+    </ng-template>
+
+    <!-- Wallet Nodes Edit Form -->
+    <ng-template #dynamicEditTab let-formControl="formControl" let-tabid="tabid">
+        <div class="user-tab-panel-body panel-body">
+            <form (ngSubmit)="handleChecks(tabid, 'edit')" [formGroup]="formControl">
+                <div class="row">
+                    <input type="hidden" id="walletNodeId" class="form-control" formControlName="walletNodeId">
+                    <div class="form-group col-sm-6">
+
+                        <label class="control-label required-field" for="walletNodeName">
+                            {{ 'Node Name' | translate }}
+                        </label>
+
+                        <input type="text" id="walletNodeName"
+                                class="form-control"
+                                formControlName="walletNodeName"
+                                placeholder="{{ 'Wallet Node Name' | translate }}"/>
+
+                        <div *ngIf="!formControl.controls['walletNodeName'].valid && formControl.controls['walletNodeName'].touched" class="field-error">{{ 'Field is required' | translate }}</div>
+                    </div>
+
+                    <div class="form-group col-sm-6">
+                        <label class="control-label required-field" for="nodeAddress">
+                           {{ 'Node Address' | translate }}
+                        </label>
+
+                        <input type="text" id="nodeAddress"
+                                class="form-control"
+                                formControlName="nodeAddress"
+                                placeholder="{{ 'Wallet Node Address' | translate }}"/>
+
+                        <div *ngIf="!formControl.controls['nodeAddress'].valid && formControl.controls['nodeAddress'].touched" class="field-error">{{ 'Field is required' | translate }}</div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group col-sm-6">
+                        <label class="control-label">
+                            {{ 'Node Path' | translate }}
+                        </label>
+                        <input type="text" id="nodePath"
+                                class="form-control"
+                                formControlName="nodePath"
+                                placeholder="{{ 'Wallet Node Path' | translate }}"/>
+                    </div>
+
+                    <div class="form-group col-sm-6">
+                        <label class="control-label required-field" for="nodePort">
+                            {{ 'Node Port' | translate }}
+                        </label>
+
+                        <input type="number" id="nodePort"
+                                class="form-control"
+                                formControlName="nodePort"
+                                placeholder="{{ 'Wallet Node Port' | translate }}"/>
+
+                        <div *ngIf="!formControl.controls['nodePort'].valid && formControl.controls['nodePort'].touched" class="field-error">{{ 'Field must be a number of less than 12 digits' | translate }}</div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group col-sm-12">
+                        <label class="control-label required-field" for="chainId">
+                            {{ 'Chain' | translate }}
+                        </label>
+
+                        <input type="text" id="chainId" class="form-control" formControlName="chainId" disabled>
+
+                        <div *ngIf="!formControl.controls['chainId'].valid && formControl.controls['chainId'].touched" class="error-field">{{ 'Field is required' | translate }}</div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group col-sm-12">
+                        <div class="form-group col-sm-12">
+                            <button id="walletNodeBtnSubmitForm" type="submit" class="btn btn-primary"
+                                    [disabled]="!formControl.valid && !isDebug">
+                                <i class="fa fa-save"></i> {{ 'Save' | translate }}
+                            </button>
+                            <button (click)="closeTab(tabid)" class="btn btn-secondary">
+                                {{ 'Close' | translate }}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </ng-template>
+</div>

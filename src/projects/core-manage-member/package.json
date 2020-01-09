@@ -1,0 +1,8 @@
+{
+    "name": "@setl/core-manage-member",
+    "version": "1.0.0",
+    "main": "index.js",
+    "repository": "git@si-nexus01.dev.setl.io:SETL_Modules/core-manage-member.git",
+    "author": "SETL.io",
+    "license": "UNLICENCED"
+}
