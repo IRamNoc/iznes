@@ -1,0 +1,159 @@
+<div class="header-breadcrumbs">
+    <h1><i class="fa fa-th-list"></i> {{ 'Balances' | translate }}</h1>
+</div>
+
+<clr-tabs *ngIf="tabs.length">
+    <clr-tab *ngFor="let tab of tabs; let id = index">
+        <button clrTabLink id="testlink{{id}}" (click)="tabControl.activate(id); viewingAsset = tab.title"
+                innerHTML="<i class='fa fa-{{tab.icon}}'></i> {{tab.title | asset}}"></button>
+        <clr-tab-content *clrIfActive="tab.active">
+            <!-- User list tab. -->
+            <ng-container *ngIf="id === 0">
+                <ng-container
+                    *ngTemplateOutlet="staticBalanceList"
+                ></ng-container>
+            </ng-container>
+
+            <!-- User edit tabs. -->
+            <ng-container *ngIf="id >= 1">
+                <ng-container
+                    *ngTemplateOutlet="dynamicViewTab; context: {'formControl': tab.formControl, 'id': id, 'asset': tab.data.assetObject, 'transactions': tab.data.transactions, 'template': tab.data.template, 'transaction': tab.data.transaction}"
+                ></ng-container>
+            </ng-container>
+        </clr-tab-content>
+    </clr-tab>
+</clr-tabs>
+
+<ng-template #staticBalanceList>
+    <div class="panel-body">
+        <datagrid-list
+            [fieldsModel]="overviewFieldsModel"
+            [listData]="balances$ | async"
+            [listActions]="overviewListActions"
+            [exportOptions]="breakdownExportOptions"
+            [currentPage]="pageCurrent"
+            [filters]="overviewListFilters"
+            (action)="onAction($event)"
+            (currentPageChange)="setCurrentPage($event)">
+        </datagrid-list>
+    </div>
+</ng-template>
+
+<!-- User Edit Form. -->
+<ng-template #dynamicViewTab let-formControl="formControl" let-id="id" let-asset="asset" let-template="template"
+                let-transactions="transactions" let-transaction="transaction">
+    <div class="user-tab-panel-body panel-body">
+
+        <!-- Breakdown view -->
+        <div *ngIf="template === 'breakdown'">
+            <div class="form-group tx-view-header">
+                <h2>{{ 'Breakdown' | translate }}</h2>
+            </div>
+
+            <datagrid-list
+                [fieldsModel]="breakdownFieldsModel"
+                [listData]="asset.breakdown"
+                [exportOptions]="breakdownExportOptions"
+                [filters]="breakdownListFilters">
+            </datagrid-list>
+        </div>
+
+        <!-- History view -->
+        <div *ngIf="template === 'history'">
+            <h2>{{ 'Transaction History' | translate }}</h2>
+
+            <clr-datagrid #myDataGrid [clrDgLoading]="(transactions | async)?.loading">
+                <clr-dg-column>{{ 'Action' | translate }}</clr-dg-column>
+                <clr-dg-column>{{ 'Tx ID' | translate }}</clr-dg-column>
+                <clr-dg-column>{{ 'Asset' | translate }}</clr-dg-column>
+                <clr-dg-column class="right">{{ 'Amount' | translate }}</clr-dg-column>
+                <clr-dg-column>{{ 'Time (UTC)' | translate }}</clr-dg-column>
+                <clr-dg-column>{{ 'Type' | translate }}</clr-dg-column>
+
+                <clr-dg-row *clrDgItems="let transaction of (transactions | async)?.pages[(transactions | async)?.currentPage]?.transactions">
+                    <clr-dg-cell>
+                        <button (click)="handleViewTransaction(transaction)" class="btn btn-sm"><i
+                            class="fa fa-search"></i>{{ 'View' | translate }}
+                        </button>
+                    </clr-dg-cell>
+                    <clr-dg-cell class="tooltip tooltip-xs" [title]="transaction.hash">{{transaction.shortHash}}
+                    </clr-dg-cell>
+                    <clr-dg-cell class="ellipsised" [title]="transaction.issuer + ' | ' + transaction.instrument">
+                        {{transaction.issuer}} | {{transaction.instrument}}
+                    </clr-dg-cell>
+                    <clr-dg-cell class="right">{{transaction.amount | moneyValue}}</clr-dg-cell>
+                    <clr-dg-cell>{{transaction.utc | date: 'dd/MM/yyyy hh:mm:ss'}}</clr-dg-cell>
+                    <clr-dg-cell><span class="label label-success">{{transaction.txType}}</span></clr-dg-cell>
+                </clr-dg-row>
+
+                <!-- <clr-dg-footer>
+                    <div rowsPerPage="10" (rowsUpdate)="pageSize = $event"></div>
+                    {{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
+                    <clr-dg-pagination #pagination [clrDgPageSize]="pageSize"></clr-dg-pagination>
+                </clr-dg-footer> -->
+                <clr-dg-footer>
+                    <div style="width: 100%; text-align: left">
+                        <!-- <span>Page size&nbsp;</span>
+                        <select (change)="pageSize = $event.target.value">
+                            <option *ngFor="let size of [10, 25, 50, 100]" [value]="size">{{size}}</option>
+                        </select> -->
+
+                        <div class="btn-group btn-pagination">
+                            <button class="btn btn-sm" (click)="reportingService.historyResetByAsset(asset.asset)"><clr-icon shape="refresh"></clr-icon></button>
+                        </div>
+
+                        <div class="btn-group btn-pagination">
+                            <button
+                                class="btn btn-sm"
+                                [disabled]="(transactions | async)?.currentPage === 0"
+                                (click)="reportingService.historyPaginationByAsset(asset.asset, 'prev')"
+                            ><clr-icon shape="caret left"></clr-icon></button>
+                            <button
+                                class="btn btn-sm"
+                                [disabled]="(transactions | async)?.pages.length <= (transactions | async)?.currentPage - 1 || (transactions | async)?.pages[(transactions | async)?.currentPage]?.next === null"
+                                (click)="reportingService.historyPaginationByAsset(asset.asset, 'next')"
+                            ><clr-icon shape="caret right"></clr-icon></button>
+                        </div>
+
+                        <div class="btn-group btn-pagination">
+                            {{ 'Page' | translate }}: {{(transactions | async)?.currentPage + 1}}
+                        </div>
+                    </div>
+                </clr-dg-footer>
+            </clr-datagrid>
+        </div>
+
+        <!-- Transaction view -->
+        <div *ngIf="template === 'transaction'">
+            <div class="transaction-tab-panel-body panel-body">
+                <form>
+                    <div class="form-horizontal">
+                        <div class="form-group tx-view-header">
+                            <div class="col-sm-3">&nbsp;</div>
+                            <label class="col-sm-4">
+                                <h2>{{ 'Transaction Details' | translate }}</h2>
+                            </label>
+                        </div>
+
+                        <ng-container *ngFor="let field of transactionFields">
+                            <div class="form-group" *ngIf="transaction[field.field]">
+                                <label class="col-sm-3 control-label">
+                                    <span>{{field.displayName | translate}}</span>
+                                </label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control" readonly=""
+                                            [value]="transaction[field.field]">
+                                </div>
+                            </div>
+                        </ng-container>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="form-block tx-view-header">
+            <button type="button" class="btn btn-primary" (click)="handleClose(id, asset)">{{ 'Close' | translate }}
+            </button>
+        </div>
+    </div>
+</ng-template>

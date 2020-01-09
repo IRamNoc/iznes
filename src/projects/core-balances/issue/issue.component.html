@@ -1,0 +1,57 @@
+<div class="animated fadeInRight">
+    <div class="header-breadcrumbs">
+        <h1><i class="fa fa fa-money"></i> {{ 'Issue Reports' | translate }}</h1>
+    </div>
+
+    <clr-tabs *ngIf="tabs.length">
+        <clr-tab *ngFor="let tab of tabs; let id = index">
+            <button clrTabLink id="testlink{{id}}"
+                    innerHTML="<i class='fa fa-{{tab.icon}}'></i> {{tab.title}}"></button>
+            <clr-tab-content *clrIfActive="tab.active">
+                <!-- User list tab. -->
+                <ng-container *ngIf="id === 0">
+                    <ng-container
+                        *ngTemplateOutlet="staticBalanceList"
+                    ></ng-container>
+                </ng-container>
+
+                <!-- User edit tabs. -->
+                <ng-container *ngIf="id >= 1">
+                    <ng-container
+                        *ngTemplateOutlet="dynamicViewTab; context: {'formControl': tab.formControl, 'id': id, 'asset': tab.assetObject, 'holdings': tab.data.holdings}"
+                    ></ng-container>
+                </ng-container>
+            </clr-tab-content>
+        </clr-tab>
+    </clr-tabs>
+
+    <ng-template #staticBalanceList>
+        <div class="panel-body">
+            <datagrid-list
+                [fieldsModel]="issueListFields"
+                [listData]="issuers$ | async"
+                [listActions]="issueListActions"
+                [filters]="issueFilters"
+                [exportOptions]="exportOptions"
+                [currentPage]="pageCurrent"
+                (action)="onAction($event)"
+                (currentPageChange)="setCurrentPage($event)">
+            </datagrid-list>
+        </div>
+    </ng-template>
+
+    <!-- Asset Detail Report -->
+    <ng-template #dynamicViewTab let-formControl="formControl" let-id="id" let-asset="asset" let-holdings="holdings">
+        <div class="user-tab-panel-body panel-body">
+            <datagrid-list
+                [fieldsModel]="detailFieldsModel"
+                [listData]="holdings"
+                [filters]="detailFilters"
+                [exportOptions]="exportOptions">
+            </datagrid-list>
+            <div class="form-block tx-view-header">
+                <button type="button" class="btn btn-primary" (click)="tabControl.close(id)">{{ 'Close' | translate }}</button>
+            </div>
+        </div>
+    </ng-template>
+</div>
