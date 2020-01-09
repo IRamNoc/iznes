@@ -1,0 +1,49 @@
+div.option-wrap {
+    position: relative;
+    display: inline-block;
+    user-select: none;
+}
+
+div.option-box {
+    display: inline-block;
+    border: 1px solid gainsboro;
+    border-radius: 4px;
+    padding: 5px;
+    cursor: pointer;
+    height: 30px;
+    width: 30px;
+    line-height: 20px;
+}
+
+ul.option-list {
+    position: absolute;
+    top: 32px;
+    left: 0px;
+    height: 0;
+    overflow: hidden;
+    list-style-type: none;
+    text-align: left;
+}
+
+ul.option-list.open {
+    height: auto;
+    width: 140px;
+    background-color: #FFFFFF;
+    border: 1px solid gainsboro;
+    border-radius: 4px;
+    padding: 2.5px 5px;
+    z-index: 2;
+}
+
+ul.option-list li {
+    display: inline-block;
+    width: 100%;
+    margin: 2.5px 0;
+    padding: 4px;
+    cursor: pointer;
+}
+
+ul.option-list li:hover {
+    background-color: gainsboro;
+    border-radius: 4px;
+}

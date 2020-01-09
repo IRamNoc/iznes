@@ -1,0 +1,48 @@
+<div class="permission-grid">
+    <clr-datagrid fixedHeader>
+        <clr-dg-column class="left">Permission Area</clr-dg-column>
+        <clr-dg-column *ngFor="let level of permissionLevels">
+            {{level.text}}
+        </clr-dg-column>
+
+        <clr-dg-row *ngFor="let area of permissionAreas; let areaIndex = index">
+            <clr-dg-cell class="left">{{area.text}}</clr-dg-cell>
+            <clr-dg-cell *ngFor="let level of permissionLevels; let levelIndex = index">
+
+                <!-- Option List, defaults to this grid. -->
+                <div class="option-wrap" (click)="setOpen(areaIndex, levelIndex)">
+
+                    <!-- The option box, shows the value and is the toggle to show the list. -->
+                    <div class="option-box">
+
+                        <!-- Icon of the value. -->
+                        <i class="fa"
+                           [ngClass]="optionSelect('icon', rawComponentData[area.id][level.id])"
+                           [ngStyle]="{'color': optionSelect('color', rawComponentData[area.id][level.id])}">
+                        </i>
+
+                    </div>
+
+                    <!-- The option list. -->
+                    <ul class="option-list open" *ngIf="checkOpen(areaIndex, levelIndex)">
+
+                        <!-- Each option. -->
+                        <li *ngFor="let option of optionsList" (click)="updateValue(area.id, level.id, option.id)">
+
+                            <!-- Option Icon. -->
+                            <i class="fa"
+                               [ngClass]="option.icon"
+                               [ngStyle]="{'color': option.color}">
+                            </i>
+
+                            <!-- Option text. -->
+                            <span [innerHTML]="option.text"
+                                  [ngClass]="{'selected': optionSelect.id === option.id}">
+                            </span>
+                        </li>
+                    </ul>
+                </div>
+            </clr-dg-cell>
+        </clr-dg-row>
+    </clr-datagrid>
+</div>

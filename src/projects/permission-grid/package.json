@@ -1,0 +1,8 @@
+{
+  "name": "@setl/permission-grid",
+  "version": "1.0.0",
+  "main": "index.ts",
+  "repository": "git@si-nexus01.dev.setl.io:SETL_Modules/Angular_components/permission-grid.git",
+  "author": "Dan Sarracayo <dan.sarracayo@setl.io>",
+  "license": "MIT"
+}
