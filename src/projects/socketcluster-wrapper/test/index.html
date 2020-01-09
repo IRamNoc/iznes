@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+</head>
+<body>
+
+</body>
+<script src="bundle.js"></script>
+<script>
+    var setlWebsocket = new SocketClusterWrapper('wss', 'localhost', '9788', 'db');
+    setlWebsocket.openWebSocket();
+
+    var Request = {
+        MessageType: 'DataRequest',
+        MessageHeader: '',
+        RequestID: 0,
+        //MessageBody: {RequestName: 'Login', UserName: username, Password: password, CFCountry: nz(document.cf_ipcountry, '.')}
+        // CFCountry just legacy. It still required as a parameter, but it is not used for anything.
+        MessageBody: {RequestName: 'Login', UserName: 'ofi_am_1', Password: 'alex01', CFCountry: '.'}
+    };
+
+    setlWebsocket.sendRequest([Request, function (errorCode, data) {
+        console.log(data);
+        document.body.innerHTML = "<h1>It works</h1>"
+    }]);
+
+</script>
+</html>
