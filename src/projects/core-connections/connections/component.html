@@ -1,0 +1,206 @@
+<div class="header-breadcrumbs">
+    <h1><i class="fa fa-users"></i> {{ 'Connections' | translate }}</h1>
+</div>
+
+<clr-tabs>
+    <!-- Accepted connections tab -->
+    <clr-tab>
+        <button id="accepted-connection-tab" clrTabLink>
+            <i class="fa fa-check"></i> {{ 'Accepted' | translate }}
+        </button>
+
+        <ng-template [(clrIfActive)]="isAcceptedTabDisplayed">
+            <clr-tab-content>
+                <section class="form-block">
+                    <datagrid-list
+                        [fieldsModel]="connectionsFieldsModel"
+                        [listData]="acceptedConnectionList"
+                        [listActions]="connectionsListActions"
+                        [filters]="connectionsFilters"
+                        (action)="onAction($event)">
+                    </datagrid-list>
+                </section>
+            </clr-tab-content>
+        </ng-template>
+    </clr-tab>
+
+    <!-- Pending connections tab -->
+    <clr-tab>
+        <button id="pending-connection-tab" clrTabLink>
+            <i class="fa fa-ellipsis-h"></i> {{ 'Pending' | translate }}
+        </button>
+
+        <clr-tab-content>
+            <section class="form-block">
+                <datagrid-list
+                    [fieldsModel]="pendingFieldsModel"
+                    [listData]="pendingConnectionList"
+                    [listActions]="pendingListActions"
+                    [filters]="pendingFilters"
+                    (action)="onAction($event)">
+                </datagrid-list>
+            </section>
+        </clr-tab-content>
+    </clr-tab>
+
+    <!-- Add connection tab -->
+    <clr-tab>
+        <button id="add-connection-tab" clrTabLink (click)="resetForm()">
+            <i class="fa fa-plus"></i> {{ 'Add Connection' | translate }}
+        </button>
+
+        <clr-tab-content>
+            <form [formGroup]="formGroup" novalidate (ngSubmit)="handleSubmitButtonClick()">
+                <section class="form-block">
+                    <div class="row">
+                        <div class="form-group col-sm-6">
+
+                            <div class="tooltip left tooltip-sm">
+                                <i class="fa fa-info-circle"></i>
+                                <span class="tooltip-content">{{ 'Select a wallet to connect to' | translate }}</span>
+                                <label class="control-label required-field" for="add-connection-select">{{ 'Connection' | translate }}</label>
+                            </div>
+
+                            <ng-select
+                                    id="add-connection-select"
+                                    placeholder="{{ 'Select wallet' | translate }}"
+                                    [items]="walletList"
+                                    [allowClear]=true
+                                    [formControl]="formGroup.controls['connection']">
+                            </ng-select>
+
+                            <span *ngIf="formGroup.controls['connection'].hasError('required') && formGroup.controls['connection'].touched"
+                                  class="field-error">{{ 'Field is required' | translate }}</span>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group col-sm-6">
+
+                            <div class="tooltip left tooltip-sm">
+                                <i class="fa fa-info-circle"></i>
+                                <span class="tooltip-content">{{ 'Select an address to use for this connection' | translate }}</span>
+                                <label class="control-label required-field" for="add-subportfolio-select">{{ 'Address' | translate }}</label>
+                            </div>
+
+                            <ng-select
+                                id="add-subportfolio-select"
+                                [items]="addressList"
+                                [allowClear]=true
+                                placeholder="{{ 'Select address' | translate }}"
+                                [formControl]="formGroup.controls['sub-portfolio']">
+                            </ng-select>
+
+                            <span *ngIf="formGroup.controls['sub-portfolio'].hasError('required') && formGroup.controls['sub-portfolio'].touched"
+                                  class="field-error">{{ 'Field is required' | translate }}</span>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <button id="add-connection-button" class="btn btn-primary" [disabled]="formGroup.invalid">
+                            <i class="fa fa-save"></i> {{ 'Save' | translate }}
+                        </button>
+                    </div>
+                </section>
+            </form>
+        </clr-tab-content>
+    </clr-tab>
+
+    <!-- Edit connection tab -->
+    <clr-tab *ngIf="!isEditTabClosed">
+        <button id="edit-connection-tab" clrTabLink>
+            <i class="fa fa-pencil"></i>
+            {{ 'Edit Connection' | translate }}
+        </button>
+
+        <ng-template [(clrIfActive)]="isEditTabDisplayed">
+            <clr-tab-content>
+                <form [formGroup]="formGroup" novalidate (ngSubmit)="handleSubmitButtonClick()">
+                    <section class="form-block">
+                        <div class="row">
+                            <div class="form-group col-sm-6">
+
+                                <label class="control-label required-field" for="add-connection-select">{{ 'Connection' | translate }}</label>
+
+                                <ng-select
+                                        id="edit-connection-select"
+                                        placeholder="{{ 'Select a connection' | translate }}"
+                                        [items]="walletList"
+                                        [allowClear]=true
+                                        [formControl]="formGroup.controls['connection']"
+                                        [disabled]="isEditTabDisplayed">
+                                </ng-select>
+
+                                <span *ngIf="formGroup.controls['connection'].hasError('required') && formGroup.controls['connection'].touched"
+                                      class="field-error">{{ 'Field is required' | translate }}</span>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="form-group col-sm-6">
+                                <div class="tooltip left tooltip-sm">
+                                    <i class="fa fa-info-circle"></i>
+                                    <span class="tooltip-content">{{ 'Select an address to use for this connection' | translate }}</span>
+                                    <label class="control-label required-field" for="add-subportfolio-select">{{ 'Address' | translate }}</label>
+                                </div>
+
+                                <ng-select
+                                        id="edit-subportfolio-select"
+                                        [items]="addressList"
+                                        [allowClear]=true
+                                        placeholder="{{ 'Select address' | translate }}"
+                                        [formControl]="formGroup.controls['sub-portfolio']">
+                                </ng-select>
+
+                                <span *ngIf="formGroup.controls['sub-portfolio'].hasError('required') && formGroup.controls['sub-portfolio'].touched"
+                                      class="field-error">{{ 'Field is required' | translate }}</span>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <button id="edit-connection-button" class="btn btn-primary" [disabled]="formGroup.invalid">
+                                <i class="fa fa-save"></i> {{ 'Save' | translate }}
+                            </button>
+                            <button class="btn btn-secondary" (click)="handleCloseButtonClick()">
+                                {{ 'Close' | translate }}
+                            </button>
+                        </div>
+                    </section>
+                </form>
+            </clr-tab-content>
+        </ng-template>
+    </clr-tab>
+</clr-tabs>
+
+<!-- Accept connection modal -->
+<clr-modal [(clrModalOpen)]="isAcceptModalDisplayed">
+    <h3 class="modal-title">{{ 'Select a sub-portfolio to use for this connection' | translate }}</h3>
+    <div class="modal-body">
+        <label class="control-label required-field" for="accept-subportfolio-addr-link">{{ 'Sub-portfolio' | translate }}</label>
+        <ng-select
+                id="accept-subportfolio-addr-link"
+                [items]="addressList"
+                [allowClear]=true
+                placeholder="{{ 'Select a sub-portfolio' | translate }}"
+                [formControl]="formGroup.controls['sub-portfolio']">
+        </ng-select>
+
+        <span *ngIf="formGroup.controls['sub-portfolio'].hasError('required') && formGroup.controls['sub-portfolio'].touched"
+              class="field-required">{{ 'Field is required' | translate }}</span>
+    </div>
+
+    <div class="modal-footer">
+        <button type="button"
+                id="accept-connection-cancel-btn"
+                class="btn btn-outline"
+                (click)="onAcceptConnection(false)">
+            {{ 'Cancel' | translate }}
+        </button>
+        <button type="button"
+                id="accept-connection-submit-btn"
+                class="btn btn-primary"
+                (click)="onAcceptConnection(true)">
+            {{ 'Submit' | translate }}
+        </button>
+    </div>
+</clr-modal>
