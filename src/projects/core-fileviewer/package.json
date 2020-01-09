@@ -1,0 +1,7 @@
+ {
+  "name": "@setl/core-fileviewer",
+  "version": "1.0.0",
+  "description": "A file viewer.",
+  "main": "index.ts",
+  "license": "Private SETL"
+}
