@@ -1,0 +1,308 @@
+.ui-select-toggle {
+    position: relative;
+    margin: 0px;
+    width: 100% !important;
+}
+
+.btn {
+    max-width: unset;
+}
+
+/* Fix caret going into new line in Firefox */
+.ui-select-placeholder {
+    float: left;
+}
+
+.ui-select-multiple {
+    cursor: pointer;
+
+    .ui-select-placeholder {
+        padding: 0 15px;
+        margin: -6px 0 !important;
+    }
+}
+
+/* Fix Bootstrap dropdown position when inside a input-group */
+.input-group > .dropdown {
+    /* Instead of relative */
+    position: static;
+}
+
+.ui-select-match > .btn {
+    /* Instead of center because of .btn */
+    text-align: left !important;
+}
+
+.ui-select-match {
+    .arrow {
+        position: absolute;
+        top: 13px;
+        right: 13px;
+    }
+    .clear {
+        color: #007cbb;
+        margin: 0;
+        padding: 0;
+        z-index: 1;
+        position: absolute;
+        right: 23px;
+        top: 2px;
+        border: none;
+        background: none;
+        min-width: inherit!important;
+        &:hover {
+            color: #004a70;
+        }
+    }
+}
+
+.ui-disabled {
+    background-color: #eceeef;
+    border-radius: 4px;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    z-index: 5;
+    opacity: 0.6;
+    top: 0;
+    left: 0;
+    cursor: not-allowed;
+}
+
+.ui-select-choices {
+    width: 100%;
+    height: auto;
+    max-height: 200px;
+    overflow-x: hidden;
+    margin-top: 0;
+}
+
+.ui-select-multiple .ui-select-choices {
+    margin-top: 1px;
+}
+
+.ui-select-choices-row > a {
+    display: block;
+    padding: 3px 20px;
+    clear: both;
+    font-weight: 400;
+    line-height: 1.42857143;
+    color: #333;
+    white-space: nowrap;
+}
+
+.ui-select-choices-row.active > a {
+    color: #fff;
+    text-decoration: none;
+    outline: 0;
+    background-color: #428bca;
+}
+
+.ui-select-multiple {
+    height: auto;
+    padding: 0px;
+}
+
+.ui-select-container.ui-select-multiple {
+    border: none !important;
+    padding: 0px !important;
+}
+
+.ui-select-multiple input.ui-select-search {
+    background-color: transparent !important; /* To prevent double background when disabled */
+    border: none;
+    outline: none;
+    box-shadow: none;
+    height: 1.6666em;
+    padding: 0;
+    margin-bottom: 3px;
+
+}
+
+.ui-select-match .close {
+    font-size: 1.6em;
+    line-height: 0.75;
+}
+
+.ui-select-multiple .ui-select-match-item {
+    outline: 0;
+    margin: 0 3px 3px 0;
+}
+
+.dropdown-menu {
+    max-width: 10000px !important
+}
+
+.option-wrapper.ui-select-choices.dropdown-menu {
+    position: absolute;
+    /*height: 200 px;*/
+    visibility: visible;
+    list-style: none;
+
+    .search {
+        max-width: unset;
+        height: auto;
+    }
+}
+
+.ui-select-choices li {
+    list-style: none;
+    overflow-x: hidden;
+    width: 100%;
+}
+
+.ui-select-search, .menuitem {
+    width: 95% !important;
+    margin: 0 auto !important;
+}
+
+.option-wrapper.dropdown-menu > * {
+    padding: 0;
+    width: 100%;
+    margin: 0 auto;
+}
+
+.ui-select-choices-row > a {
+    padding: 3px 5px;
+}
+
+.ui-select-container {
+    position: relative;
+}
+
+.ui-select-container .ui-select-search {
+    line-height: 30px !important;
+    height: 30px !important;
+    min-height: unset;
+}
+
+.ui-select-match.dropdown.open {
+    .ui-select-toggle {
+        border-bottom: none;
+        border-radius: .125rem .125rem 0 0;
+    }
+
+    a.btn {
+        background: transparent;
+    }
+
+}
+
+.option-wrapper.ui-select-choices.dropdown-menu {
+    border-color: #dadada;
+    margin-top: 0px;
+    -webkit-box-sizing: none;
+    -moz-box-sizing: none;
+    box-sizing: none;
+    border-top: none;
+    border-radius: 0 0 .125rem .125rem;
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+    overflow-y: hidden;
+    padding: 5px;
+}
+
+.dropdown-menu ul {
+    overflow-y: auto;
+    max-height: 145px;
+    position: relative;
+}
+
+.ui-select-container:hover {
+    .dropdown-menu {
+        border-color: #a4c4fa;
+    }
+    .ui-select-match.dropdown.open .ui-select-toggle {
+        border-color: #a4c4fa;
+    }
+    .ui-select-match {
+        border-color: #a4c4fa;
+    }
+}
+
+.option-wrapper.dropdown-menu ul {
+    margin-top: 5px;
+}
+
+.select-search {
+    position: relative;
+}
+
+.select-search .fa-search {
+    position: absolute;
+    top: 7px;
+    right: 10px;
+    font-size: 15px;
+    color: #a8a8a8;
+}
+
+.option-wrapper.dropdown-menu input {
+    width: 100% !important;
+}
+
+.ui-select-match {
+    width: 100%;
+}
+
+.ui-select-container.ui-select-multiple .ui-select-match {
+    padding: 5px;
+    border: 1px solid #dadada;
+    height: auto;
+    min-height: 40px;
+    width: 100%;
+    border-radius: 0.125rem;
+}
+
+.ui-select-container.ui-select-multiple.open {
+    .ui-select-match {
+        border-bottom: none;
+        -webkit-border-radius: 0.125rem 0.125rem 0 0;
+        -moz-border-radius: 0.125rem 0.125rem 0 0;
+        border-radius: 0.125rem 0.125rem 0 0;
+    }
+}
+
+.ui-select-container.ui-select-multiple .ui-select-search {
+    margin-left: 0px !important;
+    border: 1px solid #dadada !important;
+    padding: 0px 10px !important;
+}
+
+.no-active-top {
+    top: 1px;
+}
+
+:host(.multiline) {
+    .ui-select-placeholder,
+    .ui-select-match-text {
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .ui-select-choices-row,
+    .ui-select-choices-row > a {
+        white-space: normal;
+    }
+
+    .dropdown-item {
+        height: auto;
+    }
+}
+
+.dropdown-item div {
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.icon {
+    width: 26px;
+    height: 40px;
+    float: left;
+}
+
+.clear-search {
+    margin-left: -25px;
+    color: #737373;
+    cursor: pointer;
+}

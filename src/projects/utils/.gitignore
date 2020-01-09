@@ -1,0 +1,15 @@
+# dependencies
+node_modules
+
+# misc
+npm-debug.log
+yarn-error.log
+yarn.lock
+package-lock.json
+
+# Log file
+*.log
+
+# System Files
+.DS_Store
+Thumbs.db

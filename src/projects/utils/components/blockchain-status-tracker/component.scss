@@ -1,0 +1,167 @@
+:host {
+    .sm-col {
+        max-width: 200px;
+    }
+
+    clr-datagrid {
+        max-height: 64vh;
+        width: 95%;
+        margin: 0 auto;
+    }
+
+    /deep/ .dropdown {
+        display: none;
+        position: absolute;
+        margin-top: 10px;
+        width: 635px;
+        margin-left: -514px;
+        border-radius: 0 0 .125rem .125rem;
+        z-index: 1000001;
+        background: #ffffff;
+        &.solo {
+            margin-left: 0;
+            width: 560px;
+        }
+        &.active {
+            display: block;
+        }
+        clr-datagrid {
+            .datagrid {
+                border: none;
+                margin-top: 0;
+                overflow: hidden;
+                clr-dg-placeholder {
+                    border: none;
+                }
+                .datagrid-row {
+                    border-bottom: none;
+                }
+                .datagrid-column {
+                    background: none;
+                }
+                .datagrid-header .datagrid-row {
+                    background: none;
+                }
+                clr-dg-column-separator {
+                    display: none;
+                }
+            }
+            clr-dg-cell {
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+        }
+        .footer {
+            border-top: solid 1px #979797;
+            margin: 0 15px;
+        }
+    }
+}
+
+#blockchain-status-tracker {
+    cursor: pointer;
+    overflow: hidden;
+    .pending, .success, .fail {
+        box-sizing: border-box;
+        font-size: 12px;
+        font-weight: 400;
+        position: relative;
+        vertical-align: middle;
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+        text-align: center;
+        width: 40px;
+        height: 40px;
+        margin: 0 0 0 1px;
+        padding: 0;
+        border-radius: 100%;
+        box-shadow: none;
+        float: left;
+        transition: all 0.2s linear;
+        color: #ffffff;
+
+        &::after {
+            box-sizing: inherit;
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            border-radius: 100%;
+        }
+
+        &.update::after {
+            border: 0 solid transparent;
+            border-left-width: 5px;
+            border-right-width: 5px;
+            animation-duration: 1s;
+            animation-iteration-count: infinite;
+            animation-direction: normal;
+        }
+    }
+
+    &:hover, &.active {
+        .fail {
+            border-color: #c92100;
+        }
+        .pending {
+            border-color: #ff8400;
+        }
+        .success {
+            border-color: #2f8400;
+        }
+    }
+
+    .fail {
+        border: solid 2px #92242e;
+        &.update::after {
+            animation-name: spinRotateFail;
+        }
+    }
+
+    .pending {
+        border: solid 2px #836300;
+        &.update::after {
+            animation-name: spinRotatePending;
+        }
+    }
+
+    .success {
+        border: solid 2px #00551a;
+        &.update::after {
+            animation-name: spinRotateSuccess;
+        }
+    }
+
+    @keyframes spinRotateFail {
+        0% {
+            border-top: 4px solid #92242e;
+            transform: rotate(360deg);
+        }
+        20% {
+            border-top: 4px solid #92242e;
+        }
+    }
+
+    @keyframes spinRotatePending {
+        0% {
+            border-top: 3px solid #836300;
+            transform: rotate(360deg);
+        }
+        20% {
+            border-top: 3px solid #836300;
+        }
+    }
+
+    @keyframes spinRotateSuccess {
+        0% {
+            border-top: 3px solid #00551a;
+            transform: rotate(360deg);
+        }
+        20% {
+            border-top: 3px solid #00551a;
+        }
+    }
+}

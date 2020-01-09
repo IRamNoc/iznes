@@ -1,0 +1,19 @@
+{
+  "name": "@setl/utils",
+  "version": "1.0.3",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "ibantools": "^2.0.0",
+    "moment-timezone": "^0.5.17",
+    "ngx-json-viewer": "^2.4.0",
+    "ramda": "^0.24.1",
+    "redux-saga": "^0.15.6",
+    "xss": "^0.3.8"
+  }
+}

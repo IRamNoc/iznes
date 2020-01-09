@@ -1,0 +1,75 @@
+:host {
+    display: block;
+    width: 100%;
+
+    .toggle-switch label {
+        margin-left: -0.75em;
+    }
+    .break-on-before {
+        left: -1px;
+        margin-left: 1px;
+
+        + div:not(.break-on-before) {
+            margin-left: -1px;
+        }
+    }
+
+    .break {
+        flex-basis: 100%;
+        width: 0px; 
+        height: 0px; 
+        overflow: hidden;
+    }
+
+    .na-field { width: 360px; }
+
+    .filedrop-wrapper {
+        display: flex;
+
+        /deep/ .drop-file-wrapper { padding: 0; }
+
+        setl-file-drop {
+            display: block;
+            flex: 1 1 auto;
+            z-index: 0;
+        }
+
+        setl-file-viewer {
+            flex: 0 0 100px;
+            z-index: 1;
+        }
+                
+        setl-file-viewer /deep/ > div > .btn {
+            border-bottom-left-radius: 0;
+            border-top-left-radius: 0;
+            height: 40px;
+            margin-bottom: 0;
+            margin-left: -4px;
+            margin-top: 0;
+            z-index: 1;
+        }
+    }
+
+    .dynamic-form-header {
+        border-bottom: 1px solid rgb(220, 220, 220);
+        display: block;
+        margin-bottom: 15px;
+        width: 100%;
+    }
+
+    p {
+        margin: 1em 0 0.5em 0;
+        padding: 0;
+    }
+
+    label.hasTitle {
+        text-align: left;
+        color: #545454;
+        line-height: 20px;
+        position: static;
+        width: 100%;
+        margin-top: 0px;
+        margin-bottom: 0px;
+        font-size: 12px;
+    }
+}

@@ -1,0 +1,13 @@
+<div class="timelime">
+    <ng-container *ngFor="let status of objectKeys(statusList); let i = index">
+        <ng-template [ngIf]="i > 0">
+            <div class="line" [class.active]="statusList[i].active"></div>
+        </ng-template>
+        <div class="status tooltip tooltip-sm">
+            <i class="fa fa-check" [class.active]="statusList[i].active">
+            </i>
+            <p class="label">{{ objectKeys(statusList[i])[0] }}</p>
+            <span class="tooltip-content">{{ statusList[i][objectKeys(statusList[i])[0]] }}</span>
+        </div>
+    </ng-container>
+</div>

@@ -1,0 +1,57 @@
+.timelime {
+    display: flex;
+    width: 80%;
+    margin: 0 10%;
+    .status {
+        width: 60px;
+        z-index: 1;
+        i {
+            border-radius: 100%;
+            font-size: 25px;
+            padding: 10px;
+            background-color: #a8a8a8;
+            transition: all 0.7s ease;
+            transition-delay: 0.3s;
+            color: rgba(255, 255, 255, 0.5);
+            &.active {
+                background-color: #49A45F;
+                animation: pulse 1s forwards;
+                animation-delay: 1.5s;
+            }
+        }
+        p.label {
+            width: 45px;
+            text-align: center;
+            margin-top: 2px;
+            font-weight: bold;
+            font-size: 15px;
+            border: none;
+        }
+    }
+    .line {
+        flex: 1;
+        height: 15px;
+        margin: 15px -20px;
+        background: linear-gradient(to right, #49A45F 50%, #a8a8a8 50%);
+        background-size: 200% 100%;
+        background-position: right bottom;
+        opacity: 0.5;
+        transition: all 0.7s ease;
+        &.active {
+            background-position: left bottom;
+        }
+    }
+    .tooltip-content {
+        background: #373a49;
+        &::before {
+            border-left: .25rem solid #373a49;
+            border-top: .208333rem solid #373a49;
+        }
+    }
+}
+
+@keyframes pulse {
+    100% {
+        color: rgba(255, 255, 255, 1);
+    }
+}

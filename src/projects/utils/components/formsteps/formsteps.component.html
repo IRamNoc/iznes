@@ -1,0 +1,24 @@
+<div class="steps-container" [class.fixed]="fixStepsProgress" (wheel)="debounceScroll($event)">
+    <div *ngIf="_onboardingMode" class="kyc-step complete"><span></span> {{ 'User Profile' | translate }}</div>
+    <form-steps-progress [config]="progress" (jumpToStep)="goToStep($event)"></form-steps-progress>
+</div>
+
+<div class="form-container">
+    <div class="steps-slider" [ngStyle]="{'marginLeft': margin}">
+        <ng-content></ng-content>
+    </div>
+
+    <div class="button-container">
+        <button *ngIf="!isBeginning()" class="btn" (click)="askPrevious()" [disabled]="disabled">
+            {{'Back' | translate}}
+        </button>
+        <button #submit class="btn btn-primary" (click)="askNext()" [disabled]="disabled || !isStepValid()">
+            <span *ngIf="!isEnd()">
+                {{'Next' | translate}}
+            </span>
+            <span *ngIf="isEnd()">
+                {{'Submit' | translate}}
+            </span>
+        </button>
+    </div>
+</div>
