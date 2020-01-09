@@ -1,0 +1,12 @@
+<div class="message-body">
+    <!-- body gets printed automagically -->
+
+    <div class="btn-group btn-primary" *ngIf="!isActed">
+        <div *ngIf="canShowButton('R')" (click)="sendXparam('R')" class="btn">Retry</div>
+        <div *ngIf="canShowButton('I')" (click)="sendXparam('I')" class="btn">Ignore</div>
+        <div *ngIf="canShowButton('C')" (click)="sendXparam('C')" class="btn">Cancel</div>
+        <div *ngIf="canShowButton('A')" (click)="sendXparam('A')" class="btn">Abort</div>
+    </div>
+    <p *ngIf="isActed">This alert has already been acted upon.</p>
+
+</div>

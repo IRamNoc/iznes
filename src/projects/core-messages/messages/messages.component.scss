@@ -1,0 +1,132 @@
+button.disabled {
+    color: #ccc;
+    cursor: default;
+    border-color: #eaeaea;
+}
+
+.messagesSubject {
+    word-wrap: break-word;
+}
+
+.message_view_header h4 b {
+    word-wrap: break-word;
+}
+
+.padding {
+    width: 20px;
+    height: 4px;
+    float: left;
+}
+
+h2 {
+    display: inline-block;
+}
+
+.message_list_item_check i {
+    color: #57a5e3;
+}
+
+@keyframes chevron-fade-in {
+    0%   { opacity: 0; transform: translateX(-20px) }
+    100% { opacity: 1; transform: translateX(0) }
+}
+
+.message_menu ul li.active i.fa-chevron-right {
+    color: #57a5e3;
+    animation: chevron-fade-in 500ms 1;
+}
+
+.mail-count {
+    font-size: 14px;
+    padding: 0px 5px;
+    color: white;
+    background: #57a5e3;
+    border-radius: 10px 10px 10px 0;
+    position: relative;
+    bottom: 17px;
+    right: 4px;
+    text-align: center;
+    display: inline-block;
+    height: 20px;
+    min-width: 20px;
+    line-height: 20px;
+    font-weight: normal;
+}
+
+.search {
+    position: relative;
+    float: right;
+    text-align: right;
+    padding: 20px;
+    button {
+        background: transparent;
+        cursor: pointer;
+        border-radius: 0px 3px 3px 0px;
+        height: 34px;
+        border-left: 0;
+        transition: color .5s ease;
+        &:hover {
+            i {
+                color: #333;
+            }
+        }
+        i {
+            color: #777;
+        }
+    }
+    .search-filter {
+        opacity: 0;
+        font-size: 12px;
+        float: left;
+        margin-right: 20px;
+        padding: 3px 10px;
+        background: #57a5e3;
+        color: white;
+        border-radius: 5px;
+        position: relative;
+        top: 2px;
+        transition: opacity .5s ease;
+        &.show {
+            opacity: 1;
+        }
+        &:hover {
+            text-decoration: line-through;
+            background: #e3625c;
+        }
+        a {
+            color: white;
+            text-decoration: none;
+            &:hover {
+                text-decoration: none;
+            }
+        }
+        i {
+            color: white;
+        }
+    }
+    input {
+        background: white;
+        border: 1px solid #dadada !important;
+        line-height: 30px;
+        height: 34px !important;
+        border-radius: 3px 0px 0px 3px;
+        font-size: 12px;
+        float: left;
+        display: block;
+        padding: 3px 10px;
+        &:focus {
+            border-color: #2199e8;
+        }
+    }
+}
+
+.searchCross{
+    position: absolute;
+    cursor: pointer;
+    right: 55px;
+    top: 31px;
+}
+
+.level-selected{
+    font-weight: bold;
+}

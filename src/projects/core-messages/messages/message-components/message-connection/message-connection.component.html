@@ -1,0 +1,66 @@
+<ng-container *ngIf="config">
+    <div class="message-body" *ngIf="config.messageBody">{{config.messageBody}}</div>
+
+    <div class="message-fields" *ngIf="config.content">
+        <div class="message-field" *ngFor="let field of config.content">
+            <div class="message-field--name">{{field.name}}</div>
+            <div class="message-field--content">{{field.content}}</div>
+            <div class="hr-line-dashed"></div>
+        </div>
+    </div>
+
+    <div class="message-actions" *ngIf="config.actions && !isActed">
+        <div class="message-action" *ngFor="let action of config.actions">
+            <button class="btn {{action.styleClasses}}" type="button" (click)="onActionClick(action)">
+                {{action.text}}
+            </button>
+        </div>
+    </div>
+
+    <div class="alert alert-warning" *ngIf="isActed">
+        <div class="alert-items">
+            <div class="alert-item static">
+                <div class="alert-icon-wrapper">
+                    <clr-icon class="alert-icon" shape="exclamation-triangle"></clr-icon>
+                </div>
+                <span class="alert-text">{{config.completeText}}</span>
+            </div>
+        </div>
+    </div>
+</ng-container>
+
+<!-- Accept connection modal -->
+<clr-modal [(clrModalOpen)]="isModalDisplayed">
+    <h3 class="modal-title">{{ 'Accept connection request' | translate }}</h3>
+    <div class="modal-body">
+
+        <form>
+            <div class="form-group">
+                <div class="tooltip left tooltip-sm">
+                    <i class="fa fa-info-circle"></i>
+                    <span class="tooltip-content">{{ 'Select an address to use for this connection' | translate }}</span>
+                    <label class="control-label required-field">{{ 'Address' | translate }}</label>
+                </div>
+               
+                <ng-select 
+                    id="accept-subportfolio-addr-link" 
+                    [items]="addressList" 
+                    [allowClear]="true" 
+                    placeholder="{{ 'Select address' | translate }}" 
+                    [formControl]="formGroup.controls['selectedAddress']"
+                >
+                </ng-select>
+
+                <div *ngIf="formGroup.controls['selectedAddress'].hasError('required') && formGroup.controls['selectedAddress'].touched" class="text-danger">{{ 'Field is required' | translate }}</div>
+            </div>
+        </form>
+
+    </div>
+
+    <div class="modal-footer">
+        <button type="button" id="accept-connection-cancel-btn" class="btn btn-outline" (click)="handleAcceptButtonClick(false)">{{ 'Cancel' | translate }}
+        </button>
+        <button type="button" id="accept-connection-submit-btn" class="btn btn-primary" (click)="handleAcceptButtonClick(true)">{{ 'Submit' | translate }}
+        </button>
+    </div>
+</clr-modal>

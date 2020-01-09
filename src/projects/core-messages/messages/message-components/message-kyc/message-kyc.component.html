@@ -1,0 +1,129 @@
+<ng-container *ngIf="config">
+    <div [ngSwitch]="config.type">
+        <!-- KYC approved -->
+        <div *ngSwitchCase="'kycApproved'">
+            <p class="padding"><span>{{ 'Hello' | translate }}</span> {{config.investorFirstName}},</p>
+
+            <p class="padding">
+                {{ 'We have the pleasure to inform you that @amCompanyName@ approved the KYC documents pertaining to @investorCompanyName@.' | translate: {'amCompanyName': config.amCompanyName, 'investorCompanyName': config.investorCompanyName} }}
+            </p>
+
+            <div *ngIf="askedForClassificationChange">
+                <div *ngIf="config.changeAccepted">
+                    <p *ngIf="config.currentClassification">
+                        {{'In addition, your request for a classification change from professional investor to non professional investor has also been accepted' | translate}}
+                    </p>
+                    <p *ngIf="!config.currentClassification">
+                        {{'In addition, your request for a classification change from non professional investor to professional investor has also been accepted' | translate}}
+                    </p>
+                </div>
+                <div *ngIf="!config.changeAccepted">
+                    <p *ngIf="config.currentClassification">
+                        {{'However, your request for a classification change from professional investor to non professional investor has not been accepted.' | translate}}
+                    </p>
+                    <p *ngIf="!config.currentClassification">
+                        {{'However, your request for a classification change from non professional investor to professional investor has not been accepted.' | translate}}
+                    </p>
+                </div>
+            </div>
+
+            <p class="padding">
+                {{ '@amCompanyName@ will shortly enable you to access funds’ shares, in order for your company to be able to invest on the IZNES platform.' | translate: {'amCompanyName': config.amCompanyName} }}
+            </p>
+
+            <p class="padding">{{'Thank you' | translate}},</p>
+            <p class="padding">{{'The IZNES team' | translate}}</p>
+        </div>
+
+        <!-- KYC investor yes -->
+        <div *ngSwitchCase="'kycInvestorYes'">
+            <p class="padding">{{messageBody.greeting}}</p>
+            <p class="padding">{{messageBody.line1}}</p>
+            <p class="padding">{{messageBody.line2}}</p>
+            <p class="padding">{{messageBody.line3}}</p>
+
+            <button type="button" class="btn btn-primary btn-block" (click)="handleRedirectButtonClick()">{{messageBody.buttonLabel}}
+            </button>
+
+            <p class="padding">{{messageBody.thanks}}</p>
+            <p class="padding">{{messageBody.signature}}</p>
+        </div>
+
+        <!-- KYC investor no -->
+        <div *ngSwitchCase="'kycInvestorNo'">
+            <p class="padding">{{messageBody.greeting}}</p>
+            <p class="padding">{{messageBody.line1}}</p>
+            <p class="padding">{{messageBody.line2}}</p>
+
+            <ul class="padding">{{messageBody.line3}}
+                <li>{{messageBody.email}}</li>
+                <li>{{messageBody.phoneNumber}}</li>
+            </ul>
+
+            <p class="padding">{{messageBody.line4}}</p>
+
+            <button type="button" class="btn btn-primary btn-block" (click)="handleRedirectButtonClick()">{{messageBody.buttonLabel}}</button>
+
+            <p class="padding">{{messageBody.thanks}}</p>
+            <p class="padding">{{messageBody.signature}}</p>
+        </div>
+
+        <!-- User finished his KYC -->
+        <div *ngSwitchCase="'kycUserFinished'">
+            <p class="padding">{{messageBody.greeting}}</p>
+            <p class="padding">{{messageBody.line1}}</p>
+            <p class="padding">{{messageBody.line2}}</p>
+
+            <button type="button" class="btn btn-primary btn-block" (click)="handleRedirectButtonClick()">
+                {{messageBody.buttonLabel}}
+            </button>
+
+            <p class="padding">{{messageBody.thanks}}</p>
+            <p class="padding">{{messageBody.signature}}</p>
+        </div>
+
+        <!-- Asking user to do the KYC -->
+        <div *ngSwitchCase="'kycInvestorCompletion'">
+            <p class="padding">{{messageBody.greeting}}</p>
+            <p class="padding">{{messageBody.line1}}</p>
+            <p class="padding">{{messageBody.line2}}</p>
+
+            <button type="button" class="btn btn-primary btn-block" [routerLink]="['/my-requests/list']">
+                {{messageBody.buttonLabel}}
+            </button>
+
+            <p class="padding">{{messageBody.thanks}}</p>
+            <p class="padding">{{messageBody.signature}}</p>
+        </div>
+
+        <!-- Investor is updating his request -->
+        <div *ngSwitchCase="'kycContinuedFromRequest'">
+            <p class="padding">{{messageBody.greeting}}</p>
+            <p class="padding">{{messageBody.line1}}</p>
+            <p class="padding">{{messageBody.line2}}</p>
+
+            <button type="button" class="btn btn-primary btn-block" (click)="handleRedirectButtonClick()">
+                {{messageBody.buttonLabel}}
+            </button>
+
+            <p class="padding">{{messageBody.thanks}}</p>
+            <p class="padding">{{messageBody.signature}}</p>
+        </div>
+
+        <!-- Investor is updating his request -->
+        <div *ngSwitchCase="'kycContinuedFromAskMoreInfo'">
+            <p class="padding">{{messageBody.greeting}}</p>
+            <p class="padding">{{messageBody.line1}}</p>
+            <p class="padding">{{messageBody.line2}}</p>
+
+            <button type="button" class="btn btn-primary btn-block" (click)="handleRedirectButtonClick()">
+                {{messageBody.buttonLabel}}
+            </button>
+
+            <p class="padding">{{messageBody.thanks}}</p>
+            <p class="padding">{{messageBody.signature}}</p>
+        </div>
+
+
+    </div>
+</ng-container>
