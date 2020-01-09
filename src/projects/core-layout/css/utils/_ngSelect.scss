@@ -1,0 +1,175 @@
+/* Fix for ng2-select dropdowns. */
+.ui-select-toggle {
+    width: 360px !important;
+    margin-right: 0;
+    height: 35px;
+    border: 1px solid #b9b9b9;
+    position: relative;
+}
+
+.ui-select-search {
+    width: 360px !important;
+}
+
+form .form-group div.ui-select-container {
+    width: inherit;
+}
+
+.ui-select-match .ui-select-placeholder,
+.ui-select-toggle .ui-select-placeholder,
+.ui-select-toggle .ui-select-match-text {
+    margin: 0;
+    font-size: 12.5px;
+    letter-spacing: normal;
+    text-transform: none;
+    line-height: 40px;
+    color: #565656;
+}
+
+.ui-select-toggle > a.btn-link {
+    margin: 0;
+}
+
+.ui-select-search {
+    /* Importants are needed as the component ng2-select has inline styling... */
+    //min-width: 240px !important;
+    border: 1px solid #b9b9b9 !important;
+    padding: 0 12px !important;
+}
+
+.ui-select-choices {
+    padding: 4px 0;
+}
+
+.caret {
+    width: 0;
+    height: 0;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 5px solid #9a9a9a;
+}
+
+.ui-select-match .ui-select-toggle {
+    position: relative !important;
+}
+
+.ui-select-match .btn a {
+    padding: 0;
+    color: rgb(136, 162, 249);
+    min-width: 30px !important;
+    margin-right: -10px !important;
+    margin-top: 1px;
+    z-index: 1;
+    position: absolute;
+    background: white;
+    right: 11px;
+    border: 0px;
+}
+
+.ui-select-match .btn a:hover {
+    border: 0px solid white !important;
+    background: white;
+}
+
+.ui-select-choices-row {
+    font-size: 13px;
+}
+
+.ui-select-choices-row.active > a {
+    background-color: #6098f7;
+}
+
+.ui-select-toggle .ui-select-placeholder, .ui-select-toggle .ui-select-match-text {
+    line-height: 40px;
+}
+
+.ui-select-choices-row > a {
+    line-height: 24px;
+}
+
+.ui-disabled {
+    // Comment out util clarify, Need to find out why we need that
+    //height: 87% !important;
+    //top: 6px !important;
+    //background: none;
+}
+
+.ui-select-container.ui-select-multiple {
+
+    border: 1px solid #ccc !important;
+    border-radius: 4px;
+    margin: 0;
+    padding: 5px !important;
+    width: 100% !important;
+
+    .ui-select-match {
+        display: block;
+        margin: 0;
+        float: left;
+        height: 28px;
+
+        span {
+            width: auto !important;
+            max-width: 100%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+    }
+
+    .ui-select-match-item {
+        outline: 0;
+        margin: 0 3px 3px 0;
+        line-height: 27px;
+        height: 28px;
+        padding-right: 30px;
+        position: relative;
+        color: #007cbb;
+
+        a {
+            margin-right: -25px !important;
+            padding: 2px 0 !important;
+            background: none !important;
+            display: inline-block;
+            right: 24px;
+            margin-top: 6px;
+        }
+    }
+
+    input {
+        height: 28px !important;
+    }
+
+    .ui-select-search {
+        border: none !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        height: 28px !important;
+        line-height: 28px;
+        font-size: 12px;
+        width: 100%;
+        margin-left: 5px !important;
+        &:focus {
+            background: transparent !important;
+        }
+
+    }
+}
+
+ng-select {
+    width: 100%;
+    &.ng-invalid.ng-touched {
+        .ui-select-container.ui-select-multiple {
+            .ui-select-match {
+                border: 1px solid red;
+            }
+        }
+    }
+}
+
+ng-select.fluid-width {
+    width: 95%;
+    .ui-select-toggle, .ui-select-search, .ui-select-choices, .ui-select-container {
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+}

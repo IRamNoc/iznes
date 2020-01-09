@@ -1,0 +1,524 @@
+<clr-tabs style="margin-top: -25px!important;">
+    <clr-tab>
+        <button clrTabLink style="display: none!important;"><i class="fa fa-bars"></i> {{'Documentation' | translate }}</button>
+
+        <clr-tab-content *clrIfActive>
+
+            <div class="jumbotron">
+                <h1>{{'Form percentage' | translate}}</h1>
+                <hr>
+                <p>
+                    <span class="label label-success" id="tooltip-label-directives" [tooltip]="{text: _translate.translate('This feature use the Angular directives'), size: 'small'}">Directives</span>
+                </p>
+                <p>{{'Form percent allow user to know the percentage of completion of a form or a part of the form.' | translate}}</p>
+                <h1>{{'How to use' | translate}}</h1>
+                <hr>
+                <p>{{'There is several ways to use the Form percentage component' | translate}}:</p>
+                <ol>
+                    <li><b>{{'Form' | translate}}:</b> {{'used to calculate the completion rate of all the fields of a form' | translate}}</li>
+                    <li><b>{{'FormGroup' | translate}}:</b> {{'used to calculate the percentage of completion of a formgroup in a form.' | translate}}</li>
+                </ol>
+                <br>
+                <h2>{{'Configuration' | translate}}</h2>
+                <hr>
+                <p>{{'Form percentage use an Object to set himself.' | translate}}<br><b class="red">{{'You need to apply this directives on a container. the progress bar will be pushed into this container.' | translate}}</b></p>
+                <ol>
+                    <li><b>{{'form'}}:</b> {{'[ form | formGroup ]'}}</li>
+                    <li><b>{{'type'}}:</b> {{'[ square | round | border ]'}} - <i>({{'optional - default: border' | translate}})</i></li>
+                    <li><b>{{'color'}}:</b> {{'[ info | warning | danger | success ]'}} - <i>({{'optional - default: success' | translate}})</i></li>
+                    <li><b>{{'animated'}}:</b> {{'[true | false ]'}} - <i>({{'optional - default: true' | translate}})</i></li>
+                    <li><b>{{'stripes'}}:</b> {{'[ true | false ]'}} - <i>({{'optional - default: true' | translate}})</i></li>
+                </ol>
+                <br>
+                <pre><code>{{'&lt;div [formpercent]=&quot;{form: myForm, type: \'square\', color: \'danger\', animated: false, stripes: false}&quot;&gt;&lt;/div&gt;'}}</code></pre>
+                <br>
+                <h2>{{'Examples' | translate}}:</h2>
+                <hr>
+                <div class="docBox">
+                    <h1>{{'Full Form - Default progressive color (0% to 99% = warning | 100% = success)' | translate}}</h1>
+                    <!--all field in 1 form-->
+                    <p class="mb-0">
+                        Call custom events from component to directive (re-calcul percentage):
+                        <button type="button" class="m-1 btn btn-warning" (click)="addField()">Add 1 field to form</button>
+                        <button type="button" class="m-1 btn btn-warning" (click)="removeField()">Remove 1 field to form</button>
+                    </p>
+                    <form [formGroup]="myForm1" novalidate (ngSubmit)="myForm1.valid && save(myForm1.value)">
+                        <div id="formPercent1" style="width: 99%" [formpercent]="{form: myForm1}"></div>
+                        <br>
+                        <div class="form-group" formGroupName="field1">
+                            <input type="checkbox" id="red" class="form-control" formControlName="red" value="red"><label for="red" style="margin: -5px 20px 0 5px">Red</label>
+                            <input type="checkbox" id="blue" class="form-control" formControlName="blue" value="blue"><label for="blue" style="margin: -5px 20px 0 5px">Blue</label>
+                            <input type="checkbox" id="orange" class="form-control" formControlName="orange" value="orange"><label for="orange" style="margin: -5px 20px 0 5px">Orange</label>
+                        </div>
+                        <div class="form-group"><input type="text" class="form-control" formControlName="field2" [placeholder]="_translate.translate('type here')"></div>
+                        <div class="mb-1">
+                            <setl-file-drop [formControl]="myForm1.controls['field3']" (onDrop)="getUpload($event, 'myFile1')" [inline]="false" ngDefaultControl></setl-file-drop>
+                        </div>
+                        <div formGroupName="mygroup">
+                            <div class="form-group">
+                                <div class="mb-1">
+                                    <setl-file-drop [formControl]="myForm1.controls.mygroup.controls['field3']" (onDrop)="getUpload($event, 'myFile2')" [inline]="false" ngDefaultControl></setl-file-drop>
+                                </div>
+                            </div>
+                            <div class="form-group"><input type="text" class="form-control" formControlName="field5" [placeholder]="_translate.translate('type here')"></div>
+                            <div class="form-group" *ngIf="myForm1.controls.mygroup.controls.nickname"><input type="text" class="form-control" formControlName="nickname" [placeholder]="_translate.translate('your nickname here')"></div>
+                        </div>
+                    </form>
+                </div>
+                <br>
+                <div class="docBox">
+                    <h1>{{'FormGroups + Full Form' | translate}}</h1>
+                    <!--all formgroups in 1 form-->
+                    <form [formGroup]="myForm2" novalidate (ngSubmit)="myForm2.valid && save(myForm2.value)">
+                        <div style="width: 99%" [formpercent]="{form: myForm2}"></div>
+                        <br>
+                        <div class="well">
+                            <!-- Panel header -->
+                            <div class="row panel-header">
+                                <div class="col-xs-12">
+                                    <a href="#" (click)="$event.preventDefault();">
+                                        <i class="fa fa-chevron-right" [class.rotate]="true"></i>
+                                        <h2>{{'Square Bar - forced class info:' | translate}}</h2>
+                                        <div class="pgContainer" [formpercent]="{form: myForm2.controls.mygroup1, type: 'square', color: 'info'}"></div>
+                                    </a>
+                                </div>
+                            </div>
+                            <!-- Panel body -->
+                            <div class="panel-body">
+                                <div formGroupName="mygroup1">
+                                    <div class="form-group"><input type="text" class="form-control" formControlName="field1" [placeholder]="_translate.translate('type here')"></div>
+                                    <div class="form-group"><input type="text" class="form-control" formControlName="field2" [placeholder]="_translate.translate('type here')"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="well">
+                            <!-- Panel header -->
+                            <div class="row panel-header">
+                                <div class="col-xs-12">
+                                    <a href="#" (click)="$event.preventDefault();">
+                                        <i class="fa fa-chevron-right" [class.rotate]="true"></i>
+                                        <h2>{{'Rounded Bar - forced class warning:' | translate}}</h2>
+                                        <div class="pgContainer" [formpercent]="{form: myForm2.controls.mygroup2, type: 'round', color: 'warning'}"></div>
+                                    </a>
+                                </div>
+                            </div>
+                            <!-- Panel body -->
+                            <div class="panel-body">
+                                <div formGroupName="mygroup2">
+                                    <div class="form-group"><input type="text" class="form-control" formControlName="field3" [placeholder]="_translate.translate('type here')"></div>
+                                    <div class="form-group"><input type="text" class="form-control" formControlName="field4" [placeholder]="_translate.translate('type here')"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="well">
+                            <!-- Panel header -->
+                            <div class="row panel-header">
+                                <div class="col-xs-12">
+                                    <a href="#" (click)="$event.preventDefault();">
+                                        <i class="fa fa-chevron-right" [class.rotate]="true"></i>
+                                        <h2>{{'Bordered Bar - forced class danger:' | translate}}</h2>
+                                        <div class="pgContainer" [formpercent]="{form: myForm2.controls.mygroup3, type: 'border', color: 'danger'}"></div>
+                                    </a>
+                                </div>
+                            </div>
+                            <!-- Panel body -->
+                            <div class="panel-body">
+                                <div formGroupName="mygroup3">
+                                    <div class="form-group"><input type="text" class="form-control" formControlName="field5" [placeholder]="_translate.translate('type here')"></div>
+                                    <div class="form-group"><input type="text" class="form-control" formControlName="field6" [placeholder]="_translate.translate('type here')"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="well">
+                            <!-- Panel header -->
+                            <div class="row panel-header">
+                                <div class="col-xs-12">
+                                    <a href="#" (click)="$event.preventDefault();">
+                                        <i class="fa fa-chevron-right" [class.rotate]="true"></i>
+                                        <h2>{{'Static Bordered Bar with Stripes - forced class succcess:' | translate}}</h2>
+                                        <div class="pgContainer" [formpercent]="{form: myForm2.controls.mygroup4, type: 'border', color: 'succcess', animated: false, stripes: true}"></div>
+                                    </a>
+                                </div>
+                            </div>
+                            <!-- Panel body -->
+                            <div class="panel-body">
+                                <div formGroupName="mygroup4">
+                                    <div class="form-group"><input type="text" class="form-control" formControlName="field7" [placeholder]="_translate.translate('type here')"></div>
+                                    <div class="form-group"><input type="text" class="form-control" formControlName="field8" [placeholder]="_translate.translate('type here')"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="well">
+                            <!-- Panel header -->
+                            <div class="row panel-header">
+                                <div class="col-xs-12">
+                                    <a href="#" (click)="$event.preventDefault();">
+                                        <i class="fa fa-chevron-right" [class.rotate]="true"></i>
+                                        <h2>{{'Static Flat Bordered Bar - forced class succcess:' | translate}}</h2>
+                                        <div class="pgContainer" [formpercent]="{form: myForm2.controls.mygroup5, type: 'border', color: 'succcess', animated: false, stripes: false}"></div>
+                                    </a>
+                                </div>
+                            </div>
+                            <!-- Panel body -->
+                            <div class="panel-body">
+                                <div formGroupName="mygroup5">
+                                    <div class="form-group"><input type="text" class="form-control" formControlName="field9" [placeholder]="_translate.translate('type here')"></div>
+                                    <div class="form-group"><input type="text" class="form-control" formControlName="field10" [placeholder]="_translate.translate('type here')"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <br>
+                <h2>{{'Progress Bars' | translate}}:</h2>
+                <hr>
+                <p>{{'All possible configurations with the progress bars:' | translate}}:</p>
+                <div class="row mb-1">
+                    <div class="col-lg-6">
+                        <div class="docBox">
+                            <h3>Types</h3>
+                            <br>
+                            Square
+                            <div class="cssProgress mb-1">
+                                <div class="progressSquare">
+                                    <div class="cssProgress-bar " style="width: 30%;">
+                                        <span class="cssProgress-label">25%</span>
+                                    </div>
+                                </div>
+                            </div>
+                            Rounded
+                            <div class="cssProgress mb-1">
+                                <div class="progressRounded">
+                                    <div class="cssProgress-bar" style="width: 60%;">
+                                        <span class="cssProgress-label">50%</span>
+                                    </div>
+                                </div>
+                            </div>
+                            Bordered
+                            <div class="cssProgress mb-1">
+                                <div class="progressBordered">
+                                    <div class="cssProgress-bar" style="width: 90%;">
+                                        <span class="cssProgress-label">75%</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="docBox">
+                            <h3>Colors</h3>
+                            <br>
+                            Info
+                            <div class="cssProgress mb-1">
+                                <div class="progressSquare">
+                                    <div class="cssProgress-bar cssProgress-info" style="width: 30%;">
+                                        <span class="cssProgress-label">25%</span>
+                                    </div>
+                                </div>
+                            </div>
+                            Warning
+                            <div class="cssProgress mb-1">
+                                <div class="progressSquare">
+                                    <div class="cssProgress-bar cssProgress-warning" style="width: 50%;">
+                                        <span class="cssProgress-label">50%</span>
+                                    </div>
+                                </div>
+                            </div>
+                            Danger
+                            <div class="cssProgress mb-1">
+                                <div class="progressSquare">
+                                    <div class="cssProgress-bar cssProgress-danger" style="width: 70%;">
+                                        <span class="cssProgress-label">75%</span>
+                                    </div>
+                                </div>
+                            </div>
+                            Success
+                            <div class="cssProgress mb-1">
+                                <div class="progressSquare">
+                                    <div class="cssProgress-bar cssProgress-success" style="width: 90%;">
+                                        <span class="cssProgress-label">90%</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="docBox">
+                            <h3>Stripes</h3>
+                            <br>
+                            <div class="cssProgress mb-1">
+                                <div class="progressSquare">
+                                    <div class="cssProgress-bar cssProgress-stripes cssProgress-warning" style="width: 30%;">
+                                        <span class="cssProgress-label">25%</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="cssProgress mb-1">
+                                <div class="progressRounded">
+                                    <div class="cssProgress-bar cssProgress-stripes cssProgress-danger" style="width: 60%;">
+                                        <span class="cssProgress-label">50%</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="cssProgress mb-1">
+                                <div class="progressBordered">
+                                    <div class="cssProgress-bar cssProgress-stripes cssProgress-success" style="width: 90%;">
+                                        <span class="cssProgress-label">75%</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="docBox">
+                            <h3>Animated</h3>
+                            <br>
+                            <div class="cssProgress mb-1">
+                                <div class="progressSquare">
+                                    <div class="cssProgress-bar cssProgress-active cssProgress-warning" style="width: 30%;">
+                                        <span class="cssProgress-label">25%</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="cssProgress mb-1">
+                                <div class="progressRounded">
+                                    <div class="cssProgress-bar cssProgress-active cssProgress-danger" style="width: 60%;">
+                                        <span class="cssProgress-label">50%</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="cssProgress mb-1">
+                                <div class="progressBordered">
+                                    <div class="cssProgress-bar cssProgress-active cssProgress-success" style="width: 90%;">
+                                        <span class="cssProgress-label">75%</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </clr-tab-content>
+    </clr-tab>
+</clr-tabs>
+
+<!--<div class="main-content">-->
+<!--<div id="example-1" class="examples">-->
+<!--<h3>Example #1 - progressSquare</h3>-->
+<!--<div class="cssProgress">-->
+<!--<div class="progressSquare">-->
+<!--<div class="cssProgress-bar" data-percent="75" style="width: 75%;"> <span class="cssProgress-label">75%</span> </div>-->
+<!--</div>-->
+<!--</div>-->
+<!--<div class="cssProgress">-->
+<!--<div class="progressSquare">-->
+<!--<div class="cssProgress-bar cssProgress-info" data-percent="65" style="width: 65%;"> <span class="cssProgress-label">65%</span> </div>-->
+<!--</div>-->
+<!--</div>-->
+<!--<div class="cssProgress">-->
+<!--<div class="progressSquare">-->
+<!--<div class="cssProgress-bar cssProgress-danger" data-percent="55" style="width: 55%;"> <span class="cssProgress-label">55%</span> </div>-->
+<!--</div>-->
+<!--</div>-->
+<!--<div class="cssProgress">-->
+<!--<div class="progressSquare">-->
+<!--<div class="cssProgress-bar cssProgress-success" data-percent="45" style="width: 45%;"> <span class="cssProgress-label">45%</span> </div>-->
+<!--</div>-->
+<!--</div>-->
+<!--<div class="cssProgress">-->
+<!--<div class="progressSquare">-->
+<!--<div class="cssProgress-bar cssProgress-warning" data-percent="35" style="width: 35%;"> <span class="cssProgress-label">35%</span> </div>-->
+<!--</div>-->
+<!--</div>-->
+<!--</div>-->
+<!--<div id="example-2" class="examples">-->
+<!--<h3>Example #2 - progressRounded</h3>-->
+<!--<div class="cssProgress">-->
+<!--<div class="progressRounded">-->
+<!--<div class="cssProgress-bar" data-percent="75" style="width: 75%;"> <span class="cssProgress-label">75%</span> </div>-->
+<!--</div>-->
+<!--</div>-->
+<!--<div class="cssProgress">-->
+<!--<div class="progressRounded">-->
+<!--<div class="cssProgress-bar cssProgress-info" data-percent="65" style="width: 65%;"> <span class="cssProgress-label">65%</span> </div>-->
+<!--</div>-->
+<!--</div>-->
+<!--<div class="cssProgress">-->
+<!--<div class="progressRounded">-->
+<!--<div class="cssProgress-bar cssProgress-danger" data-percent="55" style="width: 55%;"> <span class="cssProgress-label">55%</span> </div>-->
+<!--</div>-->
+<!--</div>-->
+<!--<div class="cssProgress">-->
+<!--<div class="progressRounded">-->
+<!--<div class="cssProgress-bar cssProgress-success" data-percent="45" style="width: 45%;"> <span class="cssProgress-label">45%</span> </div>-->
+<!--</div>-->
+<!--</div>-->
+<!--<div class="cssProgress">-->
+<!--<div class="progressRounded">-->
+<!--<div class="cssProgress-bar cssProgress-warning" data-percent="35" style="width: 35%;"> <span class="cssProgress-label">35%</span> </div>-->
+<!--</div>-->
+<!--</div>-->
+<!--</div>-->
+<!--<div id="example-3" class="examples">-->
+<!--<h3>Example #3 - progressBordered</h3>-->
+<!--<div class="cssProgress">-->
+<!--<div class="progressBordered">-->
+<!--<div class="cssProgress-bar" data-percent="75" style="width: 75%;"> <span class="cssProgress-label">75%</span> </div>-->
+<!--</div>-->
+<!--</div>-->
+<!--<div class="cssProgress">-->
+<!--<div class="progressBordered">-->
+<!--<div class="cssProgress-bar cssProgress-info" data-percent="65" style="width: 65%;"> <span class="cssProgress-label">65%</span> </div>-->
+<!--</div>-->
+<!--</div>-->
+<!--<div class="cssProgress">-->
+<!--<div class="progressBordered">-->
+<!--<div class="cssProgress-bar cssProgress-danger" data-percent="55" style="width: 55%;"> <span class="cssProgress-label">55%</span> </div>-->
+<!--</div>-->
+<!--</div>-->
+<!--<div class="cssProgress">-->
+<!--<div class="progressBordered">-->
+<!--<div class="cssProgress-bar cssProgress-success" data-percent="45" style="width: 45%;"> <span class="cssProgress-label">45%</span> </div>-->
+<!--</div>-->
+<!--</div>-->
+<!--<div class="cssProgress">-->
+<!--<div class="progressBordered">-->
+<!--<div class="cssProgress-bar cssProgress-warning" data-percent="35" style="width: 35%;"> <span class="cssProgress-label">35%</span> </div>-->
+<!--</div>-->
+<!--</div>-->
+<!--</div>-->
+<!--<div id="example-4" class="examples">-->
+<!--<h3>Example #4 - Stripes</h3>-->
+<!--<div class="cssProgress">-->
+<!--<div class="progressSquare">-->
+<!--<div class="cssProgress-bar cssProgress-info cssProgress-stripes" data-percent="75" style="width: 75%;"> <span class="cssProgress-label">75%</span> </div>-->
+<!--</div>-->
+<!--</div>-->
+<!--<div class="cssProgress">-->
+<!--<div class="progressRounded">-->
+<!--<div class="cssProgress-bar cssProgress-success cssProgress-stripes" data-percent="65" style="width: 65%;"> <span class="cssProgress-label">65%</span> </div>-->
+<!--</div>-->
+<!--</div>-->
+<!--<div class="cssProgress">-->
+<!--<div class="progressBordered">-->
+<!--<div class="cssProgress-bar cssProgress-warning cssProgress-stripes" data-percent="55" style="width: 55%;"> <span class="cssProgress-label">55%</span> </div>-->
+<!--</div>-->
+<!--</div>-->
+<!--</div>-->
+<!--<div id="example-5" class="examples">-->
+<!--<h3>Example #5 - Animation</h3>-->
+<!--<div class="cssProgress">-->
+<!--<div class="progressSquare">-->
+<!--<div class="cssProgress-bar cssProgress-active" data-percent="75" style="width: 75%;"> <span class="cssProgress-label">75%</span> </div>-->
+<!--</div>-->
+<!--</div>-->
+<!--<div class="cssProgress">-->
+<!--<div class="progressRounded">-->
+<!--<div class="cssProgress-bar cssProgress-success cssProgress-active" data-percent="65" style="width: 65%;"> <span class="cssProgress-label">65%</span> </div>-->
+<!--</div>-->
+<!--</div>-->
+<!--<div class="cssProgress">-->
+<!--<div class="progressBordered">-->
+<!--<div class="cssProgress-bar cssProgress-warning cssProgress-active" data-percent="55" style="width: 55%;"> <span class="cssProgress-label">55%</span> </div>-->
+<!--</div>-->
+<!--</div>-->
+<!--</div>-->
+<!--<div id="example-6" class="examples">-->
+<!--<h3>Example #6 - Reverse animation</h3>-->
+<!--<div class="cssProgress">-->
+<!--<div class="progressSquare">-->
+<!--<div class="cssProgress-bar cssProgress-active-right" data-percent="75" style="width: 75%;"> <span class="cssProgress-label">75%</span> </div>-->
+<!--</div>-->
+<!--</div>-->
+<!--<div class="cssProgress">-->
+<!--<div class="progressRounded">-->
+<!--<div class="cssProgress-bar cssProgress-success cssProgress-active-right" data-percent="65" style="width: 65%;"> <span class="cssProgress-label">65%</span> </div>-->
+<!--</div>-->
+<!--</div>-->
+<!--<div class="cssProgress">-->
+<!--<div class="progressBordered">-->
+<!--<div class="cssProgress-bar cssProgress-warning cssProgress-active-right" data-percent="65" style="width: 65%;"> <span class="cssProgress-label">65%</span> </div>-->
+<!--</div>-->
+<!--</div>-->
+<!--</div>-->
+<!--<div id="example-7" class="examples">-->
+<!--<h3>Example #7 - Float right</h3>-->
+<!--<div class="cssProgress">-->
+<!--<div class="progressSquare">-->
+<!--<div class="cssProgress-bar cssProgress-right" data-percent="75" style="width: 75%;"> <span class="cssProgress-label">75%</span> </div>-->
+<!--</div>-->
+<!--</div>-->
+<!--<div class="cssProgress">-->
+<!--<div class="progressRounded">-->
+<!--<div class="cssProgress-bar cssProgress-success cssProgress-stripes cssProgress-right" data-percent="65" style="width: 65%;"> <span class="cssProgress-label">65%</span> </div>-->
+<!--</div>-->
+<!--</div>-->
+<!--<div class="cssProgress">-->
+<!--<div class="progressBordered">-->
+<!--<div class="cssProgress-bar cssProgress-warning cssProgress-active-right cssProgress-right" data-percent="55" style="width: 55%;"> <span class="cssProgress-label">55%</span> </div>-->
+<!--</div>-->
+<!--</div>-->
+<!--</div>-->
+<!--<div id="example-8" class="examples">-->
+<!--<h3>Example #8 - Label middle</h3>-->
+<!--<div class="cssProgress">-->
+<!--<div class="progressSquare">-->
+<!--<div class="cssProgress-bar" data-percent="75" style="width: 75%;"> <span class="cssProgress-label">75%</span> </div>-->
+<!--</div>-->
+<!--</div>-->
+<!--<div class="cssProgress">-->
+<!--<div class="progressRounded">-->
+<!--<div class="cssProgress-bar cssProgress-success cssProgress-stripes" data-percent="65" style="width: 65%;"> <span class="cssProgress-label">65%</span> </div>-->
+<!--</div>-->
+<!--</div>-->
+<!--<div class="cssProgress">-->
+<!--<div class="progressBordered">-->
+<!--<div class="cssProgress-bar cssProgress-warning cssProgress-active" data-percent="55" style="width: 55%;"> <span class="cssProgress-label">55%</span> </div>-->
+<!--</div>-->
+<!--</div>-->
+<!--</div>-->
+<!--<div id="example-9" class="examples">-->
+<!--<h3>Example #9 - Label top</h3>-->
+<!--<div class="cssProgress">-->
+<!--<div class="cssProgress-label2">75%</div>-->
+<!--<div class="progressSquare">-->
+<!--<div class="cssProgress-bar" data-percent="75" style="width: 75%;"></div>-->
+<!--</div>-->
+<!--</div>-->
+<!--<div class="cssProgress">-->
+<!--<div class="cssProgress-label2 cssProgress-label2-center">65%</div>-->
+<!--<div class="progressRounded">-->
+<!--<div class="cssProgress-bar cssProgress-success cssProgress-stripes" data-percent="65" style="width: 65%;"></div>-->
+<!--</div>-->
+<!--</div>-->
+<!--<div class="cssProgress">-->
+<!--<div class="cssProgress-label2 cssProgress-label2-right">55%</div>-->
+<!--<div class="progressBordered">-->
+<!--<div class="cssProgress-bar cssProgress-warning cssProgress-active" data-percent="55" style="width: 55%;"></div>-->
+<!--</div>-->
+<!--</div>-->
+<!--</div>-->
+<!--<div id="example-10" class="examples">-->
+<!--<h3>Example #10 - Label bottom</h3>-->
+<!--<div class="cssProgress">-->
+<!--<div class="progressSquare">-->
+<!--<div class="cssProgress-bar" data-percent="75" style="width: 75%;"></div>-->
+<!--</div>-->
+<!--<div class="cssProgress-label2">75%</div>-->
+<!--</div>-->
+<!--<div class="cssProgress">-->
+<!--<div class="progressRounded">-->
+<!--<div class="cssProgress-bar cssProgress-success cssProgress-stripes" data-percent="65" style="width: 65%;"></div>-->
+<!--</div>-->
+<!--<div class="cssProgress-label2 cssProgress-label2-center">65%</div>-->
+<!--</div>-->
+<!--<div class="cssProgress">-->
+<!--<div class="progressBordered">-->
+<!--<div class="cssProgress-bar cssProgress-warning cssProgress-active" data-percent="55" style="width: 55%;"></div>-->
+<!--</div>-->
+<!--<div class="cssProgress-label2 cssProgress-label2-right">55%</div>-->
+<!--</div>-->
+<!--</div>-->
+<!--</div>-->

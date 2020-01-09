@@ -1,0 +1,198 @@
+<clr-tabs style="margin-top: -25px!important;">
+    <clr-tab>
+        <button clrTabLink style="display: none!important;"><i class="fa fa-bars"></i> {{'Documentation' | translate }}
+        </button>
+
+        <clr-tab-content *clrIfActive>
+
+            <div class="jumbotron">
+                <h1>{{'New Translation System' | translate}}</h1>
+                <hr>
+                <p>
+                    <span class="label label-success" [tooltip]="{text: _translate.translate('This feature use the Angular services'), size: 'small'}">Services</span>
+                    <span class="label label-warning" [tooltip]="{text: _translate.translate('This feature use the Angular pipes'), size: 'small'}">Pipes</span>
+                    <span class="label label-danger" [tooltip]="{text: _translate.translate('This feature use the Angular functions'), size: 'small'}">Functions</span>
+                </p>
+                <p>{{'Translate statics & dynamics strings into the application. The system is based on Services, Pipes & Functions.' | translate}}</p>
+                <h1>{{'How to use' | translate}}</h1>
+                <hr>
+                <p>{{'The new translation system works following these steps:' | translate}}</p>
+                <ol>
+                    <li>{{'Clean your old HTML page with mltag attributes by using ' | translate}}
+                        <a href="http://si-nexus01.dev.setl.io/common-components/mltag-auto" target="_blank">mltag_remove.py</a>.
+                    </li>
+                    <li>{{'Add new translation system by using' | translate}}
+                        <a href="http://si-nexus01.dev.setl.io/common-components/mltag-auto" target="_blank">translate.py</a>.
+                    </li>
+                    <li>{{'Show & Generate all missing translations in database via generator.' | translate}}</li>
+                    <li>{{'Translate missing translations on' | translate}}
+                        <a href="http://si-babel01:8080/#/login" target="_blank">{{'Translations back-office' | translate}}</a>.
+                    </li>
+                    <li>{{'Generate new translations file with' | translate}}
+                        <a href="http://si-nexus01.dev.setl.io/SETL_Modules/multilingual" target="_blank">updateTranslations.sh</a>.
+                    </li>
+                    <li>{{'Test all pages in your local environment.' | translate}}</li>
+                </ol>
+                <br>
+                <h2>{{'1. Remove old mltag in HTML' | translate}}</h2>
+                <hr>
+                <p>
+                    {{'The new translations system don\'t use anymore the mltag in HTML pages.' | translate}}
+                    <br>
+                    {{'Go to your local mltag-auto folder and launch this command:' | translate}}
+                </p>
+                <pre><code>python mltag_remove.py ../your_folder_name/</code></pre>
+                <br>
+                <h2>{{'2. Add new translation system' | translate}}</h2>
+                <hr>
+                <p>
+                    {{'The new translations system use Pipes and Functions now.' | translate}}
+                    <br>
+                    {{'Go to your local mltag-auto folder and launch this command:' | translate}}
+                </p>
+                <b>{{'Automatic Implementation' | translate}}:</b>
+                <pre><code>python translate.py ../your_folder_name/</code></pre>
+                <br>
+                <b>{{'Manual Pipes Implementation for static strings' | translate}}:</b>
+                <pre><code>{{'\{\{\'your text here\' | translate\}\}'}}</code></pre>
+                <br>
+                <b>{{'Manual Pipes Implementation for dynamic strings' | translate}}:</b>
+                <pre><code>{{'\{\{\'your @varname@ here\' | translate: \{\'varname\': varname}\}\}'}}</code></pre>
+                <br>
+                <b>{{'Manuel Functions Implementation' | translate}}:</b>
+                <pre><code>{{'&lt;input type=&quot;text&quot; [placeholder]=&quot;_translate.translate(\'your text here\')&quot;&gt;'}}</code></pre>
+                <br>
+                <h2>{{'3. Show & Generate missing translations in database' | translate}}</h2>
+                <hr>
+                <p>
+                    {{'All missing translations are detected by the translations service when we asked for it.' | translate}}
+                    <br>
+                    {{'You can see all theses missing translations by clicking on the Translations button on the top navigation bar.' | translate}}
+                </p>
+                <pre><img src="assets/images/translationsButton.gif" alt="Translations" height="80"></pre>
+                <br>
+                <p>{{'By clicking this button, a modal will appear and show you all missing translations' | translate }}</p>
+                <pre>
+                    <img src="assets/images/needtotranslate.gif" alt="Translations" width="50%">
+                </pre>
+                <br>
+                <p>{{'If you close this modal, you can see all missing translations highlighted in yellow.' | translate}}</p>
+                <pre>
+                    <img src="assets/images/showMissingTranslations.gif" alt="Translations" width="50%">
+                </pre>
+                <br>
+                <p>{{'By clicking the button, you can generate in database all these missing translations.' | translate}}</p>
+                <pre><button type="button" class="btn btn-success">{{'Generate translations (max @nbMaxTranslationsToProcess@ per click)' | translate: {'nbMaxTranslationsToProcess': nbMaxTranslationsToProcess} }}</button></pre>
+                <br>
+                <p>{{'A report will be generated after generation to inform you of the result. All saved translations are not anymore in the first part of the modal.' | translate}}</p>
+                <pre>
+                    <img src="assets/images/translationsReport.gif" alt="Translations" width="50%">
+                </pre>
+                <div class="alert alert-danger p-1 mb-1 mt-1">
+                    <div class="alert-items">
+                        <div class="alert-item static">
+                            <span class="alert-text text-center">{{'The only reason a translation could be FAILED is that the translation is already in the database.' | translate}}</span>
+                        </div>
+                    </div>
+                </div>
+                <br>
+                <h2>{{'4. Translate new translations' | translate}}</h2>
+                <hr>
+                <p>
+                    {{'Go directly to the back-office:' | translate}}
+                    <a href="http://si-babel01:8080/#/login" target="_blank">{{'Translations back-office' | translate}}</a>.
+                    <br>
+                    {{'You need an account to access this back-office. If you don\'t have one, ask to a developer.' | translate}}
+                </p>
+                <br>
+                <h2>{{'5. Generate new translations file' | translate}}</h2>
+                <hr>
+                <p>{{'When all new translations has been translated via the back-office, you can generate the new translations file for front-end application.' | translate}}</p>
+                <p>{{'Generate file with:' | translate}}
+                    <a href="http://si-nexus01.dev.setl.io/SETL_Modules/multilingual" target="_blank">updateTranslations.sh</a>
+                </p>
+                <p>{{'To use it, go to your multilingual folder via the terminal and launch the following command:' | translate}}</p>
+                <pre><code>./updateTranslations.sh</code></pre>
+                <br>
+                <h2>{{'6. Test your pages' | translate}}</h2>
+                <hr>
+                <p>
+                    {{'Now the translations.ts file is up to date, you can see on your application the results.' | translate}}
+                    <br>
+                    {{'Normally, you should not have any missing translations in the modal Translations:' | translate}}
+                    <br><br>
+                    {{'Enjoy' | translate}} ;)
+                </p>
+            </div>
+
+            <br>
+            <hr>
+            <br>
+
+            <div class="text-center">
+                <h1>{{'Codes & Examples:' | translate}}</h1>
+            </div>
+
+            <div>
+                <h1>{{'Static strings' | translate}}</h1>
+                <p>{{'Once upon a time...' | translate}}</p>
+            </div>
+            <div class="hr-line-dashed"></div>
+            <div>
+                <h1>{{'Dynamic string' | translate}}</h1>
+                <p>{{'The @fakeName@\'s house' | translate: {'fakeName': fakeName} }}</p>
+            </div>
+            <div class="hr-line-dashed"></div>
+            <div>
+                <h1>{{'Array of objects' | translate}}</h1>
+                <p>Model = {{listTest | json}}</p>
+                <ul>
+                    <li *ngFor="let elt of listTest">
+                        {{elt.text | translate}}
+                    </li>
+                </ul>
+            </div>
+            <div class="hr-line-dashed"></div>
+            <div>
+                <h1>{{'Array of strings' | translate}}</h1>
+                <p>Model = {{animalList | json}}</p>
+                <ul>
+                    <li *ngFor="let elt of animalList">
+                        {{elt | translate}}
+                    </li>
+                </ul>
+            </div>
+            <div class="hr-line-dashed"></div>
+            <div>
+                <h1>{{'Forms' | translate}}</h1>
+                <form [formGroup]="translateForm" novalidate (ngSubmit)="fakeSave(translateForm.value)">
+                    <section class="form-block">
+                        <div class="row">
+                            <div class="form-group required-field col-sm-6">
+                                <label for="inputText" class="control-label">{{'Label' | translate}}</label>
+                                <input type="text" id="inputText" formControlName="inputText" [placeholder]="_translate.translate('Select a country')">
+                                <div *ngIf="translateForm.controls['inputText'].hasError('required') && translateForm.controls['inputText'].touched" class="text-danger">{{'This field is required' | translate}}</div>
+                            </div>
+                            <div class="form-group required-field col-sm-6">
+                                <label for="list" class="control-label">{{'Label' | translate}}</label>
+                                <ng-select id="list" [items]="_translate.translate(listTest)" [placeholder]="_translate.translate('Select a country')" formControlName="list"></ng-select>
+                                <div *ngIf="translateForm.controls['list'].hasError('required') && translateForm.controls['list'].touched" class="text-danger">{{'This field is required' | translate}}</div>
+                            </div>
+                        </div>
+                    </section>
+                </form>
+            </div>
+            <div class="hr-line-dashed"></div>
+            <div>
+                <h1>{{'Sub-components' | translate}}</h1>
+                <app-dashboard [rows]="2" [columns]="4">
+                    <app-counter-tile name="actions" icon="list-ul" [count]="" color="red" route="manage-orders">{{'Order Book' | translate}}</app-counter-tile>
+                    <app-counter-tile name="connections" icon="sitemap" [count]="" color="green" route="reports/holders-list/list">{{'Holders List' | translate}}</app-counter-tile>
+
+                    <app-counter-tile name="messages" icon="book" [count]="" color="orange" route="reports/centralisation">{{'Centralisation Report' | translate}}</app-counter-tile>
+                    <app-counter-tile name="contracts" icon="ellipsis-h" [count]="" color="blue" route="product-module/net-asset-value">{{'Net Asset Value' | translate}}</app-counter-tile>
+                </app-dashboard>
+            </div>
+        </clr-tab-content>
+    </clr-tab>
+</clr-tabs>

@@ -1,0 +1,63 @@
+/*
+<div class="input-button-group">
+    <input type='text' />
+    <button>hi</button>
+</div>
+*/
+.input-button-group {
+
+  input, button {
+    float: left;
+  }
+
+  input {
+    width: calc(100% - 40px) !important;
+    border-top-right-radius: 0px !important;
+    border-bottom-right-radius: 0px !important;
+  }
+
+  button {
+    width: 40px;
+    height: 40px;
+    margin-left: -4px;
+    border: 0 none;
+    border-radius: 0 4px 4px 0;
+    background-color: #58a5e3;
+    color: #ffffff;
+    cursor: pointer;
+    -webkit-transition: background-color 0.2s ease-out;
+    -moz-transition: background-color 0.2s ease-out;
+    -o-transition: background-color 0.2s ease-out;
+    transition: background-color 0.2s ease-out;
+
+    &:active {
+      background-color: #4681b1;
+    }
+  }
+
+}
+
+/*
+For use with ng-select.
+
+<ng-select></ng-select>
+<button class='btn btn-primary btn-end'></button>
+*/
+button.btn-end {
+  display: inline-block;
+  margin-top: 6px !important;
+  height: 40px;
+}
+
+/* Smaller button group for buttons with just icons. */
+.btn-group.btn-sm.compact button {
+  display: inline-block;
+  width: 10px !important;
+  min-width: 0px;
+  overflow: visible;
+  padding: 0 14px;
+
+  i {
+    margin-left: -4.5px;
+  }
+}

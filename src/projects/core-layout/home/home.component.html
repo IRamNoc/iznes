@@ -1,0 +1,106 @@
+<h3 class="pt-1 pl-1">
+    <b>{{ 'Welcome @username@' | translate: {'username': username} }} </b>
+    <span *ngIf="lastLogin">
+        <small>&nbsp;{{ 'Last login:' | translate }} {{lastLogin | datex: 'MMMM DD YYYY HH:mm'}}</small>
+    </span>
+</h3>
+
+<clr-tabs class="mt-2">
+    <clr-tab>
+        <button clrTabLink>
+            <i class="fa fa-tachometer"></i>{{ 'Dashboard' | translate }}
+        </button>
+
+        <clr-tab-content *clrIfActive>
+            <app-dashboard>
+                <app-counter-tile name="actions" icon="rocket" [count]="actionCount" color="red" route="messages/action">
+                    {{ 'Actions' | translate }}
+                </app-counter-tile>
+
+                <app-counter-tile name="connections" icon="random" [count]="connectionCount" color="green" route="connections">{{ 'Connections' | translate }}
+                </app-counter-tile>
+
+                <app-counter-tile name="messages" icon="envelope" [count]="unreadCount" color="orange" route="messages">
+                    {{ 'New messages' | translate }}
+                </app-counter-tile>
+
+                <app-counter-tile name="contracts" icon="plug" [count]="contractsCount" color="blue" route="contracts/manage">{{ 'Contracts' | translate }}</app-counter-tile>
+
+                <app-basic-tile name="asset1" color="green">
+                    <ng-container *ngTemplateOutlet="assetTile; context: {'asset': assetTiles[0]}"></ng-container>
+                </app-basic-tile>
+
+                <app-basic-tile name="asset2" color="orange">
+                    <ng-container *ngTemplateOutlet="assetTile; context: {'asset': assetTiles[1]}"></ng-container>
+                </app-basic-tile>
+
+                <app-basic-tile name="search" color="blue" data-span="2">
+                    <h1 class="tile-heading">{{ 'Search' | translate }}</h1>
+                    <div class="input-group">
+                        <input type="text" style="background: white!important; width: calc(100% - 60px)!important;" class="form-control" [placeholder]="translate.translate('Search by Tx ID, Contract Address, Instruments or Address')">
+                        <button class="btn btn-outline-secondary" style="margin-top: 3px;" type="button">
+                            <i class="fa fa-search"></i></button>
+                    </div>
+                </app-basic-tile>
+
+            </app-dashboard>
+        </clr-tab-content>
+    </clr-tab>
+
+    <clr-tab>
+        <button clrTabLink>
+            <i class="fa fa-th-list"></i>{{ 'Balances' | translate }}
+
+        </button>
+
+        <clr-tab-content *clrIfActive>
+            <!-- Balances -->
+            <div class="balances-grid">
+                <datagrid-list
+                    [fieldsModel]="balancesListFieldsModel"
+                    [listData]="holdingByAsset$ | async"
+                    [listActions]="balancesListActionsModel"
+                    (action)="onAction($event)">
+                </datagrid-list>
+            </div>
+        </clr-tab-content>
+    </clr-tab>
+
+    <clr-tab>
+        <button clrTabLink>
+            <i class="fa fa-key"></i>{{ 'Transactions' | translate }}
+
+        </button>
+
+        <clr-tab-content *clrIfActive>
+            <!-- Transactions -->
+            <div class="transactions-grid">
+                <datagrid-list
+                    [fieldsModel]="transactionsFieldsModel"
+                    [listData]="transactions"
+                    [listActions]="transactionsListActionsModel"
+                    (action)="onAction($event)">
+                </datagrid-list>
+            </div>
+        </clr-tab-content>
+    </clr-tab>
+
+</clr-tabs>
+
+<ng-template #assetTile let-asset="asset">
+    <div class="container-fluid" style="margin:0;" *ngIf="asset.asset">
+        <h1 class="tile-heading">{{ asset.total | moneyValue }}</h1>
+        <div class="row">
+            <div class="col-xs-12">
+                <span class="asset-id" title="asset.identifier" [innerHtml]="asset.asset | truncate:10"></span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12">
+                <a [routerLink]="'/reports/balances/'+asset.hash+'/history'" title="View history" class="btn btn-transparent"><i class="fa fa-history"></i></a>
+            </div>
+        </div>
+    </div>
+</ng-template>
+
+<div class="hSep"></div>

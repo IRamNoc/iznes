@@ -1,0 +1,35 @@
+form-steps {
+    background: #fafafa;
+    display: block;
+    overflow: hidden;
+    margin-bottom: -20px;
+
+    .steps-slider {
+        width: 100%;
+        display: flex;
+
+        .steps-slide {
+            height: 0;
+
+            flex-shrink: 0;
+            width: 100%;
+
+            &.active{
+                height: 100%;
+                overflow-y: visible;
+            }
+        }
+    }
+
+    .hidden {
+        display: none;
+    }
+}
+
+
+
+.steps-buttons{
+    width: 100%;
+    text-align: center;
+    margin: 20px auto;
+}

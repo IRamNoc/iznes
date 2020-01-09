@@ -1,0 +1,116 @@
+<div class="header-breadcrumbs">
+    <h1><i class="fa fa-th"></i> {{'Layout One' | translate}}
+    </h1>
+</div>
+
+<div class="padding">
+    <a href="#" class="toggle-info-panes" (click)="toggleInfoPanes($event)">{{ showInfoPanes ? '[-] hide info panes' :
+        '[+] show info panes' }}
+
+    </a>
+    <app-ui-info-pane [hidden]="!showInfoPanes" [message]="'This info pane does not make up part of these guidelines. If you see this pane displayed in any of the below items, it is just for informational purposes. To view the source code for this page, go to @setl/core-layout/layouts/ui-form.'">
+    </app-ui-info-pane>
+</div>
+
+<clr-tabs>
+    <clr-tab>
+        <button clrTabLink id="button">
+            <i class="fa fa-bars"></i> {{'Layout One' | translate}}
+        </button>
+
+        <clr-tab-content *clrIfActive>
+            <form>
+                <p>{{'Lets add some text at the top if it required. No problems lots of space here' | translate}}</p>
+                <h2><i class="fa fa-list"></i> {{'Form Area' | translate}}</h2>
+                <section class="form-block">
+                    <div class="row">
+                        <div class="form-group required-field col-sm-6">
+                            <label class="control-label" for="firstName">{{'First name' | translate}}</label>
+                            <input type="text" name="firstName" id="firstName">
+                            <span class="field-error">{{'Field is required' | translate}}</span>
+                        </div>
+
+                        <div class="form-group col-sm-6">
+                            <label class="control-label required-field" for="lastName">{{'Last
+                                name' | translate}}
+
+                            </label>
+                            <input type="text" name="lastName" id="lastName">
+                            <span class="field-error">{{'Field is required' | translate}}</span>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group col-sm-6">
+                            <label class="control-label required-field" for="password">{{'Password' | translate}}
+                            </label>
+                            <input type="password" name="password" id="password">
+                            <span class="field-error">{{'Field is required' | translate}}</span>
+                        </div>
+
+                        <div class="form-group col-sm-6">
+                            <label class="control-label required-field" for="passwordConfirm">{{'Confirm password' | translate}}
+                            </label>
+                            <input type="password" name="passwordConfirm" id="passwordConfirm">
+                            <span class="field-error">{{'Field is required' | translate}}</span>
+                        </div>
+                    </div>
+                </section>
+                <div class="hr-line-dashed"></div>
+
+                <h2><i class="fa fa-info-circle"></i> {{'Text & Info Area' | translate}}</h2>
+                <section class="form-block">
+                    <p><b>{{'Please confirm that you validate your client\'s KYC documents' | translate}}</b></p>
+                    <p>{{'Does the Asset Management company OFI AM, confirm that the client OFI AM has successfully filled
+                        up the KYC documents, and that you wish to authorise this client to place orders on IZNES?' | translate}}
+
+                    </p>
+                    <p>{{'Can add more great things in here such as checkboxes' | translate}}</p>
+                </section>
+                <div class="hr-line-dashed"></div>
+
+                <h2><i class="fa fa-table"></i> {{'Datagrid Area' | translate}}</h2>
+                <section class="form-block">
+                    <clr-datagrid #dataGrid>
+                        <clr-dg-column>{{'Column 1' | translate}}</clr-dg-column>
+                        <clr-dg-column>{{'Column 2' | translate}}</clr-dg-column>
+                        <clr-dg-column class="actions">{{'Actions' | translate}}</clr-dg-column>
+
+                        <clr-dg-row *clrDgItems="let item of mockDataGridItems; let i = index">
+                            <clr-dg-cell>{{item.value1}}</clr-dg-cell>
+                            <clr-dg-cell>{{item.value2}}</clr-dg-cell>
+                            <clr-dg-cell class="actions">
+                                <div class="btn-group btn-sm">
+                                    <button id="edit" (click)="dataGridEdit()" class="btn">
+                                        <i class="fa fa-pencil-square-o"></i> {{'Edit' | translate}}
+                                    </button>
+
+                                    <button id="delete" (click)="dataGridDelete()" class="btn">
+                                        <i class="fa fa-trash-o"></i> {{'Delete' | translate}}
+                                    </button>
+                                </div>
+                            </clr-dg-cell>
+                        </clr-dg-row>
+
+                        <clr-dg-footer>{{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
+
+                            <clr-dg-pagination #pagination [clrDgPageSize]="5"></clr-dg-pagination>
+                        </clr-dg-footer>
+                    </clr-datagrid>
+                </section>
+                <div class="hr-line-dashed"></div>
+
+                <section class="form-block">
+                    <div class="form-group col-sm-6">
+                        <button id="submit" type="submit" class="btn btn-primary">{{'Submit
+                            Button' | translate}}
+
+
+                        </button>
+                    </div>
+                </section>
+
+            </form>
+        </clr-tab-content>
+    </clr-tab>
+</clr-tabs>

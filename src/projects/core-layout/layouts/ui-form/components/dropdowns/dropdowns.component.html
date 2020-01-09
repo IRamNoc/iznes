@@ -1,0 +1,54 @@
+<div class="header-breadcrumbs">
+    <h1><i class="fa fa-caret-down"></i> {{'Dropdowns (Select)' | translate}}</h1>
+</div>
+
+<div class="padding">
+    <a href="#" class="toggle-info-panes" (click)="toggleInfoPanes($event)">{{ showInfoPanes ? '[-] hide info panes' : '[+] show info panes' }}</a>
+    <app-ui-info-pane [hidden]="!showInfoPanes" [message]="'This info pane does not make up part of these guidelines. If you see this pane displayed in any of the below items, it is just for informational purposes. To view the source code for this page, go to @setl/core-layout/layouts/ui-form/components/forms.'"></app-ui-info-pane>
+</div>
+
+<clr-tabs>
+    <clr-tab>
+        <button clrTabLink id="basicselect">
+            <i class="fa fa-bars"></i> {{'Basic Select' | translate}}
+        </button>
+
+        <clr-tab-content *clrIfActive>
+            <form>
+                <section class="form-block">
+                    <div class="form-group col-sm-6">
+                        <ng-select id="select" [items]="mockSelectItems" [allowClear]="true" [placeholder]="_translate.translate('Select')">
+
+
+
+
+                        </ng-select>
+                    </div>
+                </section>
+            </form>
+        </clr-tab-content>
+    </clr-tab>
+
+    <clr-tab>
+        <button clrTabLink id="addressselect">
+            <i class="fa fa-bars"></i> {{'Address Select' | translate}}
+        </button>
+
+        <clr-tab-content *clrIfActive>
+            <form>
+                <section class="form-block">
+                    <div class="form-group col-sm-6">
+                        <various-address-select [formControl]="dropdownForm.controls['address']" [relationshipArray]="dropdownAddressSelectItems" [ownWalletAddressArray]="[]" [class.error]="!dropdownForm.controls['address'].valid && dropdownForm.controls['address'].touched" [required]="true">
+
+
+
+
+                        </various-address-select>
+
+                        <app-ui-info-pane [hidden]="!showInfoPanes" [message]="'You can add the \'required\' input to the address select to give it an asterix. This does not make it required in your form though.'"></app-ui-info-pane>
+                    </div>
+                </section>
+            </form>
+        </clr-tab-content>
+    </clr-tab>
+</clr-tabs>

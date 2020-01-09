@@ -1,0 +1,33 @@
+.dash-grid{
+    display : flex;
+    margin: 0 -12px;
+    flex-wrap: wrap;
+
+    h1 {
+        color: #383d48;
+        font-weight: bold;
+        margin-top: 0;
+        font-size: 22px;
+        padding-left: 5px;
+    }
+
+    app-counter-tile,
+    app-basic-tile
+    {
+        width: calc(50% - 24px);
+        margin: 0 12px 12px;
+        padding-top: 10px;
+
+        &[data-span="2"]{
+            width: calc(100% - 24px);
+        }
+
+        @media screen and (min-width: 1279px) {
+            width: calc(25% - 24px);
+
+            &[data-span="2"]{
+                width: calc(50% - 24px);
+            }
+        }
+    }
+}

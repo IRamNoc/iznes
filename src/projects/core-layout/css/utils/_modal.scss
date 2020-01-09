@@ -1,0 +1,132 @@
+.modal-backdrop {
+    background-color: rgba(141, 150, 165, 0.71);
+    opacity: 1.0;
+}
+
+.modal-header {
+    letter-spacing: .005em;
+    line-height: 26px;
+    padding: 20px 20px 0;
+    text-transform: capitalize;
+    text-align: center;
+    font-weight: 500;
+    border-bottom: 1px solid #d5d6d6;
+    background: #f7f7f7;
+    padding: 20px;
+    color: #383d48;
+    font-weight: bold;
+    margin-top: 0;
+    font-size: 22px;
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+}
+
+.modal-header h3 {
+    color: #383d48 !important;
+    font-weight: bold !important;
+    font-size: 22px !important;
+}
+
+.modal-title {
+    padding: 30px 15px;
+    text-align: center;
+}
+
+.modal-icon {
+    font-size: 84px;
+    color: #1AB399;
+}
+
+.modal-dialog .modal-content {
+    padding: 0 !important;
+    box-shadow: none;
+}
+
+.modal-body {
+    background: white;
+    padding: 20px;
+    border-bottom: 0px solid #e5e5e5;
+    border-top: 0px solid #e5e5e5;
+
+    iframe {
+        border-width: 0;
+    }
+
+    .fileviewer-main {
+        padding: 0px;
+    }
+}
+
+.modal-footer {
+    border-top: 1px solid #d5d6d6;
+    background: #f8fafb;
+    min-height: 60px;
+    padding: 0;
+    display: -ms-flexbox;
+    -ms-flex-align: center;
+    align-items: center;
+    -ms-flex-pack: end;
+    justify-content: flex-end;
+    position: relative;
+    text-align: center;
+    display: block;
+    border-bottom-left-radius: 3px;
+    border-bottom-right-radius: 3px;
+    .form-group {
+        padding: 0 20px;
+        clr-checkbox-wrapper label {
+            margin: 0;
+        }
+    }
+}
+
+clr-modal.large .modal-dialog {
+    width: 95%;
+}
+
+.modal-footer {
+    .btn {
+        margin: 12px 5px 0 5px;
+    }
+}
+
+.modal-body .form-group.col-sm-12 {
+    padding: 0px;
+}
+
+.modal-body .form-group.col-sm-12 input[type] {
+    width: 100%;
+    margin: 0px;
+}
+
+.modal-body .form-group.col-sm-6 {
+    padding: 0px;
+}
+
+.modal-body .form-group.col-sm-6 input[type] {
+    width: 100%;
+    margin: 0px;
+}
+
+.modal-body .form-group.col-sm-6:nth-of-type(1) {
+    padding-right: 10px;
+}
+
+.modal-body .form-group.col-sm-6:nth-of-type(2) {
+    padding-left: 10px;
+}
+
+clr-modal .modal-form-body {
+    padding-bottom: 20px !important;
+    .fa {
+        color: #cccccc
+    }
+    input[type=text] {
+        border: 1px solid #96c8f1;
+        margin: 10px 0 0 0;
+        width: 100%;
+    }
+    .field-error {
+        width: 100%;
+    }
+}
