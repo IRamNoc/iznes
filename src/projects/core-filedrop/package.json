@@ -1,0 +1,7 @@
+ {
+  "name": "@setl/core-filedrop",
+  "version": "1.0.0",
+  "description": "A simple file drop zone built in house.",
+  "main": "index.js",
+  "license": "Private SETL"
+}
