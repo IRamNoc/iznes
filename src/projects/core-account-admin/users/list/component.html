@@ -1,0 +1,94 @@
+<div class="header-breadcrumbs">
+    <h1><i class="fa fa-users"></i> {{ 'Users' | translate }}</h1>
+</div>
+
+<clr-tabs>
+    <clr-tab>
+        <button clrTabLink id="tabAccountAdminUsersButton">{{ 'List' | translate }}</button>
+        <clr-tab-content class="outer">
+            <!-- Button container -->
+            <div *ngIf="!hasPermissionCreateUsers" class="alert alert-warning">
+                <div class="alert-items">
+                    <div class="alert-item static">
+                        <div class="alert-icon-wrapper">
+                            <clr-icon class="alert-icon" shape="exclamation-triangle"></clr-icon>
+                        </div>
+                        <span class="alert-text">
+                            {{ 'Please contact the administrator to request permission to create users.' | translate }}
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <br />
+
+            <div class="row buttons">
+                <div class="col">
+                    <a [routerLink]="'/account-admin/users/audit'" class="btn btn-primary">{{ 'Audit Trail' | translate }}</a>
+                </div>
+                <div class="col">
+                    <button class="btn btn-primary" (click)="exportCSV()">{{ 'Export Users as CSV' | translate }}</button>
+                </div>
+                <div class="col">
+                    <button [routerLink]="'/account-admin/users/new'" [disabled]="!hasPermissionCreateUsers" class="btn btn-primary">{{ 'Add New User' | translate }}</button>
+                </div>
+            </div>
+
+            <clr-datagrid #dataGrid>
+                <clr-dg-column [clrDgField]="'reference'" class="col-ref">
+                    <span id="accountAdminColRef">{{ 'Reference' | translate }}</span>
+                </clr-dg-column>
+                <clr-dg-column [clrDgField]="'firstName'" class="col-firstname">
+                    <span id="accountAdminColFirstName">{{ 'First Name' | translate }}</span>
+                </clr-dg-column>
+                <clr-dg-column [clrDgField]="'lastName'" class="col-lastname">
+                    <span id="accountAdminColLastName">{{ 'Last Name' | translate }}</span>
+                </clr-dg-column>
+                <clr-dg-column [clrDgField]="'emailAddress'" class="col-email">
+                    <span id="accountAdminColEmail">{{ 'Email Address' | translate }}</span>
+                </clr-dg-column>
+                <clr-dg-column [clrDgField]="'phoneNumber'" class="col-phone">
+                    <span id="accountAdminColPhone">{{ 'Phone' | translate }}</span>
+                </clr-dg-column>
+                <clr-dg-column [clrDgField]="'userType'" class="col-type">
+                    <span id="accountAdminColType">{{ 'Type' | translate }}</span>
+                </clr-dg-column>
+                <clr-dg-column [clrDgField]="'totalTeams'" class="col-teams right">
+                    <span id="accountAdminColTeams">{{ 'Teams' | translate }}</span>
+                </clr-dg-column>
+                <clr-dg-column class="col-status">
+                    <span id="accountAdminColStatus">{{ 'Status' | translate }}</span>
+                </clr-dg-column>
+
+                <clr-dg-row *clrDgItems="let user of users; let idx = index;" id="{{'accountAdminTeamRow' + idx}}" clrDgRowClickable>
+                    <clr-dg-cell id="{{'accountAdminTeamCellRef' + idx}}" class="col-ref"
+                                 (click)="navigateToEntity(user.userID)">
+                        {{ (user.reference) ? user.reference : 'N/A' }}
+                    </clr-dg-cell>
+                    <clr-dg-cell id="{{'accountAdminTeamCellFirstName' + idx}}" (click)="navigateToEntity(user.userID)">{{user.firstName}}</clr-dg-cell>
+                    <clr-dg-cell id="{{'accountAdminTeamCellLastName' + idx}}" (click)="navigateToEntity(user.userID)">{{user.lastName}}</clr-dg-cell>
+                    <clr-dg-cell id="{{'accountAdminTeamCellEmail' + idx}}" (click)="navigateToEntity(user.userID)">{{user.emailAddress}}</clr-dg-cell>
+                    <clr-dg-cell id="{{'accountAdminTeamCellPhone' + idx}}" (click)="navigateToEntity(user.userID)">{{user.phoneNumber}}</clr-dg-cell>
+                    <clr-dg-cell id="{{'accountAdminTeamCellType' + idx}}" (click)="navigateToEntity(user.userID)">{{user.userType}}</clr-dg-cell>
+                    <clr-dg-cell id="{{'accountAdminTeamCellTeams' + idx}}" (click)="navigateToEntity(user.userID)">
+                        <span class="label"
+                              [class.label-danger]="user.totalTeams == 0"
+                              [class.label-info]="user.totalTeams > 0">
+                            {{user.totalTeams}}
+                        </span>
+                    </clr-dg-cell>
+                    <clr-dg-cell id="{{'accountAdminTeamCellStatus' + idx}}" (click)="navigateToEntity(user.userID)">
+                        <ng-container [ngSwitch]="user.userStatus">
+                            <span *ngSwitchCase="'2'" class="label label-info">{{ 'Pending' | translate }}</span>
+                            <span *ngSwitchCase="'1'" class="label label-success">{{ 'Active' | translate }}</span>
+                            <span *ngSwitchCase="'0'" class="label label-danger">{{ 'Disabled' | translate }}</span>
+                        </ng-container>
+                    </clr-dg-cell>
+                </clr-dg-row>
+
+                <clr-dg-footer>{{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
+                    <clr-dg-pagination #pagination [clrDgPageSize]="10"></clr-dg-pagination>
+                </clr-dg-footer>
+            </clr-datagrid>
+        </clr-tab-content>
+    </clr-tab>
+</clr-tabs>

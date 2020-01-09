@@ -1,0 +1,12 @@
+.status {
+    font-weight: bold;
+    text-transform: uppercase;
+
+    &.enabled { color: green; }
+    &.disabled { color: red; }
+}
+
+.status-pending {
+    display: block;
+    font-style: italic;
+}

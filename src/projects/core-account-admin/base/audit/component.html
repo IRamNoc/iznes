@@ -1,0 +1,86 @@
+<div class="header-breadcrumbs">
+    <h1><i class="fa fa-address-book-o"></i> {{ [noun + 's', 'Audit'].join(' ') | translate }}</h1>
+</div>
+
+<clr-tabs>
+    <clr-tab>
+        <button clrTabLink id="tabAccountAdminTeamsAuditButton">{{ 'Audit' | translate }}</button>
+        <clr-tab-content class="outer">
+            <form [formGroup]="searchForm" novalidate>
+                <div class="form-horizontal">
+                    <div class="row">
+                        <div class="form-group col-sm-3">
+                            <label class="control-label">{{ noun | translate }}</label>
+                            <input id="auditSearch" 
+                                    name="auditSearch" 
+                                    class="form-control"
+                                    type="text"
+                                    placeholder="{{ ['Search by', noun, 'name or reference'].join(' ') | translate }}"
+                                    formControlName="entitySearch"/>
+                        </div>
+
+                        <div class="form-group col-sm-3">
+                            <label class="control-label">{{ 'Date From' | translate }}</label>
+                            <div class="input-group date-pick-wrapper">
+                                <span class="fa fa-calendar"></span>
+                                <input id="auditDateFrom" 
+                                        name="auditDateFrom"
+                                        placeholder="{{ 'Choose a date' | translate }}"
+                                        formControlName="dateFrom"
+                                        [dpDayPicker]="dateConfig"
+                                        mode="day"
+                                        theme="dp-material">
+                            </div>
+                        </div>
+
+                        <div class="form-group col-sm-3">
+                            <label class="control-label">{{ 'Date To' | translate }}</label>
+                            <div class="input-group date-pick-wrapper">
+                                <span class="fa fa-calendar"></span>
+                                <input id="auditDateTo" 
+                                        name="auditDateTo"
+                                        placeholder="{{ 'Choose a date' | translate }}"
+                                        formControlName="dateTo"
+                                        [dpDayPicker]="dateConfig"
+                                        mode="day"
+                                        theme="dp-material">
+                            </div>
+                        </div>
+
+                        <div class="form-group col-sm-3">
+                            <label class="control-label">&nbsp;</label>
+                            <button class="btn" (click)="exportCSV()">
+                                {{ ['Export', noun, 'Audit as CSV'].join(' ') | translate }}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+            <clr-datagrid #dataGrid>
+                <clr-dg-column *ngFor="let col of datagridConfig.columns" class="col-{{col.styleClass}}">
+                    <span id="auditCol{{col.id}}">{{ col.title | translate }}</span>
+                </clr-dg-column>
+            
+                <clr-dg-row *clrDgItems="let entity of audit; let idx = index;" id="{{'auditRow' + idx}}"
+                    clrDgRowClickable
+                    [class.selected]="entity.isActivated">
+                    <clr-dg-cell *ngFor="let col of datagridConfig.columns"
+                        id="{{'auditCell' + col.id + idx}}" class="col-{{col.styleClass}}">
+                            {{ col.valueDecorator ? col.valueDecorator(entity)[col.dataIndex] : entity[col.dataIndex] }}
+                    </clr-dg-cell>
+                </clr-dg-row>
+            
+                <clr-dg-footer>{{ pagination.firstItem + 1 }} - {{ pagination.lastItem + 1 }}
+                    <clr-dg-pagination #pagination [clrDgPageSize]="10"></clr-dg-pagination>
+                </clr-dg-footer>
+            </clr-datagrid>
+
+            <div class="row actions bottom">
+                <div class="col">
+                    <a [routerLink]="goBackURL()" class="btn btn-primary">{{ 'Back' | translate }}</a>
+                </div>               
+            </div>
+        </clr-tab-content>
+    </clr-tab>
+</clr-tabs>

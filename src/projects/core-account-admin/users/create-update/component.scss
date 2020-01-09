@@ -1,0 +1,40 @@
+clr-tab-content { padding-bottom: 200px; }
+
+.well { border-bottom: none; }
+
+.repeatable-users {
+    border: 1px solid #DDD;
+    border-radius: 3px;
+    box-shadow: 2px 2px 0px 1px rgba(0,0,0,0.05);
+    margin-bottom: 15px;
+    padding: 8px 20px 5px;
+    text-align: right;
+
+    app-dynamic-form { margin-bottom: -10px; }
+
+    .remove-user {
+        color: red;
+        cursor: pointer;
+        font-size: 12px;
+
+        &:hover, &:focus { text-decoration: underline; }
+    }
+}
+
+.tooltip {
+    font-size: 20px;
+    margin-left: 0.25rem;
+
+    &.tooltip-right {
+        float: right;
+    }
+}
+
+button + .tooltip-right {
+    margin-right: 0.5rem;
+    margin-top: 16px;
+}
+
+.no-teams {
+    font-size: 11px;
+}
