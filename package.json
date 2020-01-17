@@ -102,5 +102,8 @@
     "typescript": "2.7.2",
     "yargs": "^11.0.0",
     "yarn": "^1.14.0"
+  },
+  "browser": {
+    "crypto": false
   }
 }
