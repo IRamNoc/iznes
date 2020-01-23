@@ -1,0 +1,67 @@
+<form>
+    <div class="row form-group">
+        <div class="col col-sm-4 search-name">
+            <input type="text"
+                name="nameSearch"
+                id="nameSearch"
+                [(ngModel)]="nameSearch"
+                (ngModelChange)="searchByName()"
+                [placeholder]="translate.translate('Search by first name, last name, or ref')" />
+        </div>
+
+        <div class="col col-sm-4 show-active">
+            <label class="control-label" *ngIf="showOnlyActiveFilter">
+                {{ 'Show Only Active' | translate }}
+                <input type="checkbox"
+                        name="showOnlyActivated"
+                        id="showOnlyActivated"
+                        [(ngModel)]="showOnlyActivated">
+            </label>
+        </div>
+
+        <div class="col col-sm-4 justify-end">
+            <button [routerLink]="getCreateNewLink()" class="btn" [disabled]="!hasPermissionCreate">
+                {{ ['Create New', noun].join(' ') | translate }}
+            </button>
+        </div>
+    </div>
+</form>
+
+<clr-datagrid #dataGrid>
+    <clr-dg-column *ngFor="let col of datagridConfig.columns" class="col-{{col.styleClass}}">
+        <span id="userMgmtCol{{col.id}}">{{ col.title | translate }}</span>
+    </clr-dg-column>
+    <clr-dg-column class="col-actions">
+        <span id="userMgmtColActions">{{ 'Active' | translate }}</span>
+    </clr-dg-column>
+
+    <clr-dg-row *clrDgItems="let entity of entities; let idx = index;" id="{{'userMgmtRow' + idx}}"
+        clrDgRowClickable
+        [class.selected]="entity.isActivated">
+        <clr-dg-cell *ngFor="let col of datagridConfig.columns"
+            id="{{'userMgmtCell' + col.id + idx}}" class="col-{{col.styleClass}}">
+            <ng-container *ngIf="col.dataIndex !== 'status'">
+                {{ entity[col.dataIndex] }}
+            </ng-container>
+            <ng-container *ngIf="col.dataIndex === 'status'" [ngSwitch]="entity.status">
+                <span *ngSwitchCase="'2'" class="label label-info">{{ 'Pending' | translate }}</span>
+                <span *ngSwitchCase="'1'" class="label label-success">{{ 'Active' | translate }}</span>
+                <span *ngSwitchCase="'0'" class="label label-danger">{{ 'Disabled' | translate }}</span>
+            </ng-container>
+        </clr-dg-cell>
+        <clr-dg-cell id="{{'userMgmtCellActions' + idx}}" class="col-actions">
+            <label class="switch">
+                <input class="form-control"
+                        id="{{'userMgmtCellAction' + idx}}"
+                        type="checkbox"
+                        [disabled]="isProcessing() || !hasPermissionUpdateMembership"
+                        [(ngModel)]="entity.isActivated">
+                <span class="slider round"></span>
+            </label>
+        </clr-dg-cell>
+    </clr-dg-row>
+
+    <clr-dg-footer>{{ pagination.firstItem + 1 }} - {{ pagination.lastItem + 1 }}
+        <clr-dg-pagination #pagination [clrDgPageSize]="5"></clr-dg-pagination>
+    </clr-dg-footer>
+</clr-datagrid>

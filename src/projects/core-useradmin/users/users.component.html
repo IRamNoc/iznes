@@ -1,0 +1,552 @@
+<div class="header-breadcrumbs">
+    <h1 id="manage-users"><i class="fa fa-users"></i> {{ 'Manage User' | translate }}</h1>
+</div>
+
+<div class="wrapper wrapper-content">
+
+    <clr-tabs *ngIf="tabsControl.length">
+        <clr-tab *ngFor="let tabdata of tabsControl; let id = index">
+            <button clrTabLink id="user-tab-{{id}}" [routerLink]="['/user-administration/users', id]">
+                <i class="fa {{tabdata.title.icon}}"></i> {{tabdata.title.text}}
+            </button>
+            <clr-tab-content *clrIfActive="tabdata.active">
+
+                <!-- Search Users -->
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="custom-search left" *ngIf="id === 0">
+
+                            <input type="form-control text"
+                                    placeholder="{{ 'Enter username or email' | translate }}"
+                                    #searchBox (keyup.enter)="handleSearch(searchBox.value); searchBox.value = '';"
+                                    (keyup)="showCross = (searchBox.value != '' ? true : false);"
+                                    id="messagesSearch">
+
+                            <button (click)="handleSearch(searchBox.value); searchBox.value = ''; showCross = false;" class="" id="messagesSearchBtn">
+                                <i class="fa fa-search"></i>
+                            </button>
+
+                            <i *ngIf="showCross" class="fa fa-times searchCross" (click)="showCross = false; searchBox.value = ''"></i>
+
+                            <span *ngIf="search" class="search-filter" [class.show]="search"><a href="#" (click)="clearSearch($event); searchBox.value='' ">
+                                <i class="fa fa-search">
+                                </i> {{search}} <i class="fa fa-times"></i></a>
+                            </span>
+
+                        </div>
+                    </div>
+                </div>
+
+                <!-- User list tab. -->
+                <ng-container *ngIf="id === 0">
+                    <ng-container *ngTemplateOutlet="staticUserListTab">
+
+                    </ng-container>
+                </ng-container>
+
+                <!-- User add tab. -->
+                <ng-container *ngIf="id === 1">
+                    <ng-container
+                        *ngTemplateOutlet="staticUserAddTab; context: {'formControl': tabdata.formControl, 'tabid': id}">
+
+                    </ng-container>
+                </ng-container>
+
+                <!-- User edit tabs. -->
+                <ng-container *ngIf="id >= 2">
+                    <ng-container
+                        *ngTemplateOutlet="dynamicEditTab; context: {'formControl': tabdata.formControl, 'tabid': id}">
+
+                    </ng-container>
+                </ng-container>
+            </clr-tab-content>
+        </clr-tab>
+    </clr-tabs>
+
+    <!-- User Data Table. -->
+    <ng-template #staticUserListTab>
+        <div class="panel-body">
+            <datagrid-list
+                (action)="onAction($event)"
+                (refresh)="datagridRefresh($event)"
+                (rowsUpdate)="dgPageSize=$event; dgPageFrom=0; setPaginatedUsersList(); requestPaginatedUsersList(); currentPage=1;"
+                [(currentPage)]="currentPage"
+                [listData]="paginatedUsersList"
+                [listActions]="usersListActions"
+                [fieldsModel]="usersListModel"
+                [lazyLoaded]="true"
+                [totalItems]="dgTotalItems"
+                [showHideColumns]="true">
+            </datagrid-list>
+        </div>
+    </ng-template>
+
+    <!-- User Add Form. -->
+    <ng-template #staticUserAddTab let-formControl="formControl" let-tabid="tabid">
+        <div class="user-tab-panel-body panel-body">
+            <form id="new-user-form" (ngSubmit)="handleNewUser(tabid)" [formGroup]="formControl" autocomplete="off">
+                <div class="form-horizontal">
+                    <div class="row">
+                        <div class="form-group col-sm-6">
+                            <div class="tooltip left tooltip-md">
+                                <i class="fa fa-info-circle"></i>
+                                <span class="tooltip-content">{{ 'Username cannot exceed 45 characters, cannot contain spaces and can only contain letters, numbers and the following characters: . - _ @' | translate }}</span>
+                                <label class="control-label required-field tooltip-wrapped">{{ 'Username' | translate }}</label>
+                            </div>
+                            <input id="new-user-username"
+                                    type="text"
+                                    formControlName="username"
+                                    placeholder="{{ 'Username' | translate }}"
+                                    class="form-control username">
+                            <div *ngIf="formControl.controls.username.hasError('required') && formControl.controls.username.touched"
+                                    class="field-error">{{ 'Field is required' | translate }}
+                            </div>
+                            <div *ngIf="formControl.controls.username.hasError('pattern') && !formControl.controls.username.hasError('required') && formControl.controls.username.touched"
+                                    class="field-error">{{ 'Invalid username format' | translate }}
+                            </div>
+                        </div>
+
+                        <div class="form-group col-sm-6">
+                            <label class="control-label required-field">{{ 'Email' | translate }}</label>
+                            <input id="new-user-email"
+                                    type="email" formControlName="email" name="email"
+                                    placeholder="{{ 'Enter email' | translate }}"
+                                    class="form-control email">
+                            <div *ngIf="formControl.controls.email.hasError('required') && formControl.controls.email.touched"
+                                    class="field-error">{{ 'Field is required' | translate }}
+                            </div>
+                            <div *ngIf="!formControl.controls.email.valid && !formControl.controls.email.hasError('required')"
+                                    class="field-error">{{ 'Invalid email format' | translate }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group col-sm-6">
+                            <label class="control-label required-field">{{ 'Account' | translate }}</label>
+                            <ng-select
+                                id="new-user-account-select"
+                                [items]="accountTypes"
+                                [allowClear]="true"
+                                placeholder="{{ 'Select Type' | translate }}"
+                                [formControl]="formControl.controls['accountType']"
+                                (selected)="setFormAccountId( tabid, $event )"
+                            ></ng-select>
+                            <div *ngIf="formControl.controls.accountType.hasError('required') && formControl.controls.accountType.touched"
+                                    class="field-error">{{ 'Field is required' | translate }}
+                            </div>
+                        </div>
+
+                        <div class="form-group col-sm-6">
+                            <label class="control-label">{{ 'Lock / Unlock User' | translate }}</label>
+                            <div class="locked-toggle">
+                                <span *ngIf="!formControl.value.userLocked" (click)="formControl.controls.userLocked.setValue(1);">
+                                    <i class="fa fa-unlock"></i>
+                                </span>
+                                <span *ngIf="formControl.value.userLocked" (click)="formControl.controls.userLocked.setValue(0);">
+                                    <i class="fa fa-lock"></i>
+                                </span>
+
+                                <div class="toggle-switch">
+                                    <input [formControl]="formControl.controls['userLocked']"
+                                            id="user-status-toggle"
+                                            type="checkbox"
+                                            [checked]="formControl.value.userLocked">
+                                    <label for="user-status-toggle"></label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group col-sm-6">
+                            <label class="control-label required-field">{{ 'User Type' | translate }}</label>
+                            <ng-select
+                                id="new-user-usertype-select"
+                                [items]="userTypes"
+                                [allowClear]="true"
+                                placeholder="{{ 'Select Type' | translate }}"
+                                [formControl]="formControl.controls['userType']">
+                            </ng-select>
+                            <div *ngIf="formControl.controls.userType.hasError('required') && formControl.controls.userType.touched"
+                                    class="field-error">{{ 'Field is required' | translate }}
+                            </div>
+                        </div>
+                        <div *ngIf="!hasDefaultWallet" class="form-group col-sm-6">
+                            <label class="control-label">{{ 'Create Default Wallet' | translate }}</label>
+                            <div class="locked-toggle">
+                                <span *ngIf="!formControl.value.createDefaultWallet" (click)="formControl.controls.createDefaultWallet.setValue(1);">
+                                    <i class="fa fa-briefcase"></i>
+                                </span>
+                                <span *ngIf="formControl.value.createDefaultWallet" (click)="formControl.controls.createDefaultWallet.setValue(0);">
+                                    <i class="fa fa-briefcase"></i>
+                                </span>
+
+                                <div class="toggle-switch">
+                                    <input [formControl]="formControl.controls['createDefaultWallet']" id="create-default-wallet-toggle" type="checkbox"
+                                        [checked]="formControl.value.createDefaultWallet">
+                                    <label for="create-default-wallet-toggle"></label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group col-sm-6">
+                            <label class="control-label required-field">{{ 'Password' | translate }}</label>
+                            <input id="new-user-password" type="password"
+                                    formControlName="password"
+                                    name="password"
+                                    autocomplete="off"
+                                    placeholder="{{ 'Password' | translate }}"
+                                    class="form-control password1">
+                            <div *ngIf="formControl.controls.password.hasError('required') && formControl.controls.password.touched"
+                                    class="field-error">{{ 'Field is required' | translate }}
+                            </div>
+                            <div *ngIf="formControl.controls.password.hasError('mismatch') && !formControl.controls.password.hasError('required') && !formControl.controls.passwordConfirm.pristine"
+                                    class="field-error">{{ 'Password does not match' | translate }}
+                            </div>
+                        </div>
+
+                        <div class="form-group col-sm-6">
+                            <label class="control-label required-field">{{ 'Repeat Password' | translate }}</label>
+                            <input id="new-user-password-repeat"
+                                    type="password"
+                                    formControlName="passwordConfirm"
+                                    autocomplete="off"
+                                    placeholder="{{ 'Repeat Password' | translate }}"
+                                    class="form-control password2">
+                            <div *ngIf="formControl.controls.passwordConfirm.hasError('required') && formControl.controls.passwordConfirm.touched"
+                                    class="field-error">{{ 'Field is required' | translate }}
+                            </div>
+                            <div *ngIf="formControl.controls.passwordConfirm.hasError('mismatch') && !formControl.controls.passwordConfirm.hasError('required') && !formControl.controls.passwordConfirm.pristine"
+                                    class="field-error">{{ 'Password does not match' | translate }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group col-sm-12">
+                            <label class="control-label">
+                                {{ 'Access' | translate }}
+                            </label>
+                            <div>
+                                <ng-container
+                                    *ngTemplateOutlet="accessAdminTabs; context: {'formControl': formControl, 'tabid': tabid}"></ng-container>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group button-group">
+                        <div class="col-sm-12">
+                            <button id="new-user-submit" type="submit"
+                                    class="btn btn-primary"
+                                    [disabled]="!formControl.valid">
+                                <i class="fa fa-save"></i>
+                                {{ 'Save' | translate }}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </ng-template>
+
+    <!-- User Edit Form. -->
+    <ng-template #dynamicEditTab let-formControl="formControl" let-tabid="tabid">
+        <div class="user-tab-panel-body panel-body">
+            <form id="edit-user{{tabid}}-form" (ngSubmit)="handleEditUser(tabid)" [formGroup]="formControl">
+                <div class="form-horizontal">
+                    <div class="row">
+                        <div class="form-group col-sm-6">
+                            <label class="control-label required-field">{{ 'Username' | translate }}</label>
+                            <input id="edit-user{{tabid}}-username"
+                                    type="text"
+                                    formControlName="username"
+                                    placeholder="{{ 'Username' | translate }}"
+                                    class="form-control username">
+                            <div *ngIf="formControl.controls.username.hasError('required') && formControl.controls.username.touched"
+                                    class="field-error">{{ 'Field is required' | translate }}
+                            </div>
+                        </div>
+
+                        <div class="form-group col-sm-6">
+                            <label class="control-label required-field">{{ 'Email' | translate }}</label>
+                            <input id="edit-user{{tabid}}-email"
+                                    type="email"
+                                    formControlName="email"
+                                    name="email"
+                                    placeholder="{{ 'Enter email' | translate }}"
+                                    class="form-control email">
+                            <div *ngIf="formControl.controls.email.hasError('required') && formControl.controls.email.touched"
+                                    class="field-error">{{ 'Field is required' | translate }}
+                            </div>
+                            <div *ngIf="!formControl.controls.email.valid && formControl.controls.email.touched && !formControl.controls.email.hasError('required')"
+                                    class="field-error">{{ 'Invalid email format' | translate }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group col-sm-6">
+                            <label class="control-label required-field">{{ 'Account' | translate }}</label>
+                            <ng-select
+                                id="edit-user{{tabid}}-account-select"
+                                [items]="accountTypes"
+                                [allowClear]="true"
+                                placeholder="{{ 'Select Type' | translate }}"
+                                [formControl]="formControl.controls['accountType']"
+                                (selected)="setFormAccountId( tabid, $event )"
+                            ></ng-select>
+                            <div *ngIf="formControl.controls.accountType.hasError('required') && formControl.controls.accountType.touched"
+                                    class="field-error">{{ 'Field is required' | translate }}
+                            </div>
+                        </div>
+
+                        <div class="form-group col-sm-6">
+                            <label class="control-label">{{ 'Lock / Unlock User' | translate }}</label>
+                            <div class="locked-toggle">
+                                <span *ngIf="!formControl.value.userLocked" (click)="formControl.controls.userLocked.setValue(1)">
+                                    <i class="fa fa-unlock"></i>
+                                </span>
+                                <span *ngIf="formControl.value.userLocked" (click)="formControl.controls.userLocked.setValue(0)">
+                                    <i class="fa fa-lock"></i>
+                                </span>
+
+                                <div class="toggle-switch">
+                                    <input [formControl]="formControl.controls['userLocked']"
+                                            id="user-status-toggle"
+                                            type="checkbox"
+                                            [checked]="formControl.value.userLocked">
+                                    <label for="user-status-toggle"></label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group col-sm-6">
+                            <label class="control-label required-field">{{ 'User Type' | translate }}</label>
+                            <ng-select
+                                id="edit-user{{tabid}}-usertype-select"
+                                [items]="userTypes"
+                                [allowClear]="true"
+                                placeholder="{{ 'Select Type' | translate }}"
+                                [formControl]="formControl.controls['userType']">
+                            </ng-select>
+                        </div>
+                        <div *ngIf="!hasDefaultWallet" class="form-group col-sm-6">
+                            <label class="control-label">{{ 'Create Default Wallet' | translate }}</label>
+                            <div class="locked-toggle">
+                                <span *ngIf="!formControl.value.createDefaultWallet"
+                                    (click)="formControl.controls.createDefaultWallet.setValue(1);">
+                                    <i class="fa fa-briefcase"></i>
+                                </span>
+                                <span *ngIf="formControl.value.createDefaultWallet"
+                                    (click)="formControl.controls.createDefaultWallet.setValue(0);">
+                                    <i class="fa fa-briefcase"></i>
+                                </span>
+
+                                <div class="toggle-switch">
+                                    <input [formControl]="formControl.controls['createDefaultWallet']" id="create-default-wallet-toggle"
+                                        type="checkbox" [checked]="formControl.value.createDefaultWallet">
+                                    <label for="create-default-wallet-toggle"></label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group col-sm-12">
+                            <label class="control-label">
+                                {{ 'Access' | translate }}
+                            </label>
+                            <div>
+                                <ng-container
+                                    *ngTemplateOutlet="accessAdminTabs; context: {'formControl': formControl, 'tabid': tabid}"></ng-container>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group button-group">
+                        <div class="col-sm-12">
+                            <button type="submit" class="btn btn-primary"
+                                    [disabled]="!formControl.controls.username.valid || !formControl.controls.email.valid || !formControl.controls.accountType.valid || !formControl.controls.userType.valid">
+                                <i class="fa fa-save"></i>
+                                {{ 'Save' | translate }}
+                            </button>
+                            <button (click)="closeTab(tabid)" class="btn btn-secondary">
+                                {{ 'Close' | translate }}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </ng-template>
+
+    <!-- This nested tab set cannot be directly inside the main one :( -->
+    <ng-template #accessAdminTabs let-formControl="formControl" let-tabid="tabid">
+        <clr-tabs>
+            <clr-tab>
+                <a clrTabLink><i class="fa fa-users"></i>
+                    {{ 'Administrative' | translate }}</a>
+                <clr-tab-content *clrIfActive="true">
+                    <div class="panel-body">
+                        {{ 'Administrative Groups' | translate }}
+                        <ng-select
+                            [items]="filteredAdminGroupsList"
+                            [multiple]="true"
+                            [allowClear]="true"
+                            placeholder="{{ 'Select Type' | translate }}"
+                            [containerWidth]="'100%'"
+                            [formControl]="formControl.controls['adminGroups']">
+                        </ng-select>
+                    </div>
+                </clr-tab-content>
+            </clr-tab>
+
+            <clr-tab>
+                <a clrTabLink><i class="fa fa-user"></i>
+                    {{ 'Transactional' | translate }}
+                </a>
+                <clr-tab-content *clrIfActive>
+                    <div class="panel-body">
+                        <div id="group-in-chain">
+                            {{ 'Group in Chain' | translate }}
+                            <ng-select
+                                [items]="filteredChainList"
+                                [allowClear]="true"
+                                placeholder="{{ 'Select Chain' | translate }}"
+                                [active]="selectedChainItem"
+                                (selected)="setFormChainId(tabid, $event)">
+                            </ng-select>
+                        </div>
+
+                        <div id="transactional-group">
+                            {{ 'Transactional Groups' | translate }}
+                            <ng-select
+                                [items]="tabsControl[tabid].filteredTxList"
+                                [multiple]="true"
+                                [allowClear]="true"
+                                placeholder="{{ 'Select Type' | translate }}"
+                                [containerWidth]="'100%'"
+                                [formControl]="formControl.controls['txGroups']">
+                            </ng-select>
+                        </div>
+                    </div>
+                </clr-tab-content>
+            </clr-tab>
+
+            <clr-tab>
+                <a clrTabLink><i class="fa fa-briefcase"></i> {{ 'Wallets' | translate }}</a>
+                <clr-tab-content *clrIfActive>
+                    <div class="panel-body">
+                        <div class="m-b-10" id="wallet-permission-full">
+                            {{ 'Full Access Wallets' | translate }}
+                            <ng-select
+                                [items]="tabsControl[tabid].filteredWalletsByAccount"
+                                (selected)="addedWalletSelection(1, tabid, $event)"
+                                [multiple]="true"
+                                [allowClear]="true"
+                                placeholder="{{ 'Choose Wallets' | translate }}"
+                                [containerWidth]="'100%'"
+                                [formControl]="formControl.controls['walletsFull']">
+                            </ng-select>
+                        </div>
+
+                        <div class="m-b-10" id="wallet-permission-read">
+                            {{ 'Read Only Wallets' | translate }}
+                            <ng-select
+                                [items]="tabsControl[tabid].filteredWalletsByAccount"
+                                (selected)="addedWalletSelection(0, tabid, $event)"
+                                [multiple]="true"
+                                [allowClear]="true"
+                                placeholder="{{ 'Choose Wallets' | translate }}"
+                                [containerWidth]="'100%'"
+                                [formControl]="formControl.controls['walletsRead']">
+                            </ng-select>
+                        </div>
+
+                        <div class="m-b-10" id="group-wallet-permission-full">
+                            {{ 'Group Wallet Permission (Full Access)' | translate }}
+                            <ng-select
+                                [items]="accountTypes"
+                                (selected)="addedGroupWalletSelection(1, tabid, $event)"
+                                [multiple]="true"
+                                [allowClear]="true"
+                                placeholder="{{ 'Choose Accounts' | translate }}"
+                                [containerWidth]="'100%'"
+                                [formControl]="formControl.controls['groupWalletsFull']">
+                            </ng-select>
+                        </div>
+
+                        <div id="group-wallet-permission-read">
+                            {{ 'Group Wallet Permission (Read Only)' | translate }}
+                            <ng-select
+                                [items]="accountTypes"
+                                (selected)="addedGroupWalletSelection(0, tabid, $event)"
+                                [multiple]="true"
+                                [allowClear]="true"
+                                placeholder="{{ 'Choose Accounts' | translate }}"
+                                [containerWidth]="'100%'"
+                                [formControl]="formControl.controls['groupWalletsRead']">
+                            </ng-select>
+                        </div>
+                    </div>
+                </clr-tab-content>
+            </clr-tab>
+
+            <clr-tab>
+                <a clrTabLink><i class="fa fa-chain"></i>
+                    {{ 'Chains' | translate }}</a>
+                <clr-tab-content *clrIfActive>
+                    <div class="panel-body">
+                        {{ 'Chains' | translate }}
+                        <ng-select
+                            [items]="filteredChainList"
+                            [multiple]="true"
+                            [allowClear]="true"
+                            placeholder="{{ 'Choose Chains' | translate }}"
+                            [containerWidth]="'100%'"
+                            [formControl]="formControl.controls['chainAccess']">
+                        </ng-select>
+                    </div>
+                </clr-tab-content>
+            </clr-tab>
+
+            <clr-tab>
+                <a clrTabLink><i class="fa fa-bars"></i> {{ 'Menu' | translate }}</a>
+                <clr-tab-content *clrIfActive>
+                    <div class="panel-body">
+                        {{ 'Menu' | translate }}
+                        <ng-select
+                            [items]="filteredMenuGroupsList"
+                            [multiple]="false"
+                            [allowClear]="true"
+                            placeholder="{{ 'Choose Menu' | translate }}"
+                            [containerWidth]="'100%'"
+                            [formControl]="formControl.controls['menuGroups']">
+                        </ng-select>
+                    </div>
+                </clr-tab-content>
+            </clr-tab>
+
+            <clr-tab *ngIf="tabid !== 1">
+                <a clrTabLink><i class="fa fa-lock"></i> {{ 'Reset Access' | translate }}</a>
+                <clr-tab-content *clrIfActive>
+                    <div class="panel-body">
+                        <div>{{ 'Send reset emails' | translate }}</div>
+                        <button id="sendResetPasswordEmail" class="btn btn-outline" (click)="sendResetPassword(tabid, $event);">
+                            <i class="fa fa-envelope-o"></i>{{ 'Reset Password' | translate }}
+                        </button>
+
+                        <button id="sendResetTwoFactorEmail" class="btn btn-outline" (click)="sendResetTwoFactor(tabid, $event);">
+                            <i class="fa fa-envelope-o"></i>{{ 'Reset Two-Factor' | translate }}
+                        </button>
+                    </div>
+                </clr-tab-content>
+            </clr-tab>
+        </clr-tabs>
+    </ng-template>
+</div>

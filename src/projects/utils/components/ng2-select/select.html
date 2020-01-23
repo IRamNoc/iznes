@@ -1,0 +1,217 @@
+<!-- Single Select -->
+<div (focus)="handleOnFocus()"
+    tabindex="0"
+     *ngIf="multiple === false"
+     offClick
+     (clickOutside)="clickedOutside()"
+     [style.width]="containerWidth"
+     class="ui-select-container">
+    <div [ngClass]="{'ui-disabled': disabled}" #com3></div>
+    <div class="ui-select-match dropdown" [ngClass]="{open: inputMode}">
+        <span tabindex="-1"
+              class="btn btn-default btn-secondary form-control ui-select-toggle"
+              (click)="matchClick($event)"
+              style="outline: 0;">
+
+            <span *ngIf="inlineLabel !== ''" class="pull-left">
+                {{this.translate.getTranslation(inlineLabelMlTag) || inlineLabel}}:
+            </span>
+
+            <clr-icon *ngIf="inlineIcon !== ''" class="icon" [attr.shape]="inlineIcon === 'topNavWalletDropDown' ? 'wallet' : inlineIcon"></clr-icon>
+            <clr-icon *ngIf="inlineIcon === 'topNavWalletDropDown'" class="icon chev" [attr.shape]="'caret down'"></clr-icon>
+
+            <span *ngIf="active.length <= 0" class="ui-select-placeholder text-muted">
+                <ng-template [ngIf]="itemObjects.length >= 1000">
+                    <span _ngcontent-c10="" class="fa fa-search"></span>
+                </ng-template>
+                {{ placeholder }}
+            </span>
+            <span *ngIf="active.length > 0" class="ui-select-match-text pull-left"
+                  [ngClass]="{'ui-select-allow-clear': allowClear && active.length > 0}"
+                  [innerHTML]="sanitize(active[0].text)" style="padding: 2px; margin:-2px 2px; width: 250px; overflow: hidden"></span>
+            <clr-icon *ngIf="(allowClear && !active.length>0 || inputMode) || !allowClear" class="arrow" [attr.shape]="inputMode ? 'caret up' : 'caret down'"></clr-icon>
+            <a *ngIf="allowClear && active.length>0 && !inputMode" class="btn btn-xs btn-link pull-right clear" (click)="removeClick(active[0], $event)">
+               <clr-icon shape="times-circle"></clr-icon>
+            </a>
+        </span>
+    </div>
+    <!-- options template -->
+    <div class="option-wrapper ui-select-choices dropdown-menu" *ngIf="optionsOpened && inputMode">
+
+        <div class="select-search">
+
+            <input type="text" autocomplete="false" tabindex="-1"
+                   #singleDropdownInput
+                   (keydown)="inputEvent($event)"
+                   (keyup)="inputEvent($event, true)"
+                   class="form-control ui-select-search"
+                   placeholder="{{active.length <= 0 ? placeholder : ''}}">
+
+            <span class="fa fa-search"></span>
+            <clr-icon *ngIf="inlineIcon !== ''" class="clear-search" shape="times-circle" (click)="singleDDInput.nativeElement.value=''; open(); inputValue=''"></clr-icon>
+        </div>
+
+        <ng-template [ngIf]="options.length < 1000">
+
+            <ul class="ui-select-choices-content" role="menu" *ngIf="!firstItemHasChildren">
+
+                <li *ngFor="let o of options" role="menuitem">
+                    <div class="ui-select-choices-row"
+                         [class.active]="isActive(o)"
+                         [class.selected]="(active[0] || {}).text === o.text"
+                         (mouseenter)="selectActive(o)"
+                         (click)="selectMatch(o, $event); focusedWithClick=true">
+                        <a href="javascript:void(0)" class="dropdown-item">
+                            <div [innerHtml]="sanitize(o.text | highlight:inputValue)"></div>
+                        </a>
+                    </div>
+                </li>
+            </ul>
+
+            <ul class="ui-select-choices-content" *ngIf="firstItemHasChildren" role="menu">
+
+                <li *ngFor="let c of options; let index=index" role="menuitem">
+                    <div class="divider dropdown-divider" *ngIf="index > 0"></div>
+                    <div class="dropdown-header">{{c.text}}</div>
+
+                    <div *ngFor="let o of c.children"
+                         class="ui-select-choices-row"
+                         [class.active]="isActive(o)"
+                         (mouseenter)="selectActive(o)"
+                         (click)="selectMatch(o, $event); focusedWithClick=true"
+                         [ngClass]="{'active': isActive(o)}">
+                        <a href="javascript:void(0)" class="dropdown-item">
+                            <div [innerHtml]="sanitize(o.text | highlight:inputValue)"></div>
+                        </a>
+                    </div>
+                </li>
+            </ul>
+        </ng-template>
+    </div>
+
+</div>
+
+<!-- Multi Select -->
+<div (focus)="handleOnFocus()"
+    (mousedown)="focusedWithClick=true"
+    tabindex="0"
+     *ngIf="multiple === true"
+     offClick
+     (clickOutside)="clickedOutside()"
+     [style.width]="containerWidth"
+     class="ui-select-container ui-select-multiple dropdown form-control" [ngClass]="{open: inputMode}">
+    <div [ngClass]="{'ui-disabled': disabled}"></div>
+    <span class="ui-select-match" (click)="matchClick($event)">
+        <span *ngIf="!active.length" class="ui-select-placeholder text-muted">{{placeholder}}</span>
+        <ng-container *ngIf="active.length">
+            <span *ngFor="let a of active">
+                <span class="ui-select-match-item btn btn-default btn-secondary btn-xs"
+                      tabindex="-1"
+                      type="button"
+                      [ngClass]="{'btn-default': true}">
+                    <a class="close"
+                       style="margin-left: 5px; padding: 0;"
+                       (click)="removeClick(a, $event)">&times;</a>
+                    <span [innerHtml]="sanitize(a.text)"></span>
+                </span>
+            </span>
+        </ng-container>
+
+        <clr-icon *ngIf="!active.length" class="arrow" [attr.shape]="inputMode ? 'caret up' : 'caret down'"></clr-icon>
+    </span>
+
+    <div class="option-wrapper ui-select-choices dropdown-menu {{(active.length == 0 ? 'no-active-top' : '')}}" *ngIf="optionsOpened && inputMode">
+
+        <div class="select-search">
+
+            <input type="text" autocomplete="false" tabindex="-1"
+                   #multiDropdownInput
+                   (keydown)="inputEvent($event)"
+                   (keyup)="inputEvent($event, true)"
+                   class="form-control ui-select-search"
+                   placeholder="{{active.length <= 0 ? placeholder : ''}}">
+
+            <span class="fa fa-search"></span>
+        </div>
+
+        <ul class="ui-select-choices-content" role="menu" *ngIf="!firstItemHasChildren">
+
+            <li *ngFor="let o of options" role="menuitem">
+                <div class="ui-select-choices-row"
+                     [class.active]="isActive(o)"
+                     (mouseenter)="selectActive(o)"
+                     (click)="selectMatch(o, $event); focusedWithClick=true">
+                    <a href="javascript:void(0)" class="dropdown-item">
+                        <div [innerHtml]="sanitize(o.text | highlight:inputValue)"></div>
+                    </a>
+                </div>
+            </li>
+        </ul>
+
+        <ul class="ui-select-choices-content" *ngIf="firstItemHasChildren" role="menu">
+
+            <li *ngFor="let c of options; let index=index" role="menuitem">
+                <div class="divider dropdown-divider" *ngIf="index > 0"></div>
+                <div class="dropdown-header">{{c.text}}</div>
+
+                <div *ngFor="let o of c.children"
+                     class="ui-select-choices-row"
+                     [class.active]="isActive(o)"
+                     (mouseenter)="selectActive(o)"
+                     (click)="selectMatch(o, $event); focusedWithClick=true"
+                     [ngClass]="{'active': isActive(o)}">
+                    <a href="javascript:void(0)" class="dropdown-item">
+                        <div [innerHtml]="sanitize(o.text | highlight:inputValue)"></div>
+                    </a>
+                </div>
+            </li>
+        </ul>
+    </div>
+    <div *ngIf="false">
+        <input type="text"
+               (keydown)="inputEvent($event)"
+               (keyup)="inputEvent($event, true)"
+               (click)="matchClick($event)"
+               autocomplete="false"
+               autocorrect="off"
+               autocapitalize="off"
+               spellcheck="false"
+               class="form-control ui-select-search"
+               placeholder="{{active.length <= 0 ? placeholder : ''}}"
+               role="combobox">
+        <!-- options template -->
+        <ul *ngIf="optionsOpened && options && options.length > 0 && !firstItemHasChildren"
+            class="ui-select-choices dropdown-menu" role="menu">
+            <li *ngFor="let o of options" role="menuitem">
+                <div class="ui-select-choices-row"
+                     [class.active]="isActive(o)"
+                     (mouseenter)="selectActive(o)"
+                     (click)="selectMatch(o, $event)">
+                    <a href="javascript:void(0)" class="dropdown-item">
+                        <div [innerHtml]="sanitize(o.text | highlight:inputValue)"></div>
+                    </a>
+                </div>
+            </li>
+        </ul>
+
+        <ul *ngIf="optionsOpened && options && options.length > 0 && firstItemHasChildren"
+            class="ui-select-choices dropdown-menu" role="menu">
+            <li *ngFor="let c of options; let index=index" role="menuitem">
+                <div class="divider dropdown-divider" *ngIf="index > 0"></div>
+                <div class="dropdown-header">{{c.text}}</div>
+
+                <div *ngFor="let o of c.children"
+                     class="ui-select-choices-row"
+                     [class.active]="isActive(o)"
+                     (mouseenter)="selectActive(o)"
+                     (click)="selectMatch(o, $event)"
+                     [ngClass]="{'active': isActive(o)}">
+                    <a href="javascript:void(0)" class="dropdown-item">
+                        <div [innerHtml]="sanitize(o.text | highlight:inputValue)"></div>
+                    </a>
+                </div>
+            </li>
+        </ul>
+    </div>
+</div>
+

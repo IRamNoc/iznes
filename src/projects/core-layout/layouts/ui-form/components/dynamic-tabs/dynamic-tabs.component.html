@@ -1,0 +1,102 @@
+<div class="header-breadcrumbs">
+    <h1><i class="fa fa-th"></i> {{'Tabs' | translate}}</h1>
+</div>
+
+<div class="padding">
+    <a href="#" class="toggle-info-panes" (click)="toggleInfoPanes($event)">{{ showInfoPanes ? '[-] hide info panes' : '[+] show info panes' }}</a>
+    <app-ui-info-pane [hidden]="!showInfoPanes" [message]="'This info pane does not make up part of these guidelines. If you see this pane displayed in any of the below items, it is just for informational purposes. To view the source code for this page, go to @setl/core-layout/layouts/ui-form.'"></app-ui-info-pane>
+</div>
+
+<clr-tabs *ngIf="tabsControl && tabsControl.length">
+    <clr-tab *ngFor="let tabdata of tabsControl; let id = index">
+        <!--
+            The tab button has a dynamic ID, title and Font Awesome icon.
+        -->
+
+
+
+
+        <button clrTabLink id="tab-button-{{id}}">
+            <i class="fa {{tabdata.title.icon}}"></i> {{tabdata.title.text}}
+        </button>
+
+        <!--
+            Whether the tab is active, is set in the tabdata, from the
+            tabsControl object.
+        -->
+
+
+
+
+
+
+        <clr-tab-content *clrIfActive="tabdata.active">
+            <!--
+                Tabs can be filtered by a numeric ID, or a string one.
+
+                In this case, we're using numbers, but you could simple use a
+                message type or user type etc.
+            -->
+
+
+
+
+
+
+
+
+
+
+            <ng-container *ngIf="id === 0">
+                <ng-container *ngTemplateOutlet="dynamicTab1">
+
+                </ng-container>
+            </ng-container>
+
+            <!--
+                This second tab has an ID of 1, but also has the tabdata object
+                passed into the ng-template, allowing you to direclty access the
+                data in the template below.
+
+                A common use for this would be to access a FormGroup stored on
+                the tabsControl property, or a object detailing data about an
+                entity.
+            -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            <ng-container *ngIf="id === 1">
+                <ng-container *ngTemplateOutlet="dynamicTab2; context: {'tabdata': tabdata}">
+
+                </ng-container>
+            </ng-container>
+        </clr-tab-content>
+    </clr-tab>
+</clr-tabs>
+
+<!-- Tab 1 content. -->
+<ng-template #dynamicTab1>
+    <app-ui-info-pane [hidden]="!showInfoPanes" [message]="'This is the first tab, the component defaults this to be the active one by default in the tabsControl object.'"></app-ui-info-pane>
+    <p>{{'This button programatically moves to the second tab.' | translate}}
+
+        <button (click)="setTabActive(1); $event.preventDefault()">{{'Go.' | translate}}</button>
+    </p>
+</ng-template>
+
+<!-- Tab 2 content. -->
+<ng-template #dynamicTab2 let-tabdata="tabdata">
+    <app-ui-info-pane [hidden]="!showInfoPanes" [message]="'This is the second tab, it\'s not active by default, but can be programatically switched to in the code.'"></app-ui-info-pane>
+</ng-template>

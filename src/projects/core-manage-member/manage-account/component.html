@@ -1,0 +1,196 @@
+<div class="header-breadcrumbs">
+    <h1><i class="fa fa-user-o"></i> {{ 'Accounts' | translate }}</h1>
+</div>
+
+<div class="wrapper wrapper-content">
+    <clr-tabs *ngIf="tabsControl.length">
+        <clr-tab *ngFor="let tabdata of tabsControl; let id = index">
+            <button clrTabLink id="link{{id}}" [innerHTML]="tabdata.title"></button>
+            <clr-tab-content *clrIfActive="tabdata.active">
+                <!-- Account list tab. -->
+                <ng-container *ngIf="id === 0">
+                    <ng-container
+                        *ngTemplateOutlet="accountListTab">
+                    </ng-container>
+                </ng-container>
+
+                <!-- Account add tab. -->
+                <ng-container *ngIf="id === 1">
+                    <ng-container
+                        *ngTemplateOutlet="staticAccountAddTab; context: {'formControl': tabdata.formControl, 'tabid': id}">
+                    </ng-container>
+                </ng-container>
+
+                <!-- Account edit tabs. -->
+                <ng-container *ngIf="id >= 2">
+                    <ng-container
+                        *ngTemplateOutlet="dynamicEditTab; context: {'formControl': tabdata.formControl, 'tabid': id}">
+                    </ng-container>
+                </ng-container>
+            </clr-tab-content>
+        </clr-tab>
+    </clr-tabs>
+
+    <!-- Account Data Table. -->
+    <ng-template #accountListTab>
+        <div class="panel-body">
+            <datagrid-list
+                [fieldsModel]="accountFieldsModel"
+                [listData]="accountList"
+                [listActions]="accountListActions"
+                [filters]="accountListFilters"
+                (action)="onAction($event)">
+            </datagrid-list>
+        </div>
+    </ng-template>
+
+    <!-- User Add Form. -->
+    <ng-template #staticAccountAddTab let-formControl="formControl" let-tabid="tabid">
+        <div class="user-tab-panel-body panel-body">
+            <form (ngSubmit)="handleAddAccount(tabid)" [formGroup]="formControl">
+                <div class="form-horizontal">
+                    <div class="row">
+                        <div class="form-group col-sm-6">
+                            <label class="control-label required-field" for="accountName">
+                                {{ 'Account Name' | translate }}
+                            </label>
+
+                            <input id="accountName"
+                                    type="text"
+                                    formControlName="accountName"
+                                    placeholder="{{ 'Account Name' | translate }}"
+                                    class="form-control username"/>
+
+                            <div *ngIf="formControl.controls.accountName.hasError('required') && formControl.controls.accountName.touched" class="field-error">{{ 'Field is required' | translate }}</div>
+
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group col-sm-6">
+                            <label class="control-label required-field" for="accountDescription">
+                                {{ 'Account Description' | translate }}
+                            </label>
+
+                            <input id="accountDescription"
+                                    type="text"
+                                    formControlName="accountDescription"
+                                    placeholder="{{ 'Account Description' | translate }}"
+                                    class="form-control username"/>
+
+                            <div *ngIf="formControl.controls.accountDescription.hasError('required') && formControl.controls.accountDescription.touched" class="field-error">{{ 'Field is required' | translate }}</div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group col-sm-6">
+                            <label class="control-label required-field">
+                                {{ 'Account Member' | translate }}
+                            </label>
+                            <ng-select
+                                [items]="managedMemberList"
+                                [allowClear]="true"
+                                placeholder="{{ 'Select Member' | translate }}"
+                                formControlName="member"
+                                [disabled]="!isSymAdmin">
+                            </ng-select>
+                            <div *ngIf="formControl.controls.member.hasError('required') && formControl.controls.member.touched" class="field-error">
+                                {{ 'Field is required' | translate }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group button-group">
+                        <button type="submit" class="btn btn-primary" [disabled]="!formControl.valid">
+                            <i class="fa fa-save"></i> {{ 'Save' | translate }}
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </ng-template>
+
+    <!--Account Edit Form-->
+    <ng-template #dynamicEditTab let-formControl="formControl" let-tabid="tabid">
+        <div class="user-tab-panel-body panel-body">
+            <form (ngSubmit)="handleEditAccount(tabid)" [formGroup]="formControl">
+                <div class="form-horizontal">
+                    <div class="row">
+                        <div class="form-group col-sm-6">
+                            <label class="control-label">
+                                {{ 'Account Name' | translate }}
+                            </label>
+                            <div>
+                                <input type="text"
+                                        formControlName="accountName"
+                                        placeholder="{{ 'Account Name' | translate }}"
+                                        class="form-control mlp_translated"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-horizontal">
+                    <div class="row">
+                        <div class="form-group col-sm-6">
+                            <label class="control-label">
+                                {{ 'Account Description' | translate }}
+                            </label>
+                            <div>
+                                <input type="text"
+                                        formControlName="accountDescription"
+                                        placeholder="{{ 'Account Description' | translate }}"
+                                        class="form-control mlp_translated"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-horizontal">
+                    <div class="row">
+                        <div class="form-group col-sm-6">
+                            <label class="control-label">
+                                {{ 'Member' | translate }}
+                            </label>
+                            <div>
+                                <input type="text"
+                                        [readonly]="true"
+                                        formControlName="memberName"
+                                        class="form-control"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-horizontal">
+                    <div class="row">
+                        <div class="form-group col-sm-6">
+                            <label class="control-label">
+                                {{ 'Wallet' | translate }}
+                            </label>
+                            <ng-select
+                                [items]="managedWalletList"
+                                [allowClear]="true"
+                                placeholder="{{ 'Select Wallet' | translate }}"
+                                formControlName="wallet">
+                            </ng-select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-horizontal">
+                    <div class="row">
+                        <div class="form-group button-group">
+                            <button type="submit" class="btn btn-primary" [disabled]="!formControl.valid">
+                                <i class="fa fa-save"></i> {{ 'Save' | translate }}
+                            </button>
+                            <button (click)="closeTab(tabid)" class="btn btn-secondary">
+                                {{ 'Close' | translate }}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </ng-template>
+</div>

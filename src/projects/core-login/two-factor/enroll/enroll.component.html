@@ -1,0 +1,30 @@
+<section class="form-block">
+    <div class="form-group col-sm-6">
+        <form>
+            <div *ngIf="!useTwoFactor">
+                <p *ngIf="!useTwoFactor">{{ 'Two Factor Authentication is disabled.' | translate }}</p>
+                <div class="row">
+                    <button *ngIf="!useTwoFactor" id="enable" class="btn btn-primary" (click)="setTwoFactorAuthentication(true)">
+                        <i class="fa fa-save"></i> {{ 'Enable' | translate }}
+                    </button>
+                </div>
+            </div>
+
+            <div *ngIf="useTwoFactor">
+                <p *ngIf="useTwoFactor">{{ 'Two Factor Authentication is enabled.' | translate }}</p>
+                <div class="row">
+                    <button *ngIf="useTwoFactor" id="disable" class="btn btn-primary" (click)="setTwoFactorAuthentication(false)">
+                        <i class="fa fa-save"></i> {{ 'Disable' | translate }}
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</section>
+
+<app-authenticate
+    *ngIf="showQRCodeChallenge"
+    (modalCancelled)="showQRCodeChallenge=!$event"
+    [showSuccessAlert]="true"
+    [qrCode]="qrCode">
+</app-authenticate>

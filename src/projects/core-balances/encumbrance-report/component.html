@@ -1,0 +1,52 @@
+<div class="header-breadcrumbs">
+    <h1><i class="fa fa-th-list"></i> {{ 'Encumbrance Report' | translate }}</h1>
+</div>
+
+<clr-tabs *ngIf="tabs.length">
+    <clr-tab *ngFor="let tab of tabs; let id = index">
+        <button clrTabLink id="encumbanceReportTab{{id}}" (click)="tabControl.activate(id); setViewingAddress(id)"
+                innerHTML="<i class='fa fa-{{tab.icon}}'></i> {{tab.title | asset}}"></button>
+        <clr-tab-content *clrIfActive="tab.active">
+            <!-- Top Level Datagrid -->
+            <ng-container *ngIf="id === 0">
+                <ng-container *ngTemplateOutlet="topLevelDatagrid"></ng-container>
+            </ng-container>
+
+            <!-- Breakdown Datagrid -->
+            <ng-container *ngIf="id >= 1">
+                <ng-container *ngTemplateOutlet="breakdownDatagrid; context: {'id': id, 'encumbrance': tab.data.encumbranceObject}"></ng-container>
+            </ng-container>
+        </clr-tab-content>
+    </clr-tab>
+</clr-tabs>
+
+<!-- Top Level Datagrid -->
+<ng-template #topLevelDatagrid>
+    <div class="panel-body">
+        <datagrid-list
+            [fieldsModel]="encumbrancesFieldsModel"
+            [listData]="encumbrances"
+            [listActions]="encumbrancesListActions"
+            (action)="onAction($event)">
+        </datagrid-list>
+    </div>
+</ng-template>
+
+<!-- Breakdown Datagrid-->
+<ng-template #breakdownDatagrid let-id="id" let-encumbrance="encumbrance">
+    <div class="user-tab-panel-body panel-body">
+        <div class="form-group tx-view-header">
+            <h2>{{ encumbrance.label }} ({{ encumbrance.address }})</h2>
+        </div>
+
+        <datagrid-list
+            [fieldsModel]="breakdownFieldsModel"
+            [listData]="encumbrance.details"
+            [exportOptions]="breakdownExportOptions">
+        </datagrid-list>
+
+        <div class="form-block">
+            <button type="button" class="btn btn-primary" (click)="handleClose(id)">{{ 'Close' | translate }}</button>
+        </div>
+    </div>
+</ng-template>

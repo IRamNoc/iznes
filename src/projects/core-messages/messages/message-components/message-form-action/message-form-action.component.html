@@ -1,0 +1,28 @@
+<ng-container *ngIf="config">
+    <div class="message-body" *ngIf="config.messageBody">{{config.messageBody}}</div>
+
+    <div class="message-fields" *ngIf="config.content">
+        <div class="message-field" *ngFor="let field of config.content">
+            <div class="message-field--name">{{field.name}}</div>
+            <div class="message-field--content">{{field.content}}</div>
+            <div class="hr-line-dashed"></div>
+        </div>
+    </div>
+
+    <div class="message-actions" *ngIf="config.actions && !isActed">
+        <div class="message-action" *ngFor="let action of config.actions">
+            <button class="btn {{action.styleClasses}}" type="button" (click)="onActionClick(action)">{{action.text}}</button>
+        </div>
+    </div>
+
+    <div class="alert alert-warning" *ngIf="isActed">
+        <div class="alert-items">
+            <div class="alert-item static">
+                <div class="alert-icon-wrapper">
+                    <clr-icon class="alert-icon" shape="exclamation-triangle"></clr-icon>
+                </div>
+                <span class="alert-text">{{config.completeText}}</span>
+            </div>
+        </div>
+    </div>
+</ng-container>

@@ -1,0 +1,59 @@
+:host {
+    display: block;
+
+    .date-picker-extended { display: table; }
+
+    .calendar {
+        border: 1px solid #E0E0E0;
+
+        &.c-header {
+            border-bottom: none;
+            padding: 10px 20px;
+        }
+
+        &.c-footer {
+            border-top: none;
+            padding: 10px;
+            text-align: right;
+
+            .btn { margin: 0; }
+        }
+    }
+
+    /deep/  {
+        dp-day-calendar {
+            min-width: 362px;
+            dp-month-calendar {
+                width: 100%;
+                .dp-months-row {
+                    text-align: center;
+                }
+            }
+        }
+
+        .dp-calendar-nav-container-left,
+        .dp-calendar-nav-container-right {
+            width: auto;
+        }
+
+        .dp-material .dp-calendar-day {
+            border-radius: 0;
+            height: 50px;
+            margin-bottom: 0;
+            margin-top: 0;
+            width: 50px;
+
+            &.dp-selected, &[disabled] {
+                background: #EEE;
+                color: #BBB;
+                opacity: 0.75;
+            }
+
+            &[disabled] { cursor: not-allowed }
+
+            &.dp-current-day { border: none; }
+        }
+
+        .dp-material .dp-calendar-weekday { width: 50px; }
+    }
+}

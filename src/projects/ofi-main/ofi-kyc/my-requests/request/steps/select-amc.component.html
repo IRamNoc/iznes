@@ -1,0 +1,85 @@
+<h4 class="step-title">
+    {{ 'Select Company' | translate }}
+</h4>
+
+<form [formGroup]="form" id="step-selection" (ngSubmit)="handleSubmit($event)" class="well p-1">
+
+    <div class="row" *ngIf="alreadyRegistered">
+        <div class="col-sm-12">
+
+            <div class="text-center mb-1">
+                <span class="alert-icon-wrapper text-warning">
+                    <clr-icon class="alert-icon" shape="exclamation-triangle"></clr-icon>
+                </span>
+                <span class="alert-text text-warning">
+                    {{ 'Warning: if you select Yes in the following list, you will not be able to benefit from all the KYC features of IZNES.' | translate }}
+                </span>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="form-group search-companies">
+        <input type="text" placeholder="{{ 'Search companies' | translate }}" [formControl]="searchCompanies" (keydown)="stopSubmit($event)">
+        <clr-icon *ngIf="(searchCompanies || {}).value" shape="times-circle" (click)="clearSearch()"></clr-icon>
+    </div>
+
+    <div>
+
+        <div class="management-companies">
+
+            <div id="no-results" *ngIf="filteredManagementCompanies && filteredManagementCompanies.length === 0">
+                <p>{{ 'No companies found, please try again.' | translate }}</p>
+            </div>
+
+            <div class="management-company-container" *ngFor="let managementCompany of filteredManagementCompanies">
+
+                <div class="link">
+                    &nbsp;
+                </div>
+
+                <div class="management-company" [class.selected]="isAMCSelected(managementCompany.id)">
+                    <clr-icon shape="check" class="confirm-mark" *ngIf="isAMCSelected(managementCompany.id)"></clr-icon>
+
+                    <div class="infos" (click)="toggleManagementCompany(managementCompany)">
+                        <div class="logo">
+                            <div class="img-container">
+                                <div class="img">
+                                    <img *ngIf="managementCompany.image" src="{{managementCompany.image}}" alt="{{managementCompany.text}}"/>
+                                    <i *ngIf="!managementCompany.image" class="fa fa-building-o fa-3x"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="name">
+                            {{managementCompany.text}}
+                        </div>
+                    </div>
+
+                    <div class="actions" *ngIf="!duplicate" [hidden]="!isAMCSelected(managementCompany.id)">
+                        <div *ngIf="managementCompany.id" class="checkbox-inline" [class.disabled]="submitted">
+                            <input [attr.disabled]="submitted ? 'true' : null"
+                                    type="checkbox"
+                                    id="registered_{{managementCompany.id}}"
+                                    name="registered"
+                                    class="form-control"
+                                    [(ngModel)]="managementCompany.registered"
+                                    [ngModelOptions]="{standalone: true}"
+                                    (ngModelChange)="onRegisteredChange()">
+                            <label for="registered_{{managementCompany.id}}">{{ 'KYC Completed?' | translate }}</label>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+        <p id="filtered-count" *ngIf="filteredManagementCompanies && managementCompanies">
+            {{ 'Showing @filtered@ of @total@ companies' | translate: { filtered: filteredManagementCompanies.length, total: managementCompanies.length } }}
+        </p>
+
+    </div>
+
+    <input type="submit" class="hidden"/>
+
+</form>

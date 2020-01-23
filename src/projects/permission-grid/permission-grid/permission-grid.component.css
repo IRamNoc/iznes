@@ -1,0 +1,87 @@
+setl-permission-grid {
+    width: 100%;
+}
+
+.permission-grid {
+    margin-bottom: 15px;
+}
+
+:host /deep/ .permission-grid .datagrid-column .datagrid-column-title,
+.permission-grid clr-dg-cell {
+    text-align: center;
+}
+
+.permission-grid .option-box .fa {
+    margin: 0;
+}
+
+:host /deep/ .permission-grid .left.datagrid-cell,
+:host /deep/ .permission-grid .left .datagrid-column-title {
+    text-align: left;
+    padding-left: 10px;
+}
+
+:host /deep/ .permission-grid .datagrid-column:first-child,
+:host /deep/ .permission-grid .datagrid-cell:first-child {
+    width: 40% !important;
+}
+
+:host /deep/ .datagrid .datagrid-body .datagrid-row .datagrid-cell,
+:host /deep/ .datagrid-overlay-wrapper,
+:host /deep/ .datagrid .datagrid-body,
+:host /deep/ .permission-grid clr-dg-cell,
+:host /deep/ .datagrid {
+    overflow: visible;
+}
+
+div.option-wrap {
+    position: relative;
+    display: inline-block;
+    user-select: none;
+}
+
+div.option-box {
+    display: inline-block;
+    border: 1px solid gainsboro;
+    border-radius: 4px;
+    padding: 5px;
+    cursor: pointer;
+    height: 30px;
+    width: 30px;
+    line-height: 20px;
+    background: #ffffff;
+}
+
+ul.option-list {
+    position: absolute;
+    top: 32px;
+    left: 0px;
+    height: 0;
+    overflow: hidden;
+    list-style-type: none;
+    text-align: left;
+}
+
+ul.option-list.open {
+    height: auto;
+    width: 140px;
+    background-color: #FFFFFF;
+    border: 1px solid gainsboro;
+    border-radius: 4px;
+    padding: 2.5px 5px;
+    z-index: 2;
+}
+
+ul.option-list li {
+    display: block;
+    width: 100%;
+    margin: 2.5px 0;
+    padding: 4px;
+    cursor: pointer;
+    line-height: 10px;
+}
+
+ul.option-list li:hover {
+    background-color: gainsboro;
+    border-radius: 4px;
+}

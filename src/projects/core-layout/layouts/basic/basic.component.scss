@@ -1,0 +1,21 @@
+.main-container {
+    position: relative;
+    .content-container .content-area {
+        padding: 0;
+        .router-container {
+            min-height: 100%;
+            padding-bottom: 57px;
+        }
+    }
+}
+
+:host /deep/ clr-main-container.open-hamburger-menu .branding {
+    @media screen and (max-width: 768px) {
+        .logo-dark {
+            display: block!important;
+        }
+    }
+    .title {
+        display: none!important;
+    }
+}

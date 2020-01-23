@@ -1,0 +1,36 @@
+:host {
+    border-right: solid 1px #cfcfcf;
+}
+
+.disable {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+clr-vertical-nav {
+    .tooltip {
+        margin: 3px 0;
+    }
+    &.is-collapsed {
+        .tooltip-content {
+            display: block;
+            position: fixed;
+            left: 45px;
+            top: auto;
+            margin-top: -20px;
+        }
+    }
+    .tooltip-content {
+        display: none;
+    }
+    .label {
+        float: right;
+        margin: 8px 0 0 0;
+        background: #007dc1;
+        color: white;
+        border: none;
+    }
+    .nav-content {
+        overflow: visible; 
+    }
+}

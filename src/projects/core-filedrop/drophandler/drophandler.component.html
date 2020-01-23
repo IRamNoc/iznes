@@ -1,0 +1,83 @@
+<ng-container *ngIf="!inline">
+    <!-- Raw input and form. -->
+    <form #dropFileForm>
+        <input class="drop-file-input" #fileInput [multiple]="multiple" type="file" (change)="handleFileChange($event)" />
+    </form>
+
+    <!-- Custom UI. -->
+    <div
+        class="drop-file-zone" tabindex="0" (keyup)="stopPropagation($event);handleFocus($event)">
+        <div
+            class="drop-file-area"
+            [ngClass]="{active: this.isHovering}"
+            (drag)="stopPropagation($event)"
+            (dragstart)="stopPropagation($event)"
+            (dragend)="stopPropagation($event);onDragLeave($event)"
+            (dragover)="stopPropagation($event);onDragEnter($event)"
+            (dragenter)="stopPropagation($event)"
+            (dragleave)="stopPropagation($event);onDragLeave($event)"
+            (drop)="stopPropagation($event);onDragLeave($event)"
+            (click)="handleClick($event)"
+            (drop)="handleDrop($event)">
+            <p>
+                <span>{{uploadPrompt}}</span>
+            </p>
+            <p>
+                <span>{{numberFilesText}}</span>
+            </p>
+        </div>
+
+        <div
+            class="drop-file-meta"
+            *ngIf="uploadedFiles.length">
+            <span
+                *ngFor="let file of uploadedFiles; let i = index">
+                <span class="tablet added-file {{file.status}}" (click)="stopPropagation($event);clearFiles(i)" *ngIf="file.name">
+                    <i class="fa fa-times"></i> {{ file.name }}
+                </span>
+            </span>
+        </div>
+    </div>
+</ng-container>
+
+<ng-container *ngIf="inline">
+    <div class="inline-filedrop">
+        <form #dropFileForm>
+            <input class="drop-file-input" #fileInput [multiple]="multiple" type="file" (change)="handleFileChange($event)" />
+        </form>
+
+        <div class="drop-file-zone" tabindex="0" (keyup)="stopPropagation($event);handleFocus($event)">
+            <div class="drop-file-area"
+                [ngClass]="{active: this.isHovering}"
+                (drag)="stopPropagation($event)"
+                (dragstart)="stopPropagation($event)"
+                (dragend)="stopPropagation($event);onDragLeave($event)"
+                (dragover)="stopPropagation($event);onDragEnter($event)"
+                (dragenter)="stopPropagation($event)"
+                (dragleave)="stopPropagation($event);onDragLeave($event)"
+                (drop)="stopPropagation($event);onDragLeave($event)"
+                (click)="handleClick($event)"
+                (drop)="handleDrop($event)">
+            </div>
+
+            <div class="drop-file-nofile" [hidden]="encodedFiles.length || preset?.name">{{uploadPrompt}}</div>
+            <div class="drop-file-meta" *ngIf="encodedFiles.length">
+                <span *ngFor="let file of encodedFiles; let i = index">
+                    <span class="added-file-inline {{file.status}}-inline" *ngIf="file.name">
+                        <i class="fa fa-times" (click)="stopPropagation($event);clearFiles(i)"></i>
+                        <span *ngIf="!usePreview">{{ file.name }}</span>
+                        <file-preview *ngIf="usePreview" [fileUploadObj]="file"></file-preview>
+                    </span>
+                </span>
+            </div>
+
+            <div class="drop-file-meta" *ngIf="!uploadedFiles.length && preset?.name">
+                <span class="added-file-inline uploaded-file-inline">
+                    <i class="fa fa-times" (click)="stopPropagation($event);clearPreset()"></i>
+                    <span *ngIf="!usePreview">{{ preset.name }}</span>
+                    <file-preview *ngIf="usePreview" [fileDataString]="preset.fileBase64"></file-preview>
+                </span>
+            </div>
+        </div>
+    </div>
+</ng-container>

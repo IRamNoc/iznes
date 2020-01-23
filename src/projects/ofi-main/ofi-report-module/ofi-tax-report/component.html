@@ -1,0 +1,170 @@
+<div class="header-breadcrumbs">
+    <h1><i class="fa fa-eur"></i> {{ 'Tax Report' | translate }}</h1>
+</div>
+
+<div class="wrapper wrapper-content">
+
+    <clr-tabs *ngIf="tabsControl.length">
+        <clr-tab *ngFor="let tabdata of tabsControl; let id = index">
+            <button clrTabLink id="link{{id}}">
+                <span class="{{tabdata.title.colorClass}}"><i class="fa {{tabdata.title.icon}}"></i> {{tabdata.title.text}}</span>
+            </button>
+
+            <clr-tab-content *clrIfActive="tabdata.active">
+                <ng-container>
+                    <ng-container *ngTemplateOutlet="balanceTab"></ng-container>
+                </ng-container>
+            </clr-tab-content>
+
+        </clr-tab>
+    </clr-tabs>
+
+    <!-- balance Table. -->
+    <ng-template #balanceTab>
+        <div class="panel-body">
+            <form class="p-0">
+                <div class="form-horizontal">
+                    <div class="row">
+                        <div class="form-group col-sm-4">
+                            <label class="control-label">
+                                {{ 'Sub-portfolio' | translate }}
+                            </label>
+                            <div>
+                                <ng-select [items]="addressList" 
+                                            [allowClear]="false" 
+                                            [placeholder]="translate.translate('Select Sub-portfolio')" 
+                                            [formControl]="address" 
+                                            (selected)="handleSelectedAddress($event)">
+                                </ng-select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <form [formGroup]="dateRangeForm" class="p-0">
+                <div class="form-horizontal">
+                    <div class="row">
+                        <div class="form-group col-sm-4">
+                            <label class="control-label">
+                                {{ 'From Date' | translate }}
+                            </label>
+                            <div class="input-group date-pick-wrapper">
+                                <span class="fa fa-calendar" aria-hidden="true"></span>
+
+                                <input formControlName="fromDate" 
+                                        [dpDayPicker]="configDate" 
+                                        [placeholder]="translate.translate('Choose a date')" 
+                                        mode="day" 
+                                        theme="dp-material" 
+                                        [ngStyle]="{'width':'100%'}" 
+                                        (ngModelChange)="dateChange('from', $event)" 
+                                        [readonly]="true">
+                            </div>
+                        </div>
+
+                        <div class="form-group col-sm-4">
+                            <label class="control-label">
+                                {{ 'To Date' | translate }}
+                            </label>
+                            <div class="input-group date-pick-wrapper">
+                                <span class="fa fa-calendar" aria-hidden="true"></span>
+
+                                <input formControlName="toDate" 
+                                        [dpDayPicker]="configDate" 
+                                        [placeholder]="translate.translate('Choose a date')" 
+                                        mode="day" 
+                                        theme="dp-material" 
+                                        [ngStyle]="{'width':'100%'}" 
+                                        (ngModelChange)="dateChange('to', $event)" 
+                                        [readonly]="true">
+                            </div>
+                        </div>
+
+                        <div class="form-group col-sm-4">
+                            <label class="control-label">
+                                {{ 'Total Amount to be Declared' | translate}}
+                            </label>
+                            <div>€
+                                <span class="text-primary">{{totalAmountToDeclared | moneyValue: 4}}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+            <clr-datagrid #myDataGrid>
+                <clr-dg-column>{{ 'Action' | translate }}</clr-dg-column>
+                <clr-dg-column>{{ 'Fund Name' | translate }}</clr-dg-column>
+                <clr-dg-column>{{ 'Type' | translate }}</clr-dg-column>
+                <clr-dg-column>{{ 'Ref' | translate }}</clr-dg-column>
+                <clr-dg-column class="right">{{ 'P&L' | translate }}</clr-dg-column>
+                <clr-dg-column class="right">{{ 'Quantity' | translate }}</clr-dg-column>
+                <clr-dg-column class="right">{{ 'Tax Credit' | translate }}</clr-dg-column>
+                <clr-dg-column class="right">{{ 'Amount to be Declared' | translate }}</clr-dg-column>
+                <clr-dg-column>{{ 'Delivery Date' | translate }}</clr-dg-column>
+
+                <clr-dg-row *clrDgItems="let tx of clientTxList">
+                    <clr-dg-cell>
+                        <div class="btn-group btn-sm">
+                            <button class="btn text-primary" (click)="viewRelateTxs(tx.transactionId, tx.fundName)">
+                                <i class="fa fa-eye"></i>{{ 'Related Transactions' | translate }}
+                            </button>
+                        </div>
+                    </clr-dg-cell>
+
+                    <clr-dg-cell>{{tx.fundName}}</clr-dg-cell>
+                    <clr-dg-cell>{{tx.type | txType}}</clr-dg-cell>
+                    <clr-dg-cell>{{tx.transactionRefId | padding : 10 }}</clr-dg-cell>
+                    <clr-dg-cell class="right">{{tx.grossAmount | moneyValue: 4}}</clr-dg-cell>
+                    <clr-dg-cell class="right">{{tx.quantity | moneyValue : 5}}</clr-dg-cell>
+                    <clr-dg-cell class="right">{{tx.taxCredit | moneyValue: 4}}</clr-dg-cell>
+                    <clr-dg-cell class="right">{{tx.amountToDeclared | moneyValue: 5}}</clr-dg-cell>
+                    <clr-dg-cell>{{tx.deliveryDate | date : 'dd/MM/yyyy' }}</clr-dg-cell>
+                </clr-dg-row>
+
+                <clr-dg-footer>{{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
+
+                    <clr-dg-pagination #pagination [clrDgPageSize]="10"></clr-dg-pagination>
+                </clr-dg-footer>
+            </clr-datagrid>
+        </div>
+    </ng-template>
+</div>
+
+<clr-modal [(clrModalOpen)]="showRelatedTxModal" class="large">
+    <div class="modal-title">
+        <i class="fa fa-bar-chart modal-icon" style="color:#1AB399"></i>
+        <h4 class="modal-title-text">
+            {{ 'Related Transactions' | translate }}
+        </h4>
+    </div>
+    <div class="modal-body">
+        <clr-datagrid #myDataGrid>
+            <clr-dg-column>{{ 'Fund Name' | translate }}</clr-dg-column>
+            <clr-dg-column>{{ 'Type' | translate }}</clr-dg-column>
+            <clr-dg-column>{{ 'Ref' | translate }}</clr-dg-column>
+            <clr-dg-column class="right">{{ 'Price' | translate }}</clr-dg-column>
+            <clr-dg-column class="right">{{ 'Quantity' | translate }}</clr-dg-column>
+            <clr-dg-column class="right">{{ 'Gross Amount' | translate }}</clr-dg-column>
+            <clr-dg-column>{{ 'Delivery Date' | translate }}</clr-dg-column>
+
+            <clr-dg-row *clrDgItems="let tx of relatedRedemptionTxList">
+                <clr-dg-cell>{{tx.transactionInstrumentName}}</clr-dg-cell>
+                <clr-dg-cell>{{tx.transactionType | txType}}</clr-dg-cell>
+                <clr-dg-cell>{{tx.transactionRefId | padding : 10 }}</clr-dg-cell>
+                <clr-dg-cell class="right">{{tx.transactionPrice | moneyValue: 4}}</clr-dg-cell>
+                <clr-dg-cell class="right">{{tx.transactionUnits | moneyValue : 5}}</clr-dg-cell>
+                <clr-dg-cell class="right">{{tx.transactionSettlement | moneyValue: 4}}</clr-dg-cell>
+                <clr-dg-cell>{{tx.transactionDeliveryDate | date : 'dd/MM/yyyy' }}</clr-dg-cell>
+            </clr-dg-row>
+
+            <clr-dg-footer>{{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
+
+                <clr-dg-pagination #pagination [clrDgPageSize]="10"></clr-dg-pagination>
+            </clr-dg-footer>
+        </clr-datagrid>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-outline" (click)="showRelatedTxModal = false">{{ 'Close' | translate }}</button>
+    </div>
+</clr-modal>

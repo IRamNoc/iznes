@@ -1,0 +1,32 @@
+<h4 class="step-title">
+    {{ 'Introduction' | translate }}
+</h4>
+
+<div class="well p-1 introduction-text">
+    <p>{{ 'The European Directive 2014/65/EU known as "Markets in Financial Instruments (MiFID II)", which entered into force on the 3rd of January 2018, requires, in the continuity of the Directive 2004/39/EC known as "Markets in Financial Instruments Directive (MiFID)", in particular asset management companies and investment firms to categorise their clients and ensure that the products offered match the characteristics of the targeted clients by complying with the provisions applicable to the product governance.' | translate }}</p>
+
+    <p>{{ 'The current European Directive on the Fight against Money Laundering and Terrorist Financing requires asset management companies to know the identity of the client, the origin of the funds and information on the beneficial owners of legal entities.' | translate }}</p>
+
+    <p>{{ 'The US Foreign Account Tax Compliance Act (FATCA) is a US regulation that aims to combat tax evasion by US taxpayers within the meaning of "US PERSON" whose accounts are domiciled outside the United States or who indirectly receive income inside or outside the United States through foreign entities. FATCA regulation is extraterritorial: it applies outside the United States to a wide range of financial institutions including banks but also investment funds, asset managers and life insurance companies. The latter must identify US persons within the meaning of US PERSON and declare them annually to the US tax authority, via the local tax authority in the case of France, to allow automated matching with their individual tax returns.' | translate }}</p>
+
+    <p>{{ 'The CRS (Common Reporting Standard) has been adopted by the OECD and the G20, and consists of an automatic exchange of tax information on a global scale. Financial institutions must implement positive self-certification on a dedicated form to identify non-residents within the meaning of these regulations.' | translate }}</p>
+
+    <p>{{ 'You have expressed the wish to obtain a service from a controlled professional engaged in an activity regulated by the Autorité de Contrôle Prudentiel et de Résolution (ACPR - French Prudential Supervision and Resolution Authority) and the Autorité des Marchés Financiers (AMF – French Financial Markets Authority ). The collection of information is carried
+    out in the interest of the client and aims to provide a suitable or appropriate service or advice. The truthfulness, accuracy and updating of the answers to this questionnaire will determine the provision of an appropriate and quality service or advice. In the absence of exhaustive answers, the asset management company may not be able to verify that it is providing the requested service. Failure to respond could result in the obligation for the AMF to report it to the competent authorities.' | translate }}</p>
+</div>
+
+<div class="checkbox-inline">
+    <input type="checkbox" id="confirm-read" [formControl]="readCheckbox">
+    <label for="confirm-read">
+        {{ 'I acknowledge that I have read the European Directive on Markets in Financial Instruments' | translate }}
+    </label>
+</div>
+<!-- <div class="px-1">
+    <clr-alert [clrAlertClosable]="false" [clrAlertSizeSmall]="true">
+        <div class="alert-item">
+            <span class="alert-text">
+                {{ 'The information collected should be regularly updated.' | translate }}
+            </span>
+        </div>
+    </clr-alert>
+</div> -->

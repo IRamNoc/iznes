@@ -1,0 +1,123 @@
+<!-- Breadcrumbs. -->
+<div class="header-breadcrumbs">
+    <h1 id="am-product-home"><i class="fa fa-bar-chart"></i>{{ 'Shares / Funds / Umbrella Funds' | translate }}</h1>
+</div>
+
+<!-- Main content. -->
+<section class="subtitle">
+    <div *ngIf="isAssetManager(); else iznesAdminTemplate">
+        <p>{{ 'Here are all the Shares / Funds and Umbrella Funds that were created by @amManagementCompany@.' | translate: {'amManagementCompany': amManagementCompany} }}
+            <br>{{ 'You can also add a new Share, a new Fund or a new Umbrella Fund' | translate }}.
+        </p>
+    </div>
+    <ng-template #iznesAdminTemplate>
+        <p>{{ 'Here are all the Shares / Funds and Umbrella Funds that were created within IZNES.' | translate }}</p>
+    </ng-template>
+</section>
+
+<div class="well" *ngFor="let panel of panelDefs">
+    <!-- Panel header -->
+    <div class="row panel-header">
+        <div class="col-xs-6">
+            <a href="#" (click)="panel.open = !panel.open; $event.preventDefault();">
+                <i class="fa fa-chevron-right" [class.rotate]="panel.open"></i>
+                <h2> {{ '@panel.title@' | translate: {'panel.title': panel.title} }} ({{panel.count}})</h2>
+            </a>
+        </div>
+
+        <div class="col-xs-6 text-right">
+            <button *ngIf="isAssetManager() && panel.action"
+                    id="{{panel.action.id}}"
+                    class="btn btn-primary action-button"
+                    [disabled]="!panel.action.disabled"
+                    (click)="addForm(panel.action.type)">
+                <i class="fa fa-{{panel.action.icon}}"></i> {{panel.action.title}}
+            </button>
+        </div>
+
+        <ng-container *ngIf="!panel?.action?.disabled && panel?.columnLink != 'drafts' && isAssetManager()">
+            <ng-container *ngTemplateOutlet="permissionAlert; context: {action: panel.columnLink}"></ng-container>
+        </ng-container>
+
+    </div>
+
+    <!-- Panel body -->
+    <div class="row panel-body" [class.hidden]="!panel.open">
+        <div class="col-xs-12">
+            <div class="mb-1" *ngIf="panel.title === 'Shares'">{{ 'Display only active Shares' | translate }}
+
+                <label class="switch">
+                    <input type="checkbox"
+                            class="form-control"
+                            id="switchActiveShares"
+                            [ngModel]="showOnlyActive"
+                            (click)="handleShareToggleClick()">
+                    <span class="slider round"></span>
+                </label>
+            </div>
+
+            <clr-datagrid #myDataGrid>
+                <clr-dg-column [clrDgField]="column.dataSource" *ngFor="let column of panel.columns">{{column.label}}</clr-dg-column>
+                <clr-dg-column *ngIf="panel.buttons">Actions</clr-dg-column>
+
+                <ng-container *ngIf="!panel.buttons">
+                    <clr-dg-row *clrDgItems="let row of panel.data; index as i" id="{{'product-dashboard-' + panel.title + row[panel.linkIdent]}}" (click)="goToView(panel.link, row[panel.linkIdent])" clrDgRowClickable>
+                        <clr-dg-cell *ngFor="let dataCol of panel.columns" data-id="{{row.id}}" id="{{'product-dashboard-' + panel.linkIdent + '-' + i + '-' + dataCol.dataSource }}">
+                        <span *ngIf="dataCol.dataSource == panel.columnLink" id="{{'product-dashboard-link-' + panel.linkIdent + '-' + i }}">
+                            {{row[dataCol.dataSource]}}
+                        </span>
+                            <span *ngIf="dataCol.dataSource != panel.columnLink">{{row[dataCol.dataSource]}}</span>
+                        </clr-dg-cell>
+                    </clr-dg-row>
+                </ng-container>
+
+                <ng-container *ngIf="panel.buttons">
+                    <clr-dg-row *clrDgItems="let row of panel.data; index as i" id="{{'product-dashboard-' + panel.title + row[panel.linkIdent]}}">
+                        <clr-dg-cell *ngFor="let dataCol of panel.columns" data-id="{{row.id}}" id="{{'product-dashboard-' + panel.linkIdent + '-' + i + '-' + dataCol.dataSource }}">
+                            {{row[dataCol.dataSource]}}
+                        </clr-dg-cell>
+                        <clr-dg-cell>
+                            <div class="btn-group btn-sm">
+                                <button
+                                    *ngFor="let rowBtn of panel.buttons"
+                                    class="{{rowBtn['class']}}"
+                                    (click)="varBtn(rowBtn['click'], row.draftType, row.draftID)">
+                                    <i class="{{rowBtn['iconClass']}}"></i> {{rowBtn['text']}}
+                                </button>
+                            </div>
+                        </clr-dg-cell>
+                    </clr-dg-row>
+                </ng-container>
+
+                <clr-dg-footer>{{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
+
+                    <clr-dg-pagination #pagination [clrDgPageSize]="10"></clr-dg-pagination>
+                </clr-dg-footer>
+            </clr-datagrid>
+        </div>
+    </div>
+</div>
+
+<ng-template #permissionAlert let-action="action">
+    <div class="alert alert-warning">
+        <div class="alert-items">
+            <div class="alert-item static">
+                <div class="alert-icon-wrapper">
+                    <clr-icon class="alert-icon" shape="exclamation-triangle"></clr-icon>
+                </div>
+                <span class="alert-text">
+                    <ng-container *ngIf="action === 'umbrellaFundName'">
+                        {{ 'Please contact the administrator to request permission to add a new Umbrella Fund' | translate }}
+                    </ng-container>
+                    <ng-container *ngIf="action === 'fundName'">
+                        {{ 'Please contact the administrator to request permission to add a new Fund' | translate }}
+                    </ng-container>
+                    <ng-container *ngIf="action === 'shareName'">
+                        {{ 'Please contact the administrator to request permission add a new Fund Share' | translate }}
+                    </ng-container>
+                    <br />
+                </span>
+            </div>
+        </div>
+    </div>
+</ng-template>

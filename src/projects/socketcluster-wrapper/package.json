@@ -1,0 +1,29 @@
+{
+    "name": "@setl/socketcluster-wrapper",
+    "version": "1.0.4",
+    "description": "Implement Diffie-Hellman encryption on Socketcluster, to allow encrypted communication.",
+    "main": "src/index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "build": "browserify src/index.js -o test/bundle.js -t [ babelify --presets [ es2015] ]"
+    },
+    "repository": {
+        "type": "git",
+        "url": "http://si-nexus01.dev.setl.io/SETL_Modules/Generic_modules/socketcluster-wrapper.git"
+    },
+    "author": "SETL.io",
+    "license": "UNLICENSED",
+    "dependencies": {
+        "libsodium-wrappers": "^0.7.3",
+        "path": "^0.12.7",
+        "lodash": "^4.17.4",
+        "sha256": "^0.2.0",
+        "socketcluster-client": "^14.2.1"
+    },
+    "devDependencies": {
+        "babel-cli": "^6.24.1",
+        "babel-preset-es2015": "^6.24.1",
+        "babelify": "^7.3.0",
+        "browserify": "^14.4.0"
+    }
+}

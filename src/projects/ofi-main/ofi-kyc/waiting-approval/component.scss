@@ -1,0 +1,40 @@
+.wrapper.wrapper-content {
+    padding: 0px 15px;
+}
+
+.blockRounded {
+    width: 100%;
+    border: 1px solid #dce1eb;
+    border-radius: 12px;
+    padding: 20px;
+    margin: 10px 0;
+}
+
+.statuses {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin: 5px 0;
+}
+
+.status {
+    display: flex;
+    padding: 10px;
+}
+
+.statusRadio {
+    width: 20px;
+}
+
+.statusLabel {
+    flex-grow: 1;
+}
+
+.danger-color {
+    color: #d9534f;
+}
+
+.baseline{
+    vertical-align: baseline;
+}

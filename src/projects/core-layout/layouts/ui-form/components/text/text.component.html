@@ -1,0 +1,35 @@
+<div class="header-breadcrumbs">
+    <h1><i class="fa fa-comments-o"></i> {{'Text' | translate}}
+    </h1>
+</div>
+
+<div class="padding">
+    <a href="#" class="toggle-info-panes" (click)="toggleInfoPanes($event)">{{ showInfoPanes ? '[-] hide info panes' :
+        '[+] show info panes' }}
+
+    </a>
+    <app-ui-info-pane [hidden]="!showInfoPanes" [message]="'This info pane does not make up part of these guidelines. If you see this pane displayed in any of the below items, it is just for informational purposes. To view the source code for this page, go to @setl/core-layout/layouts/ui-form.'">
+    </app-ui-info-pane>
+</div>
+
+<clr-tabs>
+    <clr-tab>
+        <button clrTabLink id="modal">
+            <i class="fa fa-bars"></i> {{'Text' | translate}}
+        </button>
+
+        <clr-tab-content *clrIfActive>
+            <p>{{'Below are the styling for comment text tags we use' | translate}}</p>
+            <h1>{{'Heading 1' | translate}}</h1>
+            <h2>{{'Heading 2' | translate}}</h2>
+            <h3>{{'Heading 3' | translate}}</h3>
+            <br>
+            <h1><i class="fa fa-user-circle"></i> {{'Heading 1 with icon' | translate}}</h1>
+            <h2><i class="fa fa-user-circle"></i> {{'Heading 2 with icon' | translate}}</h2>
+            <h3><i class="fa fa-user-circle"></i> {{'Heading 3 with icon' | translate}}</h3>
+            <br>
+            <p>{{'Standard Paragraph Tags for putting cool stuff in, if we to use' | translate}}<b>{{'bold' | translate}}</b> {{'just wrap text around b tags' | translate}}
+            </p>
+        </clr-tab-content>
+    </clr-tab>
+</clr-tabs>

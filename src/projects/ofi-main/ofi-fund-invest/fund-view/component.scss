@@ -1,0 +1,151 @@
+/* Style the tab */
+div.tab {
+    float: left;
+    border: 1px solid #ccc;
+    background-color: #f1f1f1;
+    width: 150px;
+    border-radius: 3px 0 0 3px;
+}
+
+/* Style the buttons inside the tab */
+div.tab button {
+    display: block;
+    background-color: inherit;
+    color: black;
+    padding: 12px 16px;
+    width: 100%;
+    border: none;
+    outline: none;
+    text-align: left;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+/* Change background color of buttons on hover */
+div.tab button:hover {
+    background-color: #ddd;
+}
+
+/* Create an active/current "tab button" class */
+div.tab button.active {
+    background-color: #ccc;
+}
+
+/* Style the tab content */
+.tabcontent {
+    float: left;
+    padding: 0px 12px;
+    border: 1px solid #ccc;
+    width: 70%;
+    border-left: none;
+    border-radius: 0 3px 3px 0;
+}
+
+.tab button:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.tab button:first-child {
+    border-radius: 3px 0 0 0;
+}
+
+.tab button:last-child {
+    border-radius: 0 0 0 3px;
+}
+
+.tablinks.active {
+    font-weight: bold;
+}
+
+$breakpoint-alpha: 480px; // adjust to your n
+
+.rwd-table {
+    margin: 1em 0;
+    min-width: 300px; // adjust to your needs
+    width: 100%;
+
+    tr {
+        border-top: 1px solid #ddd;
+        border-bottom: 1px solid #ddd;
+    }
+
+    th {
+        display: none; // for accessibility, use a visually hidden method here instead! Thanks, reddit!
+    }
+
+    td {
+        display: block;
+
+        &:first-child {
+            padding-top: .5em;
+        }
+        &:last-child {
+            padding-bottom: .5em;
+        }
+
+        &:before {
+            content: attr(data-th) ": "; // who knew you could do this? The internet, that's who.
+            font-weight: bold;
+
+            // optional stuff to make it look nicer
+            width: 6.5em; // magic number :( adjust according to your own content
+            display: inline-block;
+            // end options
+
+            @media (min-width: $breakpoint-alpha) {
+                display: none;
+            }
+        }
+    }
+
+    th, td {
+        text-align: left;
+
+        @media (min-width: $breakpoint-alpha) {
+            display: table-cell;
+            padding: .25em .5em;
+
+            &:first-child {
+                padding-left: 0;
+            }
+
+            &:last-child {
+                padding-right: 0;
+            }
+        }
+
+    }
+
+}
+
+.rwd-table {
+    color: #fff;
+    overflow: hidden;
+
+    tr {
+        border-color: lighten(#34495E, 10%);
+        color: #2c2f3c;
+    }
+    th, td {
+        margin: .5em 1em;
+        @media (min-width: $breakpoint-alpha) {
+            padding: .5em !important;
+        }
+    }
+    th, td:before {
+        color: #dd5;
+    }
+    th {
+        color: white;
+        background: black;
+        font-weight: bold;
+        padding: 3px .5em !important;
+    }
+
+    tr:nth-child(even) {
+        background: white
+    }
+    tr.data-row td {
+        border-bottom: 1px solid #bbb;
+    }
+}

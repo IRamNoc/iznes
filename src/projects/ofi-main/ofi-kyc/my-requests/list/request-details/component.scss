@@ -1,0 +1,29 @@
+#blocStatus{
+  opacity: 0;
+  float: right;
+  margin-top: -20px;
+  -webkit-transition: all ease-out .6s;
+  -moz-transition: all ease-out .6s;
+  -ms-transition: all ease-out .6s;
+  -o-transition: all ease-out .6s;
+  transition: all ease-out .6s;
+}
+.text-red {
+  color: #d9534f;
+}
+.status {
+  font-size: 1.6em!important;
+  font-weight: 900;
+}
+textarea {
+  font-size: 1.2em;
+  padding: .8em;
+  font-weight: 500;
+  opacity: 1!important;
+  color: #d9534f;
+}
+.icon {
+  font-size: 1.6em;
+  margin-left: 6px;
+  margin-bottom: 17px;
+}

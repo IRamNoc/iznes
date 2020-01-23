@@ -1,0 +1,82 @@
+<div class="header-breadcrumbs">
+    <h1><i class="fa fa-list-ul"></i> {{ 'My Holdings' | translate }}</h1>
+</div>
+
+<clr-tabs>
+    <clr-tab>
+        <button id="my-holdings-list-btn" clrTabLink>
+            <i class="fa fa-th-list"></i> {{ 'List' | translate }}
+        </button>
+        <clr-tab-content *clrIfActive>
+            <section class="form-block">
+
+                <form [formGroup]="searchForm" id="search-orders-form">
+                    <div class="form-horizontal">
+                        <div class="row bordered">
+                            <div class="form-group col-sm-6">
+                                <label>{{ 'Asset Management Company' | translate }}</label>
+                                <div class="input-button-group">
+                                    <ng-select id="my-holdings-search-field" 
+                                                [items]="investorManagementCompanyList" 
+                                                [allowClear]="false" 
+                                                [placeholder]="translate.translate('Select Asset Management Company')"
+                                                [formControl]="searchForm.controls['search']">
+                                    </ng-select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+
+                <div class="hr-line-dashed"></div>
+
+                <clr-datagrid>
+                    <clr-dg-column [clrDgField]="'companyName'" clrDgSortIcon>
+                        <span>{{ 'Asset Management Company' | translate }}</span> <span class="column-label"></span>
+                    </clr-dg-column>
+                    <clr-dg-column [clrDgField]="'portfolioLabel'" clrDgSortIcon>
+                        {{ 'Portfolio' | translate }} <span class="column-label"></span>
+                    </clr-dg-column>
+                    <clr-dg-column [clrDgField]="'fundShareName'" clrDgSortIcon>
+                        {{ 'Share Name' | translate }} <span class="column-label"></span>
+                    </clr-dg-column>
+                    <clr-dg-column [clrDgField]="'isin'" clrDgSortIcon>
+                        {{ 'ISIN' | translate }} <span class="column-label"></span>
+                    </clr-dg-column>
+                    <clr-dg-column [clrDgField]="'shareClassCurrency'" clrDgSortIcon>
+                        {{ 'Share Currency' | translate }} <span class="column-label"></span>
+                    </clr-dg-column>
+                    <clr-dg-column [clrDgField]="'quantity'" class="right" clrDgSortIcon>
+                        {{ 'Quantity' | translate }} <span class="column-label"></span>
+                    </clr-dg-column>
+                    <clr-dg-column [clrDgField]="'latestNav'" class="right" clrDgSortIcon>
+                        {{ 'Last NAV' | translate }} <span class="column-label"></span>
+                    </clr-dg-column>
+                    <clr-dg-column [clrDgField]="'amount'" class="right" clrDgSortIcon>
+                        {{ 'AUI (Settled)' | translate }} <span class="column-label"></span>
+                    </clr-dg-column>
+                    <clr-dg-column [clrDgField]="'ratio'" class="right" clrDgSortIcon>
+                        {{ 'Ratio (% AM)' | translate }} <span class="column-label"></span>
+                    </clr-dg-column>
+
+                    <clr-dg-row *clrDgItems="let data of holdingList">
+                        <clr-dg-cell>{{data.companyName}}</clr-dg-cell>
+                        <clr-dg-cell>{{data.portfolioLabel}}</clr-dg-cell>
+                        <clr-dg-cell>{{data.fundShareName}}</clr-dg-cell>
+                        <clr-dg-cell>{{data.isin}}</clr-dg-cell>
+                        <clr-dg-cell>{{data.shareClassCurrency}}</clr-dg-cell>
+                        <clr-dg-cell class="right">{{data.quantity | moneyValue: 5 }}</clr-dg-cell>
+                        <clr-dg-cell class="right">{{data.latestNav | moneyValue: 2}}</clr-dg-cell>
+                        <clr-dg-cell class="right">{{data.amount | moneyValue: 2}}</clr-dg-cell>
+                        <clr-dg-cell class="right">{{data.ratio | moneyValue: 2}}%</clr-dg-cell>
+                    </clr-dg-row>
+
+                    <clr-dg-footer>
+                        <clr-dg-pagination #pagination [clrDgPageSize]="20"></clr-dg-pagination>
+                    </clr-dg-footer>
+                </clr-datagrid>
+
+            </section>
+        </clr-tab-content>
+    </clr-tab>
+</clr-tabs>

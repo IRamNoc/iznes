@@ -1,0 +1,13 @@
+{
+    "name": "@setl/jaspero-ng2-alerts",
+    "version": "0.0.6",
+    "description": "An easy to use alert library for Angular 2, branch from @jaspero/ng2-alerts. https://github.com/Jaspero/ng2-alerts.git",
+    "keywords": [
+        "angular",
+        "angular2",
+        "alerts"
+    ],
+    "author": "SETL.io",
+    "license": "UNLICENCED",
+    "main": "./index.ts"
+}

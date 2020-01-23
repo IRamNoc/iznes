@@ -1,0 +1,46 @@
+<div class="form-group col-sm-6">
+    <label class="control-label" for="requesttype">{{ 'Request Type' | translate }}</label>
+    <ng-select id="requesttype"
+        [items]="requestTypes"
+        [allowClear]="true"
+        placeholder="{{ 'Select Type' | translate }}"
+        [formControl]="requestTypeForm.controls['type']"
+        (selected)="onRequestTypeSelect($event)">
+    </ng-select>
+</div>
+
+<div [ngSwitch]="selectedRequestType">
+    <div class="form-group col-sm-6" *ngSwitchCase="1">
+        <label class="control-label" for="requestFromRelationship">{{ 'Request From Connection' | translate }}</label>
+        <ng-select id="requestFromRelationship"
+            [items]="walletRelationships"
+            [allowClear]="true"
+            placeholder="{{ 'Select Connection' | translate }}"
+            [formControl]="requestTypeForm.controls['fromRelationship']"
+            (selected)="onRelationshipSelect($event)">
+        </ng-select>
+    </div>
+
+    <div *ngSwitchCase="2">
+        <div class="form-group col-sm-6">
+            <label class="control-label" for="walletFrom">{{ 'Request From LEI' | translate }}</label>
+            <ng-select id="walletFrom"
+                [items]="walletDirectoryList"
+                [allowClear]="true"
+                placeholder="{{ 'Select Wallet' | translate }}"
+                [formControl]="requestTypeForm.controls['walletFrom']"
+                (selected)="onWalletSelect($event)">
+            </ng-select>
+        </div>
+        <div class="form-group col-sm-6">
+            <label class="control-label" for="addressTo">{{ 'Receive To Address' | translate }}</label>
+            <ng-select id="addressTo"
+                [items]="walletAddressList"
+                [allowClear]="true"
+                placeholder="{{ 'Select Address' | translate }}"
+                [formControl]="requestTypeForm.controls['addressTo']"
+                (selected)="onAddressSelect($event)">
+            </ng-select>
+        </div>
+    </div>
+</div>

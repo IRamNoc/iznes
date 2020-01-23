@@ -1,0 +1,748 @@
+<clr-tabs style="margin-top: -25px!important;">
+    <clr-tab>
+        <button clrTabLink style="display: none!important;"><i class="fa fa-bars"></i> {{'Documentation' | translate }}</button>
+
+        <clr-tab-content *clrIfActive>
+
+            <div class="jumbotron">
+                <h1>{{'Form steps' | translate}}</h1>
+                <hr>
+                <p>
+                    <span class="label label-success" id="tooltip-label-directives" [tooltip]="{text: _translate.translate('This feature use the Angular directives'), size: 'small'}">Directives</span>
+                </p>
+                <p>{{'Form steps allow user to create forms with some sort of form flow (without refreshing your page). For example, if you had a large form for entering user data, you could use a form wizard to divide it into a series of related steps. This has the advantage of not overwhelming users with a really long form and also giving them some indication of their progress as they enter their information.' | translate}}</p>
+                <h1>{{'How to use' | translate}}</h1>
+                <hr>
+                <p>{{'There is several ways to use the Form Steps component' | translate}}:</p>
+                <ol>
+                    <li><b>{{'Slideshow' | translate}}:</b> {{'used to separate screen from each other.' | translate}}</li>
+                    <li><b>{{'Single form' | translate}}:</b> {{'used to separate parts of a form.' | translate}}</li>
+                    <li><b>{{'Mix of forms & texts' | translate}}:</b> {{'used to have a full step wizard compose of textual screens and differents forms.' | translate}}</li>
+                </ol>
+                <br>
+                <h2>{{'Configuration' | translate}}</h2>
+                <hr>
+                <p>{{'Formsteps use an Array of Objects to set himself.' | translate}}</p>
+                <ol>
+                    <li><b>{{'Single Form' | translate}}:</b> {{'Only one object.' | translate}}</li>
+                    <li><b>{{'Slideshow & Mix of forms & texts' | translate}}:</b> {{'One object per screen.' | translate}}</li>
+                </ol>
+                <br>
+                <h3>{{'Slideshow configuration' | translate}}:</h3>
+                <hr>
+                <p>{{'A slideshow needs a collection of objects (one by screen) inside an array. The title is optionnal.' | translate}}</p>
+                <ol>
+                    <li><b>{{'title'}}: string</b> => {{'each screen can have a title. For each screen name those titles like this: title1, title2, etc.' | translate}} ({{'optional' | translate}})</li>
+                    <li><b>{{'startHere'}}: boolean</b> => {{'used to start directly to a specific step.' | translate}} ({{'optional' | translate}})</li>
+                    <li><b>{{'redirect'}}: boolean</b> => {{'used to redirect user to a specific url instead of showing "Finished" screen.' | translate}} ({{'optional' | translate}})</li>
+                    <li><b>{{'goNext'}}: number</b> => {{'used to go directly to a specific step.' | translate}} ({{'optional' | translate}})</li>
+                    <li><b>{{'goPrevious'}}: number</b> => {{'used to go back directly to a specific step.' | translate}} ({{'optional' | translate}})</li>
+                    <li class="txtRed"><span style="text-decoration: line-through"><b>{{'forceNext'}}: boolean</b> => {{'boolean to allow user to go to next screen without fill the fields.' | translate}}</span> Not used in <b>"Slideshows"</b></li>
+                    <li class="txtRed"><span style="text-decoration: line-through"><b>{{'submitted'}}: boolean</b> => {{'used to avoid re-saving a form.' | translate}}</span> Not used in <b>"Slideshows"</b></li>
+                    <li class="txtRed"><span style="text-decoration: line-through"><b>{{'form'}}: object</b> => {{'used to validate the form and each formGroup.' | translate}}</span> Not used in <b>"Slideshows"</b></li>
+                    <li class="txtRed"><span style="text-decoration: line-through"><b>{{'id'}}: string</b> => {{'id of the form tag to link buttons to forms.' | translate}}</span> Not used in <b>"Slideshows"</b></li>
+                </ol>
+                <br>
+                <pre><code>{{'[formsteps]=&quot;[{title: \'Title 1\'}, {startHere: true}, {title: \'Title 3\'}]&quot;'}}</code></pre>
+                <br>
+                <h3>{{'Single form configuration' | translate}}:</h3>
+                <hr>
+                <p>{{'Single form is based on &lt;section&gt; to separate each screen and FormGroup to valid each screen.' | translate}}</p>
+                <ol>
+                    <li><b>{{'form'}}: object</b> => {{'used to validate the form and each formGroup.' | translate}}</li>
+                    <li class="txtRed"><span style="text-decoration: line-through"><b>{{'id'}}: string</b> => {{'id of the form tag to link buttons to forms.' | translate}}</span> Not used in <b>"Single Forms"</b></li>
+                    <li><b>{{'forceNext'}}: boolean</b> => {{'boolean to allow user to go to next screen without validators verification.' | translate}} ({{'optional' | translate}})</li>
+                    <li><b>{{'titleN'}}: string</b> => {{'each screen can have a title. For each screen name those titles like this: title1, title2, etc.' | translate}} ({{'optional' | translate}})</li>
+                    <li><b>{{'redirect'}}: boolean</b> => {{'used to redirect user to a specific url instead of showing "Finished" screen.' | translate}} ({{'optional' | translate}})</li>
+                    <li class="txtRed"><span style="text-decoration: line-through"><b>{{'goNext'}}: number</b> => {{'used to go directly to a specific step.' | translate}} ({{'optional' | translate}})</span> Not used in <b>"Single Forms"</b></li>
+                    <li class="txtRed"><span style="text-decoration: line-through"><b>{{'goPrevious'}}: number</b> => {{'used to go back directly to a specific step.' | translate}} ({{'optional' | translate}})</span> Not used in <b>"Single Forms"</b></li>
+                    <li class="txtRed"><span style="text-decoration: line-through"><b>{{'startHere'}}: boolean</b> => {{'used to start directly to a specific step.' | translate}} ({{'optional' | translate}})</span> Not used in <b>"Single Forms"</b></li>
+                    <li class="txtRed"><span style="text-decoration: line-through"><b>{{'submitted'}}: boolean</b> => {{'used to avoid re-saving a form.' | translate}}</span> Not used in <b>"Single Forms"</b></li>
+                </ol>
+                <br>
+                <pre><code>{{'[formsteps]=&quot;[{form: myForm, forceNext: true, title1: \'Intro\', title2: \'Form\', title3: \'Submit\', redirect: \'ui-layouts/tooltips\'}]&quot;'}}</code></pre>
+                <br>
+                <h3>{{'Mix of forms & texts' | translate}}:</h3>
+                <hr>
+                <p>{{'For a mix of forms and HTML screens, you have almost the same configuration than Slideshows (one object per screen), but this time we have to pass two new parameters: FORM & ID.' | translate}}</p>
+                <ol>
+                    <li><b>{{'form'}}: object</b> => {{'used to validate the form and each formGroup.' | translate}}</li>
+                    <li><b>{{'id'}}: string</b> => {{'id of the form tag to link buttons to forms.' | translate}}</li>
+                    <li><b>{{'title'}}: string</b> => {{'each screen can have a title.' | translate}} ({{'optional' | translate}})</li>
+                    <li><b>{{'startHere'}}: boolean</b> => {{'used to start directly to a specific step.' | translate}} ({{'optional' | translate}})</li>
+                    <li><b>{{'redirect'}}: boolean</b> => {{'used to redirect user to a specific url instead of showing "Finished" screen.' | translate}} ({{'optional' | translate}})</li>
+                    <li><b>{{'goNext'}}: number</b> => {{'used to go directly to a specific step.' | translate}} ({{'optional' | translate}})</li>
+                    <li><b>{{'goPrevious'}}: number</b> => {{'used to go back directly to a specific step.' | translate}} ({{'optional' | translate}})</li>
+                    <li><b>{{'submitted'}}: boolean</b> => {{'used to avoid re-saving a form.' | translate}} ({{'optional' | translate}})</li>
+                    <li class="txtRed"><span style="text-decoration: line-through"><b>{{'forceNext'}}: boolean</b> => {{'boolean to allow user to go to next screen without fill the fields.' | translate}} ({{'optional' | translate}})</span> Not used in <b>"Mix of forms & texts"</b></li>
+                </ol>
+                <br>
+                <pre><code>{{'[formsteps]=&quot;[{title: \'Intro\'}, {form: myForm1, id: \'myForm1\', title: \'Form\', submitted: true}, {title: \'Outro\', startHere: true}, {form: myForm2, id: \'myForm2\', title: \'Form again\'}]&quot;'}}</code></pre>
+                <br><br>
+                <h2>{{'1. Slideshow' | translate}}</h2>
+                <hr>
+                <p>{{'Allow us to use the form steps like a slideshow of different HTML screens.' | translate}}</p>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <b>{{'Implementation' | translate}}:</b>
+                        <pre><code>{{'&lt;div [formsteps]=&quot;[{title: \'Title 1\'}, {startHere: true, goNext: 4}, {title: \'Title 3\', goPrevious: 2}]&quot;&gt;'}}
+    {{'&lt;section&gt;'}}
+        {{'&lt;p&gt;Screen 1: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam ullamcorper sodales arcu vestibulum pellentesque. Pellentesque quis tellus vitae neque tincidunt suscipit. Duis mattis lorem ac dapibus tempus. Maecenas quis sollicitudin risus. Sed ullamcorper est sed nulla luctus vulputate.&lt;/p&gt;'}}
+    {{'&lt;/section&gt;'}}
+    {{'&lt;section&gt;'}}
+        {{'&lt;p&gt;<b>Start directly at screen 2:</b> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam ullamcorper sodales arcu vestibulum pellentesque. Pellentesque quis tellus vitae neque tincidunt suscipit. Duis mattis lorem ac dapibus tempus. Maecenas quis sollicitudin risus. Sed ullamcorper est sed nulla luctus vulputate.&lt;/p&gt;'}}
+    {{'&lt;/section&gt;'}}
+    {{'&lt;section&gt;'}}
+        {{'&lt;p&gt;Screen 3: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam ullamcorper sodales arcu vestibulum pellentesque. Pellentesque quis tellus vitae neque tincidunt suscipit. Duis mattis lorem ac dapibus tempus. Maecenas quis sollicitudin risus. Sed ullamcorper est sed nulla luctus vulputate.&lt;/p&gt;'}}
+    {{'&lt;/section&gt;'}}
+    {{'&lt;section&gt;'}}
+        {{'&lt;p&gt;Screen 4: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam ullamcorper sodales arcu vestibulum pellentesque. Pellentesque quis tellus vitae neque tincidunt suscipit. Duis mattis lorem ac dapibus tempus. Maecenas quis sollicitudin risus. Sed ullamcorper est sed nulla luctus vulputate.&lt;/p&gt;'}}
+    {{'&lt;/section&gt;'}}
+{{'&lt;/div&gt;'}}</code></pre>
+                    </div>
+                    <div class="col-sm-6">
+                        <b>{{'Example' | translate}}:</b>
+                        <div class="docBox">
+                            <div [formsteps]="[{title: 'Title 1'}, {startHere: true, goNext: 4}, {title: 'Title 3'}, {title: 'Title 4', goPrevious: 2}]">
+                                <section><p>Screen 1: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam ullamcorper sodales arcu vestibulum pellentesque. Pellentesque quis tellus vitae neque tincidunt suscipit. Duis mattis lorem ac dapibus tempus. Maecenas quis sollicitudin risus. Sed ullamcorper est sed nulla luctus vulputate.</p></section>
+                                <section><p><b>Start directly at screen 2 and go directly to screen 4:</b> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam ullamcorper sodales arcu vestibulum pellentesque. Pellentesque quis tellus vitae neque tincidunt suscipit. Duis mattis lorem ac dapibus tempus. Maecenas quis sollicitudin risus. Sed ullamcorper est sed nulla luctus vulputate.</p></section>
+                                <section><p>Screen 3: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam ullamcorper sodales arcu vestibulum pellentesque. Pellentesque quis tellus vitae neque tincidunt suscipit. Duis mattis lorem ac dapibus tempus. Maecenas quis sollicitudin risus. Sed ullamcorper est sed nulla luctus vulputate.</p></section>
+                                <section><p>Screen 4: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam ullamcorper sodales arcu vestibulum pellentesque. Pellentesque quis tellus vitae neque tincidunt suscipit. Duis mattis lorem ac dapibus tempus. Maecenas quis sollicitudin risus. Sed ullamcorper est sed nulla luctus vulputate.</p></section>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <br>
+                <h2>{{'2. Single Form' | translate}}</h2>
+                <hr>
+                <p>{{'Allow us to separate a form into several screens.' | translate}}</p>
+                <b>{{'Implementation' | translate}}:</b>
+                <pre><code>{{'&lt;form [formGroup]=&quot;myFormSteps1&quot; novalidate id=&quot;myFormSteps1&quot; (ngSubmit)=&quot;myFormSteps1.valid &amp;&amp; save1(myFormSteps1.value)&quot; [formsteps]=&quot;[{form: myFormSteps1, forceNext: false, title1: \'This is my first step\'}]&quot;&gt;'}}
+    {{'&lt;!--each section is a page of form steps--&gt;'}}
+    {{'&lt;section formGroupName=&quot;step1&quot; class=&quot;form-block&quot;&gt;'}}
+        {{'&lt;div class=&quot;row&quot;&gt;'}}
+            {{'&lt;div class=&quot;form-group col-sm-12&quot;&gt;'}}
+                {{'&lt;label&gt;'}}
+                    {{'\{\{\'First Name\' | translate\}\}'}}
+                    {{'&lt;div class=&quot;mandatory text-danger&quot;&gt;*&lt;/div&gt;'}}
+                {{'&lt;/label&gt;'}}
+                {{'&lt;div&gt;'}}
+                    {{'&lt;input type=&quot;text&quot; class=&quot;form-control&quot; formControlName=&quot;firstname&quot; [placeholder]=&quot;_translate.translate(\'your first name here\')&quot;&gt;'}}
+                {{'&lt;/div&gt;'}}
+                {{'&lt;div *ngIf=&quot;myFormSteps1.controls.step1.controls.firstname.hasError(\'required\') &amp;&amp; myFormSteps1.controls.step1.controls.firstname.touched&quot; class=&quot;text-danger&quot;&gt;\{\{\'This field is required\' | translate\}\}&lt;/div&gt;'}}
+            {{'&lt;/div&gt;'}}
+        {{'&lt;/div&gt;'}}
+        {{'&lt;div class=&quot;row&quot;&gt;'}}
+            {{'&lt;div class=&quot;form-group col-sm-12&quot;&gt;'}}
+                {{'&lt;label&gt;'}}
+                    {{'{\{\'Last Name\' | translate\}\}'}}
+                {{'&lt;div class=&quot;mandatory text-danger&quot;&gt;*&lt;/div&gt;'}}
+                {{'&lt;/label&gt;'}}
+                {{'&lt;div&gt;'}}
+                    {{'&lt;input type=&quot;text&quot; class=&quot;form-control&quot; formControlName=&quot;lastname&quot; [placeholder]=&quot;_translate.translate(\'your last name here\')&quot;&gt;'}}
+                {{'&lt;/div&gt;'}}
+                {{'&lt;div *ngIf=&quot;myFormSteps1.controls.step1.controls.lastname.hasError(\'required\') &amp;&amp; myFormSteps1.controls.step1.controls.lastname.touched&quot; class=&quot;text-danger&quot;&gt;\{\{\'This field is required\' | translate\}\}&lt;/div&gt;'}}
+            {{'&lt;/div&gt;'}}
+        {{'&lt;/div&gt;'}}
+    {{'&lt;/section&gt;'}}
+    {{'&lt;section formGroupName=&quot;step2&quot; class=&quot;form-block&quot;&gt;'}}
+        {{'&lt;div class=&quot;row&quot;&gt;'}}
+            {{'&lt;div class=&quot;form-group col-sm-12&quot;&gt;'}}
+                {{'&lt;label&gt;'}}
+                    {{'\{\{\'Email\' | translate\}\}'}}
+                    {{'&lt;div class=&quot;mandatory text-danger&quot;&gt;*&lt;/div&gt;'}}
+                {{'&lt;/label&gt;'}}
+                {{'&lt;div&gt;'}}
+                    {{'&lt;input type=&quot;text&quot; class=&quot;form-control&quot; formControlName=&quot;email&quot; [placeholder]=&quot;_translate.translate(\'your email here\')&quot;&gt;'}}
+                {{'&lt;/div&gt;'}}
+                {{'&lt;div *ngIf=&quot;myFormSteps1.controls.step2.controls.email.hasError(\'required\') &amp;&amp; myFormSteps1.controls.step2.controls.email.dirty&quot; class=&quot;text-danger&quot;&gt;\{\{\'This field is required\' | translate\}\}&lt;/div&gt;'}}
+                {{'&lt;div *ngIf=&quot;!myFormSteps1.controls.step2.controls.email.valid &amp;&amp; !myFormSteps1.controls.step2.controls.email.hasError(\'required\')&quot; class=&quot;text-danger&quot;&gt;\{\{\'Email not valid!\' | translate\}\}&lt;/div&gt;'}}
+            {{'&lt;/div&gt;'}}
+        {{'&lt;/div&gt;'}}
+    {{'&lt;/section&gt; &lt;section formGroupName=&quot;step3&quot; class=&quot;form-block&quot;&gt;'}}
+        {{'&lt;div class=&quot;row&quot;&gt;'}}
+            {{'&lt;div class=&quot;form-group col-sm-6&quot;&gt;'}}
+                {{'&lt;label&gt;'}}
+                    {{'\{\{\'Just a field\' | translate\}\}'}}
+                    {{'&lt;div class=&quot;mandatory text-danger&quot;&gt;*&lt;/div&gt;'}}
+                {{'&lt;/label&gt;'}}
+                {{'&lt;div&gt;'}}
+                    {{'&lt;input type=&quot;text&quot; class=&quot;form-control&quot; formControlName=&quot;field1&quot; [placeholder]=&quot;_translate.translate(\'type here\')&quot;&gt;'}}
+                {{'&lt;/div&gt;'}}
+                {{'&lt;div *ngIf=&quot;myFormSteps1.controls.step3.controls.field1.hasError(\'required\') &amp;&amp; myFormSteps1.controls.step3.controls.field1.dirty&quot; class=&quot;text-danger&quot;&gt;\{\{\'This field is required\' | translate\}\}&lt;/div&gt;'}}
+            {{'&lt;/div&gt;'}}
+            {{'&lt;div class=&quot;form-group col-sm-6&quot;&gt;'}}
+                {{'&lt;label&gt;'}}
+                    {{'\{\{\'Just a field\' | translate\}\}'}}
+                    {{'&lt;div class=&quot;mandatory text-danger&quot;&gt;*&lt;/div&gt;'}}
+                {{'&lt;/label&gt;'}}
+                {{'&lt;div&gt;'}}
+                    {{'&lt;input type=&quot;text&quot; class=&quot;form-control&quot; formControlName=&quot;field2&quot; [placeholder]=&quot;_translate.translate(\'type here\')&quot;&gt;'}}
+                {{'&lt;/div&gt;'}}
+                {{'&lt;div *ngIf=&quot;myFormSteps1.controls.step3.controls.field2.hasError(\'required\') &amp;&amp; myFormSteps1.controls.step3.controls.field2.dirty&quot; class=&quot;text-danger&quot;&gt;\{\{\'This field is required\' | translate\}\}&lt;/div&gt;'}}
+            {{'&lt;/div&gt;'}}
+        {{'&lt;/div&gt;'}}
+        {{'&lt;div class=&quot;row&quot;&gt;'}}
+            {{'&lt;div class=&quot;form-group col-sm-6&quot;&gt;'}}
+                {{'&lt;label&gt;'}}
+                    {{'\{\{\'Just a field\' | translate\}\}'}}
+                    {{'&lt;div class=&quot;mandatory text-danger&quot;&gt;*&lt;/div&gt;'}}
+                {{'&lt;/label&gt;'}}
+                {{'&lt;div&gt;'}}
+                    {{'&lt;input type=&quot;text&quot; class=&quot;form-control&quot; formControlName=&quot;field3&quot; [placeholder]=&quot;_translate.translate(\'type here\')&quot;&gt;'}}
+                {{'&lt;/div&gt;'}}
+                {{'&lt;div *ngIf=&quot;myFormSteps1.controls.step3.controls.field3.hasError(\'required\') &amp;&amp; myFormSteps1.controls.step3.controls.field3.dirty&quot; class=&quot;text-danger&quot;&gt;\{\{\'This field is required\' | translate\}\}&lt;/div&gt;'}}
+            {{'&lt;/div&gt;'}}
+            {{'&lt;div class=&quot;form-group col-sm-6&quot;&gt;'}}
+                {{'&lt;label&gt;'}}
+                    {{'\{\{\'Just a field\' | translate\}\}'}}
+                    {{'&lt;div class=&quot;mandatory text-danger&quot;&gt;*&lt;/div&gt;'}}
+                {{'&lt;/label&gt;'}}
+                {{'&lt;div&gt;'}}
+                    {{'&lt;input type=&quot;text&quot; class=&quot;form-control&quot; formControlName=&quot;field4&quot; [placeholder]=&quot;_translate.translate(\'type here\')&quot;&gt;'}}
+                {{'&lt;/div&gt;'}}
+                {{'&lt;div *ngIf=&quot;myFormSteps1.controls.step3.controls.field4.hasError(\'required\') &amp;&amp; myFormSteps1.controls.step3.controls.field4.dirty&quot; class=&quot;text-danger&quot;&gt;\{\{\'This field is required\' | translate\}\}&lt;/div&gt;'}}
+            {{'&lt;/div&gt;'}}
+        {{'&lt;/div&gt;'}}
+        {{'&lt;div class=&quot;row&quot;&gt;'}}
+            {{'&lt;div class=&quot;form-group col-sm-6&quot;&gt;'}}
+                {{'&lt;label&gt;'}}
+                    {{'\{\{\'Just a field\' | translate\}\}'}}
+                    {{'&lt;div class=&quot;mandatory text-danger&quot;&gt;*&lt;/div&gt;'}}
+                {{'&lt;/label&gt;'}}
+                {{'&lt;div&gt;'}}
+                    {{'&lt;input type=&quot;text&quot; class=&quot;form-control&quot; formControlName=&quot;field5&quot; [placeholder]=&quot;_translate.translate(\'type here\')&quot;&gt;'}}
+                {{'&lt;/div&gt;'}}
+                {{'&lt;div *ngIf=&quot;myFormSteps1.controls.step3.controls.field5.hasError(\'required\') &amp;&amp; myFormSteps1.controls.step3.controls.field5.dirty&quot; class=&quot;text-danger&quot;&gt;\{\{\'This field is required\' | translate\}\}&lt;/div&gt;'}}
+            {{'&lt;/div&gt;'}}
+            {{'&lt;div class=&quot;form-group col-sm-6&quot;&gt;'}}
+                {{'&lt;label&gt;'}}
+                    {{'\{\{\'Just a field\' | translate\}\}'}}
+                    {{'&lt;div class=&quot;mandatory text-danger&quot;&gt;*&lt;/div&gt;'}}
+                {{'&lt;/label&gt;'}}
+                {{'&lt;div&gt;'}}
+                    {{'&lt;input type=&quot;text&quot; class=&quot;form-control&quot; formControlName=&quot;field6&quot; [placeholder]=&quot;_translate.translate(\'type here\')&quot;&gt;'}}
+                {{'&lt;/div&gt;'}}
+                {{'&lt;div *ngIf=&quot;myFormSteps1.controls.step3.controls.field6.hasError(\'required\') &amp;&amp; myFormSteps1.controls.step3.controls.field6.dirty&quot; class=&quot;text-danger&quot;&gt;\{\{\'This field is required\' | translate\}\}&lt;/div&gt;'}}
+            {{'&lt;/div&gt;'}}
+        {{'&lt;/div&gt;'}}
+        {{'&lt;div class=&quot;row&quot;&gt;'}}
+            {{'&lt;div class=&quot;form-group col-sm-12&quot;&gt;'}}
+                {{'&lt;label&gt;'}}
+                    {{'\{\{\'Just a field\' | translate\}\}'}}
+                    {{'&lt;div class=&quot;mandatory text-danger&quot;&gt;*&lt;/div&gt;'}}
+                {{'&lt;/label&gt;'}}
+                {{'&lt;div&gt;'}}
+                    {{'&lt;input type=&quot;text&quot; class=&quot;form-control&quot; formControlName=&quot;field7&quot; [placeholder]=&quot;_translate.translate(\'type here\')&quot;&gt;'}}
+                {{'&lt;/div&gt;'}}
+                {{'&lt;div *ngIf=&quot;myFormSteps1.controls.step3.controls.field7.hasError(\'required\') &amp;&amp; myFormSteps1.controls.step3.controls.field7.dirty&quot; class=&quot;text-danger&quot;&gt;\{\{\'This field is required\' | translate\}\}&lt;/div&gt;'}}
+            {{'&lt;/div&gt;'}}
+        {{'&lt;/div&gt;'}}
+    {{'&lt;/section&gt;'}}
+{{'&lt;/form&gt;'}}</code></pre>
+                <br>
+                <pre><code>{{'[formsteps]="[{form: myFormSteps1, forceNext: true, title1: \'This is my first step\', redirect: \'ui-layouts/tooltips\'}]"'}}</code></pre>
+                <p class="mb-0">
+                    Call custom events from component to directive (resize if form change):
+                    <button type="button" class="m-1 btn btn-warning" (click)="addField()">Add 1 field to form</button>
+                    <button type="button" class="m-1 btn btn-warning" (click)="removeField()">Remove 1 field to form</button>
+                </p>
+                <b>{{'Example' | translate}}:</b>
+                <div class="docBox">
+                    <form [formGroup]="myFormSteps1" novalidate id="myFormSteps1" (ngSubmit)="myFormSteps1.valid && save1(myFormSteps1.value)" [formsteps]="[{form: myFormSteps1, forceNext: true, title1: 'This is my first step', redirect: 'ui-layouts/tooltips'}]">
+                        <!--each section is a page of form steps-->
+                        <section formGroupName="step1" class="form-block">
+                            <div class="row">
+                                <div class="form-group col-sm-12">
+                                    <label>
+                                        {{'First Name' | translate}}
+                                        <div class="mandatory text-danger">*</div>
+                                    </label>
+                                    <div>
+                                        <ng-select id="orders-search-type" class="fluid-width" [items]="names" [formControl]="myFormSteps1.controls.step1.controls.firstname" [placeholder]="_translate.translate('firstname')"></ng-select>
+                                    </div>
+                                    <div *ngIf="myFormSteps1.controls.step1.controls.firstname.hasError('required') && myFormSteps1.controls.step1.controls.firstname.touched" class="text-danger">{{'This field is required' | translate}}</div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-sm-12">
+                                    <label>
+                                        {{'Last Name' | translate}}
+                                        <div class="mandatory text-danger">*</div>
+                                    </label>
+                                    <div>
+                                        <input type="text" class="form-control" formControlName="lastname" [placeholder]="_translate.translate('your last name here')">
+                                    </div>
+                                    <div *ngIf="myFormSteps1.controls.step1.controls.lastname.hasError('required') && myFormSteps1.controls.step1.controls.lastname.touched" class="text-danger">{{'This field is required' | translate}}</div>
+                                </div>
+                            </div>
+                            <div class="row" *ngIf="myFormSteps1.controls.step1.controls.nickname">
+                                <div class="form-group col-sm-12">
+                                    <label>
+                                        {{'NickName' | translate}}
+                                        <div class="mandatory text-danger">*</div>
+                                    </label>
+                                    <div>
+                                        <input type="text" class="form-control" formControlName="nickname" [placeholder]="_translate.translate('your nickname here')">
+                                    </div>
+                                    <div *ngIf="myFormSteps1.controls.step1.controls.nickname.hasError('required') && myFormSteps1.controls.step1.controls.nickname.touched" class="text-danger">{{'This field is required' | translate}}</div>
+                                </div>
+                            </div>
+                        </section>
+                        <section formGroupName="step2" class="form-block">
+                            <div class="row">
+                                <div class="form-group col-sm-12">
+                                    <label>
+                                        {{'Email' | translate}}
+                                        <div class="mandatory text-danger">*</div>
+                                    </label>
+                                    <div>
+                                        <input type="text" class="form-control" formControlName="email" [placeholder]="_translate.translate('your email here')">
+                                    </div>
+                                    <div *ngIf="myFormSteps1.controls.step2.controls.email.hasError('required') && myFormSteps1.controls.step2.controls.email.dirty" class="text-danger">{{'This field is required' | translate}}</div>
+                                    <div *ngIf="!myFormSteps1.controls.step2.controls.email.valid && !myFormSteps1.controls.step2.controls.email.hasError('required')" class="text-danger">{{'Email not valid!' | translate}}</div>
+                                </div>
+                            </div>
+                        </section>
+                        <section formGroupName="step3" class="form-block">
+                            <div class="row">
+                                <div class="form-group col-sm-6">
+                                    <label>
+                                        {{'Just a field' | translate}}
+                                        <div class="mandatory text-danger">*</div>
+                                    </label>
+                                    <div>
+                                        <input type="text" class="form-control" formControlName="field1" [placeholder]="_translate.translate('type here')">
+                                    </div>
+                                    <div *ngIf="myFormSteps1.controls.step3.controls.field1.hasError('required') && myFormSteps1.controls.step3.controls.field1.dirty" class="text-danger">{{'This field is required' | translate}}</div>
+                                </div>
+                                <div class="form-group col-sm-6">
+                                    <label>
+                                        {{'Just a field' | translate}}
+                                        <div class="mandatory text-danger">*</div>
+                                    </label>
+                                    <div>
+                                        <input type="text" class="form-control" formControlName="field2" [placeholder]="_translate.translate('type here')">
+                                    </div>
+                                    <div *ngIf="myFormSteps1.controls.step3.controls.field2.hasError('required') && myFormSteps1.controls.step3.controls.field2.dirty" class="text-danger">{{'This field is required' | translate}}</div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-sm-6">
+                                    <label>
+                                        {{'Just a field' | translate}}
+                                        <div class="mandatory text-danger">*</div>
+                                    </label>
+                                    <div>
+                                        <input type="text" class="form-control" formControlName="field3" [placeholder]="_translate.translate('type here')">
+                                    </div>
+                                    <div *ngIf="myFormSteps1.controls.step3.controls.field3.hasError('required') && myFormSteps1.controls.step3.controls.field3.dirty" class="text-danger">{{'This field is required' | translate}}</div>
+                                </div>
+                                <div class="form-group col-sm-6">
+                                    <label>
+                                        {{'Just a field' | translate}}
+                                        <div class="mandatory text-danger">*</div>
+                                    </label>
+                                    <div>
+                                        <input type="text" class="form-control" formControlName="field4" [placeholder]="_translate.translate('type here')">
+                                    </div>
+                                    <div *ngIf="myFormSteps1.controls.step3.controls.field4.hasError('required') && myFormSteps1.controls.step3.controls.field4.dirty" class="text-danger">{{'This field is required' | translate}}</div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-sm-6">
+                                    <label>
+                                        {{'Just a field' | translate}}
+                                        <div class="mandatory text-danger">*</div>
+                                    </label>
+                                    <div>
+                                        <input type="text" class="form-control" formControlName="field5" [placeholder]="_translate.translate('type here')">
+                                    </div>
+                                    <div *ngIf="myFormSteps1.controls.step3.controls.field5.hasError('required') && myFormSteps1.controls.step3.controls.field5.dirty" class="text-danger">{{'This field is required' | translate}}</div>
+                                </div>
+                                <div class="form-group col-sm-6">
+                                    <label>
+                                        {{'Just a field' | translate}}
+                                        <div class="mandatory text-danger">*</div>
+                                    </label>
+                                    <div>
+                                        <input type="text" class="form-control" formControlName="field6" [placeholder]="_translate.translate('type here')">
+                                    </div>
+                                    <div *ngIf="myFormSteps1.controls.step3.controls.field6.hasError('required') && myFormSteps1.controls.step3.controls.field6.dirty" class="text-danger">{{'This field is required' | translate}}</div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-sm-6">
+                                    <label>
+                                        {{'Just a field' | translate}}
+                                        <div class="mandatory text-danger">*</div>
+                                    </label>
+                                    <div>
+                                        <input type="text" class="form-control" formControlName="field7" [placeholder]="_translate.translate('type here')">
+                                    </div>
+                                    <div *ngIf="myFormSteps1.controls.step3.controls.field7.hasError('required') && myFormSteps1.controls.step3.controls.field7.dirty" class="text-danger">{{'This field is required' | translate}}</div>
+                                </div>
+                                <div class="form-group col-sm-6"></div>
+                            </div>
+                        </section>
+                    </form>
+                </div>
+                <br>
+                <h2>{{'3. Mix of forms & texts' | translate}}</h2>
+                <hr>
+                <p>{{'Allow us to have textual screens between form screens.' | translate}}</p>
+                <b>{{'Implementation' | translate}}:</b>
+                <pre><code>{{'[formsteps]="[{title: \'Introduction\'}, {form: myFormSteps2, id: \'myFormSteps2\', title: \'Form\', submitted: true}, {title: \'Outro\', startHere: true}, {form: myFormSteps3, id: \'myFormSteps3\', title: \'Form again\', redirect: \'ui-layouts/tooltips\'}]"'}}</code></pre>
+                <br>
+                <b>{{'Example' | translate}}:</b>
+                <div class="docBox">
+                    <div [formsteps]="[{title: 'Introduction'}, {form: myFormSteps2, id: 'myFormSteps2', title: 'Form', submitted: true}, {title: 'Outro', startHere: true}, {form: myFormSteps3, id: 'myFormSteps3', title: 'Form again', redirect: 'ui-layouts/tooltips'}]">
+                        <section style="padding: 20px; border: 2px dashed lightgray; border-radius: 6px;">
+                            <h1>Hello world!</h1>
+                            <br>
+                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam ullamcorper sodales arcu vestibulum pellentesque. Pellentesque quis tellus vitae neque tincidunt suscipit. Duis mattis lorem ac dapibus tempus. Maecenas quis sollicitudin risus. Sed ullamcorper est sed nulla luctus vulputate. Integer pretium lobortis congue. Ut leo tellus, tempus at pharetra vitae, rhoncus vel metus. Phasellus ex quam, ultrices id nulla quis, pulvinar facilisis ex.</p>
+                            <p>Aliquam erat volutpat. Pellentesque sollicitudin sapien mauris, sit amet finibus mi pharetra sed. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Morbi vel velit ac elit facilisis tincidunt. Sed in elementum magna, a euismod nibh. Etiam bibendum nunc ut faucibus semper. Duis vel dapibus purus.</p>
+                            <p>Nunc vulputate sollicitudin mi non ultrices. Cras sed elit varius, eleifend magna a, iaculis sem. Fusce dapibus turpis vel ante porta eleifend. Nunc felis lectus, rhoncus vitae faucibus id, aliquam eu est. Ut sed nunc in tellus iaculis molestie non at nisi. Morbi eu tempus tellus, sit amet dictum lorem. Nunc sit amet urna sodales, sagittis tortor tempus, iaculis nulla. Phasellus nec mauris rhoncus, cursus turpis a, vulputate turpis. Nam laoreet, lorem nec convallis iaculis, lorem arcu imperdiet enim, at convallis urna odio eget arcu. Cras vehicula, risus quis sagittis luctus, odio urna imperdiet lorem, id ornare sapien arcu ut justo.</p>
+                            <p>Etiam mi dui, suscipit et sodales at, bibendum in risus. Duis consectetur nulla et diam aliquet, at pulvinar sem eleifend. Nulla in augue odio. Integer ullamcorper nunc eget purus euismod luctus. Maecenas et arcu eu nulla malesuada cursus a ut turpis. In id risus at elit aliquam congue. Nulla porttitor ligula sit amet dui ultricies, non volutpat nunc luctus. Curabitur convallis, est iaculis mollis interdum, lacus ex dignissim turpis, sed fringilla purus leo a enim. Quisque ornare ex ac mi luctus dignissim. Vivamus at elit sit amet arcu sodales commodo et vitae turpis.</p>
+                            <p>Morbi quam metus, malesuada sit amet venenatis eget, sollicitudin id sapien. Nullam sit amet convallis dui, quis eleifend tellus. Aenean dictum luctus eleifend. Pellentesque dapibus neque enim, ac efficitur massa efficitur eu. Quisque sed iaculis est. Proin finibus odio nec euismod hendrerit. Mauris consequat vel massa nec tincidunt.</p>
+                        </section>
+                        <section style="padding: 20px; border: 2px dashed lightgray; border-radius: 6px;">
+                            <form [formGroup]="myFormSteps2" novalidate id="myFormSteps2" (ngSubmit)="myFormSteps2.valid && save2(myFormSteps2.value)">
+                                <div class="form-block">
+                                    <div class="row">
+                                        <div class="form-group col-sm-6">
+                                            <label>
+                                                {{'First Name' | translate}}
+                                                <div class="mandatory text-danger">*</div>
+                                            </label>
+                                            <div>
+                                                <input type="text" class="form-control" formControlName="firstname" [placeholder]="_translate.translate('your first name here')">
+                                            </div>
+                                            <div *ngIf="myFormSteps2.controls.firstname.hasError('required') && myFormSteps2.controls.firstname.touched" class="text-danger">{{'This field is required' | translate}}</div>
+                                        </div>
+                                        <div class="form-group col-sm-6">
+                                            <label>
+                                                {{'Last Name' | translate}}
+                                                <div class="mandatory text-danger">*</div>
+                                            </label>
+                                            <div>
+                                                <input type="text" class="form-control" formControlName="lastname" [placeholder]="_translate.translate('your last name here')">
+                                            </div>
+                                            <div *ngIf="myFormSteps2.controls.lastname.hasError('required') && myFormSteps2.controls.lastname.touched" class="text-danger">{{'This field is required' | translate}}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </section>
+                        <section>
+                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam ullamcorper sodales arcu vestibulum pellentesque. Pellentesque quis tellus vitae neque tincidunt suscipit. Duis mattis lorem ac dapibus tempus. Maecenas quis sollicitudin risus. Sed ullamcorper est sed nulla luctus vulputate. Integer pretium lobortis congue. Ut leo tellus, tempus at pharetra vitae, rhoncus vel metus. Phasellus ex quam, ultrices id nulla quis, pulvinar facilisis ex.</p>
+                            <p>Aliquam erat volutpat. Pellentesque sollicitudin sapien mauris, sit amet finibus mi pharetra sed. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Morbi vel velit ac elit facilisis tincidunt. Sed in elementum magna, a euismod nibh. Etiam bibendum nunc ut faucibus semper. Duis vel dapibus purus.</p>
+                            <p>Nunc vulputate sollicitudin mi non ultrices. Cras sed elit varius, eleifend magna a, iaculis sem. Fusce dapibus turpis vel ante porta eleifend. Nunc felis lectus, rhoncus vitae faucibus id, aliquam eu est. Ut sed nunc in tellus iaculis molestie non at nisi. Morbi eu tempus tellus, sit amet dictum lorem. Nunc sit amet urna sodales, sagittis tortor tempus, iaculis nulla. Phasellus nec mauris rhoncus, cursus turpis a, vulputate turpis. Nam laoreet, lorem nec convallis iaculis, lorem arcu imperdiet enim, at convallis urna odio eget arcu. Cras vehicula, risus quis sagittis luctus, odio urna imperdiet lorem, id ornare sapien arcu ut justo.</p>
+                            <p>Etiam mi dui, suscipit et sodales at, bibendum in risus. Duis consectetur nulla et diam aliquet, at pulvinar sem eleifend. Nulla in augue odio. Integer ullamcorper nunc eget purus euismod luctus. Maecenas et arcu eu nulla malesuada cursus a ut turpis. In id risus at elit aliquam congue. Nulla porttitor ligula sit amet dui ultricies, non volutpat nunc luctus. Curabitur convallis, est iaculis mollis interdum, lacus ex dignissim turpis, sed fringilla purus leo a enim. Quisque ornare ex ac mi luctus dignissim. Vivamus at elit sit amet arcu sodales commodo et vitae turpis.</p>
+                            <p>Morbi quam metus, malesuada sit amet venenatis eget, sollicitudin id sapien. Nullam sit amet convallis dui, quis eleifend tellus. Aenean dictum luctus eleifend. Pellentesque dapibus neque enim, ac efficitur massa efficitur eu. Quisque sed iaculis est. Proin finibus odio nec euismod hendrerit. Mauris consequat vel massa nec tincidunt.</p>
+                        </section>
+                        <section>
+                            <form [formGroup]="myFormSteps3" novalidate id="myFormSteps3" (ngSubmit)="myFormSteps3.valid && save3(myFormSteps3.value)">
+                                <div formGroupName="step1" class="form-block">
+                                    <div class="row">
+                                        <div class="form-group col-sm-6">
+                                            <label>
+                                                {{'First Name' | translate}}
+                                                <div class="mandatory text-danger">*</div>
+                                            </label>
+                                            <div>
+                                                <input type="text" class="form-control" formControlName="firstname" [placeholder]="_translate.translate('your first name here')">
+                                            </div>
+                                            <div *ngIf="myFormSteps3.controls.step1.controls.firstname.hasError('required') && myFormSteps3.controls.step1.controls.firstname.touched" class="text-danger">{{'This field is required' | translate}}</div>
+                                        </div>
+                                        <div class="form-group col-sm-6">
+                                            <label>
+                                                {{'Last Name' | translate}}
+                                                <div class="mandatory text-danger">*</div>
+                                            </label>
+                                            <div>
+                                                <input type="text" class="form-control" formControlName="lastname" [placeholder]="_translate.translate('your last name here')">
+                                            </div>
+                                            <div *ngIf="myFormSteps3.controls.step1.controls.lastname.hasError('required') && myFormSteps3.controls.step1.controls.lastname.touched" class="text-danger">{{'This field is required' | translate}}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <hr class="dashed">
+                                <div formGroupName="step2" class="form-block">
+                                    <div class="row">
+                                        <div class="form-group col-sm-6">
+                                            <label>
+                                                {{'Email' | translate}}
+                                                <div class="mandatory text-danger">*</div>
+                                            </label>
+                                            <div>
+                                                <input type="text" class="form-control" formControlName="email" [placeholder]="_translate.translate('your email here')">
+                                            </div>
+                                            <div *ngIf="myFormSteps3.controls.step2.controls.email.hasError('required') && myFormSteps3.controls.step2.controls.email.dirty" class="text-danger">{{'This field is required' | translate}}</div>
+                                            <div *ngIf="!myFormSteps3.controls.step2.controls.email.valid && !myFormSteps3.controls.step2.controls.email.hasError('required')" class="text-danger">{{'Email not valid!' | translate}}</div>
+                                        </div>
+                                        <div class="form-group col-sm-6"></div>
+                                    </div>
+                                </div>
+                                <hr class="dashed">
+                                <div formGroupName="step3" class="form-block">
+                                    <div class="row">
+                                        <div class="form-group col-sm-6">
+                                            <label>
+                                                {{'Just a field' | translate}}
+                                                <div class="mandatory text-danger">*</div>
+                                            </label>
+                                            <div>
+                                                <input type="text" class="form-control" formControlName="field1" [placeholder]="_translate.translate('type here')">
+                                            </div>
+                                            <div *ngIf="myFormSteps3.controls.step3.controls.field1.hasError('required') && myFormSteps3.controls.step3.controls.field1.dirty" class="text-danger">{{'This field is required' | translate}}</div>
+                                        </div>
+                                        <div class="form-group col-sm-6">
+                                            <label>
+                                                {{'Just a field' | translate}}
+                                                <div class="mandatory text-danger">*</div>
+                                            </label>
+                                            <div>
+                                                <input type="text" class="form-control" formControlName="field2" [placeholder]="_translate.translate('type here')">
+                                            </div>
+                                            <div *ngIf="myFormSteps3.controls.step3.controls.field2.hasError('required') && myFormSteps3.controls.step3.controls.field2.dirty" class="text-danger">{{'This field is required' | translate}}</div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="form-group col-sm-6">
+                                            <label>
+                                                {{'Just a field' | translate}}
+                                                <div class="mandatory text-danger">*</div>
+                                            </label>
+                                            <div>
+                                                <input type="text" class="form-control" formControlName="field3" [placeholder]="_translate.translate('type here')">
+                                            </div>
+                                            <div *ngIf="myFormSteps3.controls.step3.controls.field3.hasError('required') && myFormSteps3.controls.step3.controls.field3.dirty" class="text-danger">{{'This field is required' | translate}}</div>
+                                        </div>
+                                        <div class="form-group col-sm-6">
+                                            <label>
+                                                {{'Just a field' | translate}}
+                                                <div class="mandatory text-danger">*</div>
+                                            </label>
+                                            <div>
+                                                <input type="text" class="form-control" formControlName="field4" [placeholder]="_translate.translate('type here')">
+                                            </div>
+                                            <div *ngIf="myFormSteps3.controls.step3.controls.field4.hasError('required') && myFormSteps3.controls.step3.controls.field4.dirty" class="text-danger">{{'This field is required' | translate}}</div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="form-group col-sm-6">
+                                            <label>
+                                                {{'Just a field' | translate}}
+                                                <div class="mandatory text-danger">*</div>
+                                            </label>
+                                            <div>
+                                                <input type="text" class="form-control" formControlName="field5" [placeholder]="_translate.translate('type here')">
+                                            </div>
+                                            <div *ngIf="myFormSteps3.controls.step3.controls.field5.hasError('required') && myFormSteps3.controls.step3.controls.field5.dirty" class="text-danger">{{'This field is required' | translate}}</div>
+                                        </div>
+                                        <div class="form-group col-sm-6">
+                                            <label>
+                                                {{'Just a field' | translate}}
+                                                <div class="mandatory text-danger">*</div>
+                                            </label>
+                                            <div>
+                                                <input type="text" class="form-control" formControlName="field6" [placeholder]="_translate.translate('type here')">
+                                            </div>
+                                            <div *ngIf="myFormSteps3.controls.step3.controls.field6.hasError('required') && myFormSteps3.controls.step3.controls.field6.dirty" class="text-danger">{{'This field is required' | translate}}</div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="form-group col-sm-6">
+                                            <label>
+                                                {{'Just a field' | translate}}
+                                                <div class="mandatory text-danger">*</div>
+                                            </label>
+                                            <div>
+                                                <input type="text" class="form-control" formControlName="field7" [placeholder]="_translate.translate('type here')">
+                                            </div>
+                                            <div *ngIf="myFormSteps3.controls.step3.controls.field7.hasError('required') && myFormSteps3.controls.step3.controls.field7.dirty" class="text-danger">{{'This field is required' | translate}}</div>
+                                        </div>
+                                        <div class="form-group col-sm-6"></div>
+                                    </div>
+                                </div>
+                            </form>
+                        </section>
+                    </div>
+                </div>
+                <br>
+                <h2>{{'3. Mix of forms & texts: change dynamically the config object' | translate}}</h2>
+                <hr>
+                <p>{{'Allow us to change the structure of a formStep during use.' | translate}}<br>{{'Just for this case, you have to add an attribute order to your sections.' | translate}}</p>
+                <b>{{'Implementation' | translate}}:</b>
+                <pre><code>{{'&lt;section order="1 to N" ...'}}
+{{'[formsteps]="[{title: \'Introduction\'}, {form: myFormSteps2, id: \'myFormSteps2\', title: \'Form\', submitted: true}, {title: \'Outro\', startHere: true}, {form: myFormSteps3, id: \'myFormSteps3\', title: \'Form again\', redirect: \'ui-layouts/tooltips\'}]"'}}</code></pre>
+                <br>
+                <b>{{'Example' | translate}}:</b>
+                <div class="docBox">
+                    <div [formsteps]="dynamicConfig">
+                        <section order="1" style="padding: 20px; border: 2px dashed lightgray; border-radius: 6px;">
+                            <h1>Hello world!</h1>
+                            <br>
+                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam ullamcorper sodales arcu vestibulum pellentesque. Pellentesque quis tellus vitae neque tincidunt suscipit. Duis mattis lorem ac dapibus tempus. Maecenas quis sollicitudin risus. Sed ullamcorper est sed nulla luctus vulputate. Integer pretium lobortis congue. Ut leo tellus, tempus at pharetra vitae, rhoncus vel metus. Phasellus ex quam, ultrices id nulla quis, pulvinar facilisis ex.</p>
+                            <p>Aliquam erat volutpat. Pellentesque sollicitudin sapien mauris, sit amet finibus mi pharetra sed. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Morbi vel velit ac elit facilisis tincidunt. Sed in elementum magna, a euismod nibh. Etiam bibendum nunc ut faucibus semper. Duis vel dapibus purus.</p>
+                            <p>Nunc vulputate sollicitudin mi non ultrices. Cras sed elit varius, eleifend magna a, iaculis sem. Fusce dapibus turpis vel ante porta eleifend. Nunc felis lectus, rhoncus vitae faucibus id, aliquam eu est. Ut sed nunc in tellus iaculis molestie non at nisi. Morbi eu tempus tellus, sit amet dictum lorem. Nunc sit amet urna sodales, sagittis tortor tempus, iaculis nulla. Phasellus nec mauris rhoncus, cursus turpis a, vulputate turpis. Nam laoreet, lorem nec convallis iaculis, lorem arcu imperdiet enim, at convallis urna odio eget arcu. Cras vehicula, risus quis sagittis luctus, odio urna imperdiet lorem, id ornare sapien arcu ut justo.</p>
+                            <p>Etiam mi dui, suscipit et sodales at, bibendum in risus. Duis consectetur nulla et diam aliquet, at pulvinar sem eleifend. Nulla in augue odio. Integer ullamcorper nunc eget purus euismod luctus. Maecenas et arcu eu nulla malesuada cursus a ut turpis. In id risus at elit aliquam congue. Nulla porttitor ligula sit amet dui ultricies, non volutpat nunc luctus. Curabitur convallis, est iaculis mollis interdum, lacus ex dignissim turpis, sed fringilla purus leo a enim. Quisque ornare ex ac mi luctus dignissim. Vivamus at elit sit amet arcu sodales commodo et vitae turpis.</p>
+                            <p>Morbi quam metus, malesuada sit amet venenatis eget, sollicitudin id sapien. Nullam sit amet convallis dui, quis eleifend tellus. Aenean dictum luctus eleifend. Pellentesque dapibus neque enim, ac efficitur massa efficitur eu. Quisque sed iaculis est. Proin finibus odio nec euismod hendrerit. Mauris consequat vel massa nec tincidunt.</p>
+                        </section>
+                        <section order="2" style="padding: 20px; border: 2px dashed lightgray; border-radius: 6px;">
+                            <form [formGroup]="myFormSteps4" novalidate id="myFormSteps4" (ngSubmit)="myFormSteps4.valid && save4(myFormSteps4.value)">
+                                <div class="form-block">
+                                    <div class="row">
+                                        <div class="form-group col-sm-6">
+                                            {{'Do you  want the full form?' | translate}}
+                                            <div class="customCheckbox">
+                                                <input type="checkbox" value="None" id="customCheckbox" name="check" formControlName="isFull"/>
+                                                <label for="customCheckbox"></label>
+                                            </div>
+                                            <div *ngIf="myFormSteps4.controls.isFull.hasError('required') && myFormSteps4.controls.isFull.touched" class="text-danger">{{'This field is required' | translate}}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </section>
+                        <section order="3" *ngIf="isFullForm">
+                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam ullamcorper sodales arcu vestibulum pellentesque. Pellentesque quis tellus vitae neque tincidunt suscipit. Duis mattis lorem ac dapibus tempus. Maecenas quis sollicitudin risus. Sed ullamcorper est sed nulla luctus vulputate. Integer pretium lobortis congue. Ut leo tellus, tempus at pharetra vitae, rhoncus vel metus. Phasellus ex quam, ultrices id nulla quis, pulvinar facilisis ex.</p>
+                            <p>Aliquam erat volutpat. Pellentesque sollicitudin sapien mauris, sit amet finibus mi pharetra sed. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Morbi vel velit ac elit facilisis tincidunt. Sed in elementum magna, a euismod nibh. Etiam bibendum nunc ut faucibus semper. Duis vel dapibus purus.</p>
+                            <p>Nunc vulputate sollicitudin mi non ultrices. Cras sed elit varius, eleifend magna a, iaculis sem. Fusce dapibus turpis vel ante porta eleifend. Nunc felis lectus, rhoncus vitae faucibus id, aliquam eu est. Ut sed nunc in tellus iaculis molestie non at nisi. Morbi eu tempus tellus, sit amet dictum lorem. Nunc sit amet urna sodales, sagittis tortor tempus, iaculis nulla. Phasellus nec mauris rhoncus, cursus turpis a, vulputate turpis. Nam laoreet, lorem nec convallis iaculis, lorem arcu imperdiet enim, at convallis urna odio eget arcu. Cras vehicula, risus quis sagittis luctus, odio urna imperdiet lorem, id ornare sapien arcu ut justo.</p>
+                            <p>Etiam mi dui, suscipit et sodales at, bibendum in risus. Duis consectetur nulla et diam aliquet, at pulvinar sem eleifend. Nulla in augue odio. Integer ullamcorper nunc eget purus euismod luctus. Maecenas et arcu eu nulla malesuada cursus a ut turpis. In id risus at elit aliquam congue. Nulla porttitor ligula sit amet dui ultricies, non volutpat nunc luctus. Curabitur convallis, est iaculis mollis interdum, lacus ex dignissim turpis, sed fringilla purus leo a enim. Quisque ornare ex ac mi luctus dignissim. Vivamus at elit sit amet arcu sodales commodo et vitae turpis.</p>
+                            <p>Morbi quam metus, malesuada sit amet venenatis eget, sollicitudin id sapien. Nullam sit amet convallis dui, quis eleifend tellus. Aenean dictum luctus eleifend. Pellentesque dapibus neque enim, ac efficitur massa efficitur eu. Quisque sed iaculis est. Proin finibus odio nec euismod hendrerit. Mauris consequat vel massa nec tincidunt.</p>
+                        </section>
+                        <section order="4" *ngIf="isFullForm">
+                            <form [formGroup]="myFormSteps3" novalidate id="myFormSteps3" (ngSubmit)="myFormSteps3.valid && save3(myFormSteps3.value)">
+                                <div formGroupName="step1" class="form-block">
+                                    <div class="row">
+                                        <div class="form-group col-sm-6">
+                                            <label>
+                                                {{'First Name' | translate}}
+                                                <div class="mandatory text-danger">*</div>
+                                            </label>
+                                            <div>
+                                                <input type="text" class="form-control" formControlName="firstname" [placeholder]="_translate.translate('your first name here')">
+                                            </div>
+                                            <div *ngIf="myFormSteps3.controls.step1.controls.firstname.hasError('required') && myFormSteps3.controls.step1.controls.firstname.touched" class="text-danger">{{'This field is required' | translate}}</div>
+                                        </div>
+                                        <div class="form-group col-sm-6">
+                                            <label>
+                                                {{'Last Name' | translate}}
+                                                <div class="mandatory text-danger">*</div>
+                                            </label>
+                                            <div>
+                                                <input type="text" class="form-control" formControlName="lastname" [placeholder]="_translate.translate('your last name here')">
+                                            </div>
+                                            <div *ngIf="myFormSteps3.controls.step1.controls.lastname.hasError('required') && myFormSteps3.controls.step1.controls.lastname.touched" class="text-danger">{{'This field is required' | translate}}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <hr class="dashed">
+                                <div formGroupName="step2" class="form-block">
+                                    <div class="row">
+                                        <div class="form-group col-sm-6">
+                                            <label>
+                                                {{'Email' | translate}}
+                                                <div class="mandatory text-danger">*</div>
+                                            </label>
+                                            <div>
+                                                <input type="text" class="form-control" formControlName="email" [placeholder]="_translate.translate('your email here')">
+                                            </div>
+                                            <div *ngIf="myFormSteps3.controls.step2.controls.email.hasError('required') && myFormSteps3.controls.step2.controls.email.dirty" class="text-danger">{{'This field is required' | translate}}</div>
+                                            <div *ngIf="!myFormSteps3.controls.step2.controls.email.valid && !myFormSteps3.controls.step2.controls.email.hasError('required')" class="text-danger">{{'Email not valid!' | translate}}</div>
+                                        </div>
+                                        <div class="form-group col-sm-6"></div>
+                                    </div>
+                                </div>
+                                <hr class="dashed">
+                                <div formGroupName="step3" class="form-block">
+                                    <div class="row">
+                                        <div class="form-group col-sm-6">
+                                            <label>
+                                                {{'Just a field' | translate}}
+                                                <div class="mandatory text-danger">*</div>
+                                            </label>
+                                            <div>
+                                                <input type="text" class="form-control" formControlName="field1" [placeholder]="_translate.translate('type here')">
+                                            </div>
+                                            <div *ngIf="myFormSteps3.controls.step3.controls.field1.hasError('required') && myFormSteps3.controls.step3.controls.field1.dirty" class="text-danger">{{'This field is required' | translate}}</div>
+                                        </div>
+                                        <div class="form-group col-sm-6">
+                                            <label>
+                                                {{'Just a field' | translate}}
+                                                <div class="mandatory text-danger">*</div>
+                                            </label>
+                                            <div>
+                                                <input type="text" class="form-control" formControlName="field2" [placeholder]="_translate.translate('type here')">
+                                            </div>
+                                            <div *ngIf="myFormSteps3.controls.step3.controls.field2.hasError('required') && myFormSteps3.controls.step3.controls.field2.dirty" class="text-danger">{{'This field is required' | translate}}</div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="form-group col-sm-6">
+                                            <label>
+                                                {{'Just a field' | translate}}
+                                                <div class="mandatory text-danger">*</div>
+                                            </label>
+                                            <div>
+                                                <input type="text" class="form-control" formControlName="field3" [placeholder]="_translate.translate('type here')">
+                                            </div>
+                                            <div *ngIf="myFormSteps3.controls.step3.controls.field3.hasError('required') && myFormSteps3.controls.step3.controls.field3.dirty" class="text-danger">{{'This field is required' | translate}}</div>
+                                        </div>
+                                        <div class="form-group col-sm-6">
+                                            <label>
+                                                {{'Just a field' | translate}}
+                                                <div class="mandatory text-danger">*</div>
+                                            </label>
+                                            <div>
+                                                <input type="text" class="form-control" formControlName="field4" [placeholder]="_translate.translate('type here')">
+                                            </div>
+                                            <div *ngIf="myFormSteps3.controls.step3.controls.field4.hasError('required') && myFormSteps3.controls.step3.controls.field4.dirty" class="text-danger">{{'This field is required' | translate}}</div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="form-group col-sm-6">
+                                            <label>
+                                                {{'Just a field' | translate}}
+                                                <div class="mandatory text-danger">*</div>
+                                            </label>
+                                            <div>
+                                                <input type="text" class="form-control" formControlName="field5" [placeholder]="_translate.translate('type here')">
+                                            </div>
+                                            <div *ngIf="myFormSteps3.controls.step3.controls.field5.hasError('required') && myFormSteps3.controls.step3.controls.field5.dirty" class="text-danger">{{'This field is required' | translate}}</div>
+                                        </div>
+                                        <div class="form-group col-sm-6">
+                                            <label>
+                                                {{'Just a field' | translate}}
+                                                <div class="mandatory text-danger">*</div>
+                                            </label>
+                                            <div>
+                                                <input type="text" class="form-control" formControlName="field6" [placeholder]="_translate.translate('type here')">
+                                            </div>
+                                            <div *ngIf="myFormSteps3.controls.step3.controls.field6.hasError('required') && myFormSteps3.controls.step3.controls.field6.dirty" class="text-danger">{{'This field is required' | translate}}</div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="form-group col-sm-6">
+                                            <label>
+                                                {{'Just a field' | translate}}
+                                                <div class="mandatory text-danger">*</div>
+                                            </label>
+                                            <div>
+                                                <input type="text" class="form-control" formControlName="field7" [placeholder]="_translate.translate('type here')">
+                                            </div>
+                                            <div *ngIf="myFormSteps3.controls.step3.controls.field7.hasError('required') && myFormSteps3.controls.step3.controls.field7.dirty" class="text-danger">{{'This field is required' | translate}}</div>
+                                        </div>
+                                        <div class="form-group col-sm-6"></div>
+                                    </div>
+                                </div>
+                            </form>
+                        </section>
+                    </div>
+                </div>
+            </div>
+        </clr-tab-content>
+    </clr-tab>
+</clr-tabs>

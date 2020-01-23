@@ -1,0 +1,13 @@
+.status-header {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    button {
+        align-self: flex-end;
+        margin-right: 0;
+    }
+}
+
+clr-dg-cell {
+    text-transform: capitalize;
+}

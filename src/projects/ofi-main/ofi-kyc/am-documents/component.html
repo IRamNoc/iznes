@@ -1,0 +1,40 @@
+<!-- Breadcrumbs. -->
+<div class="header-breadcrumbs">
+    <h1><i class="fa fa-align-left"></i> {{ 'On-Boarding Management' | translate }}</h1>
+</div>
+
+<!-- Main content. -->
+<div class="wrapper wrapper-content text-margin">
+    <p>{{ 'Here\'s a list of all clients\' KYC, organised by status' | translate }}</p>
+</div>
+
+<div class="well" *ngFor="let panel of panelDefs">
+    <!-- Panel header -->
+    <div class="row panel-header">
+        <div class="col-xs-6">
+            <a id="KYC-Dropdown-{{panel.id}}" href="#" (click)="panel.open = !panel.open; $event.preventDefault();">
+                <i class="fa fa-chevron-right" [class.rotate]="panel.open"></i>
+                <h2>{{ '@panel.title@ (@(panel.data).length@)' | translate: {'panel.title': panel.title,'(panel.data).length': (panel.data).length} }}</h2>
+            </a>
+        </div>
+    </div>
+
+    <!-- Panel body -->
+    <div class="row panel-body" [class.hidden]="!panel.open">
+        <div class="col-xs-12">
+            <clr-datagrid #myDataGrid>
+                <clr-dg-column *ngFor="let column of panel.columns" [clrDgField]="column.dataSource" clrDgSortIcon>{{column.label | translate}}</clr-dg-column>
+                <clr-dg-row *clrDgItems="let row of panel.data; let i = index" clrDgRowClickable>
+                    <clr-dg-cell id="KYC-grid-{{dataCol.id}}-{{i}} " *ngFor="let dataCol of panel.columns" (click)="buildLink(dataCol, row, $event)">
+                        <span>{{row[dataCol.dataSource]}}
+                            <ng-container *ngIf="dataCol.dataSource == 'amFirstName'"> {{row['amLastName']}}</ng-container>
+                        </span>
+                    </clr-dg-cell>
+                </clr-dg-row>
+                <clr-dg-footer>{{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
+                    <clr-dg-pagination #pagination [clrDgPageSize]="10"></clr-dg-pagination>
+                </clr-dg-footer>
+            </clr-datagrid>
+        </div>
+    </div>
+</div>

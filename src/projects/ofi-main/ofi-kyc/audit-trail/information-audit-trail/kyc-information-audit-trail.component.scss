@@ -1,0 +1,13 @@
+clr-dg-cell {
+    text-transform: capitalize;
+}
+
+.export-btn-container {
+    display: flex;
+    justify-content: flex-end;
+    padding-right: 0;
+    button {
+        align-self: flex-end;
+        margin-right: 0;
+    }
+}

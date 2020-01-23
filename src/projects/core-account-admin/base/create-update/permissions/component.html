@@ -1,0 +1,51 @@
+<div class="row teams-dropdown" *ngIf="teamsList && showTeamSelect">
+    <div class="col-sm-3">
+        <ng-select id="permissionTeamsSelect"
+                    [items]="teamsList"
+                    [formControl]="teamsControl">
+        </ng-select>
+    </div>
+</div>
+
+<clr-datagrid #dataGrid>
+    <clr-dg-column class="col-name">
+        <span id="permissionsColName">{{ 'Name' | translate }}</span>
+    </clr-dg-column>
+    <clr-dg-column class="col-desc">
+        <span id="permissionsColDesc">{{ 'Description' | translate }}</span>
+    </clr-dg-column>
+    <clr-dg-column class="col-actions">
+        <span id="permissionsColActions">{{ 'Active' | translate }}</span>
+    </clr-dg-column>
+
+    <clr-dg-row *clrDgItems="let permission of permissions; let idx = index;" id="{{'permissionsRow' + idx}}"
+        clrDgRowClickable
+        [class.parent]="isPermissionParent(permission)"
+        [class.child]="!isPermissionParent(permission)"
+        [class.hidden]="permission.hidden && permission.parentID != null"
+        (click)="onRowClick(permission)">
+        <clr-dg-cell id="permissionsCellName{{idx}}" class="col-name"
+            [class.parent]="isPermissionParent(permission)"
+            [class.child]="!isPermissionParent(permission)">
+            <i class="fa"
+                [class.fa-angle-right]="!showParentAsOpen(permission)"
+                [class.fa-angle-down]="showParentAsOpen(permission)"
+                [hidden]="!isPermissionParent(permission)">
+            </i> {{ permission.name | translate }}
+        </clr-dg-cell>
+        <clr-dg-cell id="permissionsCellDesc{{idx}}" class="col-desc" [class.parent]="isPermissionParent(permission)">
+            {{ permission.description | translate }}
+        </clr-dg-cell>
+        <clr-dg-cell id="permissionsCellActions{{idx}}" class="col-actions">
+            <label class="switch" *ngIf="!isPermissionParent(permission)">
+                <input class="form-control"
+                        id="{{'permissionsCellAction' + idx}}"
+                        type="checkbox"
+                        [disabled]="isProcessing() || isUser || permission.disabled"
+                        [(ngModel)]="permission.state"
+                        (ngModelChange)="updatePermission(permission)">
+                <span class="slider round"></span>
+            </label>
+        </clr-dg-cell>
+    </clr-dg-row>
+</clr-datagrid>

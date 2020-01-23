@@ -1,0 +1,111 @@
+.drop-file-zone {
+    margin: 5px;
+    padding: 5px;
+    text-align: center;
+    border: 2px dashed #888888;
+    color: #888888;
+    -webkit-transition: color 0.5s ease-in, border-color 0.5s ease-in;
+    -moz-transition: color 0.5s ease-in, border-color 0.5s ease-in;
+    -ms-transition: color 0.5s ease-in, border-color 0.5s ease-in;
+    -o-transition: color 0.5s ease-in, border-color 0.5s ease-in;
+    transition: color 0.5s ease-in, border-color 0.5s ease-in;
+    z-index: 1;
+}
+
+.drop-file-zone .tablet {
+    padding: 4px;
+    text-align: center;
+    border: 1px solid #C0C0C0;
+    border-radius: 4px;
+}
+
+.drop-file-zone.active {
+    border: 2px dashed #ff8261;
+    color: #ff8261;
+}
+
+.drop-file-input {
+    display: none;
+}
+
+.drop-file-area {
+    padding: 25px 5px 30px;
+    background-color: #f3f3f3;
+    cursor: pointer;
+}
+
+.drop-file-area > p {
+    margin: 0;
+}
+
+.drop-file-meta {
+    padding-top: 10px;
+    padding-bottom: 5px;
+    text-align: left;
+}
+
+.drop-file-meta .added-file {
+    margin: 2px;
+    cursor: pointer;
+    display: inline-block;
+}
+
+.drop-file-meta .uploaded-file {
+    background-color: green;
+    color: white;
+}
+
+.drop-file-meta .file-error {
+    background-color:darkred;
+    color:white;
+}
+
+/* INLINE FILEDROP */
+.inline-filedrop .drop-file-zone {
+    border: 1px solid #DDD;
+    border-radius: 4px;
+    height: 40px;
+    margin: 0;
+    padding: 0;
+    position: relative;
+}
+
+.inline-filedrop .drop-file-area {
+    background: transparent;
+    height: 100%;
+    padding: 0;
+}
+
+.inline-filedrop .added-file-inline {
+    background: #F9F9F9;
+    border-radius: 4px;
+    color: #999;
+    font-style: italic;
+    height: 34px;
+    line-height: 34px;
+    padding: 0 6px;
+}
+
+.inline-filedrop .uploaded-file-inline {
+    color: #222;
+    font-style: normal;
+}
+
+.inline-filedrop .added-file-inline i.fa {
+    color: red;
+    cursor: pointer;
+}
+
+.inline-filedrop .drop-file-meta, .inline-filedrop .drop-file-nofile {
+    bottom: 2px;
+    left: 2px;
+    padding: 0;
+    position: absolute;
+    right: 2px;
+    top: 2px;
+}
+.inline-filedrop .drop-file-nofile {
+    font-style: italic;
+    line-height: 36px;
+    z-index: -1;
+}

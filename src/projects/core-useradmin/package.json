@@ -1,0 +1,11 @@
+{
+  "name": "@setl/core-useradmin",
+  "version": "1.0.8",
+  "description": "The vanilla users and permissions module.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Daniel Sarracayo",
+  "license": "ISC"
+}

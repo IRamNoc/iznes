@@ -1,0 +1,37 @@
+<!-- Breadcrumbs. -->
+<div class="header-breadcrumbs">
+    <h1><i class="fa fa-align-left"></i> {{ 'KYC Documents' | translate }}</h1>
+</div>
+
+<!-- Main content. -->
+<div class="wrapper wrapper-content">
+    <p>{{ 'Here\'s a list of all clients\' KYC, organised by status' | translate }}</p>
+</div>
+
+<div class="well" *ngFor="let panel of panelDefs">
+    <!-- Panel header -->
+    <div class="row panel-header">
+        <div class="col-xs-6">
+            <a href="#" (click)="panel.open = !panel.open; $event.preventDefault();">
+                <i class="fa fa-chevron-down" [class.reverse]="panel.open"></i>{{panel.title}}({{(panel.data | async).length}})
+            </a>
+        </div>
+        <!--<div class="col-xs-6 text-right">-->
+        <!--<button *ngIf="panel.action" class="btn btn-default action-button" (click)="panel.action.callback()"><i class="fa fa-{{panel.action.icon}}"></i> {{panel.action.title}}</button>-->
+        <!--</div>-->
+    </div>
+
+    <!-- Panel body -->
+    <div class="row panel-body" [class.hidden]="!panel.open">
+        <div class="col-xs-12">
+            <clr-datagrid #myDataGrid>
+                <clr-dg-column *ngFor="let column of panel.columns">{{column.label}}</clr-dg-column>
+                <clr-dg-row *clrDgItems="let row of panel.data | async" clrDgRowClickable>
+                    <clr-dg-cell *ngFor="let dataCol of panel.columns" data-id="{{row.id}}" (click)="buildLink(dataCol, row, panel.link, $event)">
+                        <span>{{row[dataCol.dataSource]}}</span>
+                    </clr-dg-cell>
+                </clr-dg-row>
+            </clr-datagrid>
+        </div>
+    </div>
+</div>

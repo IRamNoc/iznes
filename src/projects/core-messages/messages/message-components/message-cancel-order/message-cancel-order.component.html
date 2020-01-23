@@ -1,0 +1,14 @@
+<ng-container *ngIf="config">
+    <div>
+        <p class="padding">{{messageBody.greeting}}</p>
+        <p class="padding">{{messageBody.line1}}</p>
+
+        <div *ngIf="config.cancelMessage">
+            <p class="padding">{{messageBody.line2}}</p>
+            <p class="padding">{{messageBody.line3}}</p>
+        </div>
+
+        <p class="padding">{{messageBody.thanks}}</p>
+        <p class="padding">{{messageBody.signature}}</p>
+    </div>
+</ng-container>

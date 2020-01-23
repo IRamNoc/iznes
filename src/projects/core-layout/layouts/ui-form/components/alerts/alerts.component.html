@@ -1,0 +1,52 @@
+<div class="header-breadcrumbs">
+    <h1><i class="fa fa-bell"></i> {{'Alerts' | translate}}
+    </h1>
+</div>
+
+<div class="padding">
+    <a href="#" class="toggle-info-panes" (click)="toggleInfoPanes($event)">{{ showInfoPanes ? '[-] hide info panes' :
+        '[+] show info panes' }}
+
+    </a>
+    <app-ui-info-pane [hidden]="!showInfoPanes" [message]="'This info pane does not make up part of these guidelines. If you see this pane displayed in any of the below items, it is just for informational purposes. To view the source code for this page, go to @setl/core-layout/layouts/ui-form.'">
+    </app-ui-info-pane>
+</div>
+
+<clr-tabs>
+    <clr-tab>
+        <button clrTabLink id="alerts">
+            <i class="fa fa-bars"></i> {{'Alerts' | translate}}
+        </button>
+
+        <clr-tab-content *clrIfActive>
+            <form>
+                <section class="form-block">
+                    <div class="form-group col-sm-12">
+                        <button id="showSimpleAlert" class="btn btn-primary" (click)="showSimpleAlert()">{{'Show Example Simple Alert' | translate}}
+                        </button>
+                        <button id="showTabledAlert" class="btn" (click)="showTabledAlert()">{{'Show Example Tabled Alert' | translate}}
+                        </button>
+                        <button id="showErrorAlert" class="btn btn-danger" (click)="showErrorAlert()">{{'Show Example Error Alert' | translate}}
+                        </button>
+                        <button id="showWarningAlert" class="btn" (click)="showWarningAlert()">{{'Show Example Warning Alert' | translate}}
+                        </button>
+                        <button id="showInfoAlert" class="btn" (click)="showInfoAlert()">{{'Show Example Info Alert' | translate}}
+                        </button>
+                    </div>
+                </section>
+
+                <section class="form-block">
+                    <div class="form-group col-sm-12">
+                        <button id="showCheckAlert" class="btn" (click)="showCheckAlert()">{{'Show Example Check Alert' | translate}}
+                        </button>
+
+                        <button id="showConfirmationAlert" class="btn btn-primary" (click)="showConfirmationAlert()">{{'Show Example Confirmation Alert' | translate}}
+                        </button>
+                        <button id="showRejectAlert" class="btn btn-danger" (click)="showRejectAlert()">{{'Show Example Reject Alert' | translate}}
+                        </button>
+                    </div>
+                </section>
+            </form>
+        </clr-tab-content>
+    </clr-tab>
+</clr-tabs>

@@ -1,0 +1,68 @@
+<div class="header-breadcrumbs">
+    <h1 id="am-fund-holdings"><i class="fa fa-user"></i>{{ 'My Dashboard - @connectedWalletName@' | translate: { 'connectedWalletName': connectedWalletName } }}
+    </h1>
+</div>
+
+<div class="wrapper wrapper-content">
+    <clr-tabs>
+        <clr-tab>
+            <button clrTabLink id="am-fund-holdings-tab">
+                <i class="fa fa-bar-chart"></i> {{ 'My Holdings' | translate }}
+            </button>
+            <clr-tab-content *clrIfActive="true">
+                <div class="panel-body">
+                    <form>
+                        <div class="row form-group">
+                            <div class="col-sm-12">
+                                <label>{{ 'Fund Manager' | translate }}</label>
+                                <ng-select [items]="filteredFundAssetList" 
+                                            [allowClear]="true" 
+                                            [formControl]="fundShareForm.controls['selectFund']">
+                                </ng-select>
+                                <button (click)="handleCompanySelection()" class="btn btn-primary btn-end">
+                                    {{ 'Go' | translate }}
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+
+                    <div *ngIf="showStats">
+                        <hr class="dashed">
+                        <!-- Holder list table. -->
+                        <div class="row">
+                            <div class="col-sm-12 col-md-6">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-left">{{ 'Sub Portfolio' | translate }}</th>
+                                            <th>{{ 'Asset' | translate }}</th>
+                                            <th class="text-left">{{ 'Asset Manager' | translate }}</th>
+                                            <th class="text-right">{{ 'Quantity' | translate }}</th>
+                                            <th class="text-right">{{ 'Estimated Amount' | translate }}</th>
+                                            <th class="text-right">{{ 'Ratio' | translate }}</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let holding of fundStats.assets">
+                                            <!--<td colspan="5">{{ holding | json }}</td>-->
+                                            <td class="text-left">{{ holding.walletName }}</td>
+                                            <td class="text-left">{{ holding.asset }}</td>
+                                            <td class="text-left">{{ holding.assetManager }}</td>
+                                            <td class="text-right">{{ holding.quantity | moneyValue: 5 }}</td>
+                                            <td class="text-right">{{'&euro;' | translate}} {{ holding.estimatedAmount | moneyValue: 4 }}</td>
+                                            <td class="text-right">{{'@holding.ratio@%' | translate: {'holding.ratio': holding.ratio} }}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="col-sm-12 col-md-6">
+                                <canvas *ngIf="fundStats.graphLabels.length" baseChart [data]="fundStats.graphData" [labels]="fundStats.graphLabels" [chartType]="'pie'">
+                                </canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </clr-tab-content>
+        </clr-tab>
+    </clr-tabs>
+</div>

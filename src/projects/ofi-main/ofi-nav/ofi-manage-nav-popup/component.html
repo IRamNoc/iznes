@@ -1,0 +1,139 @@
+<clr-modal [(clrModalOpen)]="isOpen">
+    <h3 class="modal-title">
+        <span id="add-nav-title" *ngIf="isAddMode()">{{ 'Add New NAV' | translate }}</span>
+        <span id="edit-nav-title" *ngIf="isEditMode()">{{ 'Edit NAV' | translate }}</span>
+        <span id="delete-nav-title" *ngIf="isDeleteMode()">{{ 'Delete NAV' | translate }}</span>
+    </h3>
+    <div class="modal-body">
+        <form [formGroup]="navForm" *ngIf="isOpen && navForm">
+            <div class="row">
+                <div class="form-group col-sm-12">
+                    <label class="control-label" for="shareName-nav">{{ 'Share Name' | translate }}</label>
+                    <input type="text" id="shareName-nav" name="shareName" value="{{share.fundShareName}}" readonly>
+                </div>
+
+                <div class="form-group col-sm-12">
+                    <label class="control-label" for="isin-nav">{{ 'ISIN' | translate }}</label>
+                    <input type="text" id="isin-nav" name="isin" value="{{share.isin}}" readonly>
+                </div>
+
+                <div class="col-sm-12 px-0">
+                    <div class="row">
+                        <div class="form-group col-sm-8">
+                            <label class="control-label" for="lastest-nav" *ngIf="!isDeleteMode()">{{ 'Latest NAV' | translate }}</label>
+                            <label class="control-label" for="nav" *ngIf="isDeleteMode()">{{ 'NAV' | translate }}</label>
+                            <input type="text" 
+                                    id="{{(isDeleteMode()? 'nav' : 'latest-nav' )}}" 
+                                    name="nav" 
+                                    disabled 
+                                    formControlName="nav">
+                        </div>
+
+                        <div class="form-group col-sm-4">
+                            <label class="control-label">{{ 'Currency' | translate }}</label>
+                            <input type="text" 
+                                    id="Currency-nav-btn" 
+                                    name="navCurrency" 
+                                    value="{{getCurrencyString(share.currency)}} ({{currencySymbols[getCurrencyString(share.currency)]}})"
+                                    readonly>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group col-sm-12" *ngIf="!isDeleteMode()">
+                    <label class="control-label" for="Set-nav-field">{{ 'NAV' | translate }}</label>
+                    <input id="Set-nav-field" 
+                            type="text" 
+                            name="nav" 
+                            formControlName="price" 
+                            appNumberFormatter="2">
+                    <div class="field-error" *ngIf="navForm.controls['price'].dirty && navForm.controls['price'].hasError('invalidNumber')">
+                        <span>{{ 'Incorrect Value' | translate }}</span>
+                    </div>
+                    <div class="field-error" *ngIf="navForm.controls['price'].dirty && navForm.controls['price'].hasError('max')">
+                        <span>
+                            {{ 'Value is too high' | translate }}
+                        </span>
+                    </div>
+                    <span id="Set-nav-caution" class="text-danger" [hidden]="!navExceedsThreshold">
+                        {{ 'Caution: The NAV is being modified by more than 10%.' | translate }}
+                    </span>
+                </div>
+
+                <div class="form-group col-sm-6">
+                    <label class="control-label" for="Date-nav-btn">{{ 'NAV Date' | translate }}</label>
+
+                    <div class="input-group date-pick-wrapper">
+                        <span class="fa fa-calendar" [class.disabled]="isEditMode() || isDeleteMode()"></span>
+
+                        <input type='text' 
+                                id="Date-nav-btn" 
+                                name="navDate" 
+                                [placeholder]="translate.translate('Select date')" 
+                                formControlName="navDate"
+                                [dpDayPicker]="navDateConfig" 
+                                mode="day" 
+                                theme="dp-material" 
+                                #navDatePicker/>
+
+                        <span *ngIf="navForm.controls['navDate'].touched && navForm.controls['navDate'].hasError('pattern')" class='field-error'>
+                            {{ 'Incorrect date format' | translate }}
+                        </span>
+                    </div>
+
+                </div>
+
+                <div class="form-group col-sm-6">
+                    <label class="control-label" for="PublicationDate-nav-btn">{{ 'Publication Date' | translate }}</label>
+                    <div class="input-group date-pick-wrapper">
+                        <span class="fa fa-calendar" [class.disabled]="isEditMode() || isDeleteMode()"></span>
+
+                        <input type='text' 
+                                id="PublicationDate-nav-btn" 
+                                name="navPublishDate" 
+                                [placeholder]="translate.translate('Select date')"
+                                formControlName="navPubDate" 
+                                [dpDayPicker]="navPublishDateConfig" 
+                                mode="day" 
+                                theme="dp-material"
+                                #navPublishDatePicker/>
+
+                        <span *ngIf="navForm.controls['navPubDate'].touched && navForm.controls['navPubDate'].hasError('pattern')" class="field-error">
+                            {{ 'Incorrect date format' | translate }}
+                        </span>
+                    </div>
+                </div>
+
+                <div class="form-group col-sm-12">
+                    <label class="control-label" for="Status-nav-btn">{{ 'Status' | translate }}</label>
+                    <ng-select id="Status-nav-btn" 
+                                class="fluid-width" 
+                                [disabled]="navForm.controls['status'].disabled" 
+                                [items]="statusItems"
+                                formControlName="status" 
+                                [allowClear]="false" 
+                                [placeholder]="translate.translate('Select status')">
+                    </ng-select>
+                </div>
+
+                <span *ngIf="!isDeleteMode()" id="Warning-nav-msg" class="text-danger">
+                    {{ 'Warning: If you click "Validate", the NAV will be modified at the selected date.' | translate }}
+                </span>
+            </div>
+        </form>
+
+    </div>
+    <div class="modal-footer">
+        <button id="Cancel-nav-btn" class="btn btn-secondary" style="margin-right: 5px;" (click)="close()">
+            {{ 'Cancel' | translate }}
+        </button>
+
+        <button id="Validate-nav-btn" class="btn btn-primary" *ngIf="!isDeleteMode()" [disabled]="!navFormValid()" (click)="updateNav()">
+            {{ 'Validate' | translate }}
+        </button>
+
+        <button id="Delete-nav-btn" class="btn btn-primary" *ngIf="isDeleteMode()" (click)="deleteNav()">
+            {{ 'Delete' | translate }}
+        </button>
+    </div>
+</clr-modal>

@@ -1,0 +1,26 @@
+<!-- <clr-main-container insertIDs> -->
+<clr-main-container (drop)="$event.preventDefault()" (dragover)="$event.preventDefault()">
+
+    <div class="main-container {{ currentLanguage }}" [class.connection-alert]="activeAlert">
+        <connection-status-alerts (activeAlert)="setActiveAlert($event)"></connection-status-alerts>
+
+        <alerts *ngIf="!activeAlert"></alerts>
+
+        <app-navigation-topbar></app-navigation-topbar>
+
+        <div class="content-container">
+
+            <app-navigation-sidebar></app-navigation-sidebar>
+
+            <main #main class="content-area" [@routerTransition]="currentParentUrl">
+                <div class="router-container clearfix">
+                    <div class="fade-slide-right">
+                        <router-outlet #o="outlet"></router-outlet>
+                    </div>
+                </div>
+                <navigation-footer></navigation-footer>
+            </main>
+
+        </div>
+    </div>
+</clr-main-container>

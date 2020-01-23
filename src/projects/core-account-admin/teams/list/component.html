@@ -1,0 +1,78 @@
+<div class="header-breadcrumbs">
+    <h1><i class="fa fa-address-book-o"></i> {{ 'Teams' | translate }}</h1>
+</div>
+
+<clr-tabs>
+    <clr-tab>
+        <button clrTabLink id="tabAccountAdminTeamsButton">{{ 'List' | translate }}</button>
+        <clr-tab-content class="outer">
+            <!-- Button container -->
+            <div *ngIf="!hasPermissionCreateTeams" class="alert alert-warning">
+                <div class="alert-items">
+                    <div class="alert-item static">
+                        <div class="alert-icon-wrapper">
+                            <clr-icon class="alert-icon" shape="exclamation-triangle"></clr-icon>
+                        </div>
+                        <span class="alert-text">
+                            {{ 'Please contact the administrator to request permission to create teams.' | translate }}
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <br />
+            <div class="row buttons">
+                <div class="col">
+                    <a [routerLink]="'/account-admin/teams/audit'" class="btn btn-primary">{{ 'Audit Trail' | translate }}</a>
+                </div>
+                <div class="col">
+                    <button class="btn btn-primary" (click)="exportCSV()">{{ 'Export Teams as CSV' | translate }}</button>
+                </div>
+                <div class="col">
+                    <button class="btn btn-primary" [routerLink]="'/account-admin/teams/new'" [disabled]="!hasPermissionCreateTeams">{{ 'Add New Team' | translate }}</button>
+                </div>
+            </div>
+
+            <clr-datagrid #dataGrid>
+                <clr-dg-column [clrDgField]="'reference'" class="col-ref">
+                    <span id="accountAdminColRef">{{ 'Reference' | translate }}</span>
+                </clr-dg-column>
+                <clr-dg-column [clrDgField]="'name'" class="col-name">
+                    <span id="accountAdminColName">{{ 'Team Name' | translate }}</span>
+                </clr-dg-column>
+                <clr-dg-column [clrDgField]="'description'" class="col-desc">
+                    <span id="accountAdminColDescription">{{ 'Description' | translate }}</span>
+                </clr-dg-column>
+                <clr-dg-column class="col-status">
+                    <span id="accountAdminColStatus">{{ 'Status' | translate }}</span>
+                </clr-dg-column>
+
+                <clr-dg-row *clrDgItems="let team of teams; let idx = index;" id="{{'accountAdminTeamRow' + idx}}" clrDgRowClickable>
+                    <clr-dg-cell id="{{'accountAdminTeamCellRef' + idx}}" class="col-ref"
+                                 (click)="navigateToEntity(team.userTeamID)">
+                        {{ team.reference }}
+                    </clr-dg-cell>
+                    <clr-dg-cell id="{{'accountAdminTeamCellName' + idx}}" (click)="navigateToEntity(team.userTeamID)">{{ team.name }}</clr-dg-cell>
+                    <clr-dg-cell id="{{'accountAdminTeamCellDescription' + idx}}" (click)="navigateToEntity(team.userTeamID)">{{ team.description }}</clr-dg-cell>
+                    <clr-dg-cell id="{{'accountAdminTeamCellStatus' + idx}}" class="col-status"
+                                 (click)="navigateToEntity(team.userTeamID)">
+                        <span [ngSwitch]="team.status">
+                            <span *ngSwitchCase="0">
+                                <span class="label label-danger">{{ 'Disabled' | translate }}</span>
+                            </span>
+                            <span *ngSwitchCase="1">
+                                <span class="label label-success">{{ 'Active' | translate }}</span>
+                            </span>
+                            <span *ngSwitchCase="2">
+                                <span class="label label-info">{{ 'Pending' | translate }}</span>
+                            </span>
+                        </span>
+                    </clr-dg-cell>
+                </clr-dg-row>
+
+                <clr-dg-footer>{{ pagination.firstItem + 1 }} - {{ pagination.lastItem + 1 }}
+                    <clr-dg-pagination #pagination [clrDgPageSize]="10"></clr-dg-pagination>
+                </clr-dg-footer>
+            </clr-datagrid>
+        </clr-tab-content>
+    </clr-tab>
+</clr-tabs>

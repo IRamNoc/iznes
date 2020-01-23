@@ -1,0 +1,484 @@
+<div class="kyc-container sm" [formGroup]="form" [class.disabled]="disabled">
+
+    <div class="row col-sm-12">
+        <div class="form-group col-sm-6">
+            <clr-radio-container clrInline>
+                <label class="required-field">{{ 'Stakeholder Type' | translate }}</label>
+                <clr-radio-wrapper>
+                    <input type="radio" clrRadio id="opt-type-legal" value="legalPerson" formControlName="beneficiaryType" [attr.disabled]="disabled === true ? '' : null" />
+                    <label>{{ 'Legal person' | translate }}</label>
+                </clr-radio-wrapper>
+                <clr-radio-wrapper>
+                    <input type="radio" clrRadio id="opt-type-natural" value="naturalPerson" formControlName="beneficiaryType" [attr.disabled]="disabled === true ? '' : null" />
+                    <label>{{ 'Natural person' | translate }}</label>
+                </clr-radio-wrapper>
+            </clr-radio-container>
+        </div>
+
+        <div class="form-group required-field col-sm-6">
+            <label class="required-field">{{'Relation Type' | translate}} </label>
+
+            <div class="form-group required-field">
+                <ng-select id="relationType-benef"
+                            [items]="relationTypesList"
+                            [formControl]="form.get('common.relationType')"
+                            placeholder="{{'Select a relation type' | translate}}"
+                            [isDisabled]="disabled">
+                </ng-select>
+            </div>
+        </div>
+    </div>
+
+    <div class="row col-sm-12">
+        <!-- First stakeholder -->
+        <div *ngIf="isFirstStakeholder()" class="form-group required-field col-sm-6">
+            <label class="control-label" for="parent-benef">{{'Linked Entity' | translate}}</label>
+            <input type="text"
+                    id="parent-benef"
+                    value="registeredCompanyName"
+                    [readonly]="true">
+        </div>
+
+        <!-- Subsequent stakeholders -->
+        <div *ngIf="!isFirstStakeholder()" class="form-group required-field col-sm-6">
+            <label class="control-label" for="parent-benef">{{'Linked Entity' | translate}}</label>
+
+            <ng-select id="parent-benef"
+                        [items]="parents"
+                        [formControl]="form.get('common.parent')"
+                        placeholder="{{'Select stakeholder\'s parent ' | translate}}"
+                        [isDisabled]="disabled">
+            </ng-select>
+
+            <span class="field-error"
+                *ngIf="hasError(['common', 'parent'], ['required'])">{{'Field is required' | translate}}</span>
+        </div>
+
+        <div class="form-group required-field col-sm-6">
+            <label class="control-label" for="holdingType-benef">{{'Holding type' | translate}}</label>
+            <input type="text"
+                    id="holdingType-benef"
+                    value="{{ holdingTypeText }}"
+                    [readonly]="true">
+        </div>
+    </div>
+
+    <ng-container *ngIf="!isDisabled('legalPerson')" formGroupName="legalPerson">
+
+        <div class="row col-sm-12">
+            <div class="form-group required-field col-sm-6">
+                <label class="control-label" for="firstName-benef-{{index}}">{{ 'Registered Company Name or Legal Name' | translate }}</label>
+                <input type="text"
+                       id="legalName-benef-{{index}}"
+                       formControlName="legalName"
+                       [readonly]="disabled"
+                       placeholder="{{ 'Fill in company name or legal name' | translate }}">
+                <span class="field-error" *ngIf="hasError(['legalPerson', 'legalName'], ['required'])">{{ 'Field is required' | translate }}</span>
+                <span class="field-error" *ngIf="hasError(['legalPerson', 'legalName'], ['maxlength'])">{{ 'Name is too long' | translate }}</span>
+            </div>
+            <div class="form-group required-field col-sm-6">
+                <label class="control-label" for="leiCode-benef-{{index}}">{{ 'LEI Code' | translate }}</label>
+                <input type="text"
+                       id="leiCode-benef-{{index}}"
+                       formControlName="leiCode"
+                       [readonly]="disabled"
+                       placeholder="{{ 'Fill in company LEI code' | translate }}">
+                <span class="field-error" *ngIf="hasError(['legalPerson', 'leiCode'], ['required'])">{{ 'Field is required' | translate }}</span>
+                <span class="field-error" *ngIf="hasError(['legalPerson', 'leiCode'], ['pattern'])">{{ 'LEI must be 20 characters long' | translate }}</span>
+                <span class="helper-text" *ngIf="showHelperText(['legalPerson', 'leiCode'], ['required', 'pattern'])">{{ 'Must be 20 characters long' | translate }}</span>
+            </div>
+        </div>
+
+        <div class="row col-sm-12">
+            <div class="form-group required-field col-sm-6">
+                <label class="control-label" for="address-benef-{{index}}">{{ 'Stakeholder Address' | translate }}</label>
+                <input type="text"
+                       id="address-benef-{{index}}"
+                       [readonly]="disabled"
+                       [formControl]="form.get('common.address')"
+                       placeholder="{{ 'Fill in an address' | translate }}"
+                       [attr.disabled]="disabled">
+                <span class="field-error" *ngIf="hasError(['common', 'address'], ['required'])">{{ 'Field is required' | translate }}</span>
+                <span class="field-error" *ngIf="hasError(['common', 'address'], ['maxlength'])">{{ 'Address is too long' | translate }}</span>
+            </div>
+            <div class="form-group col-sm-6">
+                <label class="control-label" for="address2-benef">&nbsp;</label>
+                <input type="text" id="address2-benef" [formControl]="form.get('common.address2')" placeholder="{{'Address line 2' | translate }}"
+                       [readonly]="disabled">
+                <span class="field-error" *ngIf="hasError(['common', 'address2'], ['required'])">{{'Field is required' | translate}}</span>
+                <span class="field-error" *ngIf="hasError(['common', 'address2'], ['maxlength'])">{{'Field is too long' | translate}}</span>
+            </div>
+        </div>
+
+        <div class="row col-sm-12">
+            <div class="form-group required-field col-sm-6">
+                <label class="control-label" for="zipCode-benef">{{'ZIP Code' | translate}}</label>
+                <input type="text" id="zipCode-benef" [formControl]="form.get('common.zipCode')" placeholder="{{'Fill in a ZIP Code' | translate}}" [readonly]="disabled">
+                <span class="field-error" *ngIf="hasError(['common', 'zipCode'], ['required'])">{{'Field is required' | translate}}</span>
+                <span class="field-error" *ngIf="hasError(['common', 'zipCode'], ['maxlength'])">{{'Field is too long' | translate}}</span>
+            </div>
+            <div class="form-group required-field col-sm-6">
+                <label class="control-label" for="city-benef">{{'City' | translate}}</label>
+                <input type="text" id="city-benef" [formControl]="form.get('common.city')" placeholder="{{'Fill in a city' | translate}}" [readonly]="disabled">
+                <span class="field-error" *ngIf="hasError(['common', 'city'], ['required'])">{{'Field is required' | translate}}</span>
+                <span class="field-error" *ngIf="hasError(['common', 'city'], ['maxlength'])">{{'Field is too long' | translate}}</span>
+            </div>
+        </div>
+
+        <div class="row col-sm-12">
+            <div class="form-group required-field col-sm-6">
+                <label class="control-label" for="country-benef">{{'Country' | translate}}</label>
+                <ng-select id="country-benef"
+                            [items]="countries"
+                            [formControl]="form.get('common.country')"
+                            placeholder="{{'Select a country' | translate}}"
+                            [isDisabled]="disabled">
+                </ng-select>
+                <span class="field-error" *ngIf="hasError(['common', 'country'])">{{'Field is required' | translate}}</span>
+            </div>
+            <div class="form-group required-field col-sm-6">
+                <label class="control-label" for="country-tax-benef">{{'Country of tax residence' | translate}}</label>
+                <ng-select id="country-tax-benef"
+                            [items]="countries"
+                            [formControl]="form.get('common.countryTaxResidence')"
+                            placeholder="{{'Select a country' | translate}}"
+                            [isDisabled]="disabled">
+                </ng-select>
+                <span class="field-error" *ngIf="hasError(['common', 'countryTaxResidence'])">{{'Field is required' | translate}}</span>
+            </div>
+        </div>
+
+        <div class="row col-sm-12">
+            <div class="form-group required-field col-sm-6">
+                <label class="control-label" for="nationality-benef">{{'Nationality' | translate}}</label>
+                <ng-select id="nationality-benef"
+                            [items]="countries"
+                            [formControl]="form.get('common.nationality')"
+                            placeholder="{{'Select a country' | translate}}"
+                            [isDisabled]="disabled">
+                </ng-select>
+                <span class="field-error" *ngIf="hasError(['common', 'nationality'])">{{'Field is required' | translate}}</span>
+            </div>
+        </div>
+
+        <div class="row col-sm-12">
+            <div class="form-group required-field col-sm-6">
+                <label class="control-label" for="nationalIdNumberType-benef-{{index}}">{{ 'National Identification Number Type' | translate }}</label>
+                <ng-select id="nationalIdNumberType-benef-{{index}}"
+                           [items]="identificationNumberTypeList"
+                           formControlName="nationalIdNumberType"
+                           [isDisabled]="disabled"
+                           placeholder="{{ 'Select identification number type' | translate }}">
+                </ng-select>
+                <span class="field-error" *ngIf="hasError(['legalPerson', 'nationalIdNumberType'], ['required'])">{{ 'Field is required' | translate }}</span>
+            </div>
+
+            <div *ngIf="!isDisabled(['legalPerson', 'otherNationalIdNumberType'])" class="form-group required-field col-sm-6">
+                <label class="control-label" for="otherNationalIdNumberType-benef">{{ 'Your Number Type' | translate }}</label>
+                <input type="text"
+                        formControlName="otherNationalIdNumberType"
+                        placeholder="{{'Specify an identification number type' | translate}}"
+                        [readonly]="disabled">
+                <span class="field-error" *ngIf="hasError(['legalPerson', 'otherNationalIdNumberType'], ['required'])">{{'Field is required' | translate}}</span>
+            </div>
+        </div>
+
+        <div class="row col-sm-12">
+            <div *ngIf="!isDisabled(['legalPerson', 'nationalIdNumberText'])" class="form-group required-field col-sm-6">
+                <label class="control-label" for="nationalIdNumberText-benef">{{ 'National Identification Number' | translate }}</label>
+                <input type="text"
+                        formControlName="nationalIdNumberText"
+                        placeholder="{{'Fill in an identification number' | translate}}"
+                        [readonly]="disabled">
+                <span class="field-error"
+                    *ngIf="hasError(['legalPerson', 'nationalIdNumberText'], ['required'])">{{'Field is required' | translate}}</span>
+                <span class="field-error"
+                    *ngIf="hasError(['legalPerson', 'nationalIdNumberText'], ['validSiren'])">{{'SIREN must be 9 digits long' | translate}}</span>
+                <span class="field-error"
+                    *ngIf="hasError(['legalPerson', 'nationalIdNumberText'], ['validSiret'])">{{'SIRET must be 14 digits long' | translate}}</span>
+                <span class="helper-text" *ngIf="showHelperText(['legalPerson', 'nationalIdNumberText'], ['required', 'validSiren']) && checkNationalIdNumberType('validSiren')">{{'Must be 9 digits long' | translate }}</span>
+                <span class="helper-text" *ngIf="showHelperText(['legalPerson', 'nationalIdNumberText'], ['required', 'validSiret']) && checkNationalIdNumberType('validSiret')">{{'Must be 14 digits long' | translate }}</span>
+            </div>
+        </div>
+
+        <div class="row col-sm-12">
+            <div class="form-group required-field col-sm-6">
+                <label for="beneficiary-kbis-document-benef" class="control-label">{{'Kbis extract (or equivalent) less than 3 month old' | translate}}</label>
+                <div class="filedrop-wrapper">
+                    <setl-file-drop filePermission="0" class="form-control" id="beneficiary-kbis-document-benef"
+                                    (onDrop)="uploadFile($event)"
+                                    [preset]="form.get('common.document').value"
+                                    ngDefaultControl
+                                    [disabled]="disabled"
+                                    [inline]="true"
+                                    [class.error]="form.get(['common', 'document']).touched && form.get(['common', 'document']).status === 'INVALID'"
+                                    [allowFileTypes]="allowedFileTypes"
+                    ></setl-file-drop>
+                    <span class="field-error force-display-error w-100" *ngIf="form.get(['common', 'document']).touched && form.get(['common', 'document']).status === 'INVALID'">{{'Field is required' | translate}}</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="row col-sm-12">
+            <div class="form-group required-field col-sm-6">
+                <label for="holdingPercentage-benef">{{'Holding percentage' | translate}}</label>
+                <input id="holdingPercentage-benef"
+                        type="number"
+                        min="0"
+                        max="100"
+                        [formControl]="form.get('common.holdingPercentage')"
+                        placeholder="{{ 'Define a value @valueType@' | translate: { valueType: '(%)' } }}"
+                        [readonly]="disabled">
+                <span class="field-error" *ngIf="hasError(['common', 'holdingPercentage'], ['required'])">{{'Field is required' | translate}}</span>
+                <span class="field-error" *ngIf="hasError(['common', 'holdingPercentage'], ['min', 'max'])">{{'Value must be between 0 and 100' | translate}}</span>
+            </div>
+
+            <div class="form-group required-field col-sm-6">
+                <label for="votingPercentage-benef">{{'Voting percentage' | translate}}</label>
+                <input id="votingPercentage-benef"
+                        type="number"
+                        min="0"
+                        max="100"
+                        [formControl]="form.get('common.votingPercentage')"
+                        placeholder="{{ 'Define a value @valueType@' | translate: { valueType: '(%)' } }}"
+                        [readonly]="disabled">
+                <span class="field-error" *ngIf="hasError(['common', 'votingPercentage'], ['required'])">{{'Field is required' | translate}}</span>
+                <span class="field-error" *ngIf="hasError(['common', 'votingPercentage'], ['min', 'max'])">{{'Value must be between 0 and 100' | translate}}</span>
+            </div>
+        </div>
+
+        <div class="row col-sm-12">
+            <div class="form-group col-sm-6">
+                <clr-radio-container clrInline>
+                    <label>{{ 'Does the stakeholder exercise control?' | translate }}</label>
+                    <clr-radio-wrapper>
+                        <input type="radio" [attr.disabled]="disabled === true ? '' : null" clrRadio name="exerciseControl" [value]="0" [formControl]="form.get('common.exerciseControl')" (keydown)="stopTabbing($event)" />
+                        <label>{{ 'No' | translate }}</label>
+                    </clr-radio-wrapper>
+                    <clr-radio-wrapper>
+                        <input type="radio" [attr.disabled]="disabled === true ? '' : null"  clrRadio name="exerciseControl" [value]="1" [formControl]="form.get('common.exerciseControl')" (keydown)="stopTabbing($event)" />
+                        <label>{{ 'Yes' | translate }}</label>
+                    </clr-radio-wrapper>
+                </clr-radio-container>
+            </div>
+        </div>
+    </ng-container>
+
+    <ng-container *ngIf="!isDisabled('naturalPerson')" formGroupName="naturalPerson">
+
+        <div class="row col-sm-12">
+            <div class="form-group required-field col-sm-6">
+                <label class="control-label" for="firstName-benef">{{'First name' | translate}}</label>
+                <input type="text" id="firstName-benef" formControlName="firstName" placeholder="{{'Fill in first name' | translate}}" [readonly]="disabled">
+                <span class="field-error" *ngIf="hasError(['naturalPerson', 'firstName'], ['required'])">{{'Field is required' | translate}}</span>
+                <span class="field-error" *ngIf="hasError(['naturalPerson', 'firstName'], ['maxlength'])">{{'Field is too long' | translate}}</span>
+            </div>
+            <div class="form-group required-field col-sm-6">
+                <label class="control-label" for="lastName-benef">{{'Last name' | translate}}</label>
+                <input type="text" id="lastName-benef" formControlName="lastName" placeholder="{{'Fill in last name' | translate}}" [readonly]="disabled">
+                <span class="field-error" *ngIf="hasError(['naturalPerson', 'lastName'], ['required'])">{{'Field is required' | translate}}</span>
+                <span class="field-error" *ngIf="hasError(['naturalPerson', 'lastName'], ['maxlength'])">{{'Field is too long' | translate}}</span>
+            </div>
+        </div>
+
+        <div class="row col-sm-12">
+            <div class="form-group required-field col-sm-6">
+                <label class="control-label" for="address-benef">{{'Stakeholder Address' | translate}}</label>
+                <input type="text" id="address-benef" [formControl]="form.get('common.address')" placeholder="{{'Fill in an address' | translate}}" [readonly]="disabled">
+                <span class="field-error" *ngIf="hasError(['common', 'address'])">{{'Field is required' | translate}}</span>
+            </div>
+
+            <div class="form-group col-sm-6">
+                <label class="control-label" for="address2-benef">&nbsp;</label>
+                <input type="text" id="address2-benef" [formControl]="form.get('common.address2')" placeholder="{{'Address line 2' | translate}}" [readonly]="disabled">
+                <span class="field-error" *ngIf="hasError(['common', 'address2'], ['required'])">{{'Field is required' | translate}}</span>
+                <span class="field-error" *ngIf="hasError(['common', 'address2'], ['maxlength'])">{{'Field is too long' | translate}}</span>
+            </div>
+        </div>
+
+        <div class="row col-sm-12">
+            <div class="form-group required-field col-sm-6">
+                <label class="control-label" for="zipCode-benef">{{'ZIP Code' | translate}}</label>
+                <input type="text" id="zipCode-benef" [formControl]="form.get('common.zipCode')" placeholder="{{'Fill in a ZIP Code' | translate}}" [readonly]="disabled">
+                <span class="field-error" *ngIf="hasError(['common', 'zipCode'], ['required'])">{{'Field is required' | translate}}</span>
+                <span class="field-error" *ngIf="hasError(['common', 'zipCode'], ['maxlength'])">{{'Field is too long' | translate}}</span>
+            </div>
+            <div class="form-group required-field col-sm-6">
+                <label class="control-label" for="city-benef">{{'City' | translate}}</label>
+                <input type="text" id="city-benef" [formControl]="form.get('common.city')" placeholder="{{'Fill in a city' | translate}}" [readonly]="disabled">
+                <span class="field-error" *ngIf="hasError(['common', 'city'], ['required'])">{{'Field is required' | translate}}</span>
+                <span class="field-error" *ngIf="hasError(['common', 'city'], ['maxlength'])">{{'Field is too long' | translate}}</span>
+            </div>
+        </div>
+
+        <div class="row col-sm-12">
+            <div class="form-group required-field col-sm-6">
+                <label class="control-label" for="country-benef">{{'Country' | translate}}</label>
+                <ng-select id="country-benef"
+                            [items]="countries"
+                            [formControl]="form.get('common.country')"
+                            placeholder="{{'Select a country' | translate}}"
+                            [isDisabled]="disabled">
+                </ng-select>
+                <span class="field-error" *ngIf="hasError(['common', 'country'])">{{'Field is required' | translate}}</span>
+            </div>
+            <div class="form-group required-field col-sm-6">
+                <label class="control-label" for="country-tax-benef">{{'Country of tax residence' | translate}}</label>
+                <ng-select id="country-tax-benef"
+                            [items]="countries"
+                            [formControl]="form.get('common.countryTaxResidence')"
+                            placeholder="{{'Select a country' | translate}}"
+                            [isDisabled]="disabled">
+                </ng-select>
+                <span class="field-error" *ngIf="hasError(['common', 'countryTaxResidence'])">{{'Field is required' | translate}}</span>
+            </div>
+        </div>
+
+        <div class="row col-sm-12">
+            <div class="form-group required-field col-sm-6">
+                <label class="control-label" for="nationality-benef">{{'Nationality' | translate}}</label>
+                <ng-select id="nationality-benef"
+                            [items]="countries"
+                            [formControl]="form.get('common.nationality')"
+                            placeholder="{{'Select a country' | translate}}"
+                            [isDisabled]="disabled">
+                </ng-select>
+                <span class="field-error" *ngIf="hasError(['common', 'nationality'])">{{'Field is required' | translate}}</span>
+            </div>
+        </div>
+
+        <div class="row col-sm-12">
+            <div class="form-group required-field col-sm-6 date-picker">
+                <label for="dateOfBirth-benef" class="control-label">{{'Date of birth' | translate}}</label>
+
+                <input type="text"
+                        autocomplete="off"
+                        [dpDayPicker]="configDate"
+                        id="dateOfBirth-benef"
+                        formControlName="dateOfBirth"
+                        placeholder="{{configDate.format}}"
+                        mode="day"
+                        theme="dp-material"
+                        [attr.disabled]="disabled">
+                <span class="field-error" *ngIf="hasError(['naturalPerson', 'dateOfBirth'], ['required'])">{{ 'Field is required' | translate }}</span>
+                <span class="field-error" *ngIf="hasError(['naturalPerson', 'dateOfBirth'], ['pattern'])">{{' Date format must be: YYYY-MM-DD' | translate}}</span>
+
+                <clr-icon shape="calendar"></clr-icon>
+            </div>
+
+            <div class="form-group required-field col-sm-6">
+                <label class="control-label" for="cityOfBirth-benef-{{index}}">{{ 'City of Birth' | translate}}</label>
+                <input type="text"
+                       id="cityOfBirth-benef-{{index}}"
+                       placeholder="{{ 'Fill in a city' | translate }}"
+                       [readonly]="disabled"
+                       formControlName="cityOfBirth">
+                <span class="field-error" *ngIf="hasError(['naturalPerson', 'cityOfBirth'], ['required'])">{{ 'Field is required' | translate }}</span>
+                <span class="field-error" *ngIf="hasError(['naturalPerson', 'cityOfBirth'], ['maxlength'])">{{ 'City is too long' | translate }}</span>
+            </div>
+        </div>
+
+        <div class="row col-sm-12">
+            <div class="form-group required-field col-sm-6">
+                <label class="control-label" for="countryOfBirth-benef">{{'Country of birth' | translate}}</label>
+                <ng-select id="countryOfBirth-benef"
+                            [items]="countries"
+                            formControlName="countryOfBirth"
+                            placeholder="{{'Select a country' | translate}}"
+                            [isDisabled]="disabled">
+                </ng-select>
+                <span class="field-error" *ngIf="hasError(['naturalPerson', 'countryOfBirth'])">{{'Field is required' | translate}}</span>
+            </div>
+
+            <div class="form-group required-field col-sm-6">
+                <label for="beneficiary-document-benef" class="control-label">{{'Identity proof document' | translate}}</label>
+                <div class="filedrop-wrapper">
+                    <setl-file-drop filePermission="0" class="form-control" id="beneficiary-document-benef"
+                                    (onDrop)="uploadFile($event)"
+                                    [preset]="form.get('common.document').value"
+                                    ngDefaultControl
+                                    [isDisabled]="disabled"
+                                    [inline]="true"
+                                    [class.error]="form.get(['common', 'document']).touched && form.get(['common', 'document']).status === 'INVALID'"
+                                    [allowFileTypes]="allowedFileTypes"
+                    ></setl-file-drop>
+                    <span class="field-error force-display-error w-100" *ngIf="form.get(['common', 'document']).touched && form.get(['common', 'document']).status === 'INVALID'">{{'Field is required' | translate}}</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="row col-sm-12">
+            <div class="form-group required-field col-sm-6">
+                <label for="holdingPercentage-benef-{{index}}">{{ 'Holding Percentage' | translate }}</label>
+                <input id="holdingPercentage-benef-{{index}}"
+                       type="number"
+                       min="0"
+                       max="100"
+                       [formControl]="form.get('common.holdingPercentage')"
+                       [readonly]="disabled"
+                       placeholder="{{ 'Define a value @valueType@' | translate: { valueType: '(%)' } }}">
+                <span class="field-error" *ngIf="hasError(['common', 'holdingPercentage'], ['required'])">{{ 'Field is required' | translate }}</span>
+                <span class="field-error" *ngIf="hasError(['common', 'holdingPercentage'], ['min', 'max'])">{{ 'Value must be between 0 and 100' | translate }}</span>
+            </div>
+
+            <div class="form-group required-field col-sm-6">
+                <label for="votingPercentage-benef">{{'Voting percentage' | translate}}</label>
+                <input id="votingPercentage-benef"
+                        type="number"
+                        min="0"
+                        max="100"
+                        [formControl]="form.get('common.votingPercentage')"
+                        placeholder="{{ 'Define a value @valueType@' | translate: { valueType: '(%)' } }}"
+                        [readonly]="disabled">
+                <span class="field-error" *ngIf="hasError(['common', 'votingPercentage'], ['required'])">{{'Field is required' | translate}}</span>
+                <span class="field-error" *ngIf="hasError(['common', 'votingPercentage'], ['min', 'max'])">{{'Value must be between 0 and 100' | translate}}</span>
+            </div>
+        </div>
+
+        <div class="row col-sm-12">
+            <div class="form-group col-sm-6">
+                <clr-radio-container clrInline>
+                    <label>{{ 'Does the stakeholder exercise control?' | translate }}</label>
+                    <clr-radio-wrapper>
+                        <input type="radio" [attr.disabled]="disabled === true ? '' : null" clrRadio name="exerciseControl" [value]="0" [formControl]="form.get('common.exerciseControl')" />
+                        <label>{{ 'No' | translate }}</label>
+                    </clr-radio-wrapper>
+                    <clr-radio-wrapper>
+                        <input type="radio" [attr.disabled]="disabled === true ? '' : null"  clrRadio name="exerciseControl" [value]="1" [formControl]="form.get('common.exerciseControl')" />
+                        <label>{{ 'Yes' | translate }}</label>
+                    </clr-radio-wrapper>
+                </clr-radio-container>
+            </div>
+
+            <div class="form-group col-sm-6">
+                <clr-radio-container clrInline>
+                    <label>{{ 'Is the stakeholder a legal representative?' | translate }}</label>
+                    <clr-radio-wrapper>
+                        <input type="radio" [attr.disabled]="disabled === true ? '' : null" clrRadio name="isLegalRepresentative" [value]="0" formControlName="isLegalRepresentative" />
+                        <label>{{ 'No' | translate }}</label>
+                    </clr-radio-wrapper>
+                    <clr-radio-wrapper>
+                        <input type="radio" [attr.disabled]="disabled === true ? '' : null"  clrRadio name="isLegalRepresentative" [value]="1" formControlName="isLegalRepresentative" />
+                        <label>{{ 'Yes' | translate }}</label>
+                    </clr-radio-wrapper>
+                </clr-radio-container>
+            </div>
+        </div>
+
+        <div class="row col-sm-12">
+            <div class="form-group col-sm-6">
+                <clr-radio-container clrInline>
+                    <label>{{ 'Is the stakeholder a politically exposed person?' | translate }}</label>
+                    <clr-radio-wrapper>
+                        <input type="radio" [attr.disabled]="disabled === true ? '' : null" clrRadio name="isPoliticallyExposed" [value]="0" formControlName="isPoliticallyExposed" (keydown)="stopTabbing($event)" />
+                        <label>{{ 'No' | translate }}</label>
+                    </clr-radio-wrapper>
+                    <clr-radio-wrapper>
+                        <input type="radio" [attr.disabled]="disabled === true ? '' : null"  clrRadio name="isPoliticallyExposed" [value]="1" formControlName="isPoliticallyExposed" (keydown)="stopTabbing($event)" />
+                        <label>{{ 'Yes' | translate }}</label>
+                    </clr-radio-wrapper>
+                </clr-radio-container>
+            </div>
+        </div>
+    </ng-container>
+</div>

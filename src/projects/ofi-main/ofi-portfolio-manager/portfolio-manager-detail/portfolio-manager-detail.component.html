@@ -1,0 +1,125 @@
+<ng-container>
+    <!-- Breadcrumbs. -->
+    <div class="header-breadcrumbs">
+        <h1 id="portfolio-managers-detail"><i class="fa fa-users"></i>
+            <span *ngIf="(portfolioManager$ | async)?.type === 'PM'">{{ 'Fund of Funds Manager' | translate }} - {{(portfolioManager$ | async)?.emailAddress}}</span>
+            <span *ngIf="(portfolioManager$ | async)?.type === 'WM'">{{ 'Discretionary Manager' | translate }} - {{(portfolioManager$ | async)?.emailAddress}}</span>
+        </h1>
+    </div>
+
+    <clr-tabs>
+        <clr-tab>
+            <button clrTabLink>
+                <i class="fa fa-users"></i> {{(portfolioManager$ | async)?.emailAddress}}
+            </button>
+
+            <clr-tab-content *ngIf="(portfolioManager$ | async)?.type === 'WM'">
+
+                <div *ngIf="!hasPermissionPortfolioManagersUpdate && (portfolioManager$ | async)?.type === 'WM'" class="alert alert-warning">
+                    <div class="alert-items">
+                        <div class="alert-item static">
+                            <div class="alert-icon-wrapper">
+                                <clr-icon class="alert-icon" shape="exclamation-triangle"></clr-icon>
+                            </div>
+                            <span class="alert-text">
+                                {{ 'Please contact the administrator to request permission to grant access to this investor' | translate }}
+                                <br />
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <app-mandate-investor-grid [pm]="portfolioManager$ | async" [hasPermissionPortfolioManagersUpdate]="hasPermissionPortfolioManagersUpdate" (toggle)="handleInvestorChange($event)" (manageAccess)="handleManageShareAccess($event)"></app-mandate-investor-grid>
+
+            </clr-tab-content>
+
+            <clr-tab-content *ngIf="(portfolioManager$ | async)?.type === 'PM'">
+                <div class="row">
+                    <div class="col-sm-6">
+                        {{ 'Please find below the authorisation of @emailAddress@ regarding your fund.' | translate: { 'emailAddress': (portfolioManager$ | async)?.emailAddress } }}
+                    </div>
+                </div>
+
+                <div *ngIf="!hasPermissionPortfolioManagersUpdate && (portfolioManager$ | async)?.type === 'PM'" class="alert alert-warning">
+                    <div class="alert-items">
+                        <div class="alert-item static">
+                            <div class="alert-icon-wrapper">
+                                <clr-icon class="alert-icon" shape="exclamation-triangle"></clr-icon>
+                            </div>
+                            <span class="alert-text">
+                                {{ 'Please contact the administrator to request permission to grant access to this fund' | translate }}
+                                <br />
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-12">
+                        <clr-datagrid #dataGrid>
+                            <clr-dg-column [clrDgField]="'fundName'">{{ 'Fund Name' | translate }}</clr-dg-column>
+                            <clr-dg-column>{{ 'Grant access to this fund?' | translate }}</clr-dg-column>
+                            <clr-dg-column>{{ 'Action' | translate }}</clr-dg-column>
+
+                            <clr-dg-row *clrDgItems="let item of accessFundData$ | async; let i = index" style="cursor: pointer;">
+                                <clr-dg-cell id="fund_name_row_{{i}}">{{item.fundName}}</clr-dg-cell>
+                                <clr-dg-cell id="access_slider_row_{{i}}">
+                                    <div class="switch-container">
+                                        <label class="switch">
+                                            <input type="checkbox"
+                                                    id="access_slider_{{i}}"
+                                                    [formControl]="item.statusFormControl"
+                                                    (change)="handleAccessChange($event)"
+                                                    [attr.disabled]="!hasPermissionPortfolioManagersUpdate ? '' : null">
+                                            <span class="slider round"></span>
+                                        </label>
+                                    </div>
+                                </clr-dg-cell>
+                                <clr-dg-cell id="action_row_{{i}}">
+                                    <button class="btn btn-success btn-sm" style="margin: 0px;" [disabled]="!fundAccessHasKyc(item)" (click)="handleManageShareAccess(item)">
+                                        <i class="fa fa-align-left"></i> {{ 'Manage Shares Authorisation' | translate }}
+                                    </button>
+                                </clr-dg-cell>
+                            </clr-dg-row>
+
+                            <clr-dg-footer>{{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
+
+                                <clr-dg-pagination #pagination [clrDgPageSize]="10"></clr-dg-pagination>
+                            </clr-dg-footer>
+                        </clr-datagrid>
+                    </div>
+                </div>
+
+                <div class="row" style="margin-top:20px">
+                    <div class="col-sm-6">
+                        {{ 'Here is a recap of the updates you are making regarding @emailAddress@\'s authorisation:' | translate: { 'emailAddress': (portfolioManager$ | async)?.emailAddress } }}
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-12">
+                        <clr-datagrid #otherDatagrid>
+                            <clr-dg-column [clrDgField]="'fundName'" id="changed_data_fund_name">{{ 'Fund Name' | translate }}</clr-dg-column>
+                            <clr-dg-column [clrDgField]="'changes'" id="changed_data_changes">{{ 'Status' | translate }}</clr-dg-column>
+                            <clr-dg-row *clrDgItems="let row of fundAccessChanges">
+                                <clr-dg-cell id="changed_data_fund_name_row_{{i}}">{{row.fundName}}</clr-dg-cell>
+                                <clr-dg-cell id="changed_data_changes_row_{{i}}">
+                                   <span *ngIf="row.status">{{' Permission Granted' | translate }}</span>
+                                   <span *ngIf="!row.status">{{ 'Permission Removed' | translate }}</span>
+                                </clr-dg-cell>
+                            </clr-dg-row>
+                            <clr-dg-footer>{{otherPagination.firstItem + 1}} - {{otherPagination.lastItem + 1}}
+                                <clr-dg-pagination #otherPagination [clrDgPageSize]="10"></clr-dg-pagination>
+                            </clr-dg-footer>
+                        </clr-datagrid><br>
+                        <div align="middle">
+                            <button id="btn_back_to_pm_list" class="btn btn-info" (click)="backToPmList();">{{ 'Back' | translate }}</button>
+                            <button id="btn_validate" class="btn btn-primary" (click)="confirmSave();">{{ 'Validate' | translate }}</button>
+                        </div>
+                    </div>
+                </div>
+            </clr-tab-content>
+        </clr-tab>
+    </clr-tabs>
+
+</ng-container>

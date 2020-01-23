@@ -1,0 +1,138 @@
+<div class="header-breadcrumbs">
+    <h1><i class="fa fa-chain"></i> {{ 'Chains' | translate }}</h1>
+</div>
+
+<div>
+    <clr-tabs *ngIf="tabsControl.length">
+        <clr-tab *ngFor="let tabdata of tabsControl; let id = index">
+            <button clrTabLink id="link{{id}}" [innerHTML]="tabdata.title"></button>
+            <clr-tab-content *clrIfActive="tabdata.active">
+                <!-- Chain list tab -->
+                <ng-container *ngIf="id === 0">
+                    <ng-container *ngTemplateOutlet="chainListTab"></ng-container>
+                </ng-container>
+
+                <!-- Chain add tab -->
+                <ng-container *ngIf="id === 1">
+                    <ng-container
+                        *ngTemplateOutlet="staticAddTab; context: {'formControl': tabdata.formControl, 'tabid': id}"></ng-container>
+                </ng-container>
+
+                <!-- Chain edit tab -->
+                <ng-container *ngIf="id >= 2">
+                    <ng-container
+                        *ngTemplateOutlet="dynamicEditTab; context: {'formControl': tabdata.formControl, 'tabid': id}"></ng-container>
+                </ng-container>
+            </clr-tab-content>
+        </clr-tab>
+    </clr-tabs>
+
+    <!-- Chain Data Table -->
+    <ng-template #chainListTab>
+        <div class="panel-body">
+            <datagrid-list
+                [fieldsModel]="chainsFieldsModel"
+                [listData]="chainsList"
+                [listActions]="chainsListActions"
+                (action)="onAction($event)">
+            </datagrid-list>
+        </div>
+    </ng-template>
+
+    <!-- Chain Add Form -->
+    <ng-template #staticAddTab let-formControl="formControl" let-tabid="tabid">
+        <div class="user-tab-panel-body panel-body">
+            <form (ngSubmit)="handleAddChain(tabid)" [formGroup]="formControl">
+                <div class="form-horizontal">
+                    <div class="row">
+                        <div class="form-group col-sm-6">
+                            <label class="control-label required-field" for="chainId">
+                                {{ 'Chain Identification' | translate }}
+                            </label>
+
+                            <input type="number"
+                                    id="chainId"
+                                    class="form-control"
+                                    formControlName="chainId"
+                                    placeholder="{{ 'Chain Identification' | translate }}"/>
+
+                            <div *ngIf="formControl.controls.chainId.hasError('required') && formControl.controls.chainId.touched" class="field-error">{{ 'Field is required' | translate }}</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-horizontal">
+                    <div class="row">
+                        <div class="form-group col-sm-6">
+                            <label class="control-label required-field" for="chainName">
+                                {{ 'Chain Name' | translate }}
+                            </label>
+
+                            <input type="text" id="chainName" class="form-control" formControlName="chainName"
+                                   maxlength="100"/>
+
+                            <div *ngIf="formControl.controls.chainName.hasError('required') && formControl.controls.chainName.touched" class="field-error">{{ 'Field is required' | translate }}</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group button-group">
+                    <button type="submit" class="btn btn-primary" [disabled]="!formControl.valid">
+                        <i class="fa fa-save"></i> {{ 'Save' | translate }}
+                    </button>
+                </div>
+
+            </form>
+        </div>
+    </ng-template>
+
+    <!-- Chain Edit Form -->
+    <ng-template #dynamicEditTab let-formControl="formControl" let-tabid="tabid">
+        <div class="user-tab-panel-body panel-body">
+            <form (ngSubmit)="handleEditChain(tabid)" [formGroup]="formControl">
+                <div class="form-horizontal">
+                    <div class="row">
+                        <div class="form-group col-sm-6">
+                            <label class="control-label" for="chainId">
+                                {{ 'Chain Identification' | translate }}
+                            </label>
+                            <input type="number"
+                                    id="chainId"
+                                    class="form-control"
+                                    formControlName="chainId"
+                                    placeholder="{{ 'Chain Identification' | translate }}"
+                                    disabled/>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group col-sm-6">
+                            <label class="control-label required-field" for="chainName">
+                                {{ 'Chain Name' | translate }}
+                            </label>
+
+                            <input type="text" id="chainName" class="form-control" formControlName="chainName"
+                                   maxlength="100"/>
+
+                            <div *ngIf="formControl.controls.chainName.hasError('required') && formControl.controls.chainName.touched" class="field-error">{{ 'Field is required' | translate }}</div>
+                        </div>
+                    </div>
+
+                    <div class="form-horizontal">
+                        <div class="row">
+                            <div class="form-group button-group">
+                                <button type="submit" class="btn btn-primary" [disabled]="!formControl.valid">
+                                    <i class="fa fa-save"></i>
+                                    {{ 'Save' | translate }}
+                                </button>
+                                <button (click)="closeTab(tabid)" class="btn btn-secondary">
+                                    {{ 'Close' | translate }}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </ng-template>
+</div>

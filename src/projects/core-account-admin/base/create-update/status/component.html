@@ -1,0 +1,19 @@
+<div class="row actions">
+    <div class="col-sm-12">
+        <h3>{{ [noun, 'Status'].join(' ') | translate }}</h3>
+
+        <p>{{ 'Current status' | translate }}: <span class="status"
+            [class.enabled]="isStatusEnabled()"
+            [class.disabled]="isStatusDisabled()"
+            [class.pending]="isStatusPending()">
+            {{ getStatusText() }}</span>
+        </p>
+
+        <button class="btn btn-warning"
+            (click)="updateStatus()"
+            [disabled]="isStatusPending() || !hasPermission"
+            [class.btn-success]="isStatusDisabled()"
+            [class.btn-warning]="isStatusEnabled()">{{ status ? textDisable : textEnable  }}
+        </button>
+    </div>
+</div>

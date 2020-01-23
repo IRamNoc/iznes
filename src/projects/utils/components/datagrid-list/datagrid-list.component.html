@@ -1,0 +1,103 @@
+<div>
+    <!-- SEARCH FILTERS -->
+    <app-dynamic-form *ngIf="searchForm" #searchDynamicForm [model]="searchForm"></app-dynamic-form>
+
+    <clr-datagrid #dataGrid (clrDgRefresh)="handleRefresh($event)" [clrDgLoading]="listData === [] || (lazyLoaded && !totalItems)">
+        <!-- COLUMNS -->
+        <clr-dg-column [clrDgSortOrder]="field.sortBy ? defaultSortOrder : 0"
+            [clrFilterValue]="filterValue(field.name)" *ngFor="let field of listFields" [class.right]="field.options.rightAlign">
+            <ng-container *clrDgHideableColumn="{hidden: field.hidden}">
+                {{ field.label | dynamic : 'translate' }}
+            </ng-container>
+            <clr-dg-string-filter *ngIf="filters[field.name]" #dataGridFilter [clrDgStringFilter]="filters[field.name]" [clrFilterValue]="filterValue(field.name)"></clr-dg-string-filter>
+        </clr-dg-column>
+
+        <clr-dg-column class="right" *ngIf="listActions">{{ listActions.length > 1 ? 'Actions' : 'Action' | translate }}</clr-dg-column>
+
+        <!-- STANDARD ROWS -->
+        <ng-container *ngIf="!lazyLoaded">
+            <clr-dg-row *clrDgItems="let record of listData">
+                <ng-container *ngIf="record !== undefined">
+                    <clr-dg-cell #dataGridSpacer *ngFor="let field of listFields" [ngClass]="{ 'right': field.options.rightAlign, 'flash': record[field.options.flashOnCondition] }">
+                        <datagrid-field
+                            [value]="record[field.name]"
+                            [type]="field.type"
+                            [showColumnSpacer]="showColumnSpacer"
+                            [options]="field.options"></datagrid-field>
+                    </clr-dg-cell>
+
+                    <clr-dg-cell class="right" *ngIf="listActions">
+                        <ng-container *ngTemplateOutlet="datagridActions; context: {'listActions': listActions, 'record': record}"></ng-container>
+                    </clr-dg-cell>
+                </ng-container>
+            </clr-dg-row>
+        </ng-container>
+
+        <!-- LAZY LOADED ROWS -->
+        <ng-container *ngIf="lazyLoaded">
+            <clr-dg-row *ngFor="let record of listData">
+                <ng-container *ngIf="record !== undefined">
+                    <clr-dg-cell #dataGridSpacer *ngFor="let field of listFields">
+                        <datagrid-field
+                            [value]="record[field.name]"
+                            [type]="field.type"
+                            [showColumnSpacer]="showColumnSpacer"
+                            [options]="field.options"></datagrid-field>
+                    </clr-dg-cell>
+
+                    <clr-dg-cell class="right" *ngIf="listActions">
+                        <ng-container *ngTemplateOutlet="datagridActions; context: {'listActions': listActions, 'record': record}"></ng-container>
+                    </clr-dg-cell>
+                </ng-container>
+            </clr-dg-row>
+        </ng-container>
+
+        <!-- FOOTER -->
+        <clr-dg-footer class="full-options">
+            <!-- SHOW/HIDE COLUMNS (ngIf doesn't work, so using display:none) -->
+            <clr-dg-column-toggle [ngStyle]="{ display: showHideColumns ? '' : 'none' }"></clr-dg-column-toggle>
+
+            <!-- ROWS PER PAGE -->
+            <div rowsPerPage (rowsUpdate)="listRecordsPerPage=$event; rowsUpdate.emit($event)"></div>
+
+            <!-- EXPORT BUTTONS -->
+            <div class="export-btns">
+                <button *ngIf="export.csv" [clrLoading]="csvBtnState" class="btn btn-sm" (click)="exportCSV()">{{ 'Export CSV' | translate }}</button>
+                <button *ngIf="export.pdf" [clrLoading]="pdfBtnState" class="btn btn-sm" (click)="exportPDF()">{{ 'Export PDF' | translate }}</button>
+            </div>
+
+            <!-- PAGINATION-->
+            <clr-dg-pagination #pagination [clrDgPageSize]="listRecordsPerPage" [clrDgPage]="currentPage" (clrDgPageChange)="currentPageChange.emit($event)" [clrDgTotalItems]="totalItems" class="clr-foooter separator">
+                {{pagination.firstItem + 1}} - {{pagination.lastItem + 1}} of {{pagination.totalItems}}
+            </clr-dg-pagination>
+        </clr-dg-footer>
+    </clr-datagrid>
+</div>
+
+<!-- DATAGRID ACTIONS TEMPLATE-->
+<ng-template #datagridActions let-listActions="listActions" let-record="record">
+    <div class="btn-group">
+        <ng-container *ngFor="let listAction of listActions">
+            <button *ngIf="listAction.isVisible(record)" class="{{listAction.class}}" (click)="handleOnClick(listAction.onClick, record)">
+                <i class="fa {{listAction.icon}}"></i>
+                {{ listAction.label | translate }}
+            </button>
+        </ng-container>
+    </div>
+</ng-template>
+
+<!-- EXPORT DATA MODAL-->
+<clr-modal [(clrModalOpen)]="exportModalDisplay" [clrModalClosable]="false">
+    <div class="modal-title">
+        <i class="fa fa-check-circle modal-icon text-success"></i>
+        <h4 class="modal-title-text">
+            <span class="mltranslated">{{ 'Export Complete' | translate }}</span></h4>
+    </div>
+    <div class="modal-body text-center">
+         {{ 'Your file is now ready for download' | translate }}
+    </div>
+    <div class="modal-footer">
+        <setl-file-viewer [fileHash]="exportFileHash" [viewType]="2"></setl-file-viewer>
+        <button type="button" class="btn btn-primary" (click)="exportModalDisplay = false">{{ 'Cancel' | translate }}</button>
+    </div>
+</clr-modal>

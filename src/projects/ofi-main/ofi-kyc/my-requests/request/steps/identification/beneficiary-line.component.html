@@ -1,0 +1,17 @@
+<td>{{beneficiaryType | translate}}</td>
+<td>{{name}}</td>
+<td>{{relationType}}</td>
+<td>{{parentText}}</td>
+<td>{{countryTaxResidence | translate}}</td>
+<td>{{nationality | translate}}</td>
+<td>{{holdingPercentage}} %</td>
+<td>{{holdingType | translate}}</td>
+<td>{{votingPercentage}} %</td>
+<td *ngIf="!readOnly" class="datagrid-row" (click)="showActions=!showActions; $event.stopPropagation()">
+    <clr-icon shape="ellipsis-vertical"></clr-icon>
+    <div class="datagrid-action-overflow" *ngIf="showActions">
+        <button class="action-item" (click)="addChild()">{{'Add child' | translate}}</button>
+        <button class="action-item" (click)="editStakeholder()">{{'Edit' | translate}}</button>
+        <button class="action-item" (click)="removeStakeholder()">{{'Delete' | translate}}</button>
+    </div>
+</td>

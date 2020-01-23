@@ -1,0 +1,46 @@
+h3{
+    display : inline;
+}
+.disabled{
+    h2,
+    i{
+        color: #EBEBE4;
+    }
+}
+
+.bold{
+    font-weight: bold;
+}
+
+.table{
+    td{
+        line-height: 24px;
+    }
+}
+.middle,
+.switch{
+    vertical-align: middle;
+}
+.switch{
+    height: 24px;
+    margin: 0 15px;
+    text-align: left;
+
+    .slider{
+        top: 0;
+        left: 0;
+    }
+}
+
+input {
+    + .slider {
+        &:after {
+            content: '';
+        }
+    }
+    &:checked + .slider {
+        &:after {
+            content: '';
+        }
+    }
+}

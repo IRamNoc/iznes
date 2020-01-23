@@ -1,0 +1,25 @@
+<div class="header-breadcrumbs">
+    <h1><i class="fa fa-heart"></i> {{'Icons' | translate}}
+    </h1>
+</div>
+
+<div class="padding">
+    <a href="#" class="toggle-info-panes" (click)="toggleInfoPanes($event)">{{ showInfoPanes ? '[-] hide info panes' :
+        '[+] show info panes' }}
+
+    </a>
+    <app-ui-info-pane [hidden]="!showInfoPanes" [message]="'This info pane does not make up part of these guidelines. If you see this pane displayed in any of the below items, it is just for informational purposes. To view the source code for this page, go to @setl/core-layout/layouts/ui-form.'">
+    </app-ui-info-pane>
+</div>
+
+<clr-tabs>
+    <clr-tab>
+        <button clrTabLink id="modal">
+            <i class="fa fa-bars"></i> {{'Icons' | translate}}
+        </button>
+
+        <clr-tab-content *clrIfActive>{{'We use Font Awesome - More cool things to come here' | translate}}
+
+        </clr-tab-content>
+    </clr-tab>
+</clr-tabs>

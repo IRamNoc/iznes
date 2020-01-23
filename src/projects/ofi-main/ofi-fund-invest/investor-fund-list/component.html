@@ -1,0 +1,124 @@
+<div class="header-breadcrumbs">
+    <h1>
+        <i class="fa fa-list"></i> {{ 'Place Order' | translate }}</h1>
+</div>
+
+<div class="wrapper wrapper-content">
+    <clr-tabs *ngIf="tabsControl.length">
+        <clr-tab *ngFor="let tabdata of tabsControl; let id = index">
+            <button [style.display]="getDisplay()" clrTabLink id="link{{id}}" [routerLink]="['/list-of-funds', id]">
+                <span class="{{tabdata.title.colorClass}}"><i class="fa {{tabdata.title.icon}}"></i> {{tabdata.title.text}}</span>
+            </button>
+
+            <clr-tab-content *clrIfActive="tabdata.active">
+                <ng-container *ngIf="tabdata.actionType === ''">
+                    <ng-container *ngTemplateOutlet="listOfFundsTab"></ng-container>
+                </ng-container>
+
+                <ng-container *ngIf="tabdata.actionType === 'subscribe'">
+                    <app-invest-fund [shareId]="tabdata.fundShareId" [initialFormData]="tabdata.formData" (formDataChange)="updateFormData(id, $event)" [type]="'subscribe'" (close)="closeTab(id)" [doValidate]="production" [walletBalance]="walletBalances"></app-invest-fund>
+                </ng-container>
+
+                <ng-container *ngIf="tabdata.actionType === 'redeem'">
+                    <app-invest-fund [shareId]="tabdata.fundShareId" [initialFormData]="tabdata.formData" (formDataChange)="updateFormData(id, $event)" [type]="'redeem'" (close)="closeTab(id)" [doValidate]="production" [walletBalance]="walletBalances"></app-invest-fund>
+                </ng-container>
+
+                <ng-container *ngIf="tabdata.actionType === 'sellbuy'">
+                    <app-invest-fund [shareId]="tabdata.fundShareId" [initialFormData]="tabdata.formData" (formDataChange)="updateFormData(id, $event)" [type]="'sellbuy'" (close)="closeTab(id)" [doValidate]="production" [walletBalance]="walletBalances"></app-invest-fund>
+                </ng-container>
+
+                <ng-container *ngIf="tabdata.actionType === 'view'">
+                    <app-fund-view [shareId]="tabdata.fundShareId" (close)="closeTab(id)"></app-fund-view>
+                </ng-container>
+            </clr-tab-content>
+
+        </clr-tab>
+    </clr-tabs>
+
+    <!--list of fund tab-->
+    <ng-template #listOfFundsTab>
+        <div class="panel-body">
+            <div>
+                <clr-datagrid #dataGrid>
+                    <clr-dg-column [clrDgField]="'isin'" clrDgSortIcon>{{ 'ISIN' | translate }}
+                        <span class="column-label"></span>
+                    </clr-dg-column>
+                    <clr-dg-column [clrDgField]="'shareName'" clrDgSortIcon>{{ 'Share Name' | translate }}
+                        <span class="column-label"></span>
+                    </clr-dg-column>
+                    <clr-dg-column [clrDgField]="'assetClass'" clrDgSortIcon clrDgSortNoSearch>{{ 'Asset Class' | translate }}
+                        <span class="column-label"></span>
+                    </clr-dg-column>
+                    <clr-dg-column [clrDgField]="'assetManager'" clrDgSortIcon>{{ 'Asset Manager' | translate }}
+                        <span class="column-label"></span>
+                    </clr-dg-column>
+                    <clr-dg-column [clrDgField]="'srri'" clrDgSortIcon clrDgSortNoSearch>{{ 'SRRI' | translate }}
+                        <span class="column-label"></span>
+                    </clr-dg-column>
+                    <clr-dg-column [clrDgField]="'sri'" clrDgSortIcon clrDgSortNoSearch>{{ 'SRI' | translate }}
+                        <span class="column-label"></span>
+                    </clr-dg-column>
+                    <clr-dg-column [clrDgField]="'currency'" clrDgSortIcon clrDgSortNoSearch>{{ 'Share Currency' | translate }} <span class="column-label"></span>
+                    </clr-dg-column>
+                    <clr-dg-column [clrDgField]="'nav'" clrDgSortIcon class="right">{{ 'Last NAV' | translate }}
+                        <span class="column-label"></span>
+                    </clr-dg-column>
+                    <clr-dg-column [clrDgField]="'subscriptionDate'" clrDgSortIcon>{{ 'Subscription Cut-off Date' | translate }}
+                        <span class="column-label"></span>
+                    </clr-dg-column>
+                    <clr-dg-column [clrDgField]="'redemptionDate'" clrDgSortIcon>{{ 'Redemption Cut-off Date' | translate }}
+                        <span class="column-label"></span>
+                    </clr-dg-column>
+                    <clr-dg-column [clrDgField]="'position'" clrDgSortIcon class="right">{{ 'Available Position' | translate }}
+                    </clr-dg-column>
+                    <clr-dg-column [clrDgField]="'totalPosition'" clrDgSortIcon class="right">{{ 'Total Position' | translate }}
+                    </clr-dg-column>
+                    <clr-dg-column class="right action-width">{{ 'Actions' | translate }}</clr-dg-column>
+
+                    <clr-dg-row *clrDgItems="let fund of fundList; let i = index">
+                        <clr-dg-cell>
+                            <button class="btn btn-link btn-sm" [routerLink]="['/' + getLinkRoute() + '/product-characteristic', fund['isin']]">
+                                {{fund['isin']}}
+                            </button>
+                            <div *ngIf="showColumnSpacer" class="column-spacer">{{getColumnSpaceText(fund['isin'])}}</div>
+                        </clr-dg-cell>
+                        <clr-dg-cell>
+                            <button class="btn btn-link btn-sm" [routerLink]="['/' + getLinkRoute() + '/product-characteristic', fund['isin']]">
+                                {{fund['shareName']}}
+                            </button>
+                            <div *ngIf="showColumnSpacer" class="column-spacer">{{getColumnSpaceText(fund['shareName'])}}</div>
+                        </clr-dg-cell>
+                        <clr-dg-cell>{{fund['assetClass']}}<div *ngIf="showColumnSpacer" class="column-spacer">{{getColumnSpaceText(fund['assetClass'])}}</div></clr-dg-cell>
+                        <clr-dg-cell>{{fund['assetManager']}}<div *ngIf="showColumnSpacer" class="column-spacer">{{getColumnSpaceText(fund['assetManager'])}}</div></clr-dg-cell>
+                        <clr-dg-cell>{{fund['srri']}}<div *ngIf="showColumnSpacer" class="column-spacer">{{getColumnSpaceText(fund['srri'])}}</div></clr-dg-cell>
+                        <clr-dg-cell>{{fund['sri']}}<div *ngIf="showColumnSpacer" class="column-spacer">{{getColumnSpaceText(fund['sri'])}}</div></clr-dg-cell>
+                        <clr-dg-cell>{{fund['currency']}}<div *ngIf="showColumnSpacer" class="column-spacer">{{getColumnSpaceText(fund['currency'])}}</div></clr-dg-cell>
+                        <clr-dg-cell class="right">{{fund['nav'] | moneyValue}}<div *ngIf="showColumnSpacer" class="column-spacer">{{getColumnSpaceText(fund['nav'])}}</div></clr-dg-cell>
+                        <clr-dg-cell>{{fund['nextSubCutOff']}}<div *ngIf="showColumnSpacer" class="column-spacer">{{getColumnSpaceText(fund['nextSubCutOff'])}}</div></clr-dg-cell>
+                        <clr-dg-cell>{{fund['nextRedCutOff']}}<div *ngIf="showColumnSpacer" class="column-spacer">{{getColumnSpaceText(fund['nextRedCutOff'])}}</div></clr-dg-cell>
+                        <clr-dg-cell class="right">{{fund['position']}}<div *ngIf="showColumnSpacer" class="column-spacer">{{getColumnSpaceText(fund['position'])}}</div></clr-dg-cell>
+                        <clr-dg-cell class="right">{{fund['totalPosition']}}<div *ngIf="showColumnSpacer" class="column-spacer">{{getColumnSpaceText(fund['totalPosition'])}}</div></clr-dg-cell>
+                        <clr-dg-cell *ngIf="fund['hasNoNav']" class="action-width">{{ 'No NAV Exist' | translate }}</clr-dg-cell>
+                        <clr-dg-cell *ngIf="!fund['hasNoNav']" class="actions right action-width">
+                            <div class="btn-group btn-sm">
+                                <button class="btn btn-success btn-sm" style="margin: 0px;" (click)="handleSubscribe(fund.id)">
+                                    <i class="fa fa-sign-in"></i> {{ 'Subscribe' | translate }}
+                                </button>
+                                <button class="btn btn-danger btn-sm" style="margin: 0px;" (click)="handleRedeem(fund.id)" [attr.disabled]="disableRedeem((fund.isin + '|' + fund.shareName))">
+                                    <i class="fa fa-sign-out"></i> {{ 'Redeem' | translate }}
+                                </button>
+                                <button class="btn btn-orange btn-sm" style="margin: 0px;" (click)="handleBuySell(fund.id)" [attr.disabled]="disableRedeem((fund.isin + '|' + fund.shareName)) && !allowSellBuy(fund)">
+                                    <i class="fa fa-circle-o-notch"></i>
+                                    <span> {{ 'Sell/Buy' | translate }}</span></button>
+                            </div>
+                        </clr-dg-cell>
+                    </clr-dg-row>
+
+                    <clr-dg-footer>{{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
+                        <clr-dg-pagination #pagination [clrDgPageSize]="10"></clr-dg-pagination>
+                    </clr-dg-footer>
+                </clr-datagrid>
+            </div>
+        </div>
+    </ng-template>
+</div>

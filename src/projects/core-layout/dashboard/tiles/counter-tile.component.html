@@ -1,0 +1,19 @@
+<div class="blocsContent">
+    <ng-container *ngIf="!!route; else myTemplate">
+        <a [routerLink]="'/'+route">
+            <ng-container *ngTemplateOutlet="myTemplate"></ng-container>
+        </a>
+    </ng-container>
+</div>
+
+<ng-template #myTemplate>
+    <div class="row">
+        <div class="col-xs-6">
+            <h1>{{count}}</h1>
+            <span class="content"><ng-content></ng-content></span>
+        </div>
+        <div class="col-xs-6">
+            <i class="fa fa-{{icon}}" aria-hidden="true"></i>
+        </div>
+    </div>
+</ng-template>

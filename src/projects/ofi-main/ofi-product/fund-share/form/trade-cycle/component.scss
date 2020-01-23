@@ -1,0 +1,16 @@
+:host {
+    .row {
+        flex: 0 0 100%;
+        max-width: 100%;
+        width: 100%;
+    }
+    .col-sm-3 ng-select {
+        padding-right: 1.5em;
+        width: 100%;
+    }
+    .col-sm-3 /deep/ .ui-select-container,
+    .col-sm-3 /deep/ .ui-select-toggle,
+    .col-sm-3 /deep/ .ui-select-search {
+        width: 100% !important;
+    }
+}

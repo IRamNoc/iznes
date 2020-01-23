@@ -1,0 +1,102 @@
+.pointer {
+    cursor: pointer;
+}
+
+.fund-table {
+    width: 100%;
+    margin-top: 10px;
+}
+
+.slider {
+    top: inherit !important;
+}
+
+.switch-container {
+    position: relative;
+}
+
+label.switch {
+    margin: 4px 0 0 0;
+}
+
+.override-text {
+    color: red;
+    padding-left: 5px;
+}
+
+.override-icon {
+    margin-left: 5px;
+}
+
+.override-button {
+    margin-top: 0px !important;
+    margin-bottom: 0px !important;
+    margin-left: 15px;
+    float: right;
+}
+
+.override-modal-margin {
+    margin-bottom: 15px;
+}
+
+.font-85 {
+    font-size: 85%;
+    color: #545454;
+    margin-bottom: -10px;
+}
+
+.override-modal-icon {
+    margin-left: 15px;
+    margin-right: 5px;
+}
+
+.override-modal-div {
+    margin-bottom: 5px;
+}
+
+.thin-cell {
+    padding-top: 5px !important;
+    padding-bottom: 5px !important;
+}
+
+.small-input {
+    background: white;
+    border: 1px solid #dadada;
+    padding: 5px;
+    width: 100%;
+    border-radius: 3px;
+}
+
+.fileDropDiv {
+    padding: 0px !important;
+}
+
+.filedrop-wrapper {
+    display: flex;
+}
+
+#filedrop-wrapper wrapper-current-override {
+    display: block;
+    flex: 1 1 auto;
+    z-index: 0;
+}
+
+.filedrop-wrapper setl-file-viewer {
+    flex: 0 0 100px;
+    z-index: 1;
+}
+
+.filedrop-wrapper setl-file-viewer /deep/ > div > .btn {
+    border-bottom-left-radius: 0;
+    border-top-left-radius: 0;
+    height: 40px;
+    margin-bottom: 0;
+    margin-left: -4px;
+    margin-top: 0;
+    margin-right: 0;
+    z-index: 1;
+}
+
+.mrg-lft-5 {
+    margin-left: 5px;
+}

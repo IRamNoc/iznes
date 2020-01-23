@@ -1,0 +1,91 @@
+<div [userTour]="userTourConfig" (stage)="userTourStage=$event">
+    <div class="header-breadcrumbs">
+        <div id="usertour1">
+            <h1><i class="fa fa-share-square-o"></i> {{ 'Send Asset' | translate }}</h1>
+        </div>
+    </div>
+
+    <clr-tabs>
+        <clr-tab>
+            <button clrTabLink><i class="fa fa-plus-circle"></i> {{ 'New Send Asset' | translate }}</button>
+            <clr-tab-content *clrIfActive>
+                <form [formGroup]="sendAssetForm" (ngSubmit)="sendAsset()">
+                    <section class="form-block">
+                        <div class="form-group col-sm-6">
+
+                            <div class="alert alert-warning" *ngIf="noInstrumentsAlert">
+                                <div class="alert-items">
+                                    <div class="alert-item static">
+                                        <div class="alert-icon-wrapper">
+                                            <clr-icon class="alert-icon" shape="exclamation-triangle"></clr-icon>
+                                        </div>
+                                        <span class="alert-text">{{ 'There are no assets with available balance in this wallet' | translate }}</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div id="usertour2">
+                                <label class="control-label required-field" for="asset">{{ 'Asset' | translate }}</label>
+                                <ng-select id="asset"
+                                           [items]="allInstrumentList"
+                                           [allowClear]="true"
+                                           placeholder="{{ 'Select Issuer' | translate }}"
+                                           [formControl]="sendAssetForm.controls['asset']">
+                                </ng-select>
+
+                                <div *ngIf="sendAssetForm.controls['asset'].hasError('required')"
+                                      class="field-error">{{ 'Field is required' | translate }}</div>
+                            </div>
+                        </div>
+
+
+                        <div class="form-group col-sm-6">
+                            <div id="usertour3">
+                                <label class="control-label required-field" for="asset">{{ 'Send From Address' | translate }}</label>
+                                <ng-select id="assetAddress"
+                                           [items]="walletAddressSelectItems"
+                                           [allowClear]="true"
+                                           placeholder="{{ 'Asset Address' | translate }}"
+                                           [formControl]="sendAssetForm.controls['assetAddress']"
+                                           [class.error]="sendAssetForm.controls['amount'].hasError('insufficientFunds')">
+                                </ng-select>
+                                <div *ngIf="sendAssetForm.controls['assetAddress'].hasError('required')" class="field-error">{{ 'Field is required' | translate }}</div>
+                                <span *ngIf="showAddressHolding" class="field-error force-display-error" [ngClass]="{'text-success': addressHoldingAmount > 0 && !sendAssetForm.controls['amount'].hasError('insufficientFunds'), 'text-warning': addressHoldingAmount <= 0 && !sendAssetForm.controls['amount'].hasError('insufficientFunds')}">{{ 'Sender\'s available balance' | translate }}: {{addressHoldingAmount}}</span>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div id="usertour4">
+                                <various-address-select [formControl]="sendAssetForm.controls['recipient']"
+                                                        [relationshipArray]="walletRelationships"
+                                                        [ownWalletAddressArray]="walletAddressSelectItems"
+                                                        [required]="true"
+                                ></various-address-select>
+                                <div *ngIf="sendAssetForm.controls['recipient'].hasError('required') && !sendAssetForm.controls['recipient'].pristine" class="field-error">{{ 'Field is required' | translate }}</div>
+                                <div *ngIf="sendAssetForm.controls['recipient'].hasError('pattern') && !sendAssetForm.controls['recipient'].pristine" class="field-error">{{ 'Invalid address format' | translate }}</div>
+                            </div>
+                        </div>
+
+                        <div class="form-group col-sm-6">
+                            <div id="usertour5">
+                                <label class="control-label required-field" for="amount">{{ 'Amount' | translate }}</label>
+                                <input type="text"
+                                       id="amount"
+                                       placeholder="{{ 'Amount' | translate }}"
+                                       size="45"
+                                       [formControl]="sendAssetForm.controls['amount']"/>
+                                <div *ngIf="sendAssetForm.controls['amount'].hasError('required')" class="field-error">{{ 'Field is required' | translate }}</div>
+                                <div *ngIf="sendAssetForm.controls['amount'].hasError('pattern')" class="field-error">{{ 'Amount must be a number' | translate }}</div>
+                                <span *ngIf="sendAssetForm.controls['amount'].hasError('insufficientFunds') && !sendAssetForm.controls['amount'].hasError('pattern')" class="field-error">{{ 'Sender\'s available balance' | translate }}: {{addressHoldingAmount}}</span>
+                            </div>
+                        </div>
+
+                        <div id="usertour6">
+                            <button type="submit" class="btn btn-primary" [disabled]="sendAssetForm.invalid"><i class="fa fa-save"></i> {{ 'Send Asset' | translate }}</button>
+                        </div>
+                    </section>
+                </form>
+            </clr-tab-content>
+        </clr-tab>
+    </clr-tabs>
+</div>

@@ -1,0 +1,1 @@
+export {SocketClusterWrapper} from './src/index';

@@ -1,0 +1,22 @@
+<clr-modal *ngIf="isOpen()" [clrModalOpen]="isOpen()" [clrModalSize]="'xl'" [clrModalClosable]="false">
+    <div class="modal-title">
+        <div class="alert alert-success">
+            <div class="alert-items">
+                <div class="alert-item static">
+                    <div class="alert-icon-wrapper">
+                        <clr-icon class="alert-icon" shape="check-circle"></clr-icon>
+                    </div>
+                    <span class="alert-text">
+                        File '{{model.name}}' is verified<br/>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-body fileviewer-main">
+        <iframe class="fileviewer-contents" [src]="model.url"></iframe>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-primary" (click)="close()">{{ 'Close' | translate }}</button>
+    </div>
+</clr-modal>

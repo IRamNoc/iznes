@@ -1,0 +1,8 @@
+{
+    "name": "@setl/core-messages",
+    "version": "1.0.2",
+    "main": "index.js",
+    "repository": "http://si-nexus01.dev.setl.io/SETL_Modules/core-messages.git",
+    "author": "Ollie Kett <ollie.kett@setl.io>",
+    "license": "MIT"
+}

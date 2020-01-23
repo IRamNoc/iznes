@@ -1,0 +1,51 @@
+:host {
+    display: block;
+    margin-top: -20px;
+}
+
+.teams-dropdown {
+    padding: 15px 0;
+}
+
+clr-dg-row {
+    &.parent { background: rgba(51,153,255,0.05) !important }
+    &.hidden { display: none; }
+}
+
+.datagrid-cell.col-name {
+    width: 200px;
+
+    &.parent {
+        font-weight: 500;
+        padding-left: 15px;
+
+        .fa {
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+    }
+    &.child { padding-left: 50px; }
+}
+.datagrid-cell.col-desc {
+    max-width: 800px;
+    position: relative;
+    text-overflow: ellipsis;
+
+    &.parent {
+        font-weight: 500;
+    }
+}
+
+.col-actions { 
+    width: 75px;
+
+    .switch {
+        margin-left: 0;
+
+        .slider {
+            left: 2px;
+            top: 1px;
+        }
+    }
+}
+

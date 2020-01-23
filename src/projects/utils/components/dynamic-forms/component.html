@@ -1,0 +1,202 @@
+<div *ngIf="formKeys">
+    <form [formGroup]="form">
+        <section class="form-block">
+            <div class="row">
+                <ng-container *ngFor="let item of formKeys; trackBy: trackFormItemByFn">
+                    <div class="form-group {{model[item].cssClass}}" [hidden]="isHidden(item)">
+                        <div *ngIf="model[item].title">
+                            <p><strong>{{ model[item].title | translate }}</strong></p>
+                        </div>
+                        
+                        <label *ngIf="!model[item].noLabel" class="control-label" [class.hasTitle]="model[item].title" [class.required-field]="model[item].required" for="{{item}}">{{ model[item].label | translate }}</label>
+
+                        <ng-container [ngSwitch]="isElementFormItem(model[item])">
+                            <ng-container *ngSwitchCase="false">
+                                <ng-container [ngSwitch]="model[item].tag">
+                                    <ng-container *ngSwitchCase="'h2'">
+                                        <h2 class="dynamic-form-header" id="{{ model[item].id }}">{{ model[item].text | translate }}</h2>
+                                    </ng-container>
+                                    <ng-container *ngSwitchCase="'h3'">
+                                        <h3 class="dynamic-form-header" id="{{ model[item].id }}">{{ model[item].text | translate }}</h3>
+                                    </ng-container>
+                                    <ng-container *ngSwitchCase="'h4'">
+                                        <h4 class="dynamic-form-header" id="{{ model[item].id }}">{{ model[item].text | translate }}</h4>
+                                    </ng-container>
+                                </ng-container>
+                            </ng-container>
+
+                            <ng-container *ngSwitchCase="true">
+                                <ng-container [ngSwitch]="model[item].type">
+                                    <ng-container *ngSwitchCase="0">
+                                        <input id="{{item}}" name="{{item}}" class="form-control"
+                                            [class.required-field]="model[item].required"
+                                            type="text"
+                                            maxlength="{{model[item].maxLength}}"
+                                            placeholder="{{ model[item].placeholder | translate }}"
+                                            formControlName="{{item}}"/>
+                                    </ng-container>
+
+                                    <ng-container *ngSwitchCase="1">
+                                        <input id="{{item}}" name="{{item}}" class="form-control"
+                                            [class.required-field]="model[item].required"
+                                            type="number"
+                                            placeholder="{{ model[item].placeholder | translate }}"
+                                            formControlName="{{item}}"/>
+                                    </ng-container>
+
+                                    <ng-container *ngSwitchCase="2">
+                                        <div [ngClass]="{
+                                            'input-group': true,
+                                            'invalid': (hasErrorMessage(model[item])),
+                                            'touched': (isTouched(model[item]))
+                                            }">
+                                            <span class="fa fa-calendar"></span>
+                                            <input id="{{item}}"
+                                                name="{{ item | translate }}"
+                                                placeholder="{{ model[item].placeholder | translate }}"
+                                                formControlName="{{item}}"
+                                                [dpDayPicker]="model[item].dateOptions"
+                                                [readonly]="false"
+                                                mode="day"
+                                                type="text"
+                                                theme="dp-material"
+                                                autocomplete="off"/>
+                                        </div>
+                                    </ng-container>
+
+                                    <ng-container *ngSwitchCase="3">
+                                        <ng-select id="{{item}}" *ngIf="showDropdown(model[item])"
+                                                [items]="model[item].listItems"
+                                                [active]="model[item].preset"
+                                                [isDisabled]="model[item].control.disabled"
+                                                placeholder="{{ model[item].placeholder | translate }}"
+                                                [formControl]="model[item].control"
+                                                [multiple]="model[item].listAllowMultiple || false"
+                                                [allowClear]="model[item].allowClear"
+                                                [required]="model[item].required">
+                                        </ng-select>
+
+                                        <input type="text" id="{{item}}_na" name="{{item}}_na" value="N/A"
+                                            class="form-control na-field"
+                                            disabled
+                                            *ngIf="!showDropdown(model[item])"/>
+                                    </ng-container>
+
+                                    <ng-container *ngSwitchCase="4">
+                                        <div class="toggle-switch">
+                                            <input type="checkbox" id="{{item}}" name="{{item}}" formControlName="{{item}}">
+                                            <label for="{{item}}"></label>
+                                        </div>
+                                    </ng-container>
+
+                                    <ng-container *ngSwitchCase="5">
+                                        <div class="filedrop-wrapper">
+                                            <input type="hidden" class="form-control" formControlName="{{item}}">
+                                            <setl-file-drop id="{{item}}" [inline]="true" [formControl]="model[item].control" [preset]="model[item].fileData" [filePermission]="model[item].filePermission" [isDisabled]="model[item].disabled" (onDrop)="onDropFiles($event, model[item])" ngDefaultControl></setl-file-drop>
+                                            <setl-file-viewer *ngIf="model[item].fileData" [fileHash]="model[item].fileData.hash"></setl-file-viewer>
+                                            <!-- <a *ngIf="model[item].fileData"class="btn btn-primary" href="/mn/file?method=retrieve&fileHash={{model[item].fileData.hash}}&downloadId={{model[item].fileData.fileID}}" target="_blank">View</a> -->
+                                        </div>
+                                    </ng-container>
+
+                                    <ng-container *ngSwitchCase="6">
+                                        <textarea id="{{item}}"
+                                                name="{{item}}"
+                                                class="form-control"
+                                                [class.required-field]="model[item].required"
+                                                placeholder="{{ model[item].placeholder | translate }}"
+                                                formControlName="{{item}}">
+                                        </textarea>
+                                    </ng-container>
+
+                                    <ng-container *ngSwitchCase="7">
+                                        <div class="input-group">
+                                            <span class="fa fa-clock-o"></span>
+                                            <input id="{{item}}"
+                                                name="{{item}}"
+                                                type="time"
+                                                placeholder="{{ model[item].placeholder | translate }}"
+                                                formControlName="{{item}}"/>
+                                        </div>
+                                    </ng-container>
+
+                                    <!-- TODO: add datesEmitter prop feat (this is only display atm) -->
+                                    <ng-container *ngSwitchCase="8">
+                                        <date-picker-extended
+                                            id="{{item}}"
+                                            [hidden]="model[item].hidden()"
+                                            [dates]="model[item].control.value"
+                                            [showClearButton]="!model[item].disabled"
+                                            [showWeekendToggle]="!model[item].disabled"
+                                            [disabled]="model[item].disabled">
+                                        </date-picker-extended>
+                                    </ng-container>
+
+                                    <ng-container *ngSwitchCase="9">
+                                        <div [ngClass]="{
+                                            'input-group': true,
+                                            'invalid': (hasErrorMessage(model[item])),
+                                            'touched': (isTouched(model[item]))
+                                            }">
+                                            <span>from</span>
+                                            <span class="fa fa-calendar"></span>
+                                            <input id="{{item}}_from"
+                                                name="{{item}}_from"
+                                                placeholder="{{ model[item].placeholder | translate }}"
+                                                formControlName="{{item}}_from"
+                                                [dpDayPicker]="model[item].dateOptions"
+                                                [readonly]="false"
+                                                mode="day"
+                                                type="text"
+                                                theme="dp-material"
+                                                autocomplete="off"/>
+                                            <span>to</span>
+                                            <span class="fa fa-calendar"></span>
+                                            <input id="{{item}}_to"
+                                                name="{{item}}_to"
+                                                placeholder="{{ model[item].placeholder | translate }}"
+                                                formControlName="{{item}}_to"
+                                                [dpDayPicker]="model[item].dateOptions"
+                                                [readonly]="false"
+                                                mode="day"
+                                                type="text"
+                                                theme="dp-material"
+                                                autocomplete="off"/>
+                                        </div>
+                                    </ng-container>
+                                    <ng-container *ngSwitchCase="10">
+                                        <div class="checkbox-inline flex-items-xs-middle">
+                                            <input type="checkbox"
+                                                   id="{{item}}"
+                                                   formControlName="{{item}}">
+                                            <label for="{{item}}">
+                                                {{ model[item].checkboxLabel | translate }}
+                                            </label>
+                                        </div>
+                                        <div *ngIf="model[item].checkboxHint()" class="alert alert-info alert-sm flex-items-xs-middle">
+                                            <div class="alert-items">
+                                                <div class="alert-item static">
+                                                    <div class="alert-icon-wrapper">
+                                                        <clr-icon class="alert-icon" shape="exclamation-circle"></clr-icon>
+                                                    </div>
+                                                    <div class="alert-text">{{model[item].checkboxHint() | translate}}</div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </ng-container>
+                                </ng-container>
+                            </ng-container>
+                        </ng-container>
+
+                        <span class="field-error"
+                            *ngIf="hasErrorMessage(model[item])">
+                            {{(getErrorMessage(model[item]))}}
+                        </span>
+
+                    </div>
+                    <div class="break" *ngIf="itemHasBreakAfter(model[item])"></div>
+                </ng-container>
+            </div>
+        </section>
+    </form>
+</div>

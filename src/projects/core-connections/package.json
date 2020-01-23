@@ -1,0 +1,8 @@
+{
+  "name": "@setl/core-connections",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@si-nexus01.dev.setl.io:SETL_Modules/core-connections.git",
+  "author": "David Duong <david.duong@setl.io>",
+  "license": "MIT"
+}

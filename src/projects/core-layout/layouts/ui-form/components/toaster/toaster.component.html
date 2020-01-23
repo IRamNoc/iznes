@@ -1,0 +1,28 @@
+<div class="header-breadcrumbs">
+    <h1><i class="fa fa-exclamation"></i> {{'Toasters' | translate}}</h1>
+</div>
+
+<div class="padding">
+    <a href="#" class="toggle-info-panes" (click)="toggleInfoPanes($event)">{{ showInfoPanes ? '[-] hide info panes' : '[+] show info panes' }}</a>
+    <app-ui-info-pane [hidden]="!showInfoPanes" [message]="'This info pane does not make up part of these guidelines. If you see this pane displayed in any of the below items, it is just for informational purposes. To view the source code for this page, go to @setl/core-layout/layouts/ui-form.'"></app-ui-info-pane>
+</div>
+
+<clr-tabs>
+    <clr-tab>
+        <button clrTabLink id="toasters">
+            <i class="fa fa-bars"></i> {{'Toasters' | translate}}
+        </button>
+
+        <clr-tab-content *clrIfActive>
+            <form>
+                <section class="form-block">
+                    <div class="form-group col-sm-12">
+                        <button id="showSuccessToaster" class="btn btn-primary" (click)="showSuccessToaster()">{{'Show Example Success Toaster' | translate}}</button>
+                        <button id="showWarningToaster" class="btn btn-warning" (click)="showWarningToaster()">{{'Show Example Warning Toaster' | translate}}</button>
+                        <button id="showErrorToaster" class="btn btn-danger" (click)="showErrorToaster()">{{'Show Example Error Toaster' | translate}}</button>
+                    </div>
+                </section>
+            </form>
+        </clr-tab-content>
+    </clr-tab>
+</clr-tabs>

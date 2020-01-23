@@ -1,0 +1,26 @@
+image: node:8-jessie
+
+stages:
+    - lint
+    - test
+
+before_script:
+  - eval $(ssh-agent -s)
+  - echo "$SSH_KEY" | base64 -d | ssh-add - > /dev/null
+  - mkdir -p ~/.ssh
+  - chmod 700 ~/.ssh
+  - ssh-keyscan si-nexus01.dev.setl.io >> ~/.ssh/known_hosts
+  - chmod 644 ~/.ssh/known_hosts
+  - npm install --only=dev
+
+lint:
+  stage: lint
+  script:
+    - npm install
+    - npm run lint
+
+test:
+  stage: test
+  script:
+    - npm install
+    - npm test
