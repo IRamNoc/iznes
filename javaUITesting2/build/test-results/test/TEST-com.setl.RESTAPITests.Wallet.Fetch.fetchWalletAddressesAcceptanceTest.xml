@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.setl.RESTAPITests.Wallet.Fetch.fetchWalletAddressesAcceptanceTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2017-12-05T17:37:50" hostname="Bills-iMac.local" time="0.017">
-  <properties/>
-  <testcase name="fetchWalletAddresses" classname="com.setl.RESTAPITests.Wallet.Fetch.fetchWalletAddressesAcceptanceTest" time="0.017"/>
-  <system-out><![CDATA[payload eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJtZXNzYWdlYm9keSI6eyJ1c2VyaWQiOjZ9LCJtZXNzYWdldHlwZSI6ImluaXRpYWxpc2UiLCJyZXF1ZXN0aWQiOjEsInRva2VuIjoiIiwidGltZXN0YW1wIjoxNTEyNDk1NDcwNjUxfQ.__ya4f54M7c-uB2AmyoGR3owrj7ch0AeCpUZh7A8bDE
-]]></system-out>
-  <system-err><![CDATA[]]></system-err>
-</testsuite>
