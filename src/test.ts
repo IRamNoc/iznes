@@ -27,10 +27,10 @@ getTestBed().initTestEnvironment(
 );
 // Then we find all the tests.
 // const context = require.context('../', true, /\.spec\.ts$/);
-const setlContext = require.context('../node_modules/@setl/', true, /\.spec\.ts$/);
+const setlContext = require.context('../src/projects/', true, /\.spec\.ts$/);
 setlContext.keys().map(setlContext);
-const ofiContext = require.context('../node_modules/@ofi/', true, /\.spec\.ts$/);
-ofiContext.keys().map(ofiContext);
+// const ofiContext = require.context('../project/src/', true, /\.spec\.ts$/);
+// ofiContext.keys().map(ofiContext);
 // const setlModuleContext = require.context('../setl_modules/', true, /\.spec\.ts$/);
 // setlModuleContext.keys().map(setlModuleContext);
 
