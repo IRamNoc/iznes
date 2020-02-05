@@ -146,7 +146,7 @@ export class OfiSubPortfolioComponent implements OnDestroy {
                 ownerCountry: new FormControl('', [Validators.required]),
                 iban: new FormControl('', [Validators.required, CustomValidators.ibanValidator]),
                 bic: new FormControl('', [Validators.required, CustomValidators.bicValidator]),
-                securityAccount: new FormControl('', [Validators.maxLength(16)]),
+                securityAccount: new FormControl('', [Validators.required, Validators.maxLength(16)]),
                 cashAccount: new FormControl('', [Validators.maxLength(16)]),
                 notes: new FormControl('', [Validators.maxLength(500)]),
                 bankIdentificationStatement,

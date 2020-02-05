@@ -254,10 +254,11 @@
                 </div>
             </div>
             <div class="row">
-                <div class="form-group col-sm-6">
-                    <label class="control-label">{{ 'Security Account' | translate }}</label>
+                <div class="form-group col-sm-6 required-field">
+                    <label class="control-label required-field">{{ 'Security Account' | translate }}</label>
                     <input type="text" placeholder="{{ 'Security account number without the Bank code and the RIB Key' | translate }}" class="form-control"
                         formControlName="securityAccount" maxlength="16">
+                    <span class="field-error">{{ getFormError('securityAccount') }}</span>
                 </div>
                 <div class="form-group col-sm-6">
                     <label class="control-label">{{ 'Cash Account' | translate }}</label>
