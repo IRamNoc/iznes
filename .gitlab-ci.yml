@@ -43,6 +43,8 @@ test:
 
 build:
     image: docker:git
+    tags:
+        - dind
     services:
         - docker:dind
     stage: build
