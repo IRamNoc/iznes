@@ -44,7 +44,7 @@ test:
 build:
     image: docker:git
     tags:
-        - 18-dind
+        - dind
     services:
         - docker:dind
     stage: build
