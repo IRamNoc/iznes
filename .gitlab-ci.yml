@@ -13,8 +13,8 @@ stages:
 #         - chmod 700 ~/.ssh
 #         - ssh-keyscan si-nexus01.dev.setl.io >> ~/.ssh/known_hosts
 #         - chmod 644 ~/.ssh/known_hosts
-#         - npm install -g @angular/cli@6.0.0;
-#         - npm install
+#         - yarn install -g @angular/cli@6.0.0;
+#         - yarn install
 #     script:
 #         - ng lint
 
@@ -32,8 +32,8 @@ stages:
 #         - wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - > /dev/null
 #         - sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list' > /dev/null
 #         - apt-get update && apt-get install -y google-chrome-stable > /dev/null
-#         - npm install -g @angular/cli@6.0.0;
-#         - npm install
+#         - yarn install -g @angular/cli@6.0.0;
+#         - yarn install
 #     script:
 #         - ng test --code-coverage --progress false --watch false
 #     artifacts:
