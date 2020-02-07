@@ -46,7 +46,7 @@ build:
     tags:
         - dind
     services:
-        - docker:dind
+        - docker:18-dind
     stage: build
 
     before_script:
