@@ -208,6 +208,15 @@ export class OfiKycHomeComponent implements AfterViewInit, OnDestroy {
         this.router.navigate(['home']);
     }
 
+    /**
+     * Whether to show kyc onboarding flow
+     * portfolio manager does not need kyc onboarding
+     * @return {boolean}
+     */
+    showOnboardingFlow():boolean {
+        return !this.isPortfolioManagerType();
+    }
+
     ngOnDestroy(): void {
         this.unSubscribe.next();
         this.unSubscribe.complete();
