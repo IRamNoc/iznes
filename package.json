@@ -38,7 +38,7 @@
     "@webcomponents/custom-elements": "^1.0.8",
     "angular2-toaster": "6.1.0",
     "classlist.js": "^1.1.20150312",
-    "core-js": "^2.5.3",
+    "core-js": "^2.6.9",
     "ibantools": "^2.0.0",
     "immutable": "^3.8.1",
     "json2csv": "^4.5.2",
@@ -80,7 +80,7 @@
     "@types/jasminewd2": "~2.0.2",
     "@types/node": "^6.0.113",
     "chromedriver": "~2.34",
-    "codelyzer": "^5.1.0",
+    "codelyzer": "^5.2.0",
     "is-docker": "2.0.0",
     "jasmine-core": "^2.5.2",
     "jasmine-spec-reporter": "~4.1.0",
@@ -93,16 +93,15 @@
     "karma-jasmine-html-reporter": "^0.2.2",
     "karma-junit-reporter": "^1.2.0",
     "karma-mocha-reporter": "^2.2.5",
-    "node-sass": "^4.5.3",
+    "node-sass": "^4.13.1",
     "protractor": "~5.1.2",
     "resolve-url-loader": "^2.2.1",
     "sonar-scanner": "^3.1.0",
     "ts-node": "~3.0.4",
     "tslint": "~5.3.2",
-    "tslint-config-setl": "file:src/projects/tslint-config-setl",
     "typescript": "2.7.2",
     "yargs": "^11.0.0",
-    "yarn": "^1.14.0"
+    "yarn": "^1.17.3"
   },
   "browser": {
     "crypto": false

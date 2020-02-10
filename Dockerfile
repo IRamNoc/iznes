@@ -18,15 +18,15 @@ WORKDIR /app
 COPY package.json /app/package.json
 
 # --mount-type=ssh allow us to use ssh from host.
-RUN --mount=type=ssh cd /app && npm install
-RUN npm install -g sass
+RUN --mount=type=ssh cd /app && yarn install
+RUN yarn global add -g sass
 
 # add app
 COPY . /app
 WORKDIR /app
 
 # generate build
-RUN npm run build-prod
+RUN yarn run build-prod
 
 # production
 # base image
