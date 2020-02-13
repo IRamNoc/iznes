@@ -66,7 +66,7 @@ export class KycDetailsService {
 
     toArray(data) {
         // Handle formatting for kyc classification
-        if (!isNull(data.optFor)) {
+        if (typeof data.optFor !== 'undefined') {
             if (data.investorStatus === requestsConfig.investorStatusList.nonPro) {
                 data.optForPro = data.optFor;
             } else if (data.investorStatus !== requestsConfig.investorStatusList.nonPro) {
