@@ -47,6 +47,7 @@ export class OfiInviteInvestorsComponent implements OnInit, OnDestroy {
     unSubscribe: Subject<any> = new Subject();
 
     isNowCpAm = false;
+    isID2SAm = false;
 
     @select(['user', 'siteSettings', 'language']) requestLanguageOb;
 
@@ -122,7 +123,8 @@ export class OfiInviteInvestorsComponent implements OnInit, OnDestroy {
         this.initInvestorTypes();
 
         const investorTypeToShow = [InvestorType.InstitutionalDirect, InvestorType.FundOfFundsManager,
-            InvestorType.RetailDirect, InvestorType.NowCPKycIssuer, InvestorType.NowCPKycInvestor];
+            InvestorType.RetailDirect, InvestorType.NowCPKycIssuer, InvestorType.NowCPKycInvestor, InvestorType.NowCPKycBothInvestorAndIssuer,
+            InvestorType.ID2SKycIPA, InvestorType.ID2SKycCustodian];
 
         (<any>this).appSubscribe(this.ofiKycObservablesService.getInvitationData(), (d: investorInvitation[]) => {
             this.inviteItems = d.filter(inv => (investorTypeToShow.includes(inv.investorType))).map((invite) => {
@@ -160,10 +162,22 @@ export class OfiInviteInvestorsComponent implements OnInit, OnDestroy {
                 this.isNowCpAm = hasPermission;
             },
         );
+        await this.permissionsService.hasPermission('id2sAM', 'canRead').then(
+            (hasPermission) => {
+                this.isID2SAm = hasPermission;
+            },
+        );
         if (this.isNowCpAm) {
             this.investorTypes = this.translate.translate([
                 { id: 70, text: 'NowCP Issuer' },
                 { id: 80, text: 'NowCP Investor' },
+                { id: 90, text: 'Both Investor and Issuer' },
+            ]);
+        }
+        else if (this.isID2SAm) {
+            this.investorTypes = this.translate.translate([
+                { id: 100, text: 'IPA' },
+                { id: 110, text: 'Custodian' },
             ]);
         } else {
             this.investorTypes = this.translate.translate([
@@ -377,7 +391,10 @@ function constructInvitationRequest(formValue) {
             // check the investor type
             if (investorType !== InvestorType.InstitutionalDirect &&
                 investorType !== InvestorType.NowCPKycIssuer &&
-                investorType !== InvestorType.NowCPKycInvestor
+                investorType !== InvestorType.NowCPKycInvestor &&
+                investorType !== InvestorType.NowCPKycBothInvestorAndIssuer &&
+                investorType !== InvestorType.ID2SKycIPA &&
+                investorType !== InvestorType.ID2SKycCustodian
             ) {
                 throw new Error('Only institutional investors are allowed');
             }

@@ -47,6 +47,7 @@ export class OfiClientReferentialComponent implements OnInit, OnDestroy {
     public hasPermissionClientReferentialUpdate: boolean = false;
     public hasPermissionInvestorInvitation: boolean = false;
     public isNowCpAm: boolean = false;
+    public isID2SAm: boolean = false;
 
     public subscriptions: Array<any> = [];
 
@@ -116,6 +117,14 @@ export class OfiClientReferentialComponent implements OnInit, OnDestroy {
     @select(['user', 'myDetail', 'userId']) userIdOb;
     @select(['user', 'siteSettings', 'language']) requestLanguageOb;
 
+    /**
+     * Is common asset manager. for example: not NowCP/ID2s
+     * @return {boolean}
+     */
+    get isCommonAM(): boolean {
+        return !this.isNowCpAm && !this.isID2SAm;
+    }
+
     /* Constructor. */
     constructor(private fb: FormBuilder,
                 private changeDetectorRef: ChangeDetectorRef,
@@ -148,6 +157,12 @@ export class OfiClientReferentialComponent implements OnInit, OnDestroy {
         this.permissionsService.hasPermission('nowCpAM', 'canRead').then(
             (hasPermission) => {
                 this.isNowCpAm = hasPermission;
+            },
+        );
+
+        this.permissionsService.hasPermission('id2sAM', 'canRead').then(
+            (hasPermission) => {
+                this.isID2SAm = hasPermission;
             },
         );
 
@@ -223,6 +238,9 @@ export class OfiClientReferentialComponent implements OnInit, OnDestroy {
         const LANG_MANDATE = this.translate.translate('By Mandate');
         const LANG_NOWCP_ISSUER = this.translate.translate('Issuer');
         const LANG_NOWCP_INVESTOR = this.translate.translate('Investor');
+        const LANG_NOWCP_INVESTOR_AND_ISSUER = this.translate.translate('Investor And Issuer');
+        const LANG_ID2S_IPA = this.translate.translate('IPA');
+        const LANG_ID2s_Custodian = this.translate.translate('Custodian');
 
         const typeMap = {
             '10': LANG_INSTITUTIONAL,
@@ -233,6 +251,9 @@ export class OfiClientReferentialComponent implements OnInit, OnDestroy {
             '60': LANG_RETAIL,
             '70': LANG_NOWCP_ISSUER,
             '80': LANG_NOWCP_INVESTOR,
+            '90': LANG_NOWCP_INVESTOR_AND_ISSUER,
+            '100': LANG_ID2S_IPA,
+            '110': LANG_ID2s_Custodian,
         };
         const methodMap = {
             'direct': LANG_DIRECT,

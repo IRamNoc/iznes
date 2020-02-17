@@ -46,6 +46,7 @@ export class OfiManagementCompanyComponent implements OnInit, OnDestroy {
     countries;
     phoneNumbersCountryCodes;
     legalFormList;
+    managementCompanyTypes = [{id: 'common', text: 'Common'}, {id: 'nowcp', text: 'NowCP'}, {id: 'id2s', text: 'ID2S'}];
 
     unSubscribe: Subject<any> = new Subject();
 
@@ -187,8 +188,8 @@ export class OfiManagementCompanyComponent implements OnInit, OnDestroy {
             logo: null,
             // todo
             // need better approach
-            // it always false at the moment (because we do not need to update the type of management company now), put it in just to satisfy the form group.
-            isNowCp: false,
+            // it always empty array at the moment (because we do not need to update the type of management company now), put it in just to satisfy the form group.
+            managementCompanyType: [],
         });
         this.fileMetadata.setProperties({
             signatureTitle: company.signatureTitle,

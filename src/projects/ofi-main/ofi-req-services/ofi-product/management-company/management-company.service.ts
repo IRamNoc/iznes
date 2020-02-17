@@ -5,6 +5,7 @@ import { NgRedux, select } from '@angular-redux/store';
 import { createMemberNodeSagaRequest } from '@setl/utils/common';
 import { Subject } from 'rxjs/Subject';
 import { takeUntil } from 'rxjs/operators';
+import { get } from 'lodash';
 
 import {
     ManagementCompanyRequestMessageBody,
@@ -162,7 +163,7 @@ export class OfiManagementCompanyService {
             signatureHash: mcData.signatureHash,
             logoTitle: mcData.logoTitle,
             logoHash: mcData.logoHash,
-            isNowCp: mcData.isNowCp ? 1 : 0,
+            managementCompanyType: get(mcData.managementCompanyType, '[0].id', 'common'),
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
