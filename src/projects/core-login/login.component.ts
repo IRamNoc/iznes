@@ -111,6 +111,7 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit, Log
     showTwoFactorModal = false;
     qrCode: string = '';
     resetTwoFactorToken = '';
+    twoFactorSecret: string = '';
 
     showModal = false;
     emailUser = '';
@@ -341,6 +342,7 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit, Log
             (data) => {
                 if (_.get(data, '[1].Data[0].qrCode', false)) {
                     this.qrCode = data[1].Data[0].qrCode;
+                    this.twoFactorSecret = data[1].Data[0].twoFactorSecret;
                 }
 
                 this.loginService.postLoginRequests();
