@@ -39,7 +39,7 @@ export class FileDownloader {
                     // generate temporary link to down file.
                     const downloadUrl = window.URL.createObjectURL(response.body);
                     const a = document.createElement('a');
-                    const fileName = response.headers.get('content-filename');
+                    const fileName = decodeURI(response.headers.get('content-filename'));
 
                     document.body.appendChild(a);
                     a.setAttribute('style', 'display: none');
@@ -84,7 +84,7 @@ export class FileDownloader {
 
             // generate temporary link to down file.
             const downloadUrl = window.URL.createObjectURL(response.body);
-            const filename = response.headers.get('content-filename');
+            const filename = decodeURI(response.headers.get('content-filename'));
 
             $downLoadUrl.next({
                 filename,
