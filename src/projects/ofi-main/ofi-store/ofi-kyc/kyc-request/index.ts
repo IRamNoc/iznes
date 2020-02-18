@@ -1,5 +1,7 @@
 export {
     MyKycRequestedState,
+    MyKycRequestedIds,
+    MyKycStakeholderRelations,
 } from './model';
 
 export {

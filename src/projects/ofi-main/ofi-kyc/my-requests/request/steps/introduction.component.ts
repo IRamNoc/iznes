@@ -5,6 +5,9 @@ import { RequestsService } from '../../requests.service';
 import { NewRequestService } from '../new-request.service';
 import { take } from 'rxjs/operators';
 
+/**
+ * Kyc introduction screen component
+ */
 @Component({
     selector: 'kyc-step-introduction',
     templateUrl: './introduction.component.html',
@@ -23,10 +26,12 @@ export class NewKycIntroductionComponent {
     }
 
     handleSubmit() {
+        // emit submitEvent, so the parent kyc wrapper can handle the submit event.
         this.submitEvent.emit({
             completed: true,
         });
 
+        // loop through all the active kycs for the current kyc form, and update there completed step.
         this.requests$
         .pipe(take(1))
         .subscribe((requests) => {
@@ -36,6 +41,10 @@ export class NewKycIntroductionComponent {
         });
     }
 
+    /**
+     * Update current step of the kyc in the database.
+     * @param {number} kycID
+     */
     sendRequestUpdateCurrentStep(kycID) {
         const messageBody = {
             RequestName: 'iznesupdatecurrentstep',

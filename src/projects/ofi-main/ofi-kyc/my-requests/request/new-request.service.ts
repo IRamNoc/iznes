@@ -20,7 +20,7 @@ import {
 } from 'lodash';
 import { CustomValidators } from '@setl/utils/helper';
 import { OfiKycService } from '@ofi/ofi-main/ofi-req-services/ofi-kyc/service';
-import { setMyKycRequestedKycs } from '@ofi/ofi-main/ofi-store/ofi-kyc';
+import { setMyKycRequestedKycs, MyKycRequestedIds } from '@ofi/ofi-main/ofi-store/ofi-kyc';
 import { RequestsService } from '../requests.service';
 
 import {
@@ -150,7 +150,12 @@ export class NewRequestService {
         return this.saveContext;
     }
 
-    getContext(amcs) {
+    /**
+     * Get the current kyc context as string in this format: kycID1-KycID2, such as '3-23'
+     * @param {{kycID: number; amcID: number; context: string; completedStep: string}[]} amcs
+     * @return {string}
+     */
+    getContext(amcs: {kycID: number; amcID: number; context: string; completedStep: string}[]) {
         amcs = map(amcs, 'kycID').sort();
 
         const context = amcs.reduce(
@@ -792,7 +797,7 @@ export class NewRequestService {
         return result;
     }
 
-    storeCurrentKycs(ids) {
+    storeCurrentKycs(ids: MyKycRequestedIds) {
         const requestedKycs = setMyKycRequestedKycs(ids);
         this.ngRedux.dispatch(requestedKycs);
     }

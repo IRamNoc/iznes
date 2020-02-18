@@ -9,7 +9,6 @@ import { FormPercentDirective } from '@setl/utils/directives/form-percent/formpe
 import { IdentificationService, buildBeneficiaryObject } from '../identification.service';
 import { DocumentsService } from '../documents.service';
 import { NewRequestService } from '../../new-request.service';
-import { BeneficiaryService } from './beneficiary.service';
 import { countries, steps } from '../../../requests.config';
 import { setMyKycStakeholderRelations } from '@ofi/ofi-main/ofi-store/ofi-kyc/kyc-request';
 import { MultilingualService } from '@setl/multilingual';
@@ -25,10 +24,15 @@ import { KycMyInformations } from '@ofi/ofi-main/ofi-store/ofi-kyc/my-informatio
     styleUrls: ['./company-information.component.scss'],
 })
 export class CompanyInformationComponent implements OnInit, OnDestroy {
+    // Get access to the FormPercentDirective component instance
     @ViewChild(FormPercentDirective) formPercent: FormPercentDirective;
+    // Current component formGroup.
     @Input() form: FormGroup;
+    // whether the form should render in readonly mode.
     @Input() isFormReadonly = false;
+    // current completed step of the kyc form.
     @Input() completedStep: string;
+    // Output event to let parent component hande the submit event.
     @Output() submitEvent: EventEmitter<any> = new EventEmitter<any>();
     @select(['ofi', 'ofiKyc', 'myKycRequested', 'kycs']) requests$;
     @select(['ofi', 'ofiKyc', 'myKycRequested', 'formPersist']) persistedForms$;
@@ -36,35 +40,51 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
     @select(['ofi', 'ofiKyc', 'myInformations']) kycMyInformations: Observable<KycMyInformations>;
 
     unsubscribe: Subject<any> = new Subject();
-    open: boolean = false;
+    // countries list that used in dropdown
     countries = countries;
+    // regulator supervisory authorities list that used in dropdown
     regulatorSupervisoryAuthoritiesList;
+    // regulator status list that used in dropdown
     regulatoryStatusList;
+    // regulator status insurer list that used in dropdown
     regulatoryStatusInsurerTypeList;
+    // sector activities list that used in dropdown
     sectorActivityList;
+    // other sector activities list that used in dropdown
     otherSectorActivityList;
+    // cached other sector activities list that used in dropdown? It is used as the base of otherSectorActivityList,
+    // because otherSectorActivityList would mutate?
     cachedOtherSectorActivityList;
+    // company activities list that used in dropdown
     companyActivitiesList;
+    // investor on behalf list that used in dropdown
     investorOnBehalfList;
+    // geographical origin type list that used in dropdown
     geographicalOriginTypeList;
+    // financial assets invested list that used in dropdown
     financialAssetsInvestedList;
+    // geographical area list that used in dropdown
     geographicalAreaList;
+    // custodian holder account list that used in dropdown
     custodianHolderAccountList;
+    // listing markets list that used in dropdown
     listingMarketsList;
+    // multilateral trading facilities list used in dropdown
     multilateralTradingFacilitiesList;
+    // whether 'other listing market' field for the kyc form has error.
     otherListingMarketError = false;
+    // whether 'other multilateral trading facilities' field for the kyc form has error.
     otherMultilateralTradingFacilitiesError = false;
 
-    registeredCompanyName: string = '';
-
+    // current user investor type that store in investor invitation
     investorType: number;
+    // Whether the user is type of nowCp user.
     isNowCP: boolean = false;
 
     constructor(
         private newRequestService: NewRequestService,
         private identificationService: IdentificationService,
         private documentsService: DocumentsService,
-        private beneficiaryService: BeneficiaryService,
         private ngRedux: NgRedux<any>,
         public translate: MultilingualService,
         private element: ElementRef,
@@ -77,6 +97,7 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
         this.initFormCheck();
         this.getCurrentFormData();
 
+        // clear the form persist for the current form?
         this.persistedForms$
             .pipe(takeUntil(this.unsubscribe))
             .subscribe((forms) => {
@@ -91,6 +112,7 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
             .pipe(takeUntil(this.unsubscribe))
             .subscribe(() => this.initLists());
 
+        // set current user's investor type.
         this.kycMyInformations
             .takeUntil(this.unsubscribe)
             .subscribe((d) => {
@@ -109,6 +131,9 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
         if (!this.completedStep || (steps[this.completedStep] < steps.companyInformation)) this.persistForm();
     }
 
+    /**
+     * Observe specified properties of the form, and change the properties of the current form dynamically.
+     */
     initFormCheck() {
         this.form.get('sectorActivity').valueChanges
             .pipe(takeUntil(this.unsubscribe))
@@ -228,6 +253,9 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
             });
     }
 
+    /**
+     * Constuct the lists for dropdowns. with text tranlsated.
+     */
     initLists() {
         this.regulatorSupervisoryAuthoritiesList = this.translate.translate(this.newRequestService.regulatorSupervisoryAuthoritiesList);
         this.regulatoryStatusInsurerTypeList = this.translate.translate(this.newRequestService.regulatoryStatusInsurerTypeList);
@@ -245,15 +273,19 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
         this.multilateralTradingFacilitiesList = this.translate.translate(this.newRequestService.multilateralTradingFacilitiesList);
     }
 
-    get beneficiaries() {
-        return (this.form.get('beneficiaries') as FormArray).controls;
-    }
-
-    get geographicalOrigin() {
+    /**
+     * Get geographical origin from the formGroup.
+     * @return {string}
+     */
+    get geographicalOrigin():string {
         return getValue(this.form.get('geographicalOrigin1').value, [0, 'id']);
     }
 
-    formCheckSectorActivity(value) {
+    /**
+     * Observe 'sector activity' value and update formgroup dynamically.
+     * @param {string} value
+     */
+    formCheckSectorActivity(value: string): void {
         const control = this.form.get('sectorActivityText');
 
         if (value === 'Other') {
@@ -266,6 +298,10 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
         this.formPercent.refreshFormPercent();
     }
 
+    /**
+     * Observe 'Other sector activity' value and update formgroup dynamically.
+     * @param {string} value
+     */
     formCheckOtherSectorActivity(values) {
         const control = this.form.get('otherSectorActivityText');
 
@@ -287,6 +323,13 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
         this.formPercent.refreshFormPercent();
     }
 
+    /**
+     * Observe 'Other sector activity' value and update formgroup dynamically.
+     * Make sure 'Primary Sector of Activity' dropdown and 'Other sector(s) of Activity' value does not conflict.
+     * If confict, remove remove value in 'Other sector(s) of Activity' dropdown, and clear the dropdown value.
+     *
+     * @param {string} value
+     */
     formFilterOtherSectorActivity(value) {
         // Reset the otherSectorActivityList
         this.otherSectorActivityList = [...this.cachedOtherSectorActivityList];
@@ -313,6 +356,11 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
         }
     }
 
+    /**
+     * Observe 'activity' value and update formgroup dynamically.
+     *
+     * @param {string} value
+     */
     formCheckActivity(value) {
         const form = this.form;
         const investorOnBehalfControl = form.get('investorOnBehalfThirdParties');
@@ -328,6 +376,11 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
         this.formPercent.refreshFormPercent();
     }
 
+    /**
+     * Observe 'capital nature' value and update formgroup dynamically.
+     *
+     * @param {string} value
+     */
     formCheckNatureAndOrigin(value) {
         const control = this.form.get('otherCapitalNature');
 
@@ -341,6 +394,11 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
         this.formPercent.refreshFormPercent();
     }
 
+    /**
+     * Observe 'geographical origin type' value and update formgroup dynamically.
+     *
+     * @param {string} value
+     */
     formCheckGeographicalOrigin(value) {
         const control = this.form.get('geographicalOrigin2');
 
@@ -353,6 +411,11 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
         this.formPercent.refreshFormPercent();
     }
 
+    /**
+     * Observe 'activity geographical area' value and update formgroup dynamically.
+     *
+     * @param {string} value
+     */
     formCheckActivityGeographicalArea(value) {
         const activityGeographicalAreaTextControl = this.form.get('geographicalAreaOfActivitySpecification');
 
@@ -365,6 +428,11 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
         this.formPercent.refreshFormPercent();
     }
 
+    /**
+     * Observe 'activity regulated' value and update formgroup dynamically.
+     *
+     * @param {string} value
+     */
     formCheckActivityRegulated(value) {
         const activityAuthorityControl = this.form.get('regulator');
         const activityApprovalNumberControl = this.form.get('approvalNumber');
@@ -384,6 +452,11 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
         this.formPercent.refreshFormPercent();
     }
 
+    /**
+     * Observe 'Regulatory status' value and update formgroup dynamically.
+     *
+     * @param {string} value
+     */
     formCheckRegulatoryStatus(value) {
         const form = this.form;
         const controls = ['regulatoryStatusInsurerType', 'regulatoryStatusListingOther'];
@@ -404,6 +477,10 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
         this.formPercent.refreshFormPercent();
     }
 
+    /**
+     * Observe company listed value and update formgroup dynamically.
+     * @param {any} value
+     */
     formCheckCompanyListed(value) {
         const listingMarketsControl = this.form.get('listingMarkets');
         const multilateralTradingFacilitiesControl = this.form.get('multilateralTradingFacilities');
@@ -442,6 +519,10 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
         this.formPercent.refreshFormPercent();
     }
 
+    /**
+     * Observe 'listed market' value, and update formGroup dynamically.
+     * @param {any} selectedMarkets.
+     */
     formCheckListingMarkets(selectedMarkets: any) {
         const control = this.form.get('otherListingMarkets');
 
@@ -463,6 +544,9 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
         this.formPercent.refreshFormPercent();
     }
 
+    /**
+     * Make sure other market field value is not within the 'listing market list'?
+     */
     formFilterOtherListingMarkets() {
         const control = this.form.get('otherListingMarkets');
         const otherListingMarketsFormValue = control.value;
@@ -483,6 +567,10 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
         }
     }
 
+    /**
+     * Observe multilateral trading facilities value, and update formGroup dynamically.
+     * @param {any} selectedFacilities
+     */
     formCheckMultilateralTradingFacilities(selectedFacilities: any) {
         const control = this.form.get('otherMultilateralTradingFacilities');
 
@@ -504,6 +592,9 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
         this.formPercent.refreshFormPercent();
     }
 
+    /**
+     * Make sure other multilateral trading facilities is not within the 'multilateral trading facilities'?
+     */
     formFilterOtherMultilateralTradingFacilities() {
         const control = this.form.get('otherMultilateralTradingFacilities');
         const otherMultilateralTradingFacilityFormValue = control.value;
@@ -524,6 +615,10 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
         }
     }
 
+    /**
+     * Observe the 'regulator' value, and update formGroup dynamically.
+     * @param {string} selectedRegulators
+     */
     formCheckRegulator(selectedRegulators: any) {
         const control = this.form.get('otherRegulator');
 
@@ -544,15 +639,26 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
         this.formPercent.refreshFormPercent();
     }
 
+    /**
+     * Check a formControl has specified type of error.
+     */
     hasError(control, error = []) {
         return this.newRequestService.hasError(this.form, control, error);
     }
 
-    isDisabled(path) {
+    /**
+     * Check a field within the formGroup of the current component is disable, in order to hide it in the form.
+     * @param {string} path
+     * @return {boolean}
+     */
+    isDisabled(path): boolean {
         const control = this.form.get(path);
         return control.disabled;
     }
 
+    /**
+     * Get kyc Identification -> Company Information, from membernode, and update the formGroup.
+     */
     getCurrentFormData() {
         const requests$ = this.requests$
         .pipe(
@@ -575,10 +681,10 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
         });
     }
 
-    refresh() {
-        this.formPercent.refreshFormPercent();
-    }
 
+    /**
+     * Initiate form persist, so the form can be auto fill with the data that wasn't save in the current form.
+     */
     persistForm() {
         this.persistService.watchForm(
             'newkycrequest/identification/companyInformation',
@@ -593,6 +699,9 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
         });
     }
 
+    /**
+     * Clear form persist, when this section of the kyc form is submitted.
+     */
     clearPersistForm() {
         this.persistService.refreshState(
             'newkycrequest/identification/companyInformation',
@@ -601,11 +710,22 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
         );
     }
 
+    /**
+     * Helper function to check if specific type of validation error is need to be shown.
+     * @param {FormControl} control
+     * @param {string[]} errors
+     * @return {boolean}
+     */
     showHelperText(control, errors) {
         const hasError = errors.filter(error => this.hasError([control], [error]));
         return this.form.get(control).invalid && !hasError.length;
     }
 
+    /**
+     * Loop through all the kyc(s) for the current kyc form. and send request to membernode to update 'General Information'.
+     * @param {any} e
+     * @return {void}
+     */
     handleSubmit(e) {
         e.preventDefault();
         if (!this.form.valid) {
@@ -633,6 +753,10 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
         });
     }
 
+    /**
+     * Used by the FormStep component to check if the current component's formGroup is valid
+     * @return {boolean}
+     */
     isStepValid() {
         return this.form.valid;
     }
