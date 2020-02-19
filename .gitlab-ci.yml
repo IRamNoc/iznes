@@ -90,4 +90,4 @@ build-tags:
         - yarn install
         - yarn run build-prod
         - echo $CI_COMMIT_TAG > "$CI_PROJECT_DIR/dist/VERSION"
-        - rsync -av "$CI_PROJECT_DIR/dist" "jenkins@si-jenkins02.dev.setl.io:/var/lib/jenkins/build/opencsd-iznes/$CI_COMMIT_TAG/"
+        - rsync -av "$CI_PROJECT_DIR/dist/*" "jenkins@si-jenkins02.dev.setl.io:/var/lib/jenkins/build/opencsd-iznes/$CI_COMMIT_TAG/"
