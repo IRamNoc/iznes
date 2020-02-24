@@ -906,4 +906,14 @@ export class OfiKycService {
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
     }
+
+    setKycPartySelections(partySelections: any): any {
+        const messageBody: any = {
+            RequestName: 'iznessetkycpartyselections',
+            token: this.memberSocketService.token,
+            partySelections,
+        };
+
+        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+    }
 }

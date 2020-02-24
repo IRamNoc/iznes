@@ -1,35 +1,52 @@
 import { FormGroup } from '@angular/forms';
 
-type kycPartySelections = {
-    iznes: boolean;
-    nowCPIssuer: boolean;
-    nowCPInvestor: boolean;
-    id2sCustodian: boolean;
-    id2sIPA: boolean;
+export type kycPartySelections = {
+    iznes?: boolean;
+    nowCPIssuer?: boolean;
+    nowCPInvestor?: boolean;
+    id2sCustodian?: boolean;
+    id2sIPA?: boolean;
 };
 
 export function isIZNES(selectionState: kycPartySelections): boolean {
-    return true;
+    return selectionState && selectionState.iznes;
 }
 
 export function isID2SIPA(selectionState: kycPartySelections): boolean {
-    return true;
+    return selectionState && selectionState.id2sIPA;
 }
 
 export function isID2SCustodian(selectionState: kycPartySelections): boolean {
-    return true;
+    return selectionState && selectionState.id2sCustodian;
 }
 
 export function isNowCPBoth(selectionState: kycPartySelections): boolean {
-    return true;
+    return selectionState && selectionState.nowCPIssuer && selectionState.nowCPInvestor;
 }
 
 export function isNowCPInvestor(selectionState: kycPartySelections): boolean {
-    return true;
+    return selectionState && selectionState.nowCPInvestor;
 }
 
 export function isNowCPIssuer(selectionState: kycPartySelections): boolean {
-    return true;
+    return selectionState && selectionState.nowCPIssuer;
+}
+
+export function getPartySelectionFromInvestorType(investorType: number): kycPartySelections {
+    switch (investorType) {
+        case 70:
+            return { nowCPIssuer: true };
+        case 80:
+            return { nowCPInvestor: true };
+        case 90:
+            return { nowCPInvestor: true, nowCPIssuer: true };
+        case 100:
+            return { id2sIPA: true };
+        case 110:
+            return { id2sCustodian: true };
+        default:
+            return { iznes: true };
+    }
 }
 
 /**

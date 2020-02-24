@@ -1,3 +1,5 @@
+import { kycPartySelections } from '../../../ofi-kyc/my-requests/kyc-form-helper';
+
 export interface KycUser {
     email: string;
     firstName: string;
@@ -13,4 +15,5 @@ export interface KycMyInformations extends KycUser {
     amManagementCompanyID: number;
     invitationToken: string;
     investorType: number;
+    kycPartySelections: kycPartySelections;
 }

@@ -1,6 +1,7 @@
 import {KycMyInformationsAction, SET_INFORMATIONS, SET_INFORMATIONS_FROM_API} from './actions';
 import * as _ from 'lodash';
 import {KycUser} from './model';
+import { kycPartySelections } from '../../../ofi-kyc/my-requests/kyc-form-helper';
 
 export interface KycMyInformationsState extends KycUser {
     invitedBy: KycUser;
@@ -8,7 +9,7 @@ export interface KycMyInformationsState extends KycUser {
     amManagementCompanyID: number;
     invitationToken: string;
     investorType: number;
-    kycPartySelections: number;
+    kycPartySelections: kycPartySelections;
 }
 
 const initialState = {
@@ -40,6 +41,7 @@ export function KycMyInformationsReducer(
     switch (action.type) {
         case SET_INFORMATIONS_FROM_API:
             const res = _.get(action.payload, ['1', 'Data', '0'], {});
+
             const newData = {
                 email: res.investorEmail || '',
                 firstName: res.investorFirstName || '',
@@ -59,7 +61,7 @@ export function KycMyInformationsReducer(
                 amManagementCompanyID: res.amManagementCompanyID,
                 invitationToken: res.invitationToken,
                 investorType: res.investorType,
-                kycPartySelections: res.kycPartySelections,
+                kycPartySelections: getPartySelection(res.kycPartySelections),
             };
             return {
                 ...state,
@@ -73,4 +75,19 @@ export function KycMyInformationsReducer(
         default:
             return state;
     }
+}
+
+function getPartySelection(kycPartySelections) {
+    let partySelections = kycPartySelections;
+
+    if (partySelections) {
+        try {
+            partySelections = JSON.parse(kycPartySelections);
+        } catch (e) {
+            console.error('Unable to parse KYC Party Selections', e);
+            partySelections = null;
+        }
+    }
+
+    return partySelections;
 }

@@ -615,7 +615,8 @@ form-steps {
         background: rgba(2, 17, 70, 0.5);
     }
     .content {
-        width: 564px;
+        max-width: 1000px;
+        width: 92%;
         position: absolute;
         top: 50%;
         left: 50%;
@@ -685,6 +686,21 @@ form-steps {
             width: 100%;
             margin: 28px 0 0 0;
             max-width: 100%;
+        }
+        label {
+            color: #565656;
+            padding-left: 30px;
+        }
+        input[type=checkbox][disabled] + label {
+            cursor: not-allowed;
+            &::before {
+                background-color: #ccc;
+                border: none;
+            }
+            &::after {
+                border-left: .08333338rem solid #000;
+                border-bottom: .08333338rem solid #000;
+            }
         }
     }
 }
