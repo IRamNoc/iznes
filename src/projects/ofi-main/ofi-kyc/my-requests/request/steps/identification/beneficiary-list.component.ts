@@ -19,48 +19,78 @@ import { setMyKycStakeholderRelations } from '@ofi/ofi-main/ofi-store/ofi-kyc/ky
 import { formHelper } from '@setl/utils/helper';
 import { PersistRequestService } from '@setl/core-req-services';
 import { PersistService } from '@setl/core-persist';
-import { setMyKycRequestedPersist } from '@ofi/ofi-main/ofi-store/ofi-kyc';
+import { setMyKycRequestedPersist, MyKycStakeholderRelations } from '@ofi/ofi-main/ofi-store/ofi-kyc';
 import { steps } from '../../../requests.config';
 import { KycMyInformations } from '@ofi/ofi-main/ofi-store/ofi-kyc/my-informations';
 
+/**
+ * Stakeholders main view component of kyc form.
+ */
 @Component({
     selector: 'beneficiary-list',
     templateUrl: './beneficiary-list.component.html',
     styleUrls: ['./beneficiary-list.component.scss'],
 })
 export class BeneficiaryListComponent implements OnInit, OnDestroy {
+    // Current component formArray.
     @Input() form: FormArray;
+    // General information formGroup of the kyc formGroup. used to just get management company name?
     @Input() generalInformationForm: FormGroup;
+    // whether the form should render in readonly mode.
     @Input() isFormReadonly = false;
+    // current completed step of the kyc form.
     @Input() completedStep: string;
+    // Output event to let parent component hande the submit event.
     @Output() submitEvent: EventEmitter<any> = new EventEmitter<any>();
     @select(['ofi', 'ofiKyc', 'myKycRequested', 'stakeholderRelations']) stakeholderRelations$;
     @select(['ofi', 'ofiKyc', 'myKycRequested', 'kycs']) requests$;
     @select(['user', 'connected', 'connectedWallet']) connectedWallet$;
     @select(['ofi', 'ofiKyc', 'myInformations']) kycMyInformations: Observable<KycMyInformations>;
+    // Get access to the FormPercentDirective component instance
     @ViewChild(FormPercentDirective) formPercent: FormPercentDirective;
 
+    // Register company name, used fro rendering
     registeredCompanyName: string;
+    // Keep track of the current selected stakeholder index within the form array.
     selectedStakeholderIndex = null;
+    // Stakeholders list that group by parent.
     sortedStakeholders = [];
+    // Just to load the same stakeholder data, if edit stakeholder is cancel?
     stakeholderBackup = null;
+    // Keep track of the open state of modal
     isModalOpen: any = false;
-    mode: string;
+    // mode of the beneficiary modal
+    mode: 'add' | 'edit' | 'view';
     unsubscribe: Subject<void> = new Subject();
-    relations;
-    parents;
+    // Keep trade of the stakeholders' ID (beneficiaryID), for the active Kyc(s).
+    relations: MyKycStakeholderRelations;
+    // Store all existing stakeholder, so we can render them in dropdown.
+    parents: { id: number; text: string }[];
     connectedWallet;
+    //Current user's investor type.
     investorType: number;
+    // is the user is type of nowCP.
     isNowCP: boolean = false;
 
-    get nextId() {
+    /**
+     * Get temporary stakeholderID, that store in the frontend.
+     * @return {number}
+     */
+    get nextId(): number {
         return this.getHighestID() + 1;
     }
 
-    get openModal() {
+    /**
+     * Whether to show modal
+     * @return {boolean | string }
+     */
+    get openModal(): boolean | string {
         return this.isModalOpen;
     }
 
+    /**
+     * Set isModalOpen value, and handle closeModal
+     */
     set openModal(value) {
         this.isModalOpen = value;
 
@@ -73,14 +103,21 @@ export class BeneficiaryListComponent implements OnInit, OnDestroy {
         }
     }
 
-    get selectedStakeholder() {
+    /**
+     * Get current stakeholder as formGroup
+     * @return {FormGroup}
+     */
+    get selectedStakeholder(): FormGroup {
         if (this.selectedStakeholderIndex === null) {
             return null;
         }
 
-        return this.form.at(this.selectedStakeholderIndex);
+        return (this.form.at(this.selectedStakeholderIndex)) as FormGroup;
     }
 
+    /**
+     * Get the list of stake holder to render in the table. 
+     */
     get listStakeholders() {
         if (this.sortedStakeholders) {
             if (!this.sortedStakeholders.length && this.form.length) {
@@ -123,6 +160,9 @@ export class BeneficiaryListComponent implements OnInit, OnDestroy {
         this.getFormData();
     }
 
+    /**
+     * Fetch stakeholders data from database. and create stakholder formGroups, and set value for the formGroups.
+     */
     getFormData() {
         const requests$ = this.requests$
         .pipe(
@@ -137,8 +177,11 @@ export class BeneficiaryListComponent implements OnInit, OnDestroy {
 
                 requests.forEach((request, index) => {
 
-                    const promise = this.identificationService.getCurrentFormCompanyBeneficiariesData(request.kycID).then((formData) => {
+                    // Get stakeholder data from membernode to build stakeholder formGroups and fill stakeholdersRelationTable(stakeholders ID within kyc) in redux.
+                    const promise = this.identificationService.getCurrentFormCompanyBeneficiariesData(request.kycID).then((formData: any[]) => {
+                        // if we have data build the stakeholders, otherwise olny load data from form persist?
                         if (!isEmpty(formData)) {
+                            // create object to 
                             const relation = {
                                 kycID: request.kycID,
                                 stakeholderIDs: formData.map(stakeholder => stakeholder.companyBeneficiariesID),
@@ -146,6 +189,7 @@ export class BeneficiaryListComponent implements OnInit, OnDestroy {
 
                             stakeholdersRelationTable.push(relation);
 
+                            // only build the stakeholders formcontrol once.
                             if (index === 0) {
                                 const beneficiaries: FormArray = this.form as FormArray;
 
@@ -153,14 +197,19 @@ export class BeneficiaryListComponent implements OnInit, OnDestroy {
                                     beneficiaries.removeAt(0);
                                 }
 
+                                // build the stakeholder formArray
                                 const promises = formData.map((controlValue) => {
+                                    // create formGroup for the stakeholder
                                     const control = this.newRequestService.createBeneficiary();
                                     const documentID = controlValue.documentID;
 
+                                    // convert the stakeholder stored in database to value that can apply to stakeholder formGroup
                                     const newControlValue = buildBeneficiaryObject(controlValue);
 
+                                    // dynamically the formControl, depend on the beneficiary type
                                     this.disableBeneficiaryType(newControlValue, control);
 
+                                    // fetch document data from membernode, and update stakeholder formGroup.
                                     if (documentID) {
                                         return this.documentsService.getDocument(documentID).then((document) => {
                                             if (document) {
@@ -175,12 +224,14 @@ export class BeneficiaryListComponent implements OnInit, OnDestroy {
                                         });
                                     }
 
+                                    // set the stakeholder formgroup value
                                     control.patchValue(newControlValue);
 
                                     beneficiaries.push(control);
                                 });
 
                                 Promise.all(promises).then(() => {
+                                    // Update some formcontrol within stakeholder, that depending on the data fetch from membernode.
                                     this.beneficiaryService.fillInStakeholderSelects(this.form.get('beneficiaries'));
                                     this.beneficiaryService.updateStakeholdersValidity(this.form.get('beneficiaries') as FormArray);
                                     if (this.formPercent) this.formPercent.refreshFormPercent();
@@ -202,6 +253,9 @@ export class BeneficiaryListComponent implements OnInit, OnDestroy {
                 });
             });
 
+        /**
+         * Set the registered company name, from the 'General information' of the kyc.
+         */
         requests$.pipe(
             map(requests => requests[0]),
             rxFilter(request => !!request),
@@ -216,6 +270,11 @@ export class BeneficiaryListComponent implements OnInit, OnDestroy {
             });
     }
 
+    /**
+     * Update stakeholder formgroup depending on the beneficiary type.
+     * @param {any} values: stakeholder formGroup value
+     * @param {FormGroup} formGroup: stakeholder formGroup
+     */
     disableBeneficiaryType(values, formgroup) {
         if (values['beneficiaryType'] === 'legalPerson') {
             // Disable naturalPerson
@@ -228,10 +287,17 @@ export class BeneficiaryListComponent implements OnInit, OnDestroy {
         }
     }
 
+    /**
+     * Update stakeholder parents list(linked entity). Used in dropdown
+     */
     updateParents() {
         this.parents = this.beneficiaryService.parents(this.form);
     }
 
+    /**
+     * Update the stakeholder list order, group together if have same beneficiary parent.
+     * And Update stakeholder parent list.
+     */
     sortStakeholders() {
         if (!this.form.length) {
             this.sortedStakeholders = [];
@@ -241,6 +307,10 @@ export class BeneficiaryListComponent implements OnInit, OnDestroy {
         this.updateParents();
     }
 
+    /**
+     * Get the highest stakeholder ID(actual ID, or temporary ID that only store in frontend) in number.
+     * @return {number}
+     */
     getHighestID() {
         const stakeholders = this.form;
         const highest = stakeholders.controls.reduce(
@@ -261,6 +331,7 @@ export class BeneficiaryListComponent implements OnInit, OnDestroy {
     }
 
     initSubscriptions() {
+        // get stakeholder IDs for the kyc(s).
         this.stakeholderRelations$.pipe(
             takeUntil(this.unsubscribe),
         ).subscribe((relations) => {
@@ -275,6 +346,7 @@ export class BeneficiaryListComponent implements OnInit, OnDestroy {
                 this.connectedWallet = connectedWallet;
             });
 
+        // get the first kyc, within the current active kyc form, and load form persist for the kyc.
         this.requests$
         .pipe(
             takeUntil(this.unsubscribe),
@@ -289,6 +361,7 @@ export class BeneficiaryListComponent implements OnInit, OnDestroy {
             }
         });
 
+        // Get the investor type.
         this.kycMyInformations
             .takeUntil(this.unsubscribe)
             .subscribe((d) => {
@@ -300,6 +373,11 @@ export class BeneficiaryListComponent implements OnInit, OnDestroy {
             });
     }
 
+    /**
+     * Whether we need to load form persist for th current kyc
+     * @param {any} kyc
+     * @return {boolean}
+     */
     shouldPersist(kyc) {
         if (kyc.context === 'done') {
             return false;
@@ -307,18 +385,25 @@ export class BeneficiaryListComponent implements OnInit, OnDestroy {
         return !kyc.completedStep || (steps[kyc.completedStep] < steps.stakeholders);
     }
 
-    closeModal(cancel?) {
-        const stakeholder = this.form.at(this.selectedStakeholderIndex);
+    /**
+     * Handle the stakeholder modal close.
+     * @param {boolean} cancel
+     */
+    closeModal(cancel?: boolean) {
+        const stakeholder = this.form.at(this.selectedStakeholderIndex) as FormGroup;
 
+        // if the 'add' action is cancel, remove the stakeholder from stakeholder list.
         if (cancel && this.mode === 'add') {
             this.removeStakeholder(this.selectedStakeholderIndex);
         }
 
+        // if the 'edit' action is cancel, load the stakeholder backup for the editing stakeholder.
         if (cancel && this.mode === 'edit') {
             stakeholder.patchValue(this.stakeholderBackup);
             this.stakeholderBackup = null;
         }
 
+        // if the form is valid. save the stakeholder.
         if (!cancel && this.isValidUpdate(stakeholder)) {
             // Save the added stakeholder
             this.handleSubmit();
@@ -326,10 +411,12 @@ export class BeneficiaryListComponent implements OnInit, OnDestroy {
             this.sortStakeholders();
         }
 
+        // if the form is not valid. trigger validation error.
         if (!cancel && !this.isValidUpdate(stakeholder)) {
             this.markFormGroupTouched(stakeholder as FormGroup);
         }
 
+        // close when it is view mode?
         if (cancel || this.isValidUpdate(stakeholder)) {
             this.selectedStakeholderIndex = null;
             this.openModal = 'naturalClose';
@@ -337,7 +424,12 @@ export class BeneficiaryListComponent implements OnInit, OnDestroy {
         }
     }
 
-    private isValidUpdate(stakeholder): boolean {
+    /**
+     * Whether the stakeholder formGroup is valid.
+     * @param {FormGroup} stakeholder
+     * @return {boolean}
+     */
+    private isValidUpdate(stakeholder: FormGroup): boolean {
         const type = stakeholder.get('beneficiaryType').value;
         if (this.isLegalPerson(type)) {
             return this.isLegalPersonValid(stakeholder);
@@ -348,23 +440,41 @@ export class BeneficiaryListComponent implements OnInit, OnDestroy {
         }
     }
 
-    private isLegalPersonValid(stakeholder): boolean {
+    /**
+     * Whether stakeholder type of 'legal person' formGroup is valid.
+     * @param {FormGroup} stakeholder
+     * @return {boolean}
+     */
+    private isLegalPersonValid(stakeholder: FormGroup): boolean {
         return stakeholder.controls.legalPerson.valid &&
             stakeholder.controls.common.valid;
     }
 
-    private isNaturalPersonValid(stakeholder): boolean {
+    /**
+     * Whether stakeholder type of 'natural person' formGroup is valid.
+     * @param {FormGroup} stakeholder
+     * @return {boolean}
+     */
+    private isNaturalPersonValid(stakeholder: FormGroup): boolean {
         return stakeholder.controls.naturalPerson.valid &&
             stakeholder.controls.common.valid;
     }
 
+    /**
+     * Check current stakeholder form is valid.
+     * @return {boolean}
+     */
     canDoUpdate(): boolean {
-        const stakeholder = this.form.at(this.selectedStakeholderIndex);
+        const stakeholder = this.form.at(this.selectedStakeholderIndex) as FormGroup;
 
         return this.isValidUpdate(stakeholder);
     }
 
-    confirmClose(mode) {
+    /**
+     * Show successfully save/edit message.
+     * @param {string} mode
+     */
+    confirmClose(mode: string) {
         let text;
 
         if (mode === 'edit') {

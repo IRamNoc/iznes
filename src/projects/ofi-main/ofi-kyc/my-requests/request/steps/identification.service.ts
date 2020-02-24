@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { FormArray } from '@angular/forms';
+import { FormArray, FormGroup } from '@angular/forms';
 import { NgRedux, select } from '@angular-redux/store';
 import { take } from 'rxjs/operators';
 
@@ -26,6 +26,7 @@ import { RequestsService } from '../../requests.service';
 import { DocumentsService } from './documents.service';
 import { BeneficiaryService } from './identification/beneficiary.service';
 import { setMyKycStakeholderRelations } from '@ofi/ofi-main/ofi-store/ofi-kyc/kyc-request';
+import { MyKycRequestedIds } from '@ofi/ofi-main/ofi-store/ofi-kyc';
 
 @Injectable()
 export class IdentificationService {
@@ -52,7 +53,14 @@ export class IdentificationService {
             });
     }
 
-    sendRequestGeneralInformation(form, requests) {
+    /**
+     * Send request to membernode, for each of the current active kyc(s) to update 'General Information' 
+     * And update the completed step for the kycs
+     * @param {FormGroup} form
+     * @param {MyKycRequestedIds} requests
+     * @return {Promise<any[]>}
+     */
+    sendRequestGeneralInformation(form: FormGroup, requests: MyKycRequestedIds) {
         const promises = [];
         const context = this.newRequestService.context;
 
@@ -71,7 +79,14 @@ export class IdentificationService {
         return Promise.all(promises);
     }
 
-    sendRequestCompanyInformation(form, requests) {
+    /**
+     * Send request to membernode, for each of the current active kyc(s) to update 'Company Information' 
+     * And update the completed step for the kycs
+     * @param {FormGroup} form
+     * @param {MyKycRequestedIds} requests
+     * @return {Promise<any[]>}
+     */
+    sendRequestCompanyInformation(form: FormGroup, requests: MyKycRequestedIds) {
         const promises = [];
         const context = this.newRequestService.context;
 
@@ -88,6 +103,7 @@ export class IdentificationService {
         });
 
         return Promise.all(promises).then(() => {
+            // update tthe stakeholderRelationTable in redux? not sure why we need to do this.
             this.ngRedux.dispatch(setMyKycStakeholderRelations(this.stakeholdersRelationTable));
         });
     }
@@ -234,7 +250,14 @@ export class IdentificationService {
         return this.requestsService.sendRequest(messageBody);
     }
 
-    sendRequestUpdateCurrentStep(kycID, completedStep, context) {
+    /**
+     * Update kyc completed step in the database
+     * @param {number} kycID
+     * @param {string} completedStep
+     * @param {string} context: e.g '34-3'
+     * @return {Promise<any>}
+     */
+    sendRequestUpdateCurrentStep(kycID: number, completedStep: string, context: string): Promise<any> {
         const messageBody = {
             RequestName: 'iznesupdatecurrentstep',
             kycID,
@@ -245,6 +268,11 @@ export class IdentificationService {
         return this.requestsService.sendRequest(messageBody);
     }
 
+    /**
+     * Send request to membernode to update 'Gerneral information' of the kyc.
+     * @param {any} formGroupGeneral
+     * @return {Promise<any>}
+     */
     sendRequestGeneral(formGroupGeneral) {
         const extracted = this.newRequestService.getValues(formGroupGeneral.value);
 
@@ -255,6 +283,11 @@ export class IdentificationService {
         return this.requestsService.sendRequest(messageBody);
     }
 
+    /**
+     * Send request to membernode to update 'Company information' of the kyc.
+     * @param {any} formGroupGeneral
+     * @return {Promise<any>}
+     */
     sendRequestCompany(formGroupCompany) {
         const formGroupCompanyValue = omit(formGroupCompany.value, ['beneficiaries']);
         const extracted = this.newRequestService.getValues(formGroupCompanyValue);

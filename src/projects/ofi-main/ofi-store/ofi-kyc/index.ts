@@ -85,6 +85,8 @@ export {
     setMyKycRequestedKycs,
     setMyKycRequestedPersist,
     clearMyKycRequestedPersist,
+    MyKycRequestedIds,
+    MyKycStakeholderRelations
 } from './kyc-request';
 
 export interface KycState {

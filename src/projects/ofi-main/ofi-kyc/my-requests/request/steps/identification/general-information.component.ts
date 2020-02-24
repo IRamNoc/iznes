@@ -15,28 +15,43 @@ import { PersistRequestService } from '@setl/core-req-services';
 import { PersistService } from '@setl/core-persist';
 import { setMyKycRequestedPersist } from '@ofi/ofi-main/ofi-store/ofi-kyc';
 
+/**
+ * Kyc form sub component: Indentification -> General Information
+ */
 @Component({
     selector: 'general-information',
     templateUrl: './general-information.component.html',
 })
 export class GeneralInformationComponent implements OnInit, OnDestroy {
+    // Get access to the FormPercentDirective component instance
     @ViewChild(FormPercentDirective) formPercent: FormPercentDirective;
-    @Input() parentForm: any;
+
+    // Sub form group for the whole kyc: identification -> generalInformation
+    @Input() parentForm: FormGroup;
+
+    // current completed step of the kyc form.
     @Input() completedStep: string;
+    // whether the form should render in readonly mode.
     @Input() isFormReadonly = false;
-    @Output() submitEvent: EventEmitter<any> = new EventEmitter<any>();
+    // Output event to let parent component hande the submit event.
+    @Output() submitEvent: EventEmitter<{completed: boolean; updateView?: boolean}> = new EventEmitter<any>();
     @select(['ofi', 'ofiKyc', 'myKycRequested', 'kycs']) requests$;
     @select(['user', 'siteSettings', 'language']) requestLanguageObj;
 
+    // Current component formGroup.
     form: FormGroup;
     unsubscribe: Subject<any> = new Subject();
-    open: boolean = false;
+
+    // countries list that used in dropdown
     countries;
+    // legal from list that used in dropdown
     legalFormList;
+    // finalcial rating lit that used in dropdown
     financialRatingList;
+    // pulbic establishment list that used in dropdown
     publicEstablishmentList;
+    // identification number type list that used in dropdown
     identificationNumberTypeList;
-    associations;
 
     constructor(
         private newRequestService: NewRequestService,
@@ -51,9 +66,10 @@ export class GeneralInformationComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
+        // Construct the formgroup for the current component
         this.form = this.formBuilder.group({
-            ...this.parentForm.get('entity').controls,
-            ...this.parentForm.get('location').controls,
+            ...(this.parentForm.get('entity') as FormGroup).controls,
+            ...(this.parentForm.get('location') as FormGroup).controls,
         });
 
         this.countries = this.translate.translate(countries);
@@ -69,11 +85,15 @@ export class GeneralInformationComponent implements OnInit, OnDestroy {
 
     /**
      * Init Form Persist if the step has not been completed
+     * Store this form step to formPersist in database, if the current step 
      */
     initFormPersist() {
         if (!this.completedStep || (steps[this.completedStep] < steps.generalInformation)) this.persistForm();
     }
 
+    /**
+     * Observe specified properties of the form, and change the properties of the current form dynamically.
+     */
     initFormCheck() {
         this.form.get('otherIdentificationNumberType').valueChanges
             .pipe(takeUntil(this.unsubscribe))
@@ -90,6 +110,10 @@ export class GeneralInformationComponent implements OnInit, OnDestroy {
             });
     }
 
+    /**
+     * Observe the kyc property 'commercialDomiciliation', change the form dynamically.
+     * @param {any} value: value of the property 'commercialDomiciliation'.
+     */
     formCheckCommercialDomiciliation(value) {
         const commercialDomiciliationControls: AbstractControl[] = [
             this.form.get('commercialAddressLine1'),
@@ -112,6 +136,10 @@ export class GeneralInformationComponent implements OnInit, OnDestroy {
         this.formPercent.refreshFormPercent();
     }
 
+    /**
+     * Observe the kyc property 'otherIdentificationNumberType', change the form dynamically.
+     * @param {any} value: value of the property 'otherIdentificationNumberType'.
+     */
     formCheckOtherIdentificationNumberType(value) {
         const otherIdentificationNumberTextControl: AbstractControl = this.form.get('otherIdentificationNumberText');
         const otherIdentificationNumberTypeSpecifyControl: AbstractControl = this.form.get('otherIdentificationNumberTypeSpecify');
@@ -146,10 +174,17 @@ export class GeneralInformationComponent implements OnInit, OnDestroy {
         this.formPercent.refreshFormPercent();
     }
 
+    /**
+     * Check if value of the formcontrol 'otherIdentificationNumberText' is valid.
+     * @param {string} value: error type to check
+     */
     checkIdentificationNumberType(value) {
         return getValue(this.form.get('otherIdentificationNumberText'), ['errors', value], '');
     }
 
+    /**
+     * Constuct the lists for dropdowns. with text tranlsated.
+     */
     initLists() {
         this.legalFormList = this.translate.translate(this.newRequestService.legalFormList);
         this.financialRatingList = this.newRequestService.financialRatingList;
@@ -157,16 +192,28 @@ export class GeneralInformationComponent implements OnInit, OnDestroy {
         this.identificationNumberTypeList = this.translate.translate(this.newRequestService.identificationNumberTypeList);
     }
 
+    /**
+     * Check a form control has certian validation error type
+     */
     hasError(control, error = []) {
         return this.newRequestService.hasError(this.form, control, error);
     }
 
-    isDisabled(path) {
+    /**
+     * Check specific formControl of the formGroup of this component, is disabled or not. In order to hide certian formControl.
+     * @param {string} path
+     * @return {boolean}
+     */
+    isDisabled(path): boolean {
         const control = this.form.get(path);
 
         return control.disabled;
     }
 
+    /**
+     * Get kyc Identification -> General Information, from membernode, and update the formGroup.
+     * Not sure why loop through the kyc(s)(because it might container multiple kyc), and update the formGroup multiple time.
+     */
     getCurrentFormData() {
         this.requests$
             .pipe(
@@ -189,6 +236,9 @@ export class GeneralInformationComponent implements OnInit, OnDestroy {
             });
     }
 
+    /**
+     * Initiate form persist, so the form can be auto fill with the data that wasn't save in the current form.
+     */
     persistForm() {
         this.persistService.watchForm(
             'newkycrequest/identification/generalInformation',
@@ -203,6 +253,9 @@ export class GeneralInformationComponent implements OnInit, OnDestroy {
         });
     }
 
+    /**
+     * Clear form persist, when this section of the kyc form is submitted.
+     */
     clearPersistForm() {
         this.persistService.refreshState(
             'newkycrequest/identification/generalInformation',
@@ -211,7 +264,12 @@ export class GeneralInformationComponent implements OnInit, OnDestroy {
         );
     }
 
-    handleSubmit(e) {
+    /**
+     * Loop through all the kyc(s) for the current kyc form. and send request to membernode to update 'General Information'.
+     * @param {any} e
+     * @return {void}
+     */
+    handleSubmit(e): void {
         e.preventDefault();
         if (!this.form.valid) {
             formHelper.dirty(this.form);
@@ -239,7 +297,10 @@ export class GeneralInformationComponent implements OnInit, OnDestroy {
         });
     }
 
-    updateParentForm() {
+    /**
+     * Backfill the formGroup in the main kyc formGroup.
+     */
+    updateParentForm():void {
         const newData = {};
         Object.keys(this.form.controls).forEach((key) => {
             newData[key] = this.form.get(key).value;
@@ -248,11 +309,21 @@ export class GeneralInformationComponent implements OnInit, OnDestroy {
         this.parentForm.get('location').patchValue(newData);
     }
 
-    showHelperText(control, errors) {
+    /**
+     * Helper function to check if specific type of validation error is need to be shown.
+     * @param {FormControl} control
+     * @param {string[]} errors
+     * @return {boolean}
+     */
+    showHelperText(control, errors): boolean {
         return this.form.get(control).invalid && !this.hasError(control, errors);
     }
 
-    isStepValid() {
+    /**
+     * Used by the FormStep component to check if the current component's formGroup is valid
+     * @return {boolean}
+     */
+    isStepValid(): boolean {
         return this.form.valid;
     }
 

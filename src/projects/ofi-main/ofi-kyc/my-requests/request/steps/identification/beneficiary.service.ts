@@ -81,6 +81,10 @@ export class BeneficiaryService {
         });
     }
 
+    /**
+     * Fill some of the fields, that deduce other value within stakeholders.
+     * @param {any[]} stakeholdes
+     */
     fillInStakeholderSelects(stakeholders) {
         if (stakeholders === null) return;
 
@@ -135,6 +139,11 @@ export class BeneficiaryService {
         });
     }
 
+    /**
+     * Update stakeholder formgroup dynamically, depending on the nationalID number type.
+     * @param {FormGroup} form: stakeholder group
+     * @param {any} value: value of nationalID number type value
+     */
     formCheckNationalIdNumberType(form, value) {
         const otherNationalIdNumberTypeTextControl: AbstractControl = form.get('legalPerson.otherNationalIdNumberType');
         const nationalIdNumberTextControl: AbstractControl = form.get('legalPerson.nationalIdNumberText');
@@ -161,6 +170,11 @@ export class BeneficiaryService {
         nationalIdNumberTextControl.updateValueAndValidity();
     }
 
+    /**
+     * Update stakeholder formgroup dynamically, depending on the beneficiary type.
+     * @param {FormGroup} form: stakeholder group
+     * @param {any} value: value of beneficiary type value
+     */
     formCheckBeneficiaryType(form, value) {
         const legalPersonControl: AbstractControl = form.get('legalPerson');
         const naturalPersonControl: AbstractControl = form.get('naturalPerson');
@@ -175,6 +189,10 @@ export class BeneficiaryService {
         }
     }
 
+    /**
+     * Update stakeholder form validity, that depending on some field within the stakeholder field.
+     * @param {FormArray} form
+     */
     updateStakeholdersValidity(form: FormArray) {
         if (form === null) return;
 
@@ -188,6 +206,9 @@ export class BeneficiaryService {
     }
 }
 
+/**
+ * Show beneficiary list in a way, that the beneficiaries has the same parent to be shown together 
+ */
 @Injectable({
     providedIn: 'root',
 })

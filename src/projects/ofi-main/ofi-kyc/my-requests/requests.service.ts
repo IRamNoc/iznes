@@ -28,7 +28,14 @@ export class RequestsService {
     ) {
     }
 
-    extractManagementCompanyData(companies, kycList, requestedKycs) {
+    /**
+     * Get list of management companies that can be selected in the kyc management companies selection screen.
+     * @param {any[]} companies: a full list of management companies available in the platform.
+     * @param {any[]} kycList: a list of kycs that belong to the current investor.
+     * @param {any[]} requestKycs: a list of kycs that active for the current kyc from.
+     * @return {any[]} full list of management companies that should be shown in the am selection screen.
+     */
+    extractManagementCompanyData(companies: any[], kycList, requestedKycs): {id: number; text: string; websiteUrl: string, image: any; register: boolean}[] {
         if (_.isEmpty(companies)) {
             return [];
         }
@@ -49,7 +56,14 @@ export class RequestsService {
         .value();
     }
 
-    filterCompanies(companies, kycList, requestedKycs) {
+    /**
+     * Get list of management companies, that exluding the ones that in the kycList, except thoes one that in the requestedKycs list
+     * @param {any[]} companies: a full list of management companies available in the platform.
+     * @param {any[]} kycList: a list of kycs that belong to the current investor.
+     * @param {any[]} requestKycs: a list of kycs that active for the current kyc from.
+     * @return {any[]} full list of management companies that should be shown in the am selection screen.
+     */
+    filterCompanies(companies, kycList, requestedKycs): any[] {
         kycList = _.keyBy(kycList, 'amManagementCompanyID');
         requestedKycs = _.keyBy(requestedKycs, 'amcID');
 
@@ -57,6 +71,7 @@ export class RequestsService {
             const isInKycList = kycList[company.companyID];
             const isInRequestedList = requestedKycs[company.companyID];
 
+            // not existing in kyc list, or is belong to active current kyc form.
             return !isInKycList || isInRequestedList;
         });
     }
