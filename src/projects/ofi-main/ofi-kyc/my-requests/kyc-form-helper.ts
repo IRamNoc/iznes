@@ -1,32 +1,34 @@
 import { FormGroup } from '@angular/forms';
 
-type investorKYCTypeSelection = {
-    iznes: string;
-    nowCPType: 'issuer' | 'investor';
-    id2stype: string;
+type kycPartySelections = {
+    iznes: boolean;
+    nowCPIssuer: boolean;
+    nowCPInvestor: boolean;
+    id2sCustodian: boolean;
+    id2sIPA: boolean;
 };
 
-export function isIZNES(selectionState: investorKYCTypeSelection): boolean {
+export function isIZNES(selectionState: kycPartySelections): boolean {
     return true;
 }
 
-export function isID2SIPA(selectionState: investorKYCTypeSelection): boolean {
+export function isID2SIPA(selectionState: kycPartySelections): boolean {
     return true;
 }
 
-export function isID2SCustodian(selectionState: investorKYCTypeSelection): boolean {
+export function isID2SCustodian(selectionState: kycPartySelections): boolean {
     return true;
 }
 
-export function isNowCPBoth(selectionState: investorKYCTypeSelection): boolean {
+export function isNowCPBoth(selectionState: kycPartySelections): boolean {
     return true;
 }
 
-export function isNowCPInvestor(selectionState: investorKYCTypeSelection): boolean {
+export function isNowCPInvestor(selectionState: kycPartySelections): boolean {
     return true;
 }
 
-export function isNowCPIssuer(selectionState: investorKYCTypeSelection): boolean {
+export function isNowCPIssuer(selectionState: kycPartySelections): boolean {
     return true;
 }
 

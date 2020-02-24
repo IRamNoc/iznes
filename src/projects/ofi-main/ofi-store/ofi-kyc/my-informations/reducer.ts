@@ -8,6 +8,7 @@ export interface KycMyInformationsState extends KycUser {
     amManagementCompanyID: number;
     invitationToken: string;
     investorType: number;
+    kycPartySelections: number;
 }
 
 const initialState = {
@@ -29,6 +30,7 @@ const initialState = {
     amManagementCompanyID: null,
     invitationToken: '',
     investorType: 0,
+    kycPartySelections: null,
 };
 
 export function KycMyInformationsReducer(
@@ -57,6 +59,7 @@ export function KycMyInformationsReducer(
                 amManagementCompanyID: res.amManagementCompanyID,
                 invitationToken: res.invitationToken,
                 investorType: res.investorType,
+                kycPartySelections: res.kycPartySelections,
             };
             return {
                 ...state,
