@@ -1,6 +1,6 @@
 import {KycMyInformationsAction, SET_INFORMATIONS, SET_INFORMATIONS_FROM_API} from './actions';
 import * as _ from 'lodash';
-import {KycUser} from './model';
+import { KycUser, KycPartySelections } from './model';
 
 export interface KycMyInformationsState extends KycUser {
     invitedBy: KycUser;
@@ -8,7 +8,7 @@ export interface KycMyInformationsState extends KycUser {
     amManagementCompanyID: number;
     invitationToken: string;
     investorType: number;
-    kycPartySelections: number;
+    kycPartySelections: KycPartySelections;
 }
 
 const initialState = {

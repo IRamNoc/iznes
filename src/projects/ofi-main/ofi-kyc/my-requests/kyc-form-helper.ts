@@ -1,34 +1,27 @@
 import { FormGroup } from '@angular/forms';
+import { KycPartySelections } from '../../ofi-store/ofi-kyc/my-informations/model';
 
-type kycPartySelections = {
-    iznes: boolean;
-    nowCPIssuer: boolean;
-    nowCPInvestor: boolean;
-    id2sCustodian: boolean;
-    id2sIPA: boolean;
-};
-
-export function isIZNES(selectionState: kycPartySelections): boolean {
+export function isIZNES(selectionState: KycPartySelections): boolean {
     return true;
 }
 
-export function isID2SIPA(selectionState: kycPartySelections): boolean {
+export function isID2SIPA(selectionState: KycPartySelections): boolean {
     return true;
 }
 
-export function isID2SCustodian(selectionState: kycPartySelections): boolean {
+export function isID2SCustodian(selectionState: KycPartySelections): boolean {
     return true;
 }
 
-export function isNowCPBoth(selectionState: kycPartySelections): boolean {
+export function isNowCPBoth(selectionState: KycPartySelections): boolean {
     return true;
 }
 
-export function isNowCPInvestor(selectionState: kycPartySelections): boolean {
+export function isNowCPInvestor(selectionState: KycPartySelections): boolean {
     return true;
 }
 
-export function isNowCPIssuer(selectionState: kycPartySelections): boolean {
+export function isNowCPIssuer(selectionState: KycPartySelections): boolean {
     return true;
 }
 
