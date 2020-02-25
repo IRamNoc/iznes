@@ -1,36 +1,104 @@
 import { FormGroup } from '@angular/forms';
 import { KycPartySelections } from '../../ofi-store/ofi-kyc/my-informations/model';
 
+export interface PartyCompaniesInterface {
+    iznes: boolean;
+    nowcp: boolean;
+    id2s: boolean;
+}
+
+/**
+ * Whether IZNES was selected in Party Selections
+ *
+ * @param {KycPartySelections} selectionState
+ * @returns {boolean}
+ */
 export function isIZNES(selectionState: KycPartySelections): boolean {
     return selectionState && selectionState.iznes;
 }
 
+/**
+ * Whether ID2s IPA was selected in Party Selections
+ *
+ * @param {KycPartySelections} selectionState
+ * @returns {boolean}
+ */
 export function isID2SIPA(selectionState: KycPartySelections): boolean {
     return selectionState && selectionState.id2sIPA;
 }
 
+/**
+ * Whether ID2S Custodian was selected in Party Selections
+ *
+ * @param {KycPartySelections} selectionState
+ * @returns {boolean}
+ */
 export function isID2SCustodian(selectionState: KycPartySelections): boolean {
     return selectionState && selectionState.id2sCustodian;
 }
 
+/**
+ * Whether both NowCP Investor and Issuer were selected in Party Selections
+ *
+ * @param {KycPartySelections} selectionState
+ * @returns {boolean}
+ */
 export function isNowCPBoth(selectionState: KycPartySelections): boolean {
     return selectionState && selectionState.nowCPIssuer && selectionState.nowCPInvestor;
 }
 
+/**
+ * Whether NowCP Invetor was selected in Party Selections
+ *
+ * @param {KycPartySelections} selectionState
+ * @returns {boolean}
+ */
 export function isNowCPInvestor(selectionState: KycPartySelections): boolean {
     return selectionState && selectionState.nowCPInvestor;
 }
 
+/**
+ * Whether NowCP Issuer was selected in Party Selections
+ *
+ * @param {KycPartySelections} selectionState
+ * @returns {boolean}
+ */
 export function isNowCPIssuer(selectionState: KycPartySelections): boolean {
     return selectionState && selectionState.nowCPIssuer;
 }
 
+/**
+ * Returns an object of the parties that the investor has selected
+ *
+ * @param {KycPartySelections} selectionState
+ * @returns {PartyCompaniesInterface}
+ */
+export function getPartyCompanies(selectionState: KycPartySelections): PartyCompaniesInterface {
+    return {
+        iznes: isIZNES(selectionState),
+        nowcp: isNowCPInvestor(selectionState) || isNowCPIssuer(selectionState),
+        id2s: isID2SIPA(selectionState) || isID2SCustodian(selectionState),
+    }
+}
+
+/**
+ * Returns a string of the name of the party who invited the investor
+ *
+ * @param {number} investorType
+ * @returns {'iznes'|'nowcp'|'id2s'}
+ */
 export function getPartyNameFromInvestorType(investorType: number): 'iznes'|'nowcp'|'id2s' {
     if ([70, 80, 90].indexOf(investorType) !== -1) return 'nowcp';
     if ([100, 110].indexOf(investorType) !== -1) return 'id2s';
     return 'iznes';
 }
 
+/**
+ * Returns a KycPartySelections formatted object of the party who invited the investor
+ *
+ * @param {number} investorType
+ * @returns {KycPartySelections}
+ */
 export function getPartySelectionFromInvestorType(investorType: number): KycPartySelections {
     switch (investorType) {
         case 70:
