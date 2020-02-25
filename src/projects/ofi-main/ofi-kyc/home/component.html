@@ -1,7 +1,7 @@
 <ng-container *ngIf="!!investorType">
     <ng-container *ngIf="showOnboardingFlow()">
 
-        <kyc-welcome *ngIf="showSplash"></kyc-welcome>
+        <kyc-welcome *ngIf="showSplash" (completed)="showSplash = false"></kyc-welcome>
 
         <div class="kyc-header">
             {{ 'Onboarding' | translate }}

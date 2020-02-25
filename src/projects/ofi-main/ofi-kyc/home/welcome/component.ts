@@ -1,16 +1,17 @@
-/* Core/Angular imports. */
 import { ChangeDetectionStrategy, Component, OnInit, OnDestroy, EventEmitter, Output } from '@angular/core';
 import { FormGroup, FormControl, ValidatorFn, ValidationErrors } from '@angular/forms';
 import { select, NgRedux } from '@angular-redux/store';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
+import { take } from 'rxjs/operators';
 import { ToasterService } from 'angular2-toaster';
 import * as kycFormHelper from '../../my-requests/kyc-form-helper';
-import { KycMyInformations } from '../../../ofi-store/ofi-kyc';
 import { OfiKycService } from '../../../ofi-req-services/ofi-kyc/service';
 import { SagaHelper } from '../../../../utils';
 import { MultilingualService } from '../../../../multilingual';
-
+import { KycMyInformations } from '../../../ofi-store/ofi-kyc';
+import { SET_KYC_PARTY_SELECTIONS } from '../../../ofi-store/ofi-kyc/my-informations';
+import { KycPartySelections } from '../../../ofi-store/ofi-kyc/my-informations/model';
 
 @Component({
     selector: 'kyc-welcome',
@@ -20,12 +21,14 @@ import { MultilingualService } from '../../../../multilingual';
 export class OfiKycWelcomeComponent implements OnInit, OnDestroy {
     @Output() completed: EventEmitter<boolean> = new EventEmitter();
     public kycPartySelectionsForm: FormGroup;
-    public kycPartySelections: kycFormHelper.kycPartySelections;
+    public kycPartySelections: KycPartySelections;
     public firstname: string;
     public investorType: number;
-    public isInvitedAsIznes: boolean;
+    public invitedAs: 'iznes'|'id2s'|'nowcp';
     private unsubscribe: Subject<any> = new Subject();
-    @select(['ofi', 'ofiKyc', 'myInformations']) kycMyInformations: Observable<KycMyInformations>;
+    @select(['ofi', 'ofiKyc', 'myInformations']) kycMyInformation$: Observable<KycMyInformations>;
+    @select(['user', 'connected', 'connectedWallet']) connectedWallet$: Observable<number>;
+    @select(['user', 'myDetail', 'accountId']) accountId$: Observable<number>;
 
     constructor(
         private ofiKycService: OfiKycService,
@@ -36,9 +39,16 @@ export class OfiKycWelcomeComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         this.createKycPartySelectionsForm();
+        this.getUsersKycInfo();
+    }
 
-        /* Subscribe for this user's connected info. */
-        this.kycMyInformations
+    /**
+     * Subscribes to get Users KYC Info
+     *
+     * @returns {void}
+     */
+    private getUsersKycInfo(): void {
+        this.kycMyInformation$
             .takeUntil(this.unsubscribe)
             .subscribe((d) => {
                 this.firstname = d.firstName;
@@ -46,15 +56,22 @@ export class OfiKycWelcomeComponent implements OnInit, OnDestroy {
 
                 // Get invited party selection
                 const invitedSelection = kycFormHelper.getPartySelectionFromInvestorType(this.investorType)
-                this.isInvitedAsIznes = kycFormHelper.isIZNES(invitedSelection);
+                this.invitedAs = kycFormHelper.getPartyNameFromInvestorType(this.investorType);
 
                 // Set KYC Party Selections or Get From Investor Type
-                this.kycPartySelections = d.kycPartySelections ? d.kycPartySelections : invitedSelection;
+                this.kycPartySelections = d.kycPartySelections
+                    ? { ...d.kycPartySelections, ...invitedSelection }
+                    : invitedSelection;
 
-                this.updateKycPartySelectionsForm();
+                this.updateKycPartySelectionsForm(invitedSelection);
             });
     }
 
+    /**
+     * Creates the Party Selection Form
+     *
+     * @returns {void}
+     */
     private createKycPartySelectionsForm(): void {
         this.kycPartySelectionsForm = new FormGroup({
             nowCPIssuer: new FormControl(),
@@ -68,7 +85,7 @@ export class OfiKycWelcomeComponent implements OnInit, OnDestroy {
     }
 
     /**
-     * Validation Form Selections
+     * Validate Form Selections
      * Returns error if both ID2S Custdian and IPA are checked
      *
      * @param {FormGroup} form
@@ -82,49 +99,59 @@ export class OfiKycWelcomeComponent implements OnInit, OnDestroy {
         return null;
     }
 
-    private updateKycPartySelectionsForm(): void {
+    /**
+     * Update KYC Party Selctions Form
+     *
+     * @param {KycPartySelections} invitedSelection
+     * @returns {void}
+     */
+    private updateKycPartySelectionsForm(invitedSelection: KycPartySelections): void {
        this.kycPartySelectionsForm.reset();
 
-        // NowCP Issuer
-        if (kycFormHelper.isNowCPIssuer(this.kycPartySelections)) {
-            this.kycPartySelectionsForm.get('nowCPIssuer').patchValue(true);
-            this.kycPartySelectionsForm.get('nowCPIssuer').disable();
-        }
+       // Set form values
+       this.kycPartySelectionsForm.patchValue({
+            nowCPIssuer: !!this.kycPartySelections.nowCPIssuer,
+            nowCPInvestor: !!this.kycPartySelections.nowCPInvestor,
+            id2sCustodian: !!this.kycPartySelections.id2sCustodian,
+            id2sIPA: !!this.kycPartySelections.id2sIPA,
+            iznes: !!this.kycPartySelections.iznes,
+       })
 
-        // NowCP Investor
-        if (kycFormHelper.isNowCPInvestor(this.kycPartySelections)) {
-            this.kycPartySelectionsForm.get('nowCPInvestor').patchValue(true);
-            this.kycPartySelectionsForm.get('nowCPInvestor').disable();
-        }
-
-        // ID2S Custodian
-        if (kycFormHelper.isID2SCustodian(this.kycPartySelections)) {
-            this.kycPartySelectionsForm.get('id2sCustodian').patchValue(true);
-            this.kycPartySelectionsForm.get('id2sCustodian').disable();
-        }
-
-        // ID2S IPA
-        if (kycFormHelper.isID2SIPA(this.kycPartySelections)) {
-            this.kycPartySelectionsForm.get('id2sIPA').patchValue(true);
-            this.kycPartySelectionsForm.get('id2sIPA').disable();
-        }
+        // Disable control/s for invited party selection/s
+        Object.keys(invitedSelection).forEach(c => this.kycPartySelectionsForm.get(c).disable());
     }
 
-    handleSavePartySelection(): void {
-        const partySelections = JSON.stringify(this.kycPartySelections);
+    /**
+     * Saves the party selections
+     *
+     * @returns {Promise<void>}
+     */
+    public async handleSavePartySelection(): Promise<void> {
+        // Close if invited as IZNES
+        if (this.invitedAs === 'iznes') {
+            this.completed.emit(true);
+            return;
+        }
 
-        const asyncTaskPipe = this.ofiKycService.setKycPartySelections(partySelections);
-        this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
+        const walletId = await this.connectedWallet$.pipe(take(1)).toPromise();
+        const accountId = await this.accountId$.pipe(take(1)).toPromise();
+        const partySelections = JSON.stringify(this.kycPartySelectionsForm.getRawValue());
+        const asyncTaskPipe = this.ofiKycService.setKycPartySelections({ walletId, accountId, partySelections });
+
+        this.ngRedux.dispatch(SagaHelper.runAsync(
+            [SET_KYC_PARTY_SELECTIONS],
+            [],
             asyncTaskPipe,
+            {},
             () => {
                 this.completed.emit(true);
+                this.toasterService.pop('success', this.translate.translate('Successfully saved your selections'));
             },
             () => {
                 this.toasterService.pop('error', this.translate.translate('Something went wrong. Please try again later'));
             }),
         );
     }
-
 
     ngOnDestroy(): void {
         this.unsubscribe.next();

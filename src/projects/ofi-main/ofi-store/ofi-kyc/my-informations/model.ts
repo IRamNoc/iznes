@@ -8,11 +8,11 @@ export interface KycUser {
 }
 
 export type KycPartySelections = {
-    iznes: boolean;
-    nowCPIssuer: boolean;
-    nowCPInvestor: boolean;
-    id2sCustodian: boolean;
-    id2sIPA: boolean;
+    iznes?: boolean;
+    nowCPIssuer?: boolean;
+    nowCPInvestor?: boolean;
+    id2sCustodian?: boolean;
+    id2sIPA?: boolean;
 };
 
 export interface KycMyInformations extends KycUser {

@@ -1,19 +1,22 @@
 <div class="full-screen-splash" [style.backgroundImage]="'url(assets/images/iznes-login-bg.jpg)'">
     <div class="content">
-        <img [attr.src]="isNowCP ? 'assets/images/nowcp-logo.png' : 'assets/images/logo-iznes-only.png'" [attr.alt]="isNowCP ? 'NowCP' : 'IZNES'">
+        <img *ngIf="invitedAs === 'iznes'" src="assets/images/logo-iznes-only.png" alt="IZNES">
+        <img *ngIf="invitedAs === 'nowcp'" src="assets/images/nowcp-logo.png" alt="NowCP">
+        <img *ngIf="invitedAs === 'id2s'" src="assets/images/id2s-logo.png" alt="ID2S">
+
         <h2>{{ 'Welcome' | translate }}<ng-container *ngIf="firstName"> {{ firstName }}</ng-container> 👋</h2>
         <p>{{ 'You will start to fill in your customer file in order to serve you better and to meet our various regulatory obligations.' | translate }}</p>
         <p>{{ 'The advantage of this folder is that you can share it with different actors to carry out different financial transactions.' | translate }}</p>
         <p>{{ 'IZNES is responsible for collecting and controlling your information for all its partners and customers. You no longer need to provide your information and documents several times to a multitude of counterparties, IZNES takes care of it for you, at your request.' | translate }}</p>
 
         <!-- IZNES Investors-->
-        <ng-container *ngIf="isInvitedAsIznes">
+        <ng-container *ngIf="invitedAs === 'iznes'">
             <p>{{ 'You have been invited to:' | translate }}</p>
             <p class="ml-1"><strong>IZNES: subscriptions and redemptions of fund units (UCIs)</strong></p>
         </ng-container>
 
         <!-- NowCP or ID2S Investors-->
-        <ng-container *ngIf="!isInvitedAsIznes">
+        <ng-container *ngIf="invitedAs !== 'iznes'">
             <p>{{ 'In order to ensure the best user experience, we invite you to choose from now on the activities that are likely to interest you; this will allow us to ask you in one go for all the necessary and sufficient information and documents (multiple choices possible):' | translate }}</p>
 
             <form [formGroup]="kycPartySelectionsForm">

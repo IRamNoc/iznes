@@ -1,7 +1,6 @@
 import { FormGroup } from '@angular/forms';
 import { KycPartySelections } from '../../ofi-store/ofi-kyc/my-informations/model';
 
-
 export function isIZNES(selectionState: KycPartySelections): boolean {
     return selectionState && selectionState.iznes;
 }
@@ -24,6 +23,12 @@ export function isNowCPInvestor(selectionState: KycPartySelections): boolean {
 
 export function isNowCPIssuer(selectionState: KycPartySelections): boolean {
     return selectionState && selectionState.nowCPIssuer;
+}
+
+export function getPartyNameFromInvestorType(investorType: number): 'iznes'|'nowcp'|'id2s' {
+    if ([70, 80, 90].indexOf(investorType) !== -1) return 'nowcp';
+    if ([100, 110].indexOf(investorType) !== -1) return 'id2s';
+    return 'iznes';
 }
 
 export function getPartySelectionFromInvestorType(investorType: number): KycPartySelections {
