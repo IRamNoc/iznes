@@ -626,6 +626,13 @@ form-steps {
         border-radius: 5px;
         padding: 24px;
         text-align: center;
+        height: 95%;
+        overflow-y: auto;
+        transition: opacity 0.3s linear;
+        opacity: 0;
+        &.fade-in {
+            opacity: 1;
+        }
         .highlight {
             background: #e1f1f6;
             border: solid 1px #89cbdf;

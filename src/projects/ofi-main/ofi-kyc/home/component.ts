@@ -32,13 +32,12 @@ export class OfiKycHomeComponent implements AfterViewInit, OnDestroy {
     hasFilledAdditionnalInfos = false;
     userType: number;
     investorType: number;
-    showSplash: boolean = true;
-    isNowCP: boolean = false;
 
     /* Public properties. */
     public showModal = false;
     public userInfo: KycMyInformations;
     public kycPartySelectionsForm: FormGroup;
+    public showWelcomeModal: boolean = true;
 
     unSubscribe: Subject<any> = new Subject();
 
@@ -77,7 +76,6 @@ export class OfiKycHomeComponent implements AfterViewInit, OnDestroy {
                 /* Assign list to a property. */
                 this.userInfo = d;
                 this.investorType = d.investorType;
-                this.renderSplash();
                 this.changeDetectorRef.markForCheck();
             });
 
@@ -198,13 +196,6 @@ export class OfiKycHomeComponent implements AfterViewInit, OnDestroy {
      */
     showOnboardingFlow():boolean {
         return !this.isPortfolioManagerType();
-    }
-
-    renderSplash() {
-        // Now CP investor type, 70 = issuer, 80 == investor
-        if (this.investorType === 70 || this.investorType === 80) {
-            this.isNowCP = true;
-        }
     }
 
     ngOnDestroy(): void {

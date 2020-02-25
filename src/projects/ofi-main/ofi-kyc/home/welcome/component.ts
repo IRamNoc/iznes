@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit, OnDestroy, EventEmitter, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, AfterViewInit, OnDestroy, EventEmitter, Output, ChangeDetectorRef } from '@angular/core';
 import { FormGroup, FormControl, ValidatorFn, ValidationErrors } from '@angular/forms';
 import { select, NgRedux } from '@angular-redux/store';
 import { Observable } from 'rxjs/Observable';
@@ -18,7 +18,7 @@ import { KycPartySelections } from '../../../ofi-store/ofi-kyc/my-informations/m
     templateUrl: './component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class OfiKycWelcomeComponent implements OnInit, OnDestroy {
+export class OfiKycWelcomeComponent implements OnInit, AfterViewInit, OnDestroy {
     @Output() completed: EventEmitter<boolean> = new EventEmitter();
     public kycPartySelectionsForm: FormGroup;
     public kycPartySelections: KycPartySelections;
@@ -26,6 +26,7 @@ export class OfiKycWelcomeComponent implements OnInit, OnDestroy {
     public investorType: number;
     public invitedAs: 'iznes'|'id2s'|'nowcp';
     private unsubscribe: Subject<any> = new Subject();
+    public fadeIn: boolean = false;
     @select(['ofi', 'ofiKyc', 'myInformations']) kycMyInformation$: Observable<KycMyInformations>;
     @select(['user', 'connected', 'connectedWallet']) connectedWallet$: Observable<number>;
     @select(['user', 'myDetail', 'accountId']) accountId$: Observable<number>;
@@ -35,11 +36,16 @@ export class OfiKycWelcomeComponent implements OnInit, OnDestroy {
         private ngRedux: NgRedux<any>,
         private toasterService: ToasterService,
         public translate: MultilingualService,
+        private changeDetector: ChangeDetectorRef,
     ) {}
 
     ngOnInit() {
         this.createKycPartySelectionsForm();
         this.getUsersKycInfo();
+    }
+
+    ngAfterViewInit() {
+        this.fadeInContent();
     }
 
     /**
@@ -151,6 +157,18 @@ export class OfiKycWelcomeComponent implements OnInit, OnDestroy {
                 this.toasterService.pop('error', this.translate.translate('Something went wrong. Please try again later'));
             }),
         );
+    }
+
+    /**
+     * Fades in once the max-height of the content has been set
+     *
+     * @returns {void}
+     */
+    private fadeInContent(): void {
+        setTimeout(() => {
+            this.fadeIn = true;
+            this.changeDetector.detectChanges();
+        }, 200);
     }
 
     ngOnDestroy(): void {
