@@ -1,7 +1,11 @@
 import {KycMyInformationsAction, SET_INFORMATIONS, SET_INFORMATIONS_FROM_API} from './actions';
 import * as _ from 'lodash';
+<<<<<<< HEAD
 import {KycUser} from './model';
 import { kycPartySelections } from '../../../ofi-kyc/my-requests/kyc-form-helper';
+=======
+import { KycUser, KycPartySelections } from './model';
+>>>>>>> e877f3e727145fc00ff5d841db9371cb0956a801
 
 export interface KycMyInformationsState extends KycUser {
     invitedBy: KycUser;
@@ -9,7 +13,11 @@ export interface KycMyInformationsState extends KycUser {
     amManagementCompanyID: number;
     invitationToken: string;
     investorType: number;
+<<<<<<< HEAD
     kycPartySelections: kycPartySelections;
+=======
+    kycPartySelections: KycPartySelections;
+>>>>>>> e877f3e727145fc00ff5d841db9371cb0956a801
 }
 
 const initialState = {

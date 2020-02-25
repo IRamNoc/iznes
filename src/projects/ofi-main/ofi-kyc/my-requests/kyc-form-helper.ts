@@ -1,38 +1,32 @@
 import { FormGroup } from '@angular/forms';
+import { KycPartySelections } from '../../ofi-store/ofi-kyc/my-informations/model';
 
-export type kycPartySelections = {
-    iznes?: boolean;
-    nowCPIssuer?: boolean;
-    nowCPInvestor?: boolean;
-    id2sCustodian?: boolean;
-    id2sIPA?: boolean;
-};
 
-export function isIZNES(selectionState: kycPartySelections): boolean {
+export function isIZNES(selectionState: KycPartySelections): boolean {
     return selectionState && selectionState.iznes;
 }
 
-export function isID2SIPA(selectionState: kycPartySelections): boolean {
+export function isID2SIPA(selectionState: KycPartySelections): boolean {
     return selectionState && selectionState.id2sIPA;
 }
 
-export function isID2SCustodian(selectionState: kycPartySelections): boolean {
+export function isID2SCustodian(selectionState: KycPartySelections): boolean {
     return selectionState && selectionState.id2sCustodian;
 }
 
-export function isNowCPBoth(selectionState: kycPartySelections): boolean {
+export function isNowCPBoth(selectionState: KycPartySelections): boolean {
     return selectionState && selectionState.nowCPIssuer && selectionState.nowCPInvestor;
 }
 
-export function isNowCPInvestor(selectionState: kycPartySelections): boolean {
+export function isNowCPInvestor(selectionState: KycPartySelections): boolean {
     return selectionState && selectionState.nowCPInvestor;
 }
 
-export function isNowCPIssuer(selectionState: kycPartySelections): boolean {
+export function isNowCPIssuer(selectionState: KycPartySelections): boolean {
     return selectionState && selectionState.nowCPIssuer;
 }
 
-export function getPartySelectionFromInvestorType(investorType: number): kycPartySelections {
+export function getPartySelectionFromInvestorType(investorType: number): KycPartySelections {
     switch (investorType) {
         case 70:
             return { nowCPIssuer: true };
