@@ -19,6 +19,7 @@ import { MyUserService } from '@setl/core-req-services';
 import { SagaHelper } from '@setl/utils/index';
 import { Endpoints } from '../config';
 import { InvestorType } from '../../shared/investor-types';
+import { FormGroup, FormControl, ValidatorFn } from '@angular/forms';
 
 @Component({
     styleUrls: ['./component.scss'],
@@ -31,32 +32,12 @@ export class OfiKycHomeComponent implements AfterViewInit, OnDestroy {
     hasFilledAdditionnalInfos = false;
     userType: number;
     investorType: number;
-    showSplash: boolean = true;
-    isNowCP: boolean = false;
 
     /* Public properties. */
     public showModal = false;
-    public userInfo: KycMyInformations = {
-        email: '',
-        firstName: '',
-        lastName: '',
-        invitedBy: {
-            email: '',
-            firstName: '',
-            lastName: '',
-            companyName: '',
-            phoneCode: '',
-            phoneNumber: '',
-        },
-        companyName: '',
-        amCompanyName: '',
-        phoneCode: '',
-        phoneNumber: '',
-        amManagementCompanyID: 0,
-        invitationToken: '',
-        investorType: 0,
-        kycPartySelections: null,
-    };
+    public userInfo: KycMyInformations;
+    public kycPartySelectionsForm: FormGroup;
+    public showWelcomeModal: boolean = true;
 
     unSubscribe: Subject<any> = new Subject();
 
@@ -95,7 +76,6 @@ export class OfiKycHomeComponent implements AfterViewInit, OnDestroy {
                 /* Assign list to a property. */
                 this.userInfo = d;
                 this.investorType = d.investorType;
-                this.renderSplash();
                 this.changeDetectorRef.markForCheck();
             });
 
@@ -221,12 +201,5 @@ export class OfiKycHomeComponent implements AfterViewInit, OnDestroy {
     ngOnDestroy(): void {
         this.unSubscribe.next();
         this.unSubscribe.complete();
-    }
-
-    renderSplash() {
-        // Now CP investor type, 70 = issuer, 80 == investor
-        if (this.investorType === 70 || this.investorType === 80) {
-            this.isNowCP = true;
-        }
     }
 }

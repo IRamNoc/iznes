@@ -35,6 +35,7 @@ import {
     AuditSearchRequestData,
     DuplicateKycRequestData,
     DuplicateKycMessageBody,
+    PartySelectionRequestData,
 } from './model';
 
 import { createMemberNodeRequest, createMemberNodeSagaRequest } from '@setl/utils/common';
@@ -902,6 +903,18 @@ export class OfiKycService {
             search: _.get(requestData, 'search', ''),
             from: _.get(requestData, 'from', ''),
             to: _.get(requestData, 'to', ''),
+        };
+
+        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+    }
+
+    setKycPartySelections(requestData: PartySelectionRequestData): any {
+        const messageBody: any = {
+            RequestName: 'iznessetkycpartyselections',
+            token: this.memberSocketService.token,
+            walletId: requestData.walletId,
+            accountId: requestData.accountId,
+            partySelections: requestData.partySelections,
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);

@@ -249,3 +249,9 @@ export interface AuditSearchRequestData {
     from: string;
     to: string;
 }
+
+export interface PartySelectionRequestData {
+    walletId: number,
+    accountId: number,
+    partySelections: string,
+}

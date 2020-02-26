@@ -1,21 +1,7 @@
 <ng-container *ngIf="!!investorType">
     <ng-container *ngIf="showOnboardingFlow()">
-        <div class="full-screen-splash" *ngIf="showSplash" [style.backgroundImage]="'url(assets/images/iznes-login-bg.jpg)'">
-            <div class="content">
-                <img [attr.src]="isNowCP ? 'assets/images/nowcp-logo.png' : 'assets/images/logo-iznes-only.png'" [attr.alt]="isNowCP ? 'NowCP' : 'IZNES'">
-                <h2>{{ 'Welcome' | translate }}<ng-container *ngIf="userInfo.firstName"> {{ userInfo.firstName }}</ng-container> 👋</h2>
-                <p>{{ 'To get started, please follow the onboarding process to give you full access to the platform. Estimated time to complete:' | translate }} <strong>1 {{ 'hour' | translate }}</strong></p>
-                <p>{{ 'Before you start make sure you have the following information ready:' | translate }}</p>
-                <ul>
-                    <li>{{ 'Company details' | translate }}</li>
-                    <li>{{ 'Stakeholders (shareholders &amp; beneficaries)' | translate }}</li>
-                    <li>{{ 'Bank accounts' | translate }}</li>
-                    <li>{{ 'Details of investments' | translate }}</li>
-                    <li>{{ 'Required documents' | translate }}</li>
-                </ul>
-                <button class="btn btn-primary" (click)="showSplash = false">{{ 'Start' | translate }}</button>
-            </div>
-        </div>
+
+        <kyc-welcome *ngIf="showWelcomeModal" (completed)="showWelcomeModal = false"></kyc-welcome>
 
         <div class="kyc-header">
             {{ 'Onboarding' | translate }}
