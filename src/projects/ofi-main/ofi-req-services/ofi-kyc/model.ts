@@ -252,6 +252,5 @@ export interface AuditSearchRequestData {
 
 export interface PartySelectionRequestData {
     walletId: number,
-    accountId: number,
     partySelections: string,
 }
