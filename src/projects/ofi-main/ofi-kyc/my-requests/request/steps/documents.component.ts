@@ -177,8 +177,6 @@ export class NewKycDocumentsComponent implements OnInit, OnDestroy {
             );
         }
 
-        console.log(`DocMeta: '${docName}'`, this.documentsMetaCache[docName]);
-
         return this.documentsMetaCache[docName];
     }
 
