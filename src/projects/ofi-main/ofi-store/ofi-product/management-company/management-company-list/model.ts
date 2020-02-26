@@ -29,6 +29,7 @@ export interface ManagementCompanyDetail {
     signatureHash: string;
     logoTitle: string;
     logoHash: string;
+    isThirdPartyKyc: boolean;
 }
 
 export interface ManagementCompanyListState {

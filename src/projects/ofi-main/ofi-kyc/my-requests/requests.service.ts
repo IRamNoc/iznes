@@ -35,7 +35,7 @@ export class RequestsService {
      * @param {any[]} requestKycs: a list of kycs that active for the current kyc from.
      * @return {any[]} full list of management companies that should be shown in the am selection screen.
      */
-    extractManagementCompanyData(companies: any[], kycList, requestedKycs): {id: number; text: string; websiteUrl: string, image: any; register: boolean}[] {
+    extractManagementCompanyData(companies: any[], kycList, requestedKycs): {id: number; text: string; websiteUrl: string, image: any; register: boolean, isThirdPartyKyc: boolean}[] {
         if (_.isEmpty(companies)) {
             return [];
         }
@@ -51,13 +51,14 @@ export class RequestsService {
             websiteUrl: company.websiteUrl,
             image: company.logoHash,
             registered: false,
+            isThirdPartyKyc: company.isThirdPartyKyc,
         }))
         .values()
         .value();
     }
 
     /**
-     * Get list of management companies, that exluding the ones that in the kycList, except thoes one that in the requestedKycs list
+     * Get list of management companies, that exluding the ones that in the kycList, except thoes one that in the requestedKycs list.
      * @param {any[]} companies: a full list of management companies available in the platform.
      * @param {any[]} kycList: a list of kycs that belong to the current investor.
      * @param {any[]} requestKycs: a list of kycs that active for the current kyc from.
