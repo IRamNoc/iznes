@@ -38,7 +38,7 @@
         <form-step *ngIf="fullForm">
             <investment-objective #step [form]="forms.get('riskProfile').get('investmentObjective')" [formConstraint]="forms.get('riskProfile').get('investmentConstraint')" [completedStep]="currentCompletedStep" (submitEvent)="handleSubmit($event)"></investment-objective>
         </form-step>
-        <form-step *ngIf="fullForm">
+        <form-step *ngIf="fullForm && !(kycPartySelections.id2s || kycPartySelections.nowcp)">
             <investment-constraint #step [form]="forms.get('riskProfile').get('investmentConstraint')" [formObjective]="forms.get('riskProfile').get('investmentObjective')" [completedStep]="currentCompletedStep" (submitEvent)="handleSubmit($event)"></investment-constraint>
         </form-step>
     <form-step *ngIf="fullForm">

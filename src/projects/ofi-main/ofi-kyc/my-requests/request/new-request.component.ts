@@ -16,9 +16,11 @@ import { NewRequestService } from './new-request.service';
 import { FormstepsComponent } from '@setl/utils/components/formsteps/formsteps.component';
 import { OfiKycService } from '../../../ofi-req-services/ofi-kyc/service';
 import { setMenuCollapsed } from '@setl/core-store';
+import { PartyCompaniesInterface } from '../kyc-form-helper';
+import { KycFormHelperService } from './../kyc-form-helper.service';
 
 /**
- * KYC main form wrapper component 
+ * KYC main form wrapper component
  */
 @Component({
     templateUrl: './new-request.component.html',
@@ -81,6 +83,9 @@ export class NewKycRequestComponent implements OnInit, AfterViewInit {
     // investor type that of the user.original invited with.
     kycInvestorType;
 
+    /* The companies that this user was invited by. */
+    public kycPartySelections: PartyCompaniesInterface;
+
     // default investor data that is used to decide whether to show certian types of document for the kyc form.
     documentRules = {
         isListed: null,
@@ -99,9 +104,15 @@ export class NewKycRequestComponent implements OnInit, AfterViewInit {
         private location: Location,
         private ofiKycService: OfiKycService,
         private changeDetectorRef: ChangeDetectorRef,
+        private kycFormHelperService: KycFormHelperService,
     ) {
         // collapse the menu by default
         this.ngRedux.dispatch(setMenuCollapsed(true));
+
+        this.kycFormHelperService.kycPartyCompanies$
+            .subscribe((parties) => {
+                this.kycPartySelections = parties;
+            });
     }
 
     /**
@@ -294,7 +305,7 @@ export class NewKycRequestComponent implements OnInit, AfterViewInit {
     }
 
     /**
-     * Set Form current completed step, and setup stepConfig 
+     * Set Form current completed step, and setup stepConfig
      * @param {string} completedStep
      */
     initFormSteps(completedStep): void {
@@ -329,7 +340,7 @@ export class NewKycRequestComponent implements OnInit, AfterViewInit {
      * Get next step as string. such as 'amcSelection', 'introduction'.
      * @param {string} step
      * @return {string}
-     */ 
+     */
     getNextStep(step: string): string {
         const stepLevel = steps[step];
         const nextStep = invert(steps)[stepLevel + 1];
