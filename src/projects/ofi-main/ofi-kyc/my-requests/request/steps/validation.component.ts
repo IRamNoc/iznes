@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, OnDestroy, Output, EventEmitter } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy, Output, EventEmitter, ChangeDetectorRef } from '@angular/core';
 import { NgRedux, select } from '@angular-redux/store';
 import { Router } from '@angular/router';
 import { Subject, combineLatest } from 'rxjs';
@@ -19,6 +19,7 @@ import { MultilingualService } from '@setl/multilingual';
 import { KycMyInformations } from '@ofi/ofi-main/ofi-store/ofi-kyc/my-informations';
 import { Observable } from 'rxjs/Observable';
 import { OfiKycService } from '@ofi/ofi-main/ofi-req-services/ofi-kyc/service';
+import { getPartyNameFromInvestorType, isIZNES } from '../../kyc-form-helper';
 
 @Component({
     selector: 'kyc-step-validation',
@@ -41,9 +42,11 @@ export class NewKycValidationComponent implements OnInit, OnDestroy {
     connectedWallet;
     open = true;
     showKYCComplete: boolean = false;
-    isNowCP: boolean = false;
+    public invitedAs: 'iznes'|'id2s'|'nowcp';
+    public isIznes: boolean;
     firstName: string;
     investorInformationRequested: boolean = false;
+    fadeIn: boolean = false;
 
     constructor(
         private requestsService: RequestsService,
@@ -56,6 +59,7 @@ export class NewKycValidationComponent implements OnInit, OnDestroy {
         private ngRedux: NgRedux<any>,
         public translate: MultilingualService,
         public ofiKycService: OfiKycService,
+        private changeDetector: ChangeDetectorRef,
     ) {
     }
 
@@ -90,7 +94,8 @@ export class NewKycValidationComponent implements OnInit, OnDestroy {
                 this.investorInformationRequested = true;
                 return this.ofiKycService.fetchInvestor();
             }
-            this.isNowCP = d.investorType === 70 || d.investorType === 80;
+            this.invitedAs = getPartyNameFromInvestorType(d.investorType);
+            this.isIznes = isIZNES(d.kycPartySelections);
             this.firstName = d.firstName;
         });
     }
@@ -163,6 +168,7 @@ export class NewKycValidationComponent implements OnInit, OnDestroy {
 
     handleConfirm(closed = false, startAgain = false) {
         this.showKYCComplete = !closed;
+        if (this.showKYCComplete) this.fadeInContent();
 
         if (closed) {
             this.router.navigate(['onboarding-requests', 'list'])
@@ -255,6 +261,18 @@ export class NewKycValidationComponent implements OnInit, OnDestroy {
      */
     isStepValid() {
         return this.form.valid;
+    }
+
+    /**
+     * Fades in once the max-height of the content has been set
+     *
+     * @returns {void}
+     */
+    private fadeInContent(): void {
+        setTimeout(() => {
+            this.fadeIn = true;
+            this.changeDetector.detectChanges();
+        }, 200);
     }
 
     ngOnDestroy() {

@@ -1,4 +1,4 @@
-import {KycMyInformationsAction, SET_INFORMATIONS, SET_INFORMATIONS_FROM_API} from './actions';
+import { KycMyInformationsAction, SET_INFORMATIONS, SET_INFORMATIONS_FROM_API, SET_KYC_PARTY_SELECTIONS } from './actions';
 import * as _ from 'lodash';
 import { KycUser, KycPartySelections } from './model';
 
@@ -37,9 +37,10 @@ export function KycMyInformationsReducer(
     state: KycMyInformationsState = initialState,
     action: KycMyInformationsAction
 ): KycMyInformationsState {
+    const res = _.get(action.payload, ['1', 'Data', '0'], {});
+
     switch (action.type) {
         case SET_INFORMATIONS_FROM_API:
-            const res = _.get(action.payload, ['1', 'Data', '0'], {});
             const newData = {
                 email: res.investorEmail || '',
                 firstName: res.investorFirstName || '',
@@ -59,7 +60,7 @@ export function KycMyInformationsReducer(
                 amManagementCompanyID: res.amManagementCompanyID,
                 invitationToken: res.invitationToken,
                 investorType: res.investorType,
-                kycPartySelections: res.kycPartySelections,
+                kycPartySelections: getPartySelection(res.kycPartySelections),
             };
             return {
                 ...state,
@@ -70,7 +71,28 @@ export function KycMyInformationsReducer(
                 ...state,
                 ...action.payload
             };
+        case SET_KYC_PARTY_SELECTIONS:
+            const kycPartySelections = getPartySelection(res.kycPartySelections);
+            return {
+                ...state,
+                ...{ kycPartySelections }
+            };
         default:
             return state;
     }
+}
+
+function getPartySelection(kycPartySelections) {
+    let partySelections = kycPartySelections;
+
+    if (partySelections) {
+        try {
+            partySelections = JSON.parse(kycPartySelections);
+        } catch (e) {
+            console.error('Unable to parse KYC Party Selections', e);
+            partySelections = null;
+        }
+    }
+
+    return partySelections;
 }
