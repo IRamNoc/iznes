@@ -335,6 +335,7 @@ export class DocumentsService {
         shouldShow: boolean;
         required: boolean;
     } {
+        // Map for the rules.
         const companyRulesMap = {
             isCompanyListed: 'listed',
             isCompanyUnlisted: 'unlisted',
@@ -342,45 +343,46 @@ export class DocumentsService {
             isHighRiskActivity: 'highRiskActivity',
             isHighRiskCountry: 'highRiskCountry',
         };
+
+        // Default vars.
         let shouldShow = false;
         let required = false;
+
         /* Loop over rules. */
         for (const rule of Object.keys(permissions.rules)) {
             const docMatrixRuleMap = companyRulesMap[rule];
             switch (true) {
                 case !!(
-                    permissions.companies.iznes &&
-                    permissions.rules[rule] &&
-                    this.documentMatrix['IZNES'][docMatrixRuleMap] &&
-                    this.documentMatrix['IZNES'][docMatrixRuleMap][docName]
-                ):
+                        permissions.companies.iznes &&
+                        permissions.rules[rule] &&
+                        this.documentMatrix['IZNES'][docMatrixRuleMap] &&
+                        this.documentMatrix['IZNES'][docMatrixRuleMap][docName]
+                    ):
                     shouldShow = true;
                     required = !!(this.documentMatrix['IZNES'][docMatrixRuleMap][docName] === 'required');
+                    break;
                 case !!(
-                    (
-                        permissions.companies.nowCPIssuer ||
-                        permissions.companies.nowCPInvestor
-                    ) &&
-                    permissions.rules[rule] &&
-                    this.documentMatrix['NOWCP'][docMatrixRuleMap] &&
-                    this.documentMatrix['NOWCP'][docMatrixRuleMap][docName]
-                ):
+                        permissions.companies.nowcp &&
+                        permissions.rules[rule] &&
+                        this.documentMatrix['NOWCP'][docMatrixRuleMap] &&
+                        this.documentMatrix['NOWCP'][docMatrixRuleMap][docName]
+                    ):
                     shouldShow = true;
                     required = !!(this.documentMatrix['NOWCP'][docMatrixRuleMap][docName] === 'required');
+                    break;
                 case !!(
-                    (
-                        permissions.companies.id2sIPA ||
-                        permissions.companies.id2sCustodian
-                    ) &&
-                    permissions.rules[rule] &&
-                    this.documentMatrix['ID2S'][docMatrixRuleMap] &&
-                    this.documentMatrix['ID2S'][docMatrixRuleMap][docName]
-                ):
+                        permissions.companies.id2s &&
+                        permissions.rules[rule] &&
+                        this.documentMatrix['ID2S'][docMatrixRuleMap] &&
+                        this.documentMatrix['ID2S'][docMatrixRuleMap][docName]
+                    ):
                     shouldShow = true;
                     required = !!(this.documentMatrix['ID2S'][docMatrixRuleMap][docName] === 'required');
+                    break;
             }
         }
 
+        // Return document object.
         return {
             shouldShow,
             required,

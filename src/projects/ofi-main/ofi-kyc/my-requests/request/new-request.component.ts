@@ -17,7 +17,6 @@ import { NewRequestService } from './new-request.service';
 import { FormstepsComponent } from '@setl/utils/components/formsteps/formsteps.component';
 import { OfiKycService } from '../../../ofi-req-services/ofi-kyc/service';
 import { setMenuCollapsed } from '@setl/core-store';
-import { KycPartySelections } from './../../../ofi-store/ofi-kyc/my-informations/model';
 import { DocumentPermissions } from './steps/documents.model';
 import {
     isCompanyListed,
@@ -25,6 +24,7 @@ import {
     isCompanyUnregulated,
     isHighRiskActivity,
     isHighRiskCountry,
+    PartyCompaniesInterface,
 } from '../kyc-form-helper';
 
 /**
@@ -91,7 +91,8 @@ export class NewKycRequestComponent implements OnInit, AfterViewInit {
     // investor type that of the user.original invited with.
     kycInvestorType;
 
-    kycPartySelections;
+    /* The companies that this user was invited by. */
+    public kycPartySelections: PartyCompaniesInterface;
 
     constructor(
         private formBuilder: FormBuilder,
@@ -109,9 +110,10 @@ export class NewKycRequestComponent implements OnInit, AfterViewInit {
         this.ngRedux.dispatch(setMenuCollapsed(true));
 
         // Subscribe for party details.
-        this.kycFormHelperService.kycMyInformations$
+        this.kycFormHelperService.kycPartyCompanies$
             .subscribe((data) => {
-                this.kycPartySelections = data.kycPartySelections;
+                console.log('kycMyInformations: ', data);
+                this.kycPartySelections = data;
             });
     }
 
@@ -122,27 +124,18 @@ export class NewKycRequestComponent implements OnInit, AfterViewInit {
      * @return {DocumentPermissions}
      */
     get documents(): DocumentPermissions {
-        // Rules based on previous parts.
-        // const isListed = this.forms.get('identification.companyInformation.companyListed').value || null;
-        // const isFloatableHigh = this.forms.get('identification.companyInformation.floatableShares').value >= 75 || null;
-        // const isRegulated = this.forms.get('identification.companyInformation.activityRegulated').value || null;
-        // const isNowCp = (this.kycInvestorType === 70 || this.kycInvestorType === 80) || null;
-
         // Defaults.
-        let companyInfo: KycPartySelections = {
-            iznes: true,
-            nowCPIssuer: true,
-            nowCPInvestor: true,
-            id2sCustodian: true,
-            id2sIPA: true,
+        let companyInfo: PartyCompaniesInterface = {
+            iznes: false,
+            id2s: false,
+            nowcp: true,
         };
 
         // Replace with correct object if availible.
         if (this.kycPartySelections) {
-            companyInfo = Object.assign(
-                companyInfo,
-                this.kycPartySelections,
-            );
+            companyInfo.iznes = this.kycPartySelections.iznes || false;
+            companyInfo.id2s = this.kycPartySelections.id2s || false;
+            companyInfo.nowcp = this.kycPartySelections.nowcp || false;
         }
 
         const permissionsObject: DocumentPermissions = {
