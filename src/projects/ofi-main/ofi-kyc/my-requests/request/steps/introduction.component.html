@@ -2,17 +2,79 @@
     {{ 'Introduction' | translate }}
 </h4>
 
-<div class="well p-1 introduction-text">
-    <p>{{ 'The European Directive 2014/65/EU known as "Markets in Financial Instruments (MiFID II)", which entered into force on the 3rd of January 2018, requires, in the continuity of the Directive 2004/39/EC known as "Markets in Financial Instruments Directive (MiFID)", in particular asset management companies and investment firms to categorise their clients and ensure that the products offered match the characteristics of the targeted clients by complying with the provisions applicable to the product governance.' | translate }}</p>
+<div *ngIf="helper.kycPartyCompanies$ | async as parties" class="well p-1 introduction-text">
+    <!-- IZNES Disclaimer -->
+    <ng-container *ngIf="parties.iznes">
+        <p>{{ 'The European Directive 2014/65/EU known as "Markets in Financial Instruments (MiFID II)", which entered into force on the 3rd of January 2018, requires, in the continuity of the Directive 2004/39/EC known as "Markets in Financial Instruments Directive (MiFID)", in particular asset management companies and investment firms to categorise their clients and ensure that the products offered match the characteristics of the targeted clients by complying with the provisions applicable to the product governance.' | translate }}</p>
+        <p>{{ 'The current European Directive on the Fight against Money Laundering and Terrorist Financing requires asset management companies to know the identity of the client, the origin of the funds and information on the beneficial owners of legal entities.' | translate }}
+        <p>{{ 'The US Foreign Account Tax Compliance Act (FATCA) is a US regulation that aims to combat tax evasion by US taxpayers within the meaning of "US PERSON" whose accounts are domiciled outside the United States or who indirectly receive income inside or outside the United States through foreign entities. FATCA regulation is extraterritorial: it applies outside the United States to a wide range of financial institutions including banks but also investment funds, asset managers and life insurance companies. The latter must identify US persons within the meaning of US PERSON and declare them annually to the US tax authority, via the local tax authority in the case of France, to allow automated matching with their individual tax returns.' | translate }}</p>
+        <p>{{ 'The CRS (Common Reporting Standard) has been adopted by the OECD and the G20, and consists of an automatic exchange of tax information on a global scale. Financial institutions must implement positive self-certification on a dedicated form to identify non-residents within the meaning of these regulations.' | translate }}</p>
+        <p>{{ 'You have expressed the wish to obtain a service from a controlled professional engaged in an activity regulated by the Autorité de Contrôle Prudentiel et de Résolution (ACPR - French Prudential Supervision and Resolution Authority) and the Autorité des Marchés Financiers (AMF – French Financial Markets Authority ). The collection of information is carried out in the interest  of the client and aims to provide a suitable or appropriate service or advice. The truthfulness, accuracy and updating of the answers to this questionnaire will determine the provision of an appropriate and quality service or advice. In the absence of exhaustive answers, the asset management company may not be able to verify that it is providing the requested service. Failure to respond could result in the obligation for the AMF to report it to the competent authorities.' | translate }}</p>
+    </ng-container>
 
-    <p>{{ 'The current European Directive on the Fight against Money Laundering and Terrorist Financing requires asset management companies to know the identity of the client, the origin of the funds and information on the beneficial owners of legal entities.' | translate }}</p>
+    <!-- NowCP Disclaimer -->
+    <ng-container *ngIf="parties.nowcp && !parties.id2s">
+        <p>{{ 'The information and documents collected in the context of the admission forms are necessary for the processing of the application for admission to NowCP and are intended to comply with the applicable legal and regulatory provisions, in particular in the context of the fight against money laundering and terrorist financing. The information and documents provided by users must be accurate, sincere and up to date.' | translate }}</p>
+        <p>{{ 'Personal data is intended for:' | translate }}</p>
+        <ul class="mb-1">
+            <li>{{ 'NowCP, SA with a share capital of 7,462,000 euros, registered in the Paris Trade and Companies Register under number 528 817 356, whose registered office is located at 95 rue Saint Lazare 75009, Paris, and' | translate }}</li>
+            <li>{{ 'to service providers including Iznes, a SAS with a capital of 51,450 euros, registered in the Paris Trade and Companies Register under number 832 488 415, whose registered office is located at 20-22 rue Vernier, 75017 Paris, acting as joint data controllers.' | translate }}</li>
+        </ul>
+        <p>{{ 'Users have the right to access, rectify, update and delete information concerning them, and may object to the use of their personal data for commercial prospecting purposes by writing:' | translate }}</p>
+        <ul class="mb-1">
+            <li>{{ 'for NowCP at the email address dataprotection@nowcp.eu or by post to the attention of the Data Protection Officer - NowCP, 95 rue Saint Lazare, 75009 Paris, specifying in the subject line of the letter "Droit des personnes" and attaching a copy of their proof of identity;' | translate }}</li>
+            <li>{{ 'for Iznes at the email address contact@iznes.io or by post to the attention of the Data Protection Officer – IZNES, 20-22 rue Vernier, 75017 Paris.' | translate }}</li>
+        </ul>
+        <p>{{ 'For more information, you can consult:' | translate }}</p>
+        <ul class="mb-1">
+            <li>{{ "NowCP's personal data protection policy on its website www.nowcp.eu ;" | translate }}</li>
+            <li>{{ "Iznes' personal data protection policy on its support platform" | translate }}</li>
+        </ul>
+    </ng-container>
 
-    <p>{{ 'The US Foreign Account Tax Compliance Act (FATCA) is a US regulation that aims to combat tax evasion by US taxpayers within the meaning of "US PERSON" whose accounts are domiciled outside the United States or who indirectly receive income inside or outside the United States through foreign entities. FATCA regulation is extraterritorial: it applies outside the United States to a wide range of financial institutions including banks but also investment funds, asset managers and life insurance companies. The latter must identify US persons within the meaning of US PERSON and declare them annually to the US tax authority, via the local tax authority in the case of France, to allow automated matching with their individual tax returns.' | translate }}</p>
+    <!-- ID2S Disclaimer -->
+    <ng-container *ngIf="parties.id2s && !parties.nowcp">
+        <p>{{ 'The information and documents collected in the context of the admission forms are necessary for the processing of the application for admission to ID2S and are intended to comply with the applicable legal and regulatory provisions, in particular in the context of the fight against money laundering and terrorist financing. The information and documents provided by users must be accurate, sincere and up to date.' | translate }}</p>
+        <p>{{ 'Personal data is intended for:' | translate }}</p>
+        <ul class="mb-1">
+            <li>{{ 'ID2S, SA with a share capital of 11,685,500 euros, registered in the Paris Trade and Companies Register under number 528 817 307, whose registered office is located at 95 rue Saint Lazare 75009, Paris, and' | translate }}</li>
+            <li>{{ 'to service providers including Iznes, a SAS with a capital of 51,450 euros, registered in the Paris Trade and Companies Register under number 832 488 415, whose registered office is located at 20-22 rue Vernier, 75017 Paris, acting as joint data controllers.' | translate }}</li>
+        </ul>
+        <p>{{ 'Users have the right to access, rectify, update and delete information concerning them, and may object to the use of their personal data for commercial prospecting purposes by writing:' | translate }}</p>
+        <ul class="mb-1">
+            <li>{{ 'for ID2S at the email address id2s.dataprotection@id2s.eu or by post to the attention of the Data Protection Officer – ID2S, 95 rue Saint Lazare, 75009 Paris, specifying in the subject line of the letter "Droit des personnes" and attaching a copy of their proof of identity;' | translate }}</li>
+            <li>{{ 'for Iznes at the email address contact@iznes.io or by post to the attention of the Data Protection Officer – IZNES, 20-22 rue Vernier, 75017 Paris.' | translate }}</li>
+        </ul>
+        <p>{{ 'For more information, you can consult:' | translate }}</p>
+        <ul class="mb-1">
+            <li>{{ "ID2S’ personal data protection policy on its website www.id2s.eu;" | translate }}</li>
+            <li>{{ "Iznes' personal data protection policy on its support platform iznes-support.zendesk.com" | translate }}</li>
+        </ul>
+    </ng-container>
 
-    <p>{{ 'The CRS (Common Reporting Standard) has been adopted by the OECD and the G20, and consists of an automatic exchange of tax information on a global scale. Financial institutions must implement positive self-certification on a dedicated form to identify non-residents within the meaning of these regulations.' | translate }}</p>
-
-    <p>{{ 'You have expressed the wish to obtain a service from a controlled professional engaged in an activity regulated by the Autorité de Contrôle Prudentiel et de Résolution (ACPR - French Prudential Supervision and Resolution Authority) and the Autorité des Marchés Financiers (AMF – French Financial Markets Authority ). The collection of information is carried
-    out in the interest of the client and aims to provide a suitable or appropriate service or advice. The truthfulness, accuracy and updating of the answers to this questionnaire will determine the provision of an appropriate and quality service or advice. In the absence of exhaustive answers, the asset management company may not be able to verify that it is providing the requested service. Failure to respond could result in the obligation for the AMF to report it to the competent authorities.' | translate }}</p>
+    <!-- Combined NowCP and ID2S Disclaimer -->
+    <ng-container *ngIf="parties.id2s && parties.nowcp">
+        <p>{{ 'The information and documents collected in the context of the admission forms are necessary for the processing of the application for admission to NowCP and ID2S and are intended to comply with the applicable legal and regulatory provisions, in particular in the context of the fight against money laundering and terrorist financing. The information and documents provided by users must be accurate, sincere and up to date.' | translate }}</p>
+        <p>{{ 'Personal data is intended for:' | translate }}</p>
+        <ul class="mb-1">
+            <li>{{ 'NowCP, SA with a share capital of 7,462,000 euros, registered in the Paris Trade and Companies Register under number 528 817 356, whose registered office is located at 95 rue Saint Lazare 75009, Paris, and' | translate }}</li>
+            <li>{{ 'ID2S, SA with a share capital of 11,685,500 euros, registered in the Paris Trade and Companies Register under number 528 817 307, whose registered office is located at 95 rue Saint Lazare 75009, Paris, and' | translate }}</li>
+            <li>{{ 'to service providers including Iznes, a SAS with a capital of 51,450 euros, registered in the Paris Trade and Companies Register under number 832 488 415, whose registered office is located at 20-22 rue Vernier, 75017 Paris, acting as joint data controllers.' | translate }}</li>
+        </ul>
+        <p>{{ 'Users have the right to access, rectify, update and delete information concerning them, and may object to the use of their personal data for commercial prospecting purposes by writing:' | translate }}</p>
+        <ul class="mb-1">
+            <li>{{ 'for NowCP at the email address dataprotection@nowcp.eu or by post to the attention of the Data Protection Officer - NowCP, 95 rue Saint Lazare, 75009 Paris, specifying in the subject line of the letter "Droit des personnes" and attaching a copy of their proof of identity;' | translate }}</li>
+            <li>{{ 'for ID2S at the email address id2s.dataprotection@id2s.eu or by post to the attention of the Data Protection Officer – ID2S, 95 rue Saint Lazare, 75009 Paris, specifying in the subject line of the letter "Droit des personnes" and attaching a copy of their proof of identity;' | translate }}</li>
+            <li>{{ 'for Iznes at the email address contact@iznes.io or by post to the attention of the Data Protection Officer – IZNES, 20-22 rue Vernier, 75017 Paris.' | translate }}</li>
+        </ul>
+        <p>{{ 'For more information, you can consult:' | translate }}</p>
+        <ul class="mb-1">
+            <li>{{ "NowCP's personal data protection policy on its website www.nowcp.eu ;" | translate }}</li>
+            <li>{{ "ID2S’ personal data protection policy on its website www.id2s.eu;" | translate }}</li>
+            <li>{{ "Iznes' personal data protection policy on its support platform iznes-support.zendesk.com;" | translate }}</li>
+            <li>{{ "the user guide for completing NowCP admission forms." | translate }}</li>
+        </ul>
+    </ng-container>
 </div>
 
 <div class="checkbox-inline">
@@ -21,12 +83,3 @@
         {{ 'I acknowledge that I have read the European Directive on Markets in Financial Instruments' | translate }}
     </label>
 </div>
-<!-- <div class="px-1">
-    <clr-alert [clrAlertClosable]="false" [clrAlertSizeSmall]="true">
-        <div class="alert-item">
-            <span class="alert-text">
-                {{ 'The information collected should be regularly updated.' | translate }}
-            </span>
-        </div>
-    </clr-alert>
-</div> -->
