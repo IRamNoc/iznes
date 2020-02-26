@@ -132,12 +132,6 @@ export class OfiKycWelcomeComponent implements OnInit, AfterViewInit, OnDestroy 
      * @returns {Promise<void>}
      */
     public async handleSavePartySelection(): Promise<void> {
-        // Close if invited as IZNES
-        if (this.invitedAs === 'iznes') {
-            this.completed.emit(true);
-            return;
-        }
-
         const walletId = await this.connectedWallet$.pipe(take(1)).toPromise();
         const partySelections = JSON.stringify(this.kycPartySelectionsForm.getRawValue());
         const asyncTaskPipe = this.ofiKycService.setKycPartySelections({ walletId, partySelections });
@@ -149,7 +143,10 @@ export class OfiKycWelcomeComponent implements OnInit, AfterViewInit, OnDestroy 
             {},
             () => {
                 this.completed.emit(true);
-                this.toasterService.pop('success', this.translate.translate('Successfully saved your selections'));
+                // Don't show success toaster for IZNES as they have no selection to make, but still save to DB as needed for logic in KYC
+                if (this.invitedAs !== 'iznes') {
+                    this.toasterService.pop('success', this.translate.translate('Successfully saved your selections'));
+                }
             },
             () => {
                 this.toasterService.pop('error', this.translate.translate('Something went wrong. Please try again later'));
