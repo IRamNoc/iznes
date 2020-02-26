@@ -440,7 +440,6 @@ export const booleanControls = [
     'isPoliticallyExposed',
     // 'investmentDecisionsAdHocCommittee', /* investmentDecisionsAdHocCommittee is VARCHAR in tblIznKycRiskObjective */
     'hasAlreadyInvestedNeuCp',
-    'hasExperienceTradingNeuCp',
     'hasEverIssuedNeuCp',
 ];
 
@@ -3223,7 +3222,6 @@ export const controlToName = {
     constraintsSameInvestmentCrossAm: 'I would like to have the same investment objectives for all management companies',
     hasEverIssuedNeuCp: 'Has your company ever issued Neu CPs?',
     hasAlreadyInvestedNeuCp: 'Has your company already invested in Neu CPs?',
-    hasExperienceTradingNeuCp: 'Do your operators have experience in trading on the Neu CPs?',
 
     // Validation
     undersigned: 'Identity',
