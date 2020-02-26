@@ -913,7 +913,6 @@ export class OfiKycService {
             RequestName: 'iznessetkycpartyselections',
             token: this.memberSocketService.token,
             walletId: requestData.walletId,
-            accountId: requestData.accountId,
             partySelections: requestData.partySelections,
         };
 

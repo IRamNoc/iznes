@@ -29,7 +29,6 @@ export class OfiKycWelcomeComponent implements OnInit, AfterViewInit, OnDestroy 
     public fadeIn: boolean = false;
     @select(['ofi', 'ofiKyc', 'myInformations']) kycMyInformation$: Observable<KycMyInformations>;
     @select(['user', 'connected', 'connectedWallet']) connectedWallet$: Observable<number>;
-    @select(['user', 'myDetail', 'accountId']) accountId$: Observable<number>;
 
     constructor(
         private ofiKycService: OfiKycService,
@@ -140,9 +139,8 @@ export class OfiKycWelcomeComponent implements OnInit, AfterViewInit, OnDestroy 
         }
 
         const walletId = await this.connectedWallet$.pipe(take(1)).toPromise();
-        const accountId = await this.accountId$.pipe(take(1)).toPromise();
         const partySelections = JSON.stringify(this.kycPartySelectionsForm.getRawValue());
-        const asyncTaskPipe = this.ofiKycService.setKycPartySelections({ walletId, accountId, partySelections });
+        const asyncTaskPipe = this.ofiKycService.setKycPartySelections({ walletId, partySelections });
 
         this.ngRedux.dispatch(SagaHelper.runAsync(
             [SET_KYC_PARTY_SELECTIONS],

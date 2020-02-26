@@ -4,6 +4,7 @@ import { select } from '@angular-redux/store';
 import { RequestsService } from '../../requests.service';
 import { NewRequestService } from '../new-request.service';
 import { take } from 'rxjs/operators';
+import { KycFormHelperService } from '../../kyc-form-helper.service';
 
 /**
  * Kyc introduction screen component
@@ -22,8 +23,8 @@ export class NewKycIntroductionComponent {
     constructor(
         private requestsService: RequestsService,
         private newRequestService: NewRequestService,
-    ) {
-    }
+        public helper: KycFormHelperService,
+    ) {}
 
     handleSubmit() {
         // emit submitEvent, so the parent kyc wrapper can handle the submit event.
