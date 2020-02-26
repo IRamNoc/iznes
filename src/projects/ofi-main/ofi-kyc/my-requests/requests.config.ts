@@ -2944,28 +2944,20 @@ export const capitalNatureList = [
 
 export const documentTypesList = [
     {
-        id: 'kycribdoc',
-        text: 'RIB',
-    },
-    {
         id: 'kycstatuscertifieddoc',
-        text: 'Statuses "certified" by the duly authorized representative of the client',
+        text: 'Articles of Association',
     },
     {
         id: 'kyckbisdoc',
-        text: 'Kbis extract (or equivalent) less than 3 months old',
+        text: 'KIBS extract (or equivalent) less than 3 months old',
     },
     {
         id: 'kycannualreportdoc',
-        text: 'Latest audited annual report',
+        text: 'Audited annual reports of last year ',
     },
     {
         id: 'kycidorpassportdoc',
-        text: 'National identity card or valid passport or residence card of the signatory with photograph',
-    },
-    {
-        id: 'kycwolfsbergdoc',
-        text: 'Wolfsberg Questionnaire or equivalent',
+        text: 'IDs of persons authorised to bind the company',
     },
     {
         id: 'kyctaxcertificationdoc',
@@ -2973,11 +2965,11 @@ export const documentTypesList = [
     },
     {
         id: 'kycw8benefatcadoc',
-        text: 'Form W-8BEN-E (FACTA)',
+        text: 'Form W-8BEN-F (FACTA)',
     },
     {
         id: 'kycisincodedoc',
-        text: 'ISIN code of the listed share',
+        text: 'ISIN Code of the listed share',
     },
     {
         id: 'kycevidencefloatable',
@@ -2985,11 +2977,19 @@ export const documentTypesList = [
     },
     {
         id: 'kycproofofapprovaldoc',
-        text: 'proof of approval or copy of order',
+        text: 'Proof of approval or copy of order',
     },
     {
         id: 'kycproofregulationdoc',
-        text: 'proof of regulation/supervision from the regulator’s website',
+        text: 'Proof of regulation/supervision from the regulator\'s website',
+    },
+    {
+        id: 'kycwolfsbergdoc',
+        text: 'Wolfsberg questionnaire or equivalent',
+    },
+    {
+        id: 'kycribdoc',
+        text: 'RIB',
     },
     {
         id: 'kycinfomemorandumbdfdoc',
@@ -2999,7 +2999,38 @@ export const documentTypesList = [
         id: 'kycorgchartdoc',
         text: 'Org chart with key operational teams',
     },
-
+    {
+        id: 'kyclistsigningauthoritiesdoc',
+        text: 'List of Signing Authorities if the signatory is not on the KBIS',
+    },
+    {
+        id: 'kycbeneficialownerdoc',
+        text: 'Ultimate Beneficial Owner Statement',
+    },
+    {
+        id: 'kycdisclosureproceduredoc',
+        text: 'Disclosure of risk management procedure',
+    },
+    {
+        id: 'kyccompositioncommitteedoc',
+        text: 'Composition of the risk committee',
+    },
+    {
+        id: 'kycannual3yeardoc',
+        text: 'Audited annual reports of the last 3 years',
+    },
+    {
+        id: 'kycannual3yeartaxdoc',
+        text: 'Annual accounts certified by CAC or last 3 tax returns',
+    },
+    {
+        id: 'kyccriticalcustomersdoc',
+        text: 'Notification of critical customers',
+    },
+    {
+        id: 'kycbusinessplandoc',
+        text: 'Copy of the business continuity plan',
+    },
 ];
 
 export const beneficiaryTypesList = [
