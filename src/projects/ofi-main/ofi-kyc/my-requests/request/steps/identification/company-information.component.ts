@@ -1,5 +1,5 @@
 import { Component, Input, Output, OnInit, OnDestroy, ViewChild, EventEmitter, ElementRef } from '@angular/core';
-import { FormGroup, FormArray } from '@angular/forms';
+import { FormGroup, FormArray, Validators } from '@angular/forms';
 import { get as getValue, set as setValue, filter, isEmpty, castArray, find } from 'lodash';
 import { select, NgRedux } from '@angular-redux/store';
 import { Subject } from 'rxjs';
@@ -17,6 +17,8 @@ import { PersistRequestService } from '@setl/core-req-services';
 import { PersistService } from '@setl/core-persist';
 import { setMyKycRequestedPersist } from '@ofi/ofi-main/ofi-store/ofi-kyc';
 import { KycMyInformations } from '@ofi/ofi-main/ofi-store/ofi-kyc/my-informations';
+import { KycFormHelperService } from '../../../kyc-form-helper.service';
+import { PartyCompaniesInterface } from '../../../kyc-form-helper';
 
 @Component({
     selector: 'company-information',
@@ -71,15 +73,14 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
     listingMarketsList;
     // multilateral trading facilities list used in dropdown
     multilateralTradingFacilitiesList;
+    // type of revenues list used in dropdown
+    typeOfRevenuesList;
     // whether 'other listing market' field for the kyc form has error.
     otherListingMarketError = false;
     // whether 'other multilateral trading facilities' field for the kyc form has error.
     otherMultilateralTradingFacilitiesError = false;
-
-    // current user investor type that store in investor invitation
-    investorType: number;
-    // Whether the user is type of nowCp user.
-    isNowCP: boolean = false;
+    // The parties the investor has selected.
+    partyCompanies: PartyCompaniesInterface;
 
     constructor(
         private newRequestService: NewRequestService,
@@ -90,8 +91,8 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
         private element: ElementRef,
         private persistRequestService: PersistRequestService,
         private persistService: PersistService,
-    ) {
-    }
+        private formHelper: KycFormHelperService,
+    ) {}
 
     ngOnInit() {
         this.initFormCheck();
@@ -113,14 +114,11 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
             .subscribe(() => this.initLists());
 
         // set current user's investor type.
-        this.kycMyInformations
+        this.formHelper.kycPartyCompanies$
             .takeUntil(this.unsubscribe)
             .subscribe((d) => {
-                this.investorType = d.investorType;
-
-                if (this.investorType === 70 || this.investorType === 80) {
-                    this.isNowCP = true;
-                }
+                this.partyCompanies = d;
+                this.handlePartyFormControls();
             });
     }
 
@@ -251,6 +249,12 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
             .subscribe((data) => {
                 this.formCheckRegulator(data);
             });
+
+        this.form.get('companyStateOwned').valueChanges
+            .pipe(takeUntil(this.unsubscribe))
+            .subscribe((data) => {
+                this.formCheckCompanyStateOwned(data);
+            });
     }
 
     /**
@@ -271,6 +275,7 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
         this.custodianHolderAccountList = this.translate.translate(this.newRequestService.custodianHolderAccountList);
         this.listingMarketsList = this.translate.translate(this.newRequestService.listingMarketsList);
         this.multilateralTradingFacilitiesList = this.translate.translate(this.newRequestService.multilateralTradingFacilitiesList);
+        this.typeOfRevenuesList = this.translate.translate(this.newRequestService.typeOfRevenuesList);
     }
 
     /**
@@ -484,7 +489,7 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
     formCheckCompanyListed(value) {
         const listingMarketsControl = this.form.get('listingMarkets');
         const multilateralTradingFacilitiesControl = this.form.get('multilateralTradingFacilities');
-        const otherMultilateralTradingFacilitiesControl = this.form.get('multilateralTradingFacilities');
+        const otherMultilateralTradingFacilitiesControl = this.form.get('otherMultilateralTradingFacilities');
         const bloombergCodesControl = this.form.get('bloombergCode');
         const listedShareISINControl = this.form.get('isinCode');
         const floatableSharesControl = this.form.get('floatableShares');
@@ -494,11 +499,14 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
 
         if (value) {
             listingMarketsControl.enable();
-            multilateralTradingFacilitiesControl.enable();
-            otherMultilateralTradingFacilitiesControl.enable();
             listedShareISINControl.enable();
             bloombergCodesControl.enable();
             floatableSharesControl.enable();
+            // Leave disabled if user is ONLY ID2S
+            if (!this.isOnlyID2S()) {
+                multilateralTradingFacilitiesControl.enable();
+                otherMultilateralTradingFacilitiesControl.enable();
+            }
 
             balanceSheetTotalControl.disable();
             netRevenuesNetIncomeControl.disable();
@@ -637,6 +645,49 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
         }
 
         this.formPercent.refreshFormPercent();
+    }
+    /**
+     * Observe the 'companyStateOwned' value, and update formGroup dynamically.
+     * @param {number} isStateOwned
+     */
+    formCheckCompanyStateOwned(isStateOwned: number) {
+        const control = this.form.get('percentCapitalHeldByState');
+
+        if (isStateOwned === 1) {
+            control.enable();
+        } else {
+            control.disable();
+        }
+
+        this.formPercent.refreshFormPercent();
+    }
+
+    isOnlyID2S(): boolean {
+        return this.partyCompanies.id2s && !this.partyCompanies.iznes && !this.partyCompanies.nowcp;
+    }
+
+    handlePartyFormControls(): void {
+        // ID2S is in list of party companies...
+        if (this.partyCompanies.id2s){
+            this.regulatoryStatusList = this.translate.translate(this.newRequestService.regulatoryStatusListID2S);
+        }
+
+        // ONLY selected ID2S...
+        if (this.isOnlyID2S()) {
+            // Hide Multilateral trading facility
+            this.form.get('multilateralTradingFacilities').disable();
+            this.form.get('otherMultilateralTradingFacilities').disable();
+
+            // Update Bloomberg Code to optional (setting overwrites existing)
+            this.form.get('bloombergCode').setValidators(Validators.maxLength(45));
+        }
+
+        // Hide for ID2S and NowCP
+        if (!this.partyCompanies.iznes) {
+            this.form.get('activities').disable();
+            this.form.get('investorOnBehalfThirdParties').disable();
+            this.form.get('totalFinancialAssetsAlreadyInvested').disable();
+        }
     }
 
     /**
