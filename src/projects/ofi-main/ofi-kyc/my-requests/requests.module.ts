@@ -27,6 +27,8 @@ import { MyRequestsGridComponent } from './list/list-grid.component';
 import { NewKycRequestComponent } from './request/new-request.component';
 import { NewKycSelectAmcComponent } from './request/steps/select-amc.component';
 
+import { KycFormHelperService } from './kyc-form-helper.service';
+
 import { MyRequestsDetailsComponent } from './list/request-details/component';
 
 import { NewKycIntroductionComponent } from './request/steps/introduction.component';
@@ -121,6 +123,7 @@ import { ValidationService } from './request/steps/validation.service';
         RiskProfileService,
         DocumentsService,
         ValidationService,
+        KycFormHelperService,
     ],
 })
 

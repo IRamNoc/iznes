@@ -73,6 +73,7 @@ export function KycMyInformationsReducer(
             };
         case SET_KYC_PARTY_SELECTIONS:
             const kycPartySelections = getPartySelection(res.kycPartySelections);
+
             return {
                 ...state,
                 ...{ kycPartySelections }

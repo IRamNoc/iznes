@@ -13,6 +13,7 @@ import { NewRequestService } from '../new-request.service';
 import { DocumentsService, documentFormPaths } from './documents.service';
 import { steps } from '../../requests.config';
 import { KycMyInformations } from '@ofi/ofi-main/ofi-store/ofi-kyc/my-informations';
+import { DocumentPermissions, DocumentMetaCache } from './documents.model';
 
 @Component({
     selector: 'kyc-step-documents',
@@ -27,35 +28,11 @@ export class NewKycDocumentsComponent implements OnInit, OnDestroy {
     @Input() form: FormGroup;
     @Input() isFormReadonly = false;
 
-    @Input() set documents(documents) {
-        const listedDocuments = this.form.get('listed');
-        const floatableDocument = this.form.get('listed.kycevidencefloatable');
-        const regulatedDocuments = this.form.get('regulated');
-        const nowcpDocuments = this.form.get('nowcp');
+    // Permissions passed in from the parent component.
+    @Input('documents') public documentPermissions: DocumentPermissions;
 
-        floatableDocument.disable();
-        listedDocuments.disable();
-        regulatedDocuments.disable();
-        nowcpDocuments.disable();
-
-        if (documents.isListed) {
-            listedDocuments.enable();
-
-            if (documents.isFloatableHigh) {
-                floatableDocument.enable();
-            } else {
-                floatableDocument.disable();
-            }
-        }
-
-        if (documents.isRegulated) {
-            regulatedDocuments.enable();
-        }
-
-        if (documents.isNowCp) {
-            nowcpDocuments.enable();
-        }
-    }
+    // An object used to caache document meta info.
+    private documentsMetaCache: DocumentMetaCache = {};
 
     open;
     unsubscribe: Subject<any> = new Subject();
@@ -155,6 +132,52 @@ export class NewKycDocumentsComponent implements OnInit, OnDestroy {
                 this.submitEvent.emit({ updateView: true }); // Update the view
             });
         }
+    }
+
+    /**
+     * Returns a boolean denoting whether this document should be shown.
+     *
+     * @param docName {string} - The code name of the document to check.
+     *
+     * @return {boolean}
+     */
+    public showDocument(docName: string): boolean {
+        return this.getDocumentMeta(docName).shouldShow || false;
+    }
+
+    /**
+     * Returns a boolean denoting whether this document should be optional or required.
+     *
+     * @param docName {string} - The code name of the document to check.
+     *
+     * @return {boolean}
+     */
+    public isDocumentRequired (docName: string): boolean {
+        return this.getDocumentMeta(docName).required || false;
+    }
+
+    /**
+     * Queries for a whether a document is viewable or optional.
+     *
+     * @param docName {string} - The code name of the document to check.
+     *
+     * @return {{ shouldShow: boolean; required: boolean; }}
+     */
+    private getDocumentMeta (docName: string): {
+        shouldShow: boolean;
+        required: boolean
+    } {
+        // If not in cache...
+        if (! this.documentsMetaCache[docName]) {
+            // ...fetch it.
+            this.documentsMetaCache[docName] =
+            this.documentsService.shouldShowDocument(
+                docName,
+                this.documentPermissions,
+            );
+        }
+
+        return this.documentsMetaCache[docName];
     }
 
     isDisabled(path) {

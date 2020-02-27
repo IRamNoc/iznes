@@ -477,20 +477,23 @@ export class NewRequestService {
                 kycidorpassportdoc: this.createDocumentFormGroup('kycidorpassportdoc', !this.isProduction),
                 kyctaxcertificationdoc: this.createDocumentFormGroup('kyctaxcertificationdoc', !this.isProduction),
                 kycw8benefatcadoc: this.createDocumentFormGroup('kycw8benefatcadoc', !this.isProduction),
-            }),
-            listed: fb.group({
+                kyclistsigningauthoritiesdoc: this.createDocumentFormGroup('kyclistsigningauthoritiesdoc', !this.isProduction),
+                kycbeneficialownerdoc: this.createDocumentFormGroup('kycbeneficialownerdoc', !this.isProduction),
+                kycarticlesassociationdoc: this.createDocumentFormGroup('kycarticlesassociationdoc', !this.isProduction),
+                kycdisclosureproceduredoc: this.createDocumentFormGroup('kycdisclosureproceduredoc', !this.isProduction),
+                kyccompositioncommitteedoc: this.createDocumentFormGroup('kyccompositioncommitteedoc', !this.isProduction),
+                kycannual3yeardoc: this.createDocumentFormGroup('kycannual3yeardoc', !this.isProduction),
+                kycannual3yeartaxdoc: this.createDocumentFormGroup('kycannual3yeartaxdoc', !this.isProduction),
                 kycisincodedoc: this.createDocumentFormGroup('kycisincodedoc', !this.isProduction),
                 kycevidencefloatable: this.createDocumentFormGroup('kycevidencefloatable', !this.isProduction),
-            }),
-            regulated: fb.group({
                 kycproofofapprovaldoc: this.createDocumentFormGroup('kycproofofapprovaldoc', !this.isProduction),
                 kycproofregulationdoc: this.createDocumentFormGroup('kycproofregulationdoc', !this.isProduction),
                 kycwolfsbergdoc: this.createDocumentFormGroup('kycwolfsbergdoc', !this.isProduction),
-            }),
-            nowcp: fb.group({
                 kycribdoc: this.createDocumentFormGroup('kycribdoc', !this.isProduction),
                 kycinfomemorandumbdfdoc: this.createDocumentFormGroup('kycinfomemorandumbdfdoc', !this.isProduction),
                 kycorgchartdoc: this.createDocumentFormGroup('kycorgchartdoc', !this.isProduction),
+                kyccriticalcustomersdoc: this.createDocumentFormGroup('kyccriticalcustomersdoc', !this.isProduction),
+                kycbusinessplandoc: this.createDocumentFormGroup('kycbusinessplandoc', !this.isProduction),
             }),
         });
     }
@@ -661,7 +664,6 @@ export class NewRequestService {
             otherPersonsAuthorised: ['', Validators.maxLength(255)],
             hasEverIssuedNeuCp: [0, Validators.required],
             hasAlreadyInvestedNeuCp: [0, Validators.required],
-            hasExperienceTradingNeuCp: [0, Validators.required],
         });
     }
 

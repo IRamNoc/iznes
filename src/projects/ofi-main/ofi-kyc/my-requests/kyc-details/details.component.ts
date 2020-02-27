@@ -299,7 +299,6 @@ export class KycDetailsComponent implements OnInit, OnDestroy {
             'otherPersonsAuthorised',
             'hasEverIssuedNeuCp',
             'hasAlreadyInvestedNeuCp',
-            'hasExperienceTradingNeuCp',
         ];
 
         this.kycRiskObjective$

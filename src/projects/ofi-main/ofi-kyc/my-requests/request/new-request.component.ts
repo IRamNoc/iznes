@@ -1,3 +1,4 @@
+import { KycFormHelperService } from './../kyc-form-helper.service';
 import { Component, OnInit, ViewChild, AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { trigger, state, style, transition, animate } from '@angular/animations';
 import { Location } from '@angular/common';
@@ -16,8 +17,15 @@ import { NewRequestService } from './new-request.service';
 import { FormstepsComponent } from '@setl/utils/components/formsteps/formsteps.component';
 import { OfiKycService } from '../../../ofi-req-services/ofi-kyc/service';
 import { setMenuCollapsed } from '@setl/core-store';
-import { PartyCompaniesInterface } from '../kyc-form-helper';
-import { KycFormHelperService } from './../kyc-form-helper.service';
+import { DocumentPermissions } from './steps/documents.model';
+import {
+    isCompanyListed,
+    isStateOwn,
+    isCompanyUnregulated,
+    isHighRiskActivity,
+    isHighRiskCountry,
+    PartyCompaniesInterface,
+} from '../kyc-form-helper';
 
 /**
  * KYC main form wrapper component
@@ -86,14 +94,6 @@ export class NewKycRequestComponent implements OnInit, AfterViewInit {
     /* The companies that this user was invited by. */
     public kycPartySelections: PartyCompaniesInterface;
 
-    // default investor data that is used to decide whether to show certian types of document for the kyc form.
-    documentRules = {
-        isListed: null,
-        isFloatableHigh: null,
-        isRegulated: null,
-        isNowCp: null
-    };
-
     constructor(
         private formBuilder: FormBuilder,
         private route: ActivatedRoute,
@@ -109,9 +109,10 @@ export class NewKycRequestComponent implements OnInit, AfterViewInit {
         // collapse the menu by default
         this.ngRedux.dispatch(setMenuCollapsed(true));
 
+        // Subscribe for party details.
         this.kycFormHelperService.kycPartyCompanies$
-            .subscribe((parties) => {
-                this.kycPartySelections = parties;
+            .subscribe((data) => {
+                this.kycPartySelections = data;
             });
     }
 
@@ -119,43 +120,39 @@ export class NewKycRequestComponent implements OnInit, AfterViewInit {
      * Get investor data that used to decide whether to show certain types of document for the kyc form.
      * this.documetRules is the default investor data.
      * Not sure why it need to build like this?
-     * @return {{isListed: boolean; isFloatableHigh: boolean; isRegulated: boolean; isNowCp}}
+     * @return {DocumentPermissions}
      */
-    get documents(): {isListed: boolean; isFloatableHigh: boolean; isRegulated: boolean; isNowCp} {
-        const isListed = this.forms.get('identification.companyInformation.companyListed').value;
-        const isFloatableHigh = this.forms.get('identification.companyInformation.floatableShares').value >= 75;
-        const isRegulated = this.forms.get('identification.companyInformation.activityRegulated').value;
-        const isNowCp = (this.kycInvestorType === 70 || this.kycInvestorType === 80);
-        let changed = false;
-
-        if (this.documentRules.isListed !== isListed) {
-            this.documentRules.isListed = isListed;
-            changed = true;
-        }
-        if (this.documentRules.isFloatableHigh !== isFloatableHigh) {
-            this.documentRules.isFloatableHigh = isFloatableHigh;
-            changed = true;
-        }
-        if (this.documentRules.isRegulated !== isRegulated) {
-            this.documentRules.isRegulated = isRegulated;
-            changed = true;
-        }
-
-        if (this.documentRules.isNowCp !== isNowCp) {
-            this.documentRules.isNowCp = isNowCp;
-            changed = true;
-        }
-
-        if (!changed) {
-            return this.documentRules;
-        }
-
-        return {
-            isListed: this.documentRules.isListed,
-            isFloatableHigh: this.documentRules.isFloatableHigh,
-            isRegulated: this.documentRules.isRegulated,
-            isNowCp: this.documentRules.isNowCp,
+    get documents(): DocumentPermissions {
+        // Defaults.
+        let companyInfo: PartyCompaniesInterface = {
+            iznes: false,
+            id2s: false,
+            nowcp: true,
         };
+
+        // Replace with correct object if availible.
+        if (this.kycPartySelections) {
+            companyInfo.iznes = this.kycPartySelections.iznes || false;
+            companyInfo.id2s = this.kycPartySelections.id2s || false;
+            companyInfo.nowcp = this.kycPartySelections.nowcp || false;
+        }
+
+        const permissionsObject: DocumentPermissions = {
+            // Companies that this user belongs to.
+            companies: companyInfo,
+
+            // Rules based on other parts of the form.
+            rules: {
+                isCompanyListed:      isCompanyListed(this.forms),
+                isCompanyUnlisted:    ! isCompanyListed(this.forms),
+                isStateOwn:           isStateOwn(this.forms),
+                isCompanyUnregulated: isCompanyUnregulated(),
+                isHighRiskActivity:   isHighRiskActivity(),
+                isHighRiskCountry:    isHighRiskCountry(),
+            },
+        };
+
+        return permissionsObject;
     }
 
     /**
