@@ -112,7 +112,6 @@ export class NewKycRequestComponent implements OnInit, AfterViewInit {
         // Subscribe for party details.
         this.kycFormHelperService.kycPartyCompanies$
             .subscribe((data) => {
-                console.log('kycMyInformations: ', data);
                 this.kycPartySelections = data;
             });
     }
