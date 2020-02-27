@@ -54,7 +54,7 @@ export class IdentificationService {
     }
 
     /**
-     * Send request to membernode, for each of the current active kyc(s) to update 'General Information'
+     * Send request to membernode, for each of the current active kyc(s) to update 'General Information' 
      * And update the completed step for the kycs
      * @param {FormGroup} form
      * @param {MyKycRequestedIds} requests
@@ -80,7 +80,7 @@ export class IdentificationService {
     }
 
     /**
-     * Send request to membernode, for each of the current active kyc(s) to update 'Company Information'
+     * Send request to membernode, for each of the current active kyc(s) to update 'Company Information' 
      * And update the completed step for the kycs
      * @param {FormGroup} form
      * @param {MyKycRequestedIds} requests
@@ -291,7 +291,6 @@ export class IdentificationService {
     sendRequestCompany(formGroupCompany) {
         const formGroupCompanyValue = omit(formGroupCompany.value, ['beneficiaries']);
         const extracted = this.newRequestService.getValues(formGroupCompanyValue);
-        console.log('company form values', extracted);
 
         const messageBody = {
             RequestName: 'updatekyccompany',
