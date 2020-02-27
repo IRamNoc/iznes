@@ -31,6 +31,7 @@ import {
     otherSectorActivityList,
     regulatorSupervisoryAuthoritiesList,
     regulatoryStatusList,
+    regulatoryStatusListID2S,
     regulatoryStatusInsurerTypeList,
     publicEstablishmentList,
     companyActivitiesList,
@@ -55,6 +56,7 @@ import {
     identificationNumberList,
     listingMarketsList,
     multilateralTradingFacilitiesList,
+    typeOfRevenuesList,
 } from '../requests.config';
 
 @Injectable()
@@ -67,6 +69,7 @@ export class NewRequestService {
     otherSectorActivityList;
     regulatorSupervisoryAuthoritiesList;
     regulatoryStatusList;
+    regulatoryStatusListID2S;
     regulatoryStatusInsurerTypeList;
     publicEstablishmentList;
     geographicalAreaList;
@@ -91,6 +94,7 @@ export class NewRequestService {
     identificationNumberTypeList;
     listingMarketsList;
     multilateralTradingFacilitiesList;
+    typeOfRevenuesList;
     saveContext = '';
 
     /* Private Properties. */
@@ -116,6 +120,7 @@ export class NewRequestService {
         this.otherSectorActivityList = otherSectorActivityList;
         this.regulatorSupervisoryAuthoritiesList = regulatorSupervisoryAuthoritiesList;
         this.regulatoryStatusList = regulatoryStatusList;
+        this.regulatoryStatusListID2S = regulatoryStatusListID2S;
         this.regulatoryStatusInsurerTypeList = regulatoryStatusInsurerTypeList;
         this.publicEstablishmentList = publicEstablishmentList;
         this.geographicalAreaList = geographicalAreaList;
@@ -140,6 +145,7 @@ export class NewRequestService {
         this.identificationNumberTypeList = identificationNumberList;
         this.listingMarketsList = listingMarketsList;
         this.multilateralTradingFacilitiesList = multilateralTradingFacilitiesList;
+        this.typeOfRevenuesList = typeOfRevenuesList;
     }
 
     set context(value) {
@@ -333,6 +339,15 @@ export class NewRequestService {
                     Validators.max(100),
                 ],
             ],
+            companyStateOwned: 0,
+            percentCapitalHeldByState: [
+                { value: '', disabled: true },
+                [
+                    Validators.required,
+                    Validators.min(0),
+                    Validators.max(100),
+                ],
+            ],
             balanceSheetTotal: ['', Validators.required],
             netRevenuesNetIncome: ['', [
                 Validators.required,
@@ -362,6 +377,8 @@ export class NewRequestService {
                 Validators.required,
             ],
             totalFinancialAssetsAlreadyInvested: ['', Validators.required],
+            typeOfRevenues: ['', Validators.required],
+            typeOfRevenuesValue: ['', [Validators.required, Validators.min(0)]],
         });
 
         const beneficiaries = fb.group({

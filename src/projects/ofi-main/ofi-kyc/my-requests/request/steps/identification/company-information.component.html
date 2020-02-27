@@ -172,6 +172,7 @@
                                         id="regulatoryStatusList"
                                         [formControl]="form.get('regulatoryStatus')"
                                         [isDisabled]="isFormReadonly"
+                                        [multiple]="true"
                                         placeholder="{{ 'Fill in your company regulatory status' | translate }}">
                             </ng-select>
                             <span class="field-error" *ngIf="hasError('regulatoryStatus')">{{ 'Field is required' | translate }}</span>
@@ -277,7 +278,7 @@
                 </div>
 
                 <div class="row col-sm-12">
-                    <div class="form-group required-field col-sm-4" *ngIf="!isDisabled('bloombergCode')">
+                    <div class="form-group col-sm-4" [class.required-field]="!isOnlyID2S()" *ngIf="!isDisabled('bloombergCode')">
                         <label class="control-label" for="bloombergCode">{{ 'Bloomberg Code' | translate }}</label>
                         <input type="text"
                                 id="bloombergCode"
@@ -318,6 +319,39 @@
                         <span class="field-error" *ngIf="hasError('floatableShares', ['min', 'max'])">{{ 'Value must be between 0 and 100' | translate }}</span>
                     </div>
                 </div>
+
+                <div class="row col-sm-12">
+                    <div class="form-group col-sm-4">
+                        <clr-radio-container clrInline>
+                            <label>{{ 'Is the company state-owned?' | translate }}</label>
+                            <clr-radio-wrapper>
+                                <input type="radio" clrRadio name="companyStateOwned" [value]="0" formControlName="companyStateOwned"
+                                       [attr.disabled]="isFormReadonly === true ? '' : null"
+                                />
+                                <label>{{ 'No' | translate }}</label>
+                            </clr-radio-wrapper>
+                            <clr-radio-wrapper>
+                                <input type="radio" clrRadio name="companyStateOwned" [value]="1" formControlName="companyStateOwned"
+                                       [attr.disabled]="isFormReadonly === true ? '' : null"
+                                />
+                                <label>{{ 'Yes' | translate }}</label>
+                            </clr-radio-wrapper>
+                        </clr-radio-container>
+                    </div>
+                </div>
+
+                <div class="row col-sm-12">
+                    <div class="form-group required-field col-sm-4" *ngIf="!isDisabled('percentCapitalHeldByState')">
+                        <label class="control-label" for="percentCapitalHeldByState">{{ 'Percentage of the capital held by the state' | translate }}</label>
+                        <input type="number"
+                                id="percentCapitalHeldByState"
+                                formControlName="percentCapitalHeldByState"
+                                [readonly]="isFormReadonly"
+                                placeholder="{{ 'Fill in a percentage' | translate }}">
+                                <span class="field-error" *ngIf="hasError('percentCapitalHeldByState', ['required'])">{{ 'Field is required' | translate }}</span>
+                                <span class="field-error" *ngIf="hasError('percentCapitalHeldByState', ['min', 'max'])">{{ 'Value must be between 0 and 100' | translate }}</span>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -330,7 +364,7 @@
 
             <div class="row panel-body">
 
-                <div class="row col-sm-12">
+                <div class="row col-sm-12" *ngIf="!isDisabled('activities')">
                     <div class="form-group required-field col-md-4">
                         <label class="control-label" for="activities">{{ 'Management on behalf of' | translate }}</label>
                         <ng-select class="large-select multiline"
@@ -399,10 +433,10 @@
                 <div class="checkbox-group" formGroupName="capitalNature">
                     <div class="row col-sm-12">
                         <div class="form-group required-field col-sm-4">
-                            <label *ngIf="!isNowCP" class="required-field">
+                            <label *ngIf="!partyCompanies.nowcp" class="required-field">
                                 {{ 'Nature and origin of the capital invested by the legal entity (several possible choices)' | translate }}
                             </label>
-                            <label *ngIf="isNowCP" class="required-field">
+                            <label *ngIf="partyCompanies.nowcp" class="required-field">
                                 {{ 'Nature and origin of the capital invested by the legal entity or paid for the remuneration of nowCP (several possible choices)' | translate }}
                             </label>
                         </div>
@@ -536,7 +570,7 @@
                     </div>
                 </div>
 
-                <div class="row col-sm-12">
+                <div class="row col-sm-12" *ngIf="!isDisabled(['totalFinancialAssetsAlreadyInvested'])">
                     <div class="form-group required-field col-sm-4">
                         <label for="totalFinancialAssetsAlreadyInvested">{{ 'Total Financial Assets already invested' | translate }}</label>
                         <ng-select [items]="financialAssetsInvestedList"
@@ -546,6 +580,31 @@
                                     placeholder="{{ 'Select a range' | translate }}">
                         </ng-select>
                         <span class="field-error" *ngIf="hasError('totalFinancialAssetsAlreadyInvested')">{{ 'Field is required' | translate }}</span>
+                    </div>
+                </div>
+
+                <div class="row col-sm-12">
+                    <div class="form-group required-field col-sm-4">
+                        <label class="control-label" for="typeOfRevenues">{{ 'Type of Revenues' | translate }}</label>
+                        <ng-select class="large-select"
+                                    [items]="typeOfRevenuesList"
+                                    id="typeOfRevenues"
+                                    formControlName="typeOfRevenues"
+                                    [isDisabled]="isFormReadonly"
+                                    placeholder="{{ 'Select type of revenues' | translate }}">
+                        </ng-select>
+                        <span class="field-error" *ngIf="hasError('typeOfRevenues')">{{ 'Field is required' | translate }}</span>
+                    </div>
+
+                    <div class="form-group required-field col-sm-4" *ngIf="form.get('typeOfRevenues').value">
+                        <label class="control-label" for="typeOfRevenuesValue">&nbsp;</label>
+                        <input type="number"
+                                id="typeOfRevenuesValue"
+                                formControlName="typeOfRevenuesValue"
+                                [readonly]="isFormReadonly"
+                                placeholder="{{ 'Fill in the value of Revenues' | translate }}">
+                        <span class="field-error" *ngIf="hasError('typeOfRevenuesValue', ['required'])">{{ 'Field is required' | translate }}</span>
+                        <span class="field-error" *ngIf="hasError('typeOfRevenuesValue', ['min'])">{{ 'Number should not be negative' | translate }}</span>
                     </div>
                 </div>
             </div>
