@@ -13,6 +13,8 @@ import { OfiKycService } from '@ofi/ofi-main/ofi-req-services/ofi-kyc/service';
 import { RequestsService } from '../../requests.service';
 import { NewRequestService } from '../new-request.service';
 import { SelectAmcService } from './select-amc.service';
+import { KycFormHelperService } from '../../kyc-form-helper.service';
+import { getPartySelectionFromInvestorType } from '../../kyc-form-helper';
 
 /**
  * Kyc Asset management companie selection screen
@@ -102,6 +104,7 @@ export class NewKycSelectAmcComponent implements OnInit, OnDestroy {
         private route: ActivatedRoute,
         private selectAmcService: SelectAmcService,
         private changeDetectorRef: ChangeDetectorRef,
+        private kycFormHelperService: KycFormHelperService,
     ) {
     }
 
@@ -150,16 +153,18 @@ export class NewKycSelectAmcComponent implements OnInit, OnDestroy {
                 takeUntil(this.unsubscribe),
         );
 
-        combineLatest(companyCombination$, this.requestedKycList$)
+        combineLatest(companyCombination$, this.requestedKycList$, this.kycFormHelperService.investorType$)
         .pipe(
-            map(([company, requestedKycs]) => [company[0], company[1], requestedKycs]),
+            map(([company, requestedKycs, investorType]) => [company[0], company[1], requestedKycs, investorType]),
             takeUntil(this.unsubscribe),
         )
-        .subscribe(([managementCompanies, kycList, requestedKycs]) => {
+        .subscribe(([managementCompanies, kycList, requestedKycs, investorType]) => {
             const managementCompanyList = managementCompanies.toJS();
 
             this.managementCompanies = this.requestsService
-            .extractManagementCompanyData(managementCompanyList, kycList, requestedKycs);
+            .extractManagementCompanyData(managementCompanyList, kycList, requestedKycs)
+            // filter out third party management company. if company is third party company and kyc user is iznes investor type.
+            .filter(c => !(c.isThirdPartyKyc && getPartySelectionFromInvestorType(investorType).iznes));
             if (!this.filteredManagementCompanies) this.filteredManagementCompanies = this.managementCompanies;
         });
 

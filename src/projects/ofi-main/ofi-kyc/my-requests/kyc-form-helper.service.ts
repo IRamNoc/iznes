@@ -7,6 +7,7 @@ import { OfiKycService } from '../../ofi-req-services/ofi-kyc/service';
 import { MyUserService } from '../../../core-req-services';
 import { KycPartySelections } from '../../ofi-store/ofi-kyc/my-informations/model';
 import { isIZNES, isID2SIPA, getPartyCompanies, PartyCompaniesInterface } from './kyc-form-helper';
+import { InvestorType } from '../../shared/investor-types';
 
 @Injectable({
     providedIn: 'root',
@@ -57,6 +58,16 @@ export class KycFormHelperService {
         return this.kycPartySelections$.pipe(
             takeUntil(this.myUserService.logout$),
             map(isID2SIPA),
+        );
+    }
+
+    /**
+     * Investor type the user was invited by. As observable
+     */
+    public get investorType$(): Observable<InvestorType> {
+        return this.myInformations$.pipe(
+            takeUntil(this.myUserService.logout$),
+            map((d: KycMyInformations) => d.investorType),
         );
     }
 

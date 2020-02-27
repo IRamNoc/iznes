@@ -183,6 +183,7 @@ function handleGetInvestorManagementCompanyList(state: InvManagementCompanyListS
                 logoHash: it.logoHash,
                 signatureTitle: it.signatureTitle,
                 signatureHash: it.signatureHash,
+                isThirdPartyKyc: !!it.isThirdPartyKyc,
             });
 
             investorManagementCompanyList = investorManagementCompanyList.push(item);
