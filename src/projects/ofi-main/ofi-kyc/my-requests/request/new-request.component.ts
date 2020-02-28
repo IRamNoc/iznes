@@ -20,8 +20,7 @@ import { setMenuCollapsed } from '@setl/core-store';
 import { DocumentPermissions } from './steps/documents.model';
 import {
     isCompanyListed,
-    isStateOwn,
-    isCompanyUnregulated,
+    isStateOwned,
     isHighRiskActivity,
     isHighRiskCountry,
     PartyCompaniesInterface,
@@ -45,6 +44,7 @@ import {
         ]),
     ],
     changeDetection: ChangeDetectionStrategy.OnPush,
+    providers: [KycFormHelperService],
 })
 export class NewKycRequestComponent implements OnInit, AfterViewInit {
 
@@ -145,10 +145,9 @@ export class NewKycRequestComponent implements OnInit, AfterViewInit {
             rules: {
                 isCompanyListed:      isCompanyListed(this.forms),
                 isCompanyUnlisted:    ! isCompanyListed(this.forms),
-                isStateOwn:           isStateOwn(this.forms),
-                isCompanyUnregulated: isCompanyUnregulated(),
-                isHighRiskActivity:   isHighRiskActivity(),
-                isHighRiskCountry:    isHighRiskCountry(),
+                isStateOwn:           isStateOwned(this.forms),
+                isHighRiskActivity:   isHighRiskActivity(this.forms),
+                isHighRiskCountry:    isHighRiskCountry(this.forms),
             },
         };
 
@@ -299,6 +298,9 @@ export class NewKycRequestComponent implements OnInit, AfterViewInit {
      */
     initForm() {
         this.forms = this.newRequestService.createRequestForm();
+
+        // Set form property on helper service needed for KYC helper functions
+        this.kycFormHelperService.setForm(this.forms);
     }
 
     /**

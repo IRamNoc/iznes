@@ -1,5 +1,6 @@
-import { FormGroup } from '@angular/forms';
+import { FormGroup, Form } from '@angular/forms';
 import { KycPartySelections } from '../../ofi-store/ofi-kyc/my-informations/model';
+import { get } from 'lodash';
 
 export interface PartyCompaniesInterface {
     iznes: boolean;
@@ -120,34 +121,37 @@ export function getPartySelectionFromInvestorType(investorType: number): KycPart
  * Listed comes from Identification > Company Information field “is this company listed?”
  */
 export function isCompanyListed(f: FormGroup): boolean {
-    return true;
+    return !!get(f, 'controls.identification.controls.companyInformation.controls.companyListed.value', 0);
 }
 
 /**
  * State-owned comes from Identification > Company Information field “Is company state-owned?” and over 50% owned
  */
-export function isStateOwn(f: FormGroup): boolean {
-    return true;
+export function isStateOwned(f: FormGroup): boolean {
+    const stateOwned = !!get(f, 'controls.identification.controls.companyInformation.controls.companyStateOwned.value', 0);
+    const percentCapitalHeldByState = get(f, 'controls.identification.controls.companyInformation.controls.percentCapitalHeldByState.value', 0)
+
+    return stateOwned && percentCapitalHeldByState > 50;
 }
 
 /**
  * Regulated comes from Identification > Company Information field “Is the activity regulated?”
  */
-export function isCompanyUnregulated(): boolean {
-    return true;
+export function isCompanyRegulated(f: FormGroup): boolean {
+    return !!get(f, 'controls.identification.controls.companyInformation.controls.activityRegulated.value', 0);
 }
 
 
 /**
  * High Risk Activity comes from Identification > Company Information field “Primary Sectors of Activity” and “Other sectors of activity” these can be checked against the list in Appendix A7
  */
-export function isHighRiskActivity(): boolean {
+export function isHighRiskActivity(f: FormGroup): boolean {
     return true;
 }
 
 /**
  * High Risk Country comes from Identification > General Information > Location field “Country of Registration” these can be checked against the list in Appendix A8
  */
-export function isHighRiskCountry(): boolean {
+export function isHighRiskCountry(f: FormGroup): boolean {
     return true;
 }
