@@ -59,6 +59,7 @@ export class FormstepsComponent implements AfterContentInit, OnDestroy {
     mainContentEl: HTMLElement;
     fixStepsProgress: boolean = false;
     debounceScroll = debounce(this.handleScroll.bind(this), 20);
+    debouncedFixStepsProgress = debounce(this.handleFixStepsProgress.bind(this), 20);
 
     get steps() {
         return this.stepComponents.reduce((acc, cur) => acc.concat([cur.step]), []);
@@ -93,7 +94,7 @@ export class FormstepsComponent implements AfterContentInit, OnDestroy {
         this.position = 0;
         this.progress[0].active = true;
         this.mainContentEl = document.querySelector('main.content-area');
-        this.mainContentEl.addEventListener('scroll', debounce(this.handleFixStepsProgress.bind(this), 20));
+        this.mainContentEl.addEventListener('scroll', this.debouncedFixStepsProgress);
     }
 
     /**
@@ -277,7 +278,7 @@ export class FormstepsComponent implements AfterContentInit, OnDestroy {
     }
 
     ngOnDestroy() {
-        this.mainContentEl.removeEventListener('scroll', e => this.handleFixStepsProgress(e));
+        this.mainContentEl.removeEventListener('scroll', this.debouncedFixStepsProgress);
         this.changeDetectorRef.detach();
     }
 }
