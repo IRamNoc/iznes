@@ -48,8 +48,7 @@ export class BeneficiaryComponent implements OnInit, OnDestroy {
     holdingTypeText;
     /** Allowed file types passed to FileDrop */
     public allowedFileTypes: string[] = ['application/pdf'];
-    /** Observable of whether KBIS is required */
-    public kbisIsRequired$: Observable<boolean>;
+    /** Whether KBIS or ID field is required */
     public kbisOrIdIsRequired: boolean;
 
     constructor(
@@ -191,11 +190,16 @@ export class BeneficiaryComponent implements OnInit, OnDestroy {
             required = true;
             this.form.get('common.document').markAsTouched();
         }
-        console.log('required', required);
-        this.toggleKbisandIDRequired(required);
+        this.toggleKbisAndIdRequired(required);
     }
 
-    private toggleKbisandIDRequired(required: boolean): void {
+    /**
+     * Toggle the KBIS and ID control required validator
+     *
+     * @param {boolean} required
+     * @returns {void}
+     */
+    private toggleKbisAndIdRequired(required: boolean): void {
         this.kbisOrIdIsRequired = required;
         const control = this.form.get('common.document.hash');
 
