@@ -1,6 +1,8 @@
 import { KycMyInformationsAction, SET_INFORMATIONS, SET_INFORMATIONS_FROM_API, SET_KYC_PARTY_SELECTIONS } from './actions';
 import * as _ from 'lodash';
 import { KycUser, KycPartySelections } from './model';
+import { InvestorType } from '../../../shared/investor-types';
+import { getPartySelectionFromInvestorType } from '../../../ofi-kyc/my-requests/kyc-form-helper';
 
 export interface KycMyInformationsState extends KycUser {
     invitedBy: KycUser;
@@ -60,7 +62,7 @@ export function KycMyInformationsReducer(
                 amManagementCompanyID: res.amManagementCompanyID,
                 invitationToken: res.invitationToken,
                 investorType: res.investorType,
-                kycPartySelections: getPartySelection(res.kycPartySelections),
+                kycPartySelections: getPartySelection(res.kycPartySelections, res.investorType),
             };
             return {
                 ...state,
@@ -83,7 +85,7 @@ export function KycMyInformationsReducer(
     }
 }
 
-function getPartySelection(kycPartySelections) {
+function getPartySelection(kycPartySelections: any, investorType?: number): KycPartySelections {
     let partySelections = kycPartySelections;
 
     if (partySelections) {
@@ -93,6 +95,8 @@ function getPartySelection(kycPartySelections) {
             console.error('Unable to parse KYC Party Selections', e);
             partySelections = null;
         }
+    } else {
+        partySelections = getPartySelectionFromInvestorType(investorType);
     }
 
     return partySelections;
