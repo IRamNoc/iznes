@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
 /* Layouts. */
-import { BasicLayoutComponent, BlankLayoutComponent, FormElementsComponent, HomeComponent } from '@setl/core-layout';
+import { BasicLayoutComponent, BlankLayoutComponent, HomeComponent } from '@setl/core-layout';
 
 /* Components. */
 import { SetlMyAccountComponent } from '@setl/core-account';
@@ -12,11 +12,8 @@ import { LoginGuardService } from '@setl/core-login';
  * Ofi main module.
  */
 import {
-    CouponPaymentComponent,
-    FundHoldingsComponent,
     ShareHoldersComponent,
     ManageOrdersComponent,
-    MyDashboardComponent,
     OfiAmDocumentsComponent,
     CentralisationReportComponent,
     PrecentralisationReportComponent,
@@ -31,10 +28,8 @@ import {
     OfiNavFundsList,
     OfiNavFundView,
     OfiNavAuditComponent,
-    OfiPnlReportComponent,
     OfiProfileMyInformationsComponent,
     OfiSignUpComponent,
-    OfiTaxReportComponent,
     ProductConfigurationComponent,
     OfiInvMyDocumentsComponent,
     OfiRedirectTokenComponent,
@@ -75,14 +70,6 @@ import {
     FundComponent,
     ProductCharacteristicComponent,
 } from '@ofi/ofi-main';
-/* Corporate Actions Components */
-import {
-    CreateResolutionComponent,
-    DistributionComponent,
-    IssueResolutionComponent,
-    MergerAbsorptionComponent,
-    SplitComponent,
-} from '@setl/core-corp-actions';
 /**
  * Asset serving module
  */
@@ -290,21 +277,6 @@ export const ROUTES: Routes = [
                 ],
             },
             {
-                path: 'asset-management',
-                children: [
-                    {
-                        path: 'fund-holdings',
-                        component: FundHoldingsComponent,
-                        canActivate: [LoginGuardService],
-                    },
-                    {
-                        path: 'my-dashboard',
-                        component: MyDashboardComponent,
-                        canActivate: [LoginGuardService],
-                    },
-                ],
-            },
-            {
                 path: 'product-module',
                 children: [
                     {
@@ -448,16 +420,6 @@ export const ROUTES: Routes = [
                 path: 'management-company',
                 component: OfiManagementCompanyComponent,
                 canActivate: [LoginGuardService],
-            },
-            {
-                path: 'ui-elements',
-                children: [
-                    {
-                        path: 'form',
-                        component: FormElementsComponent,
-                        canActivate: [LoginGuardService],
-                    },
-                ],
             },
             {
                 path: 'reports',
@@ -640,48 +602,6 @@ export const ROUTES: Routes = [
                 ],
                 canActivate: [LoginGuardService],
             },
-            {
-                path: 'corporate-actions',
-                children: [
-                    /**
-                     * Core corporate actions.
-                     */
-                    {
-                        path: 'create-resolution',
-                        component: CreateResolutionComponent,
-                        canActivate: [LoginGuardService],
-                    },
-                    {
-                        path: 'issue-resolution',
-                        component: IssueResolutionComponent,
-                        canActivate: [LoginGuardService],
-                    },
-                    {
-                        path: 'distribution',
-                        component: DistributionComponent,
-                        canActivate: [LoginGuardService],
-                    },
-                    {
-                        path: 'merger-absorption',
-                        component: MergerAbsorptionComponent,
-                        canActivate: [LoginGuardService],
-                    },
-                    {
-                        path: 'split',
-                        component: SplitComponent,
-                        canActivate: [LoginGuardService],
-                    },
-
-                    /**
-                     * OFI corporate actions.
-                     */
-                    {
-                        path: 'coupon-payment/:tabid',
-                        component: CouponPaymentComponent,
-                        canActivate: [LoginGuardService],
-                    },
-                ],
-            },
 
             /**
              * OFI
@@ -750,16 +670,6 @@ export const ROUTES: Routes = [
                 path: 'reports-section',
                 canActivate: [LoginGuardService],
                 children: [
-                    {
-                        path: 'tax',
-                        canActivate: [LoginGuardService],
-                        component: OfiTaxReportComponent,
-                    },
-                    {
-                        path: 'pnl',
-                        canActivate: [LoginGuardService],
-                        component: OfiPnlReportComponent,
-                    },
                     {
                         path: 'csv',
                         canActivate: [LoginGuardService],
