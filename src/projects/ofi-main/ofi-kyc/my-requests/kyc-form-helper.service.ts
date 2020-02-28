@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { select } from '@angular-redux/store';
 import { KycMyInformations } from '../../ofi-store/ofi-kyc/my-informations';
 import { Observable } from 'rxjs/Observable';
-import { tap, takeUntil, map } from 'rxjs/operators';
+import { tap, takeUntil, map, filter, take } from 'rxjs/operators';
 import { OfiKycService } from '../../ofi-req-services/ofi-kyc/service';
 import { MyUserService } from '../../../core-req-services';
 import { isIZNES, isID2SIPA, getPartyCompanies, PartyCompaniesInterface, isCompanyListed, isCompanyRegulated, isStateOwned } from './kyc-form-helper';
@@ -79,6 +79,21 @@ export class KycFormHelperService {
         return this.myInformations$.pipe(
             takeUntil(this.myUserService.logout$),
             map((d: KycMyInformations) => d.investorType),
+        );
+    }
+
+    /**
+     * whether user selected only ID2S. as observable
+     */
+    public get onlyID2S$(): Observable<boolean> {
+        return this.kycPartySelections$.pipe(
+            takeUntil(this.myUserService.logout$),
+            filter(d => !! d),
+            map((d) => {
+                const selectedCompanies = getPartyCompanies(d);
+                return selectedCompanies.id2s && !selectedCompanies.iznes && !selectedCompanies.nowcp;
+            }),
+            take(1),
         );
     }
 

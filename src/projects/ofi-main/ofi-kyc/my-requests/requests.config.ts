@@ -11,77 +11,93 @@ export const formStepsFull = [
     {
         title: 'Selection',
         id: 'step-selection',
+        dbId: 'amcSelection',
     },
     {
         title: 'Introduction',
+        dbId: 'introduction',
     },
     {
         title: 'Identification',
         id: 'step-identification',
         children: ['General Information', 'Company Information', 'Stakeholders', 'Bank Accounts', 'Classification'],
+        dbId: 'identification',
     },
     {
         title: 'General Information',
         id: 'step-general-information',
         parentStep: 'Identification',
+        dbId: 'generalInformation',
     },
     {
         title: 'Company Information',
         id: 'step-company-information',
         parentStep: 'Identification',
+        dbId: 'companyInformation',
     },
     {
         title: 'Stakeholders',
         id: 'step-stakeholder-information',
         parentStep: 'Identification',
+        dbId: 'stakeholders',
     },
     {
         title: 'Bank Accounts',
         id: 'step-bank-accounts',
         parentStep: 'Identification',
+        dbId: 'bankAccounts',
     },
     {
         title: 'Classification',
         id: 'step-classification',
         parentStep: 'Identification',
+        dbId: 'classification',
     },
     {
         title: 'Risk Profile',
         id: 'step-risk-profile',
         children: ['Investment Details', 'Investment Objectives', 'Investment Constraints'],
+        dbId: 'riskProfile',
     },
     {
         title: 'Investment Details',
         id: 'step-investment-details',
         parentStep: 'Risk Profile',
+        dbId: 'investmentDetails',
     },
     {
         title: 'Investment Objectives',
         id: 'step-investment-objectives',
         parentStep: 'Risk Profile',
+        dbId: 'investmentObjectives',
     },
     {
         title: 'Investment Constraints',
         id: 'step-investment-constraints',
         parentStep: 'Risk Profile',
+        dbId: 'investmentConstraints',
     },
     {
         title: 'Documents',
         id: 'step-documents',
+        dbId: 'documents',
     },
     {
         title: 'Validation',
         id: 'step-validation',
+        dbId: 'validation',
     },
 ];
 export const formStepsLight = [
     {
         title: 'Selection',
         id: 'step-selection',
+        dbId: 'amcSelection',
     },
     {
         title: 'Validation',
         id: 'step-validation',
+        dbId: 'validation',
     },
 ];
 
@@ -600,23 +616,6 @@ export const controlOrder = [
     'prospectusKIIDUnderstanding',
     'knowledgeSkillsPlaceUCIOrders',
 ];
-
-export const steps = {
-    amcSelection: 0,
-    introduction: 1,
-    identification: 2,
-    generalInformation: 3,
-    companyInformation: 4,
-    stakeholders: 5,
-    bankAccounts: 6,
-    classification: 7,
-    riskProfile: 8,
-    investmentDetails: 9,
-    investmentObjectives: 10,
-    investmentConstraints: 11,
-    documents: 12,
-    validation: 13,
-};
 
 export const countries = fundItems.domicileItems;
 

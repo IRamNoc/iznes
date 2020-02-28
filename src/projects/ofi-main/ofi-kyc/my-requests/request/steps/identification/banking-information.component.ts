@@ -8,12 +8,13 @@ import { select, NgRedux } from '@angular-redux/store';
 import { FormPercentDirective } from '@setl/utils/directives/form-percent/formpercent';
 import { IdentificationService } from '../identification.service';
 import { NewRequestService } from '../../new-request.service';
-import { countries, steps } from '../../../requests.config';
+import { countries } from '../../../requests.config';
 import { formHelper } from '@setl/utils/helper';
 import { PersistRequestService } from '@setl/core-req-services';
 import { PersistService } from '@setl/core-persist';
 import { setMyKycRequestedPersist } from '@ofi/ofi-main/ofi-store/ofi-kyc';
 import { KycMyInformations } from '@ofi/ofi-main/ofi-store/ofi-kyc/my-informations';
+import { shouldFormSectionPersist } from '../../../kyc-form-helper';
 
 @Component({
     selector: 'banking-information',
@@ -23,7 +24,7 @@ import { KycMyInformations } from '@ofi/ofi-main/ofi-store/ofi-kyc/my-informatio
 export class BankingInformationComponent implements OnInit, OnDestroy {
     @ViewChild(FormPercentDirective) formPercent: FormPercentDirective;
     @Input() form;
-    @Input() completedStep: string;
+    @Input() completedStep: number;
     @Input() isFormReadonly;
     @Output() submitEvent: EventEmitter<any> = new EventEmitter<any>();
 
@@ -124,7 +125,7 @@ export class BankingInformationComponent implements OnInit, OnDestroy {
      * Init Form Persist if the step has not been completed
      */
     initFormPersist() {
-        if (!this.completedStep || (steps[this.completedStep] < steps.bankAccounts)) this.prePersistForm();
+        return shouldFormSectionPersist('bankAccounts', this.completedStep, '');
     }
 
     prePersistForm() {
@@ -177,10 +178,10 @@ export class BankingInformationComponent implements OnInit, OnDestroy {
         });
     }
 
-    clearPersistForm() {
+    async clearPersistForm() {
         this.persistService.refreshState(
             'newkycrequest/identification/bankingInformation',
-            this.newRequestService.createIdentificationFormGroup(),
+            await this.newRequestService.createIdentificationFormGroup(),
             this.newRequestService.context,
         );
     }

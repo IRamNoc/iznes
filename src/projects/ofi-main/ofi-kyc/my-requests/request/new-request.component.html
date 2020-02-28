@@ -4,9 +4,9 @@
     <button *ngIf="formSteps && formSteps.position !== 0" class="btn btn-sm" (click)="handleAction({ type: 'close' })">{{ 'Save and Exit' | translate }}</button>
 </div>
 
-<form-steps *ngIf="stepsConfig" [onboarding]="onboardingMode" [stepsConfig]="stepsConfig" (action)="handleAction($event)" [@toggle]="animating" (@toggle.done)="applyFullForm()">
+<form-steps *ngIf="stepsConfig" [onboarding]="onboardingMode" [currentCompletedStep$]="currentCompletedStep$" [stepsConfig]="stepsConfig" (action)="handleAction($event)" [@toggle]="animating" (@toggle.done)="applyFullForm()">
     <form-step>
-        <kyc-step-select-amc #step [form]="forms.get('selection')" [onboarding]="onboardingMode" (registered)="registered($event)" [disabled]="currentCompletedStep" (submitEvent)="handleSubmit($event)" [duplicate]="duplicate"></kyc-step-select-amc>
+        <kyc-step-select-amc #step [form]="forms.get('selection')" [onboarding]="onboardingMode" (registered)="registered($event)" [disabled]="currentCompletedStep >= 0" (submitEvent)="handleSubmit($event)" [duplicate]="duplicate"></kyc-step-select-amc>
     </form-step>
     <form-step *ngIf="fullForm">
         <kyc-step-introduction #step (submitEvent)="handleSubmit($event)"></kyc-step-introduction>
@@ -23,7 +23,7 @@
         <form-step *ngIf="fullForm">
             <beneficiary-list #step [isFormReadonly]="isFormReadonly" [form]="forms.get('identification').get('beneficiaries').get('beneficiaries')" [generalInformationForm]="forms.get('identification').get('generalInformation')" [completedStep]="currentCompletedStep" (submitEvent)="handleSubmit($event)"></beneficiary-list>
         </form-step>
-        <form-step *ngIf="fullForm">
+        <form-step *ngIf="fullForm && hasBankingInformationSection()">
             <banking-information #step [isFormReadonly]="isFormReadonly" [form]="forms.get('identification').get('bankingInformation')" [completedStep]="currentCompletedStep" (submitEvent)="handleSubmit($event)"></banking-information>
         </form-step>
         <form-step *ngIf="fullForm">
@@ -38,7 +38,7 @@
         <form-step *ngIf="fullForm">
             <investment-objective #step [form]="forms.get('riskProfile').get('investmentObjective')" [formConstraint]="forms.get('riskProfile').get('investmentConstraint')" [completedStep]="currentCompletedStep" (submitEvent)="handleSubmit($event)"></investment-objective>
         </form-step>
-        <form-step *ngIf="fullForm && !(kycPartySelections.id2s || kycPartySelections.nowcp)">
+        <form-step *ngIf="fullForm && !(!kycPartySelections.iznes && (kycPartySelections.id2s || kycPartySelections.nowcp))">
             <investment-constraint #step [form]="forms.get('riskProfile').get('investmentConstraint')" [formObjective]="forms.get('riskProfile').get('investmentObjective')" [completedStep]="currentCompletedStep" (submitEvent)="handleSubmit($event)"></investment-constraint>
         </form-step>
     <form-step *ngIf="fullForm">
