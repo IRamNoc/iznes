@@ -343,6 +343,7 @@ export class NewKycSelectAmcComponent implements OnInit, OnDestroy {
         // stop here,and emit submit event.
         if (this.submitted) {
             this.validSubmit();
+            return;
         }
 
         // if this.selectedManagementCompanies is not exist. stop here, and mark form dirty, so form can show error?
@@ -364,7 +365,7 @@ export class NewKycSelectAmcComponent implements OnInit, OnDestroy {
         this.newRequestService.storeCurrentKycs(ids);
 
         // If this is onboarding, set the newly created kyc completed step to 'introduction'.
-        // Setting the completed step to 'introduction' would cause the current step become the next 
+        // Setting the completed step to 'introduction' would cause the current step become the next
         if (this.onboarding) {
             const context = this.newRequestService.getContext(ids);
             ids.forEach(entry => this.selectAmcService.sendRequestUpdateCurrentStep(entry.kycID, context, 'introduction'));

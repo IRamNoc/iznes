@@ -877,8 +877,12 @@ export const sectorActivityList = [
         text: 'Catering',
     },
     {
-        id: 'Real Estate',
+        id: 'Realestate',
         text: 'Real Estate',
+    },
+    {
+        id: 'Miningactivities',
+        text: 'Mining activities',
     },
     {
         id: 'Other',
@@ -1020,8 +1024,12 @@ export const otherSectorActivityList = [
         text: 'Catering',
     },
     {
-        id: 'Real Estate',
+        id: 'Realestate',
         text: 'Real Estate',
+    },
+    {
+        id: 'Miningactivities',
+        text: 'Mining activities',
     },
     {
         id: 'Other',
