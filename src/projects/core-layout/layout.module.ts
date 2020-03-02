@@ -11,31 +11,7 @@ import { NavigationTopbarComponent } from './navigation-topbar/navigation-topbar
 import { NavigationFooterComponent } from './navigation-footer/footer.component';
 
 import { HomeComponent } from './home/home.component';
-import { FormElementsComponent } from './ui-elements/form-elements.component';
-import { UiInfoPaneComponent } from './layouts/ui-form/info-pane/info-pane.component';
-import { UiTabsComponent } from './layouts/ui-form/components/tabs/tabs.component';
-import { UiDynamicTabsComponent } from './layouts/ui-form/components/dynamic-tabs/dynamic-tabs.component';
-import { UiFormsComponent } from './layouts/ui-form/components/forms/forms.component';
-import { UiDropdownsComponent } from './layouts/ui-form/components/dropdowns/dropdowns.component';
-import { UiDataGridComponent } from './layouts/ui-form/components/datagrid/datagrid.component';
-import { UiAlertsComponent } from './layouts/ui-form/components/alerts/alerts.component';
-import { UiModalComponent } from './layouts/ui-form/components/modal/modal.component';
-import { UiButtonComponent } from './layouts/ui-form/components/button/button.component';
-import { UiToasterComponent } from './layouts/ui-form/components/toaster/toaster.component';
-import { UiTranslationsComponent } from './layouts/ui-form/components/translations/translations.component';
-import { UiTooltipsComponent } from './layouts/ui-form/components/tooltips/tooltips.component';
-import { UiFormStepsComponent } from './layouts/ui-form/components/form-steps/formsteps.component';
-import { UiFormPercentComponent } from './layouts/ui-form/components/form-percent/formpercent.component';
 
-import { UiColourComponent } from './layouts/ui-form/components/colour/colour.component';
-import { UiFormPersistComponent } from './layouts/ui-form/components/form-persist/form-persist.component';
-import { UiIconsComponent } from './layouts/ui-form/components/icons/icons.component';
-import { UiLayout1Component } from './layouts/ui-form/components/layout1/layout1.component';
-import { UiLayout2Component } from './layouts/ui-form/components/layout2/layout2.component';
-import { UiTextComponent } from './layouts/ui-form/components/text/text.component';
-import { UiExpandableComponent } from './layouts/ui-form/components/expandable/expandable.component';
-
-import { UiDatagridExpandComponent } from './layouts/ui-form/components/datagrid-expand/component';
 /* Directives. */
 import { DropdownDirective } from './menu-dropdown/menu-dropdown.directive';
 /* Services. */
@@ -58,8 +34,6 @@ import { ClarityModule } from '@clr/angular';
 import { MultilingualModule } from '@setl/multilingual/multilingual.module';
 /* Import the persist module. */
 import { PersistModule } from '@setl/core-persist';
-
-import { MockFundService } from './layouts/ui-form/components/layout2/fund.mock.service';
 
 import { FileDropModule } from '@setl/core-filedrop';
 import { FileViewerModule } from '@setl/core-fileviewer';
@@ -102,29 +76,6 @@ import { DatagridListModule } from '@setl/utils/components/datagrid-list/datagri
         CounterTileComponent,
         BasicTileComponent,
         HomeComponent,
-        FormElementsComponent,
-        UiInfoPaneComponent,
-        UiTabsComponent,
-        UiDynamicTabsComponent,
-        UiFormsComponent,
-        UiDropdownsComponent,
-        UiDataGridComponent,
-        UiAlertsComponent,
-        UiModalComponent,
-        UiButtonComponent,
-        UiToasterComponent,
-        UiTranslationsComponent,
-        UiTooltipsComponent,
-        UiFormStepsComponent,
-        UiFormPercentComponent,
-        UiColourComponent,
-        UiFormPersistComponent,
-        UiIconsComponent,
-        UiLayout1Component,
-        UiLayout2Component,
-        UiTextComponent,
-        UiExpandableComponent,
-        UiDatagridExpandComponent,
         AlertsComponent,
     ],
     exports: [
@@ -140,33 +91,10 @@ import { DatagridListModule } from '@setl/utils/components/datagrid-list/datagri
         DashboardComponent,
         CounterTileComponent,
         HomeComponent,
-        FormElementsComponent,
-        UiInfoPaneComponent,
-        UiTabsComponent,
-        UiFormsComponent,
-        UiDropdownsComponent,
-        UiDataGridComponent,
-        UiAlertsComponent,
-        UiButtonComponent,
-        UiModalComponent,
-        UiToasterComponent,
-        UiTranslationsComponent,
-        UiTooltipsComponent,
-        UiFormStepsComponent,
-        UiFormPercentComponent,
-        UiColourComponent,
-        UiFormPersistComponent,
-        UiIconsComponent,
-        UiLayout1Component,
-        UiLayout2Component,
-        UiTextComponent,
-        UiExpandableComponent,
-        UiDatagridExpandComponent,
     ],
     providers: [
         /* Services. */
         MenuDropdownService,
-        MockFundService,
     ],
 })
 

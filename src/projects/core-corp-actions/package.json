@@ -1,8 +1,0 @@
-{
-  "name": "@setl/core-corp-actions",
-  "version": "1.0.0",
-  "main": "index.js",
-  "repository": "git@si-nexus01.dev.setl.io:SETL_Modules/core-corp-actions.git",
-  "author": "Dan Sarracayo <dan.sarracayo@setl.io>",
-  "license": "MIT"
-}

@@ -52,7 +52,6 @@ import { CoreAccountAdminModule } from '@setl/core-account-admin';
 import { AssetServicingModule } from '@setl/asset-servicing';
 import { PermissionGridModule } from '@setl/permission-grid';
 import { CoreManageMemberModule } from '@setl/core-manage-member';
-import { CorpActionsModule } from '@setl/core-corp-actions';
 import { ConnectionsModule } from '@setl/core-connections/connections.module';
 import { SetlLayoutModule } from '@setl/core-layout';
 import { LogService } from '@setl/utils';
@@ -126,7 +125,6 @@ export function memberSocketServiceFactory() {
         SetlPipesModule,
         CoreManageMemberModule,
         SetlComponentsModule,
-        CorpActionsModule,
         OfiMainModule,
         SetlDirectivesModule,
         SetlServicesModule,
