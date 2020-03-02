@@ -174,6 +174,11 @@ export class NewKycDocumentsComponent implements OnInit, OnDestroy {
             );
         }
 
+        // Disable formControl if not to show.
+        if (! this.documentsMetaCache[docName].shouldShow) {
+            this.form.get('common').get(docName).disable();
+        }
+
         return this.documentsMetaCache[docName];
     }
 
