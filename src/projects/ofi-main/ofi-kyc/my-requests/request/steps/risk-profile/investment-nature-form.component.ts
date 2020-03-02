@@ -32,24 +32,11 @@ export class InvestmentNatureFormComponent implements OnInit {
         companyName: '',
     };
 
-    /* The companies that this user was invited by. */
-    public kycPartyCompanies: PartyCompaniesInterface = {
-        nowcp: false,
-        id2s: false,
-        iznes: false,
-    };
-
     constructor(
         private newRequestService: NewRequestService,
         private riskProfileService: RiskProfileService,
         private kycFormHelperService: KycFormHelperService,
     ) {
-        // Subscribe for party details.
-        this.kycFormHelperService.kycPartyCompanies$
-            .pipe(takeUntil(this.unsubscribe))
-            .subscribe((kycPartyCompanies: PartyCompaniesInterface) => {
-                this.kycPartyCompanies = kycPartyCompanies;
-            });
     }
 
     ngOnInit() {

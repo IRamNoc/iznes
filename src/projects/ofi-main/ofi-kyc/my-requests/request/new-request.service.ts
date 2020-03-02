@@ -593,8 +593,8 @@ export class NewRequestService {
 
         // Remove investment vechicles if we're with nowcp.
         if (this.kycPartyCompanies.nowcp) {
-            delete fbGroup['investmentvehiclesAlreadyUsed'];
-            delete fbGroup['investmentvehiclesAlreadyUsedSpecification']
+            fbGroup.get('investmentvehiclesAlreadyUsed').disable();
+            fbGroup.get('investmentvehiclesAlreadyUsedSpecification').disable();
         }
 
         return fbGroup;
