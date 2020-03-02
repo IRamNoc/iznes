@@ -100,7 +100,7 @@
         </ng-template>
     </div>
 
-    <div class="checkbox-group mt-2" formGroupName="investmentvehiclesAlreadyUsed">
+    <div *ngIf="! kycPartyCompanies.nowcp" class="checkbox-group mt-2" formGroupName="investmentvehiclesAlreadyUsed">
         <div class="row col-sm-12">
             <div class="form-group required-field col-sm-12">
                 <label class="required-field">{{ 'Investment vehicles already used' | translate }}</label>

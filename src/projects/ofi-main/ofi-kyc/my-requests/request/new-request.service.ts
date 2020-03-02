@@ -59,6 +59,7 @@ import {
     multilateralTradingFacilitiesList,
     typeOfRevenuesList,
 } from '../requests.config';
+import { PartyCompaniesInterface } from '../kyc-form-helper';
 
 @Injectable()
 export class NewRequestService {
@@ -102,6 +103,12 @@ export class NewRequestService {
     private subscriptions: any[] = [];
 
     @select(['user', 'siteSettings', 'production']) productionOb;
+    /* The companies that this user was invited by. */
+    public kycPartyCompanies: PartyCompaniesInterface = {
+        nowcp: false,
+        id2s: false,
+        iznes: false,
+    };
 
     constructor(
         private multilingualService: MultilingualService,
@@ -112,6 +119,12 @@ export class NewRequestService {
         private toasterService: ToasterService,
         private kycFormHelperService: KycFormHelperService,
     ) {
+        // Subscribe for party details.
+        this.kycFormHelperService.kycPartyCompanies$
+            .subscribe((kycPartyCompanies: PartyCompaniesInterface) => {
+                this.kycPartyCompanies = kycPartyCompanies;
+            });
+
         this.subscriptions.push(this.productionOb.subscribe((production) => {
             this.isProduction = production;
         }));
@@ -547,7 +560,7 @@ export class NewRequestService {
     createInvestmentNature(id): FormGroup {
         const fb = this.formBuilder;
 
-        return fb.group({
+        let fbGroup = fb.group({
             assetManagementCompanyID: id ? id : null,
             financialAssetManagementMethod: fb.group(
                 {
@@ -577,6 +590,14 @@ export class NewRequestService {
                 }, Validators.required,
             ],
         });
+
+        // Remove investment vechicles if we're with nowcp.
+        if (this.kycPartyCompanies.nowcp) {
+            delete fbGroup['investmentvehiclesAlreadyUsed'];
+            delete fbGroup['investmentvehiclesAlreadyUsedSpecification']
+        }
+
+        return fbGroup;
     }
 
     createInvestmentNatures(amcs) {
