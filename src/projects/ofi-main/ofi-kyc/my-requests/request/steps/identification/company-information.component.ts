@@ -9,7 +9,7 @@ import { FormPercentDirective } from '@setl/utils/directives/form-percent/formpe
 import { IdentificationService, buildBeneficiaryObject } from '../identification.service';
 import { DocumentsService } from '../documents.service';
 import { NewRequestService } from '../../new-request.service';
-import { countries, steps } from '../../../requests.config';
+import { countries } from '../../../requests.config';
 import { setMyKycStakeholderRelations } from '@ofi/ofi-main/ofi-store/ofi-kyc/kyc-request';
 import { MultilingualService } from '@setl/multilingual';
 import { formHelper } from '@setl/utils/helper';
@@ -18,7 +18,7 @@ import { PersistService } from '@setl/core-persist';
 import { setMyKycRequestedPersist } from '@ofi/ofi-main/ofi-store/ofi-kyc';
 import { KycMyInformations } from '@ofi/ofi-main/ofi-store/ofi-kyc/my-informations';
 import { KycFormHelperService } from '../../../kyc-form-helper.service';
-import { PartyCompaniesInterface } from '../../../kyc-form-helper';
+import { PartyCompaniesInterface, shouldFormSectionPersist } from '../../../kyc-form-helper';
 
 @Component({
     selector: 'company-information',
@@ -33,7 +33,7 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
     // whether the form should render in readonly mode.
     @Input() isFormReadonly = false;
     // current completed step of the kyc form.
-    @Input() completedStep: string;
+    @Input() completedStep: number;
     // Output event to let parent component hande the submit event.
     @Output() submitEvent: EventEmitter<any> = new EventEmitter<any>();
     @select(['ofi', 'ofiKyc', 'myKycRequested', 'kycs']) requests$;
@@ -126,7 +126,7 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
      * Init Form Persist if the step has not been completed
      */
     initFormPersist() {
-        if (!this.completedStep || (steps[this.completedStep] < steps.companyInformation)) this.persistForm();
+        if (shouldFormSectionPersist('companyInformation', this.completedStep, '')) this.persistForm();
     }
 
     /**
@@ -753,10 +753,10 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
     /**
      * Clear form persist, when this section of the kyc form is submitted.
      */
-    clearPersistForm() {
+    async clearPersistForm() {
         this.persistService.refreshState(
             'newkycrequest/identification/companyInformation',
-            this.newRequestService.createIdentificationFormGroup(),
+            await this.newRequestService.createIdentificationFormGroup(),
             this.newRequestService.context,
         );
     }

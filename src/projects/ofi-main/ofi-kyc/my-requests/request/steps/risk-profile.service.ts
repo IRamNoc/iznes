@@ -81,6 +81,7 @@ export class RiskProfileService {
     }
 
     sendRequestInvestmentObjective(formObjective, formConstraint, requests, completedStep) {
+
         this.requests = requests;
 
         let promises = [];
@@ -118,6 +119,12 @@ export class RiskProfileService {
         const kycID = formGroupObjective.get('kycID').value;
         const request = find(this.requests, ['kycID', kycID]);
         const amcID = getValue(request, 'amcID');
+
+        // The request to data for 'Risk object', would need data from 'Risk constraints' as well. we just mock the
+        // 'Risk constraints' form control to make the current flow work.
+        if (constraintsValue.length === 0) {
+            constraintsValue.push(this.newRequestService.createConstraint(amcID));
+        }
 
         let objectiveForAM;
         let constraintForAM;

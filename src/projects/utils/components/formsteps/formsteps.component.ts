@@ -12,6 +12,8 @@ import {
 } from '@angular/core';
 import { FormstepComponent } from './formstep.component';
 import { get as getValue, debounce } from 'lodash';
+import { Observable } from 'rxjs/Observable';
+import { filter, take } from 'rxjs/operators';
 
 @Component({
     selector: 'form-steps',
@@ -59,6 +61,7 @@ export class FormstepsComponent implements AfterContentInit, OnDestroy {
     mainContentEl: HTMLElement;
     fixStepsProgress: boolean = false;
     debounceScroll = debounce(this.handleScroll.bind(this), 20);
+    debouncedFixStepsProgress = debounce(this.handleFixStepsProgress.bind(this), 20);
 
     get steps() {
         return this.stepComponents.reduce((acc, cur) => acc.concat([cur.step]), []);
@@ -83,6 +86,9 @@ export class FormstepsComponent implements AfterContentInit, OnDestroy {
         this._disabled = state;
     }
 
+    @Input()
+    currentCompletedStep$: Observable<number>;
+
     constructor(
         private element: ElementRef,
         private changeDetectorRef: ChangeDetectorRef,
@@ -93,7 +99,14 @@ export class FormstepsComponent implements AfterContentInit, OnDestroy {
         this.position = 0;
         this.progress[0].active = true;
         this.mainContentEl = document.querySelector('main.content-area');
-        this.mainContentEl.addEventListener('scroll', debounce(this.handleFixStepsProgress.bind(this), 20));
+        this.mainContentEl.addEventListener('scroll', this.debouncedFixStepsProgress);
+        this.currentCompletedStep$.pipe(
+            filter(a => a !== null && typeof a !== 'undefined'),
+            take(1),
+        ).subscribe((step) => {
+            this.goToStep(step);
+            this.next();
+        });
     }
 
     /**
@@ -199,7 +212,9 @@ export class FormstepsComponent implements AfterContentInit, OnDestroy {
     }
 
     goToStep(step) {
-        this.position = step;
+        if (typeof step !== 'undefined') {
+            this.position = step;
+        }
     }
 
     move() {
@@ -209,6 +224,10 @@ export class FormstepsComponent implements AfterContentInit, OnDestroy {
     }
 
     setSubmitted(position) {
+        if (position === -1) {
+            position = 0
+        }
+
         let currentStep: any = {};
         this.progress.forEach((step, index) => {
             if (position === index) currentStep = { step, index };
@@ -227,7 +246,9 @@ export class FormstepsComponent implements AfterContentInit, OnDestroy {
         // Show sub-steps
         if (step.parentStep) {
             this.progress[this.stepsMap[step.parentStep]].children
-            .forEach(child => this.progress[this.stepsMap[child]].hide = false);
+            .forEach(child => {
+                this.progress[this.stepsMap[child]].hide = false;
+            });
 
             // Set parent step to active
             this.progress[this.stepsMap[step.parentStep]].active = true;
@@ -243,10 +264,12 @@ export class FormstepsComponent implements AfterContentInit, OnDestroy {
     }
 
     setActive(position) {
-        this.stepComponents.toArray().forEach((component, idx) => {
-            component.active = position === idx;
-            position === idx ? component.stopLastInputTabbing() : component.removeKeydownListeners();
-        });
+        if (!!this.stepComponents) {
+            this.stepComponents.toArray().forEach((component, idx) => {
+                component.active = position === idx;
+                position === idx ? component.stopLastInputTabbing() : component.removeKeydownListeners();
+            });
+        }
     }
 
     isEnd() {
@@ -277,7 +300,7 @@ export class FormstepsComponent implements AfterContentInit, OnDestroy {
     }
 
     ngOnDestroy() {
-        this.mainContentEl.removeEventListener('scroll', e => this.handleFixStepsProgress(e));
+        this.mainContentEl.removeEventListener('scroll', this.debouncedFixStepsProgress);
         this.changeDetectorRef.detach();
     }
 }

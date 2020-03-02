@@ -20,8 +20,9 @@ import { formHelper } from '@setl/utils/helper';
 import { PersistRequestService } from '@setl/core-req-services';
 import { PersistService } from '@setl/core-persist';
 import { setMyKycRequestedPersist, MyKycStakeholderRelations } from '@ofi/ofi-main/ofi-store/ofi-kyc';
-import { steps } from '../../../requests.config';
 import { KycMyInformations } from '@ofi/ofi-main/ofi-store/ofi-kyc/my-informations';
+import { shouldFormSectionPersist } from '../../../kyc-form-helper';
+
 
 /**
  * Stakeholders main view component of kyc form.
@@ -39,7 +40,7 @@ export class BeneficiaryListComponent implements OnInit, OnDestroy {
     // whether the form should render in readonly mode.
     @Input() isFormReadonly = false;
     // current completed step of the kyc form.
-    @Input() completedStep: string;
+    @Input() completedStep: number;
     // Output event to let parent component hande the submit event.
     @Output() submitEvent: EventEmitter<any> = new EventEmitter<any>();
     @select(['ofi', 'ofiKyc', 'myKycRequested', 'stakeholderRelations']) stakeholderRelations$;
@@ -379,10 +380,7 @@ export class BeneficiaryListComponent implements OnInit, OnDestroy {
      * @return {boolean}
      */
     shouldPersist(kyc) {
-        if (kyc.context === 'done') {
-            return false;
-        }
-        return !kyc.completedStep || (steps[kyc.completedStep] < steps.stakeholders);
+        return shouldFormSectionPersist('stakeholders', kyc.completedStep, kyc.context)
     }
 
     /**
@@ -749,7 +747,8 @@ export class BeneficiaryListComponent implements OnInit, OnDestroy {
      * Init Form Persist if the step has not been completed
      */
     initFormPersist() {
-        if (!this.completedStep || (steps[this.completedStep] < steps.stakeholders)) this.prePersistForm();
+        if (shouldFormSectionPersist('stakeholders', this.completedStep, '')) this.prePersistForm();
+        return 
     }
 
     prePersistForm() {
@@ -806,10 +805,10 @@ export class BeneficiaryListComponent implements OnInit, OnDestroy {
         });
     }
 
-    clearPersistForm() {
+    async clearPersistForm() {
         this.persistService.refreshState(
             'newkycrequest/identification/beneficiaryInformation',
-            this.newRequestService.createIdentificationFormGroup(),
+            await this.newRequestService.createIdentificationFormGroup(),
             this.newRequestService.context,
         );
     }

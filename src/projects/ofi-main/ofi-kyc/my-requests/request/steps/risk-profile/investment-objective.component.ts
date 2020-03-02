@@ -8,7 +8,7 @@ import { FormPercentDirective } from '@setl/utils/directives/form-percent/formpe
 import { RiskProfileService } from '../risk-profile.service';
 import { NewRequestService } from '../../new-request.service';
 import { PersistService } from '@setl/core-persist';
-import { steps } from '../../../requests.config';
+import { shouldFormSectionPersist } from '../../../kyc-form-helper';
 
 @Component({
     selector: 'investment-objective',
@@ -18,7 +18,7 @@ export class InvestmentObjectiveComponent implements OnInit, OnDestroy {
     @ViewChild(FormPercentDirective) formPercent: FormPercentDirective;
     @Input() form;
     @Input() formConstraint;
-    @Input() completedStep: string;
+    @Input() completedStep: number;
     @Output() submitEvent: EventEmitter<any> = new EventEmitter<any>();
     @select(['ofi', 'ofiKyc', 'myKycRequested', 'kycs']) currentlyRequestedKycs$;
     @select(['ofi', 'ofiKyc', 'myKycRequested', 'kycs']) requests$;
@@ -130,7 +130,7 @@ export class InvestmentObjectiveComponent implements OnInit, OnDestroy {
      * Init Form Persist if the step has not been completed
      */
     initFormPersist() {
-        if (!this.completedStep || (steps[this.completedStep] < steps.investmentObjectives)) this.persistForm();
+        if (shouldFormSectionPersist('investmentObjectives', this.completedStep, '')) this.persistForm();
     }
 
     persistForm() {

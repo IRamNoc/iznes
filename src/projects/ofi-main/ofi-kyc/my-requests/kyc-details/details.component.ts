@@ -8,6 +8,8 @@ import { isEmpty, find, isNil, get as getValue, findIndex } from 'lodash';
 import { MultilingualService } from '@setl/multilingual';
 import { minimalInvestorStatusTextList } from '@ofi/ofi-main/ofi-kyc/my-requests/requests.config';
 import { KycDetailsService } from './details.service';
+import { KycFormHelperService } from '../kyc-form-helper.service';
+import { PartyCompaniesInterface } from '../kyc-form-helper';
 
 @Component({
     selector: 'kyc-details',
@@ -36,12 +38,21 @@ export class KycDetailsComponent implements OnInit, OnDestroy {
     modals = {};
     alreadyCompleted = null;
 
+    /* The companies that this user was invited by. */
+    public kycPartySelections: PartyCompaniesInterface;
+
     constructor(
         private route: ActivatedRoute,
         private kycDetailsService: KycDetailsService,
         public translate: MultilingualService,
         private changeDetectorRef: ChangeDetectorRef,
+        private kycFormHelperService: KycFormHelperService,
     ) {
+        // Subscribe for party details.
+        this.kycFormHelperService.kycPartyCompanies$
+            .subscribe((data) => {
+                this.kycPartySelections = data;
+            });
     }
 
     ngOnInit() {
@@ -221,7 +232,8 @@ export class KycDetailsComponent implements OnInit, OnDestroy {
     }
 
     getRiskProfile() {
-        return {
+        /* Define the risk profile panels. */
+        const riskProfilePanels = {
             id: 'request-details-identification',
             title: this.translate.translate('Risk Profile'),
             open: true,
@@ -231,12 +243,20 @@ export class KycDetailsComponent implements OnInit, OnDestroy {
                 this.getRiskConstraint(),
             ],
         };
+
+        /* Filter out hidden children panels. */
+        riskProfilePanels.children = riskProfilePanels.children
+            .filter((child) => ! child.hidden);
+
+        /* Return risk panel. */
+        return riskProfilePanels;
     }
 
     getRiskNature() {
         const riskNature = {
             title: this.translate.translate('Investments\' Nature'),
             data: '',
+            hidden: false,
         };
 
         this.kycRiskNature$
@@ -256,6 +276,7 @@ export class KycDetailsComponent implements OnInit, OnDestroy {
         const riskObjectives = {
             title: this.translate.translate('Investments\' Objectives'),
             data: '',
+            hidden: false,
         };
 
         const ids = [
@@ -289,6 +310,7 @@ export class KycDetailsComponent implements OnInit, OnDestroy {
         const riskContraints = {
             title: this.translate.translate('Investments\' Constraints'),
             data: '',
+            hidden: false,
         };
 
         const ids = [
@@ -312,6 +334,11 @@ export class KycDetailsComponent implements OnInit, OnDestroy {
                 return ids.indexOf(row.originalId) > -1;
             });
         });
+
+        /* Check if we should see this panel. */
+        if (this.kycPartySelections.id2s || this.kycPartySelections.nowcp) {
+            riskContraints.hidden = true;
+        }
 
         return riskContraints;
     }

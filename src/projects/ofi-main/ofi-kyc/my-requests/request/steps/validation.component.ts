@@ -13,13 +13,13 @@ import { RequestsService } from '../../requests.service';
 import { NewRequestService, configDate } from '../new-request.service';
 import { ValidationService } from './validation.service';
 import { DocumentsService } from './documents.service';
-import { steps } from '../../requests.config';
 import { ClearMyKycListRequested } from '@ofi/ofi-main/ofi-store/ofi-kyc';
 import { MultilingualService } from '@setl/multilingual';
 import { KycMyInformations } from '@ofi/ofi-main/ofi-store/ofi-kyc/my-informations';
 import { Observable } from 'rxjs/Observable';
 import { OfiKycService } from '@ofi/ofi-main/ofi-req-services/ofi-kyc/service';
 import { getPartyNameFromInvestorType, isIZNES } from '../../kyc-form-helper';
+import { shouldFormSectionPersist } from '../../kyc-form-helper';
 
 @Component({
     selector: 'kyc-step-validation',
@@ -101,10 +101,7 @@ export class NewKycValidationComponent implements OnInit, OnDestroy {
     }
 
     shouldPersist(kyc) {
-        if (kyc.context === 'done') {
-            return false;
-        }
-        return !kyc.completedStep || (steps[kyc.completedStep] < steps.validation);
+        return shouldFormSectionPersist('validation', kyc.completedStep, kyc.context);
     }
 
     persistForm() {

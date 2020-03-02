@@ -6,13 +6,14 @@ import { Subject, combineLatest } from 'rxjs';
 import { filter, map as rxMap, takeUntil, take } from 'rxjs/operators';
 import { IdentificationService } from '../identification.service';
 import { NewRequestService } from '../../new-request.service';
-import { countries, investorStatusList, steps } from '../../../requests.config';
+import { countries, investorStatusList } from '../../../requests.config';
 import { FormPercentDirective } from '@setl/utils/directives/form-percent/formpercent';
 import { MultilingualService } from '@setl/multilingual';
 import { formHelper } from '@setl/utils/helper';
 import { PersistRequestService } from '@setl/core-req-services';
 import { PersistService } from '@setl/core-persist';
 import { setMyKycRequestedPersist } from '@ofi/ofi-main/ofi-store/ofi-kyc';
+import { shouldFormSectionPersist } from '../../../kyc-form-helper';
 
 @Component({
     selector: 'classification-information',
@@ -25,7 +26,7 @@ export class ClassificationInformationComponent implements OnInit, OnDestroy {
     @Input() enabled;
     @Input() investorType;
     @Input() isFormReadonly;
-    @Input() completedStep: string;
+    @Input() completedStep: number;
     @Output() submitEvent: EventEmitter<any> = new EventEmitter<any>();
     @select(['ofi', 'ofiKyc', 'myKycRequested', 'kycs']) currentlyRequestedKycs$;
     @select(['ofi', 'ofiProduct', 'ofiManagementCompany', 'investorManagementCompanyList', 'investorManagementCompanyList']) managementCompanyList$;
@@ -380,7 +381,7 @@ export class ClassificationInformationComponent implements OnInit, OnDestroy {
      * Init Form Persist if the step has not been completed
      */
     initFormPersist() {
-        if (!this.completedStep || (steps[this.completedStep] < steps.classification)) this.persistForm();
+        if (shouldFormSectionPersist('classification', this.completedStep, '')) this.persistForm();
     }
 
     persistForm() {
@@ -398,10 +399,10 @@ export class ClassificationInformationComponent implements OnInit, OnDestroy {
         });
     }
 
-    clearPersistForm() {
+    async clearPersistForm() {
         this.persistService.refreshState(
             'newkycrequest/identification/classificationInformation',
-            this.newRequestService.createIdentificationFormGroup(),
+            await this.newRequestService.createIdentificationFormGroup(),
             this.newRequestService.context,
         );
     }

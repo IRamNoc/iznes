@@ -2,23 +2,34 @@ import { Injectable } from '@angular/core';
 import { select } from '@angular-redux/store';
 import { KycMyInformations } from '../../ofi-store/ofi-kyc/my-informations';
 import { Observable } from 'rxjs/Observable';
-import { tap, takeUntil, map } from 'rxjs/operators';
+import { tap, takeUntil, map, filter, take } from 'rxjs/operators';
 import { OfiKycService } from '../../ofi-req-services/ofi-kyc/service';
 import { MyUserService } from '../../../core-req-services';
-import { KycPartySelections } from '../../ofi-store/ofi-kyc/my-informations/model';
-import { isIZNES, isID2SIPA, getPartyCompanies, PartyCompaniesInterface } from './kyc-form-helper';
+import { isIZNES, isID2SIPA, getPartyCompanies, PartyCompaniesInterface, isCompanyListed, isCompanyRegulated, isStateOwned } from './kyc-form-helper';
 import { InvestorType } from '../../shared/investor-types';
+import { FormGroup } from '@angular/forms';
 
 @Injectable({
     providedIn: 'root',
 })
 export class KycFormHelperService {
     @select(['ofi', 'ofiKyc', 'myInformations']) kycMyInformations$: Observable<KycMyInformations>;
+    private kycForm: FormGroup;
 
     constructor(
         private ofiKycService: OfiKycService,
         private myUserService: MyUserService,
     ) {
+    }
+
+    /**
+     * Sets the KYC Form property, needed for helper functions
+     *
+     * @param {FormGroup} form
+     * @returns {void}
+     */
+    public setForm(form: FormGroup): void {
+        this.kycForm = form;
     }
 
     /**
@@ -71,6 +82,21 @@ export class KycFormHelperService {
         );
     }
 
+    /**
+     * whether user selected only ID2S. as observable
+     */
+    public get onlyID2S$(): Observable<boolean> {
+        return this.kycPartySelections$.pipe(
+            takeUntil(this.myUserService.logout$),
+            filter(d => !! d),
+            map((d) => {
+                const selectedCompanies = getPartyCompanies(d);
+                return selectedCompanies.id2s && !selectedCompanies.iznes && !selectedCompanies.nowcp;
+            }),
+            take(1),
+        );
+    }
+
     private get myInformations$() {
         return this.kycMyInformations$.pipe(
             takeUntil(this.myUserService.logout$),
@@ -82,5 +108,35 @@ export class KycFormHelperService {
         if (data.investorType === 0) {
             this.ofiKycService.fetchInvestor();
         }
+    }
+
+    /**
+     * Returns whether company is listed based on form values
+     *
+     * @returns {boolean}
+     */
+    public isCompanyListed(): boolean {
+        if (!this.kycForm) return false;
+        return isCompanyListed(this.kycForm);
+    }
+
+    /**
+     * Returns whether company is listed based on form values
+     *
+     * @returns {boolean}
+     */
+    public isCompanyRegulated(): boolean {
+        if (!this.kycForm) return false;
+        return isCompanyRegulated(this.kycForm);
+    }
+
+    /**
+     * Returns whether company is listed based on form values
+     *
+     * @returns {boolean}
+     */
+    public isStateOwned(): boolean {
+        if (!this.kycForm) return false;
+        return isStateOwned(this.kycForm);
     }
 }
