@@ -1,15 +1,4 @@
-import {
-    Component,
-    Input,
-    Output,
-    EventEmitter,
-    ViewChild,
-    ContentChildren,
-    AfterContentInit,
-    OnDestroy,
-    ElementRef,
-    ChangeDetectorRef,
-} from '@angular/core';
+import { Component, Input, Output, EventEmitter, ViewChild, ContentChildren, AfterContentInit, OnDestroy, ElementRef, ChangeDetectorRef } from '@angular/core';
 import { FormstepComponent } from './formstep.component';
 import { get as getValue, debounce } from 'lodash';
 import { Observable } from 'rxjs/Observable';
@@ -51,7 +40,6 @@ export class FormstepsComponent implements AfterContentInit, OnDestroy {
 
     @Output() action: EventEmitter<any> = new EventEmitter<any>();
 
-    margin;
     _position;
     _stepsConfig;
     _onboardingMode;
@@ -218,8 +206,6 @@ export class FormstepsComponent implements AfterContentInit, OnDestroy {
     }
 
     move() {
-        // Not using translate because we can't have modals (using fixed) as child of translate
-        this.margin = `-${this.position * 100}%`;
         document.querySelector('main.content-area').scrollTop = 0;
     }
 

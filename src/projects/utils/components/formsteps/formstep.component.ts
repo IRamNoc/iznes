@@ -1,11 +1,12 @@
-import { Component, ContentChild, HostBinding, ElementRef, OnDestroy } from '@angular/core';
+import { Component, ContentChild, HostBinding, ElementRef, OnDestroy, ViewChild, TemplateRef } from '@angular/core';
 
 @Component({
     selector : 'form-step',
-    template : '<ng-content></ng-content>',
+    template : '<ng-template #itemTemplate><ng-content></ng-content></ng-template>',
 })
 export class FormstepComponent implements OnDestroy {
-
+    // Template Ref
+    @ViewChild('itemTemplate') template: TemplateRef<any>;
     @ContentChild('step') step;
     @HostBinding('class') classname = 'steps-slide';
     @HostBinding('class.active') active = false;
