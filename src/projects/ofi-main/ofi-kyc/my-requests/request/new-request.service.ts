@@ -1,3 +1,4 @@
+import { KycPartySelections } from './../../../ofi-store/ofi-kyc/my-informations/model';
 import { Injectable } from '@angular/core';
 import { select, NgRedux } from '@angular-redux/store';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
@@ -102,6 +103,8 @@ export class NewRequestService {
     private subscriptions: any[] = [];
 
     @select(['user', 'siteSettings', 'production']) productionOb;
+    /* The companies that this user was invited by. */
+    public kycPartySelections: KycPartySelections;
 
     constructor(
         private multilingualService: MultilingualService,
@@ -112,6 +115,12 @@ export class NewRequestService {
         private toasterService: ToasterService,
         private kycFormHelperService: KycFormHelperService,
     ) {
+        // Subscribe for party details.
+        this.kycFormHelperService.kycPartySelections$
+            .subscribe((kycPartyCompanies: KycPartySelections) => {
+                this.kycPartySelections = kycPartyCompanies;
+            });
+
         this.subscriptions.push(this.productionOb.subscribe((production) => {
             this.isProduction = production;
         }));
@@ -547,7 +556,7 @@ export class NewRequestService {
     createInvestmentNature(id): FormGroup {
         const fb = this.formBuilder;
 
-        return fb.group({
+        let fbGroup = fb.group({
             assetManagementCompanyID: id ? id : null,
             financialAssetManagementMethod: fb.group(
                 {
@@ -577,6 +586,14 @@ export class NewRequestService {
                 }, Validators.required,
             ],
         });
+
+        // Remove investment vechicles if we're with nowcp.
+        if (this.kycPartySelections.nowCPIssuer || this.kycPartySelections.nowCPInvestor) {
+            fbGroup.get('investmentvehiclesAlreadyUsed').disable();
+            fbGroup.get('investmentvehiclesAlreadyUsedSpecification').disable();
+        }
+
+        return fbGroup;
     }
 
     createInvestmentNatures(amcs) {
