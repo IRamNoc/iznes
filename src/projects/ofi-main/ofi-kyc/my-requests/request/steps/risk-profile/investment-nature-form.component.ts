@@ -8,8 +8,6 @@ import { List } from 'immutable';
 import { FormPercentDirective } from '@setl/utils/directives/form-percent/formpercent';
 import { RiskProfileService } from '../risk-profile.service';
 import { NewRequestService } from '../../new-request.service';
-import { KycFormHelperService } from './../../../kyc-form-helper.service';
-import { PartyCompaniesInterface } from '../../../kyc-form-helper';
 
 @Component({
     selector: 'investment-nature-form',
@@ -35,7 +33,6 @@ export class InvestmentNatureFormComponent implements OnInit {
     constructor(
         private newRequestService: NewRequestService,
         private riskProfileService: RiskProfileService,
-        private kycFormHelperService: KycFormHelperService,
     ) {
     }
 
