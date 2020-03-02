@@ -60,7 +60,6 @@ import {
     multilateralTradingFacilitiesList,
     typeOfRevenuesList,
 } from '../requests.config';
-import { PartyCompaniesInterface } from '../kyc-form-helper';
 
 @Injectable()
 export class NewRequestService {
