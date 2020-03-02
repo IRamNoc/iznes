@@ -22,6 +22,7 @@ import { CustomValidators } from '@setl/utils/helper';
 import { OfiKycService } from '@ofi/ofi-main/ofi-req-services/ofi-kyc/service';
 import { setMyKycRequestedKycs, MyKycRequestedIds } from '@ofi/ofi-main/ofi-store/ofi-kyc';
 import { RequestsService } from '../requests.service';
+import { KycFormHelperService } from '../kyc-form-helper.service';
 
 import {
     booleanControls,
@@ -109,6 +110,7 @@ export class NewRequestService {
         private ngRedux: NgRedux<any>,
         private ofiKycService: OfiKycService,
         private toasterService: ToasterService,
+        private kycFormHelperService: KycFormHelperService,
     ) {
         this.subscriptions.push(this.productionOb.subscribe((production) => {
             this.isProduction = production;
@@ -186,14 +188,14 @@ export class NewRequestService {
         });
     }
 
-    createRequestForm(): FormGroup {
+    async createRequestForm(): Promise<FormGroup> {
         const fb = this.formBuilder;
 
         const selection = this.formBuilder.group({
             managementCompanies: [[], Validators.required],
         });
 
-        const identification = this.createIdentificationFormGroup();
+        const identification = await this.createIdentificationFormGroup();
         const riskProfile = this.createRiskProfileFormGroup();
         const documents = this.createDocumentsFormGroup();
         const validation = this.createValidationFormGroup();
@@ -221,7 +223,7 @@ export class NewRequestService {
         });
     }
 
-    createIdentificationFormGroup() {
+    async createIdentificationFormGroup(): Promise<FormGroup> {
         const fb = this.formBuilder;
 
         const entity = fb.group({
@@ -427,13 +429,22 @@ export class NewRequestService {
             }),
         });
 
-        return fb.group({
+        const formBuilderObject = {
             generalInformation,
             companyInformation,
             beneficiaries,
             bankingInformation,
             classificationInformation,
-        });
+        };
+
+        // the kyc is only for id2s party
+        const onlyID2STypeKyc = await this.kycFormHelperService.onlyID2S$.toPromise();
+
+        if (onlyID2STypeKyc) {
+            delete formBuilderObject.bankingInformation;
+        }
+
+        return fb.group(formBuilderObject);
     }
 
     createOptFor(id) {

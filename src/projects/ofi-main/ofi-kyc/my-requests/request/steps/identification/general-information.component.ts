@@ -6,7 +6,7 @@ import { Subject } from 'rxjs';
 import { filter, take, map, takeUntil } from 'rxjs/operators';
 import { sirenValidator, siretValidator } from '@setl/utils/helper/validators';
 import { FormPercentDirective } from '@setl/utils/directives/form-percent/formpercent';
-import { countries, steps } from '../../../requests.config';
+import { countries } from '../../../requests.config';
 import { NewRequestService } from '../../new-request.service';
 import { IdentificationService } from '../identification.service';
 import { MultilingualService } from '@setl/multilingual';
@@ -14,6 +14,7 @@ import { formHelper } from '@setl/utils/helper';
 import { PersistRequestService } from '@setl/core-req-services';
 import { PersistService } from '@setl/core-persist';
 import { setMyKycRequestedPersist } from '@ofi/ofi-main/ofi-store/ofi-kyc';
+import { shouldFormSectionPersist } from '../../../kyc-form-helper';
 
 /**
  * Kyc form sub component: Indentification -> General Information
@@ -30,7 +31,7 @@ export class GeneralInformationComponent implements OnInit, OnDestroy {
     @Input() parentForm: FormGroup;
 
     // current completed step of the kyc form.
-    @Input() completedStep: string;
+    @Input() completedStep: number;
     // whether the form should render in readonly mode.
     @Input() isFormReadonly = false;
     // Output event to let parent component hande the submit event.
@@ -88,7 +89,7 @@ export class GeneralInformationComponent implements OnInit, OnDestroy {
      * Store this form step to formPersist in database, if the current step 
      */
     initFormPersist() {
-        if (!this.completedStep || (steps[this.completedStep] < steps.generalInformation)) this.persistForm();
+        if (shouldFormSectionPersist('generalInformation', this.completedStep, '')) this.persistForm();
     }
 
     /**
@@ -256,10 +257,10 @@ export class GeneralInformationComponent implements OnInit, OnDestroy {
     /**
      * Clear form persist, when this section of the kyc form is submitted.
      */
-    clearPersistForm() {
+    async clearPersistForm() {
         this.persistService.refreshState(
             'newkycrequest/identification/generalInformation',
-            this.newRequestService.createIdentificationFormGroup(),
+            await this.newRequestService.createIdentificationFormGroup(),
             this.newRequestService.context,
         );
     }

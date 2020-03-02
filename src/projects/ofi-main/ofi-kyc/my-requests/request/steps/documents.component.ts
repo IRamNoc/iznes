@@ -11,9 +11,9 @@ import { FormPercentDirective } from '@setl/utils/directives/form-percent/formpe
 import { RequestsService } from '../../requests.service';
 import { NewRequestService } from '../new-request.service';
 import { DocumentsService, documentFormPaths } from './documents.service';
-import { steps } from '../../requests.config';
 import { KycMyInformations } from '@ofi/ofi-main/ofi-store/ofi-kyc/my-informations';
 import { DocumentPermissions, DocumentMetaCache } from './documents.model';
+import { shouldFormSectionPersist } from '../../kyc-form-helper';
 
 @Component({
     selector: 'kyc-step-documents',
@@ -83,10 +83,7 @@ export class NewKycDocumentsComponent implements OnInit, OnDestroy {
     }
 
     shouldPersist(kyc) {
-        if (kyc.context === 'done') {
-            return false;
-        }
-        return !kyc.completedStep || (steps[kyc.completedStep] < steps.documents);
+        return shouldFormSectionPersist('documents', kyc.completedStep, kyc.context)
     }
 
     initData() {

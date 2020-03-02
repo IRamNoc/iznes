@@ -1,17 +1,17 @@
 import { KycFormHelperService } from './../kyc-form-helper.service';
-import { Component, OnInit, ViewChild, AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ViewChild, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { trigger, state, style, transition, animate } from '@angular/animations';
 import { Location } from '@angular/common';
 import { FormBuilder } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { select, NgRedux } from '@angular-redux/store';
-import { get as getValue, map, sort, remove, partial, invert, find, merge } from 'lodash';
-import { Subject, combineLatest } from 'rxjs';
+import { get as getValue, map, sort, remove, partial, invert, find, merge, cloneDeep } from 'lodash';
+import { Subject, combineLatest, BehaviorSubject } from 'rxjs';
 import { takeUntil, take, filter as rxFilter, map as rxMap } from 'rxjs/operators';
 
 import { clearMyKycRequestedPersist } from '@ofi/ofi-main/ofi-store/ofi-kyc';
 import { MultilingualService } from '@setl/multilingual';
-import { steps, formStepsLight, formStepsFull, formStepsOnboarding } from '../requests.config';
+import { formStepsLight, formStepsFull, formStepsOnboarding } from '../requests.config';
 import { NewRequestService } from './new-request.service';
 
 import { FormstepsComponent } from '@setl/utils/components/formsteps/formsteps.component';
@@ -46,7 +46,7 @@ import {
     changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [KycFormHelperService],
 })
-export class NewKycRequestComponent implements OnInit, AfterViewInit {
+export class NewKycRequestComponent implements OnInit {
 
     // Get access to instance of formSteps component in the html.
     // The FormstepsComponent maintain the left navigation of the kyc form.
@@ -84,6 +84,7 @@ export class NewKycRequestComponent implements OnInit, AfterViewInit {
     }
 
     // keep track of the current complete step, to decide the active step.
+    currentCompletedStep$ = new BehaviorSubject<number>(null);
     currentCompletedStep;
 
     // kycId to duplicate from.
@@ -205,23 +206,16 @@ export class NewKycRequestComponent implements OnInit, AfterViewInit {
         return Boolean(this.clientFileId);
     }
 
-    ngOnInit() {
+    async ngOnInit() {
         // Fetch form persisted in redux?
         this.ngRedux.dispatch(clearMyKycRequestedPersist());
         // Fetch investor info
         this.ofiKycService.fetchInvestor();
 
-        this.initForm();
+        await this.initForm();
+
         this.initSubscriptions();
 
-    }
-
-    ngAfterViewInit() {
-        // Get to the active kyc form step, depend on the current completed step.
-        if (this.currentCompletedStep) {
-            const nextStep = this.getNextStep(this.currentCompletedStep);
-            this.go(nextStep);
-        }
     }
 
     /**
@@ -271,12 +265,6 @@ export class NewKycRequestComponent implements OnInit, AfterViewInit {
         });
 
 
-        // Try to get kyc form shown in current language. I guess because some of the text
-        // need to translate in javascript.
-        this.language$.pipe(takeUntil(this.unsubscribe)).subscribe(() => {
-            this.initFormSteps(this.currentCompletedStep);
-        });
-
         // Get client fileID from kyc list.
         this.myKycList$.pipe(
             rxMap((kycs) => {
@@ -296,9 +284,8 @@ export class NewKycRequestComponent implements OnInit, AfterViewInit {
     /**
      * Create kyc angular form group.
      */
-    initForm() {
-        this.forms = this.newRequestService.createRequestForm();
-
+    async initForm() {
+        this.forms = await this.newRequestService.createRequestForm();
         // Set form property on helper service needed for KYC helper functions
         this.kycFormHelperService.setForm(this.forms);
     }
@@ -308,45 +295,21 @@ export class NewKycRequestComponent implements OnInit, AfterViewInit {
      * @param {string} completedStep
      */
     initFormSteps(completedStep): void {
-        this.currentCompletedStep = completedStep;
 
         if (this.fullForm) {
             this.stepsConfig = formStepsFull;
+            // remove 'banking Infromation' section if formGroup does not exist
+            if (!this.hasBankingInformationSection()) {
+                this.stepsConfig = removeStepInStepConfig(this.stepsConfig, 'step-bank-accounts')
+            }
         } else {
             this.stepsConfig = formStepsLight;
         }
-    }
 
-    /**
-     * Navigate to step of the 'fromStepComponent'(kyc form), programatically.
-     * Likely not used anymore
-     */
-    goToStep(currentStep) {
-        const stepLevel = steps[currentStep];
-        this.formSteps.goToStep(stepLevel);
-    }
+        this.currentCompletedStep = this.stepsConfig.findIndex(a => a.dbId === completedStep);
+        this.currentCompletedStep$.next(this.currentCompletedStep);
 
-    /**
-     * Navigate to step of the 'fromStepComponent'(kyc form), programatically.
-     * similar to goToStep method.
-     */
-    go(currentStep) {
-        const stepLevel = steps[currentStep];
-        this.formSteps.go(stepLevel);
-    }
-
-    /**
-     * Get next step as string. such as 'amcSelection', 'introduction'.
-     * @param {string} step
-     * @return {string}
-     */
-    getNextStep(step: string): string {
-        const stepLevel = steps[step];
-        const nextStep = invert(steps)[stepLevel + 1];
-
-        if (nextStep) {
-            return nextStep;
-        }
+        this.changeDetectorRef.markForCheck();
     }
 
     /**
@@ -432,11 +395,42 @@ export class NewKycRequestComponent implements OnInit, AfterViewInit {
         const company = this.forms.get('identification').get('companyInformation');
         const banking = this.forms.get('identification').get('bankingInformation');
 
-        return general.valid && company.valid && banking.valid;
+        const bankingFormValid = banking ? banking.valid : true;
+
+        return general.valid && company.valid && bankingFormValid;
+    }
+
+    /**
+     * Wheter to has 'banking informations' section in formGroup
+     * @return boolean
+     */
+    hasBankingInformationSection(): boolean {
+        return !!this.forms.get('identification').get('bankingInformation');
     }
 
     ngOnDestroy() {
         this.unsubscribe.next();
         this.unsubscribe.complete();
     }
+}
+
+/**
+ * Remove a step from step config, for the specified stepId.
+ * @param {any[]} config
+ * @return {any[]}
+ */
+function removeStepInStepConfig(config: any[], stepId: string): any[] {
+    const index = config.findIndex(d => d.id === stepId);
+    const stepTitle = config[index].title;
+    let clone = cloneDeep(config);
+    clone.splice(index, 1);
+
+    // remove step from parent step
+    clone.filter(c => c.children).forEach((p) => {
+        const indexInChildren = p.children.findIndex(d => d === stepTitle);
+        if (indexInChildren !== -1) {
+            p.children.splice(indexInChildren, 1);
+        }
+    });
+    return clone;
 }
