@@ -147,10 +147,10 @@ export class InvestmentObjectiveComponent implements OnInit, OnDestroy {
         });
     }
 
-    clearPersistForm() {
+    async clearPersistForm() {
         this.persistService.refreshState(
             'newkycrequest/riskProfile/investmentObjective',
-            this.newRequestService.createRiskProfileFormGroup(),
+            await this.newRequestService.createRiskProfileFormGroup(),
             this.newRequestService.context,
         );
     }

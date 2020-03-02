@@ -205,7 +205,7 @@ export class NewRequestService {
         });
 
         const identification = await this.createIdentificationFormGroup();
-        const riskProfile = this.createRiskProfileFormGroup();
+        const riskProfile = await this.createRiskProfileFormGroup();
         const documents = this.createDocumentsFormGroup();
         const validation = this.createValidationFormGroup();
 
@@ -450,7 +450,7 @@ export class NewRequestService {
         const onlyID2STypeKyc = await this.kycFormHelperService.onlyID2S$.toPromise();
 
         if (onlyID2STypeKyc) {
-            delete formBuilderObject.bankingInformation;
+            formBuilderObject.bankingInformation.disable();
         }
 
         return fb.group(formBuilderObject);
@@ -477,7 +477,7 @@ export class NewRequestService {
         return optfors;
     }
 
-    createRiskProfileFormGroup() {
+    async createRiskProfileFormGroup(): Promise<FormGroup> {
         const fb = this.formBuilder;
 
         const investmentNature = fb.group({
@@ -495,6 +495,13 @@ export class NewRequestService {
             constraintsSameInvestmentCrossAm: 0,
             constraints: fb.array([]),
         });
+
+        // the kyc is only for id2s party
+        const onlyID2STypeKyc = await this.kycFormHelperService.onlyID2SOrNowCP$.toPromise();
+
+        if (onlyID2STypeKyc) {
+            investmentConstraint.get('constraints').disable();
+        }
 
         return fb.group({
             investmentNature,

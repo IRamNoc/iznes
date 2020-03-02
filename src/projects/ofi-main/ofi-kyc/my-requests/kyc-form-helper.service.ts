@@ -97,6 +97,21 @@ export class KycFormHelperService {
         );
     }
 
+    /**
+     * whether user selected ID2S or NowCP, and not iznes is not selected. as observable
+     */
+    public get onlyID2SOrNowCP$(): Observable<boolean> {
+        return this.kycPartySelections$.pipe(
+            takeUntil(this.myUserService.logout$),
+            filter(d => !! d),
+            map((d) => {
+                const selectedCompanies = getPartyCompanies(d);
+                return !selectedCompanies.iznes && (selectedCompanies.nowcp || selectedCompanies.id2s);
+            }),
+            take(1),
+        );
+    }
+
     private get myInformations$() {
         return this.kycMyInformations$.pipe(
             takeUntil(this.myUserService.logout$),

@@ -44,7 +44,7 @@
         </form-step>
 
         <!-- BANKING INFORMATION -->
-        <form-step *ngIf="fullForm && hasBankingInformationSection()">
+        <form-step *ngIf="fullForm && !isBankingInformationSectionDisabled()">
             <ng-template #stepTemplate>
                 <banking-information #step [isFormReadonly]="isFormReadonly" [form]="forms.get('identification').get('bankingInformation')" [completedStep]="currentCompletedStep" (submitEvent)="handleSubmit($event)"></banking-information>
             </ng-template>
@@ -75,7 +75,7 @@
         </form-step>
 
         <!-- INVESTMENT CONTRAINT -->
-        <form-step *ngIf="fullForm && !(!kycPartySelections.iznes && (kycPartySelections.id2s || kycPartySelections.nowcp))">
+        <form-step *ngIf="fullForm && !isRiskConstraintSectionDisabled()">
             <ng-template #stepTemplate>
                 <investment-constraint #step [form]="forms.get('riskProfile').get('investmentConstraint')" [formObjective]="forms.get('riskProfile').get('investmentObjective')" [completedStep]="currentCompletedStep" (submitEvent)="handleSubmit($event)"></investment-constraint>
             </ng-template>

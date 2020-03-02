@@ -123,7 +123,7 @@ export class RiskProfileService {
         // The request to data for 'Risk object', would need data from 'Risk constraints' as well. we just mock the
         // 'Risk constraints' form control to make the current flow work.
         if (constraintsValue.length === 0) {
-            constraintsValue.push(this.newRequestService.createConstraint(amcID));
+            constraintsValue.push(this.newRequestService.createConstraint(amcID).value);
         }
 
         let objectiveForAM;

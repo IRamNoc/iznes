@@ -299,8 +299,13 @@ export class NewKycRequestComponent implements OnInit {
         if (this.fullForm) {
             this.stepsConfig = formStepsFull;
             // remove 'banking Infromation' section if formGroup does not exist
-            if (!this.hasBankingInformationSection()) {
-                this.stepsConfig = removeStepInStepConfig(this.stepsConfig, 'step-bank-accounts')
+            if (this.isBankingInformationSectionDisabled()) {
+                this.stepsConfig = removeStepInStepConfig(this.stepsConfig, 'bankAccounts')
+            }
+
+            // remove 'RiskConstraints' section if formGroup does not exist
+            if (this.isRiskConstraintSectionDisabled()) {
+                this.stepsConfig = removeStepInStepConfig(this.stepsConfig, 'investmentConstraints')
             }
         } else {
             this.stepsConfig = formStepsLight;
@@ -401,11 +406,19 @@ export class NewKycRequestComponent implements OnInit {
     }
 
     /**
-     * Wheter to has 'banking informations' section in formGroup
+     * Wheter to 'banking informations' section is disabled in formGroup
      * @return boolean
      */
-    hasBankingInformationSection(): boolean {
-        return !!this.forms.get('identification').get('bankingInformation');
+    isBankingInformationSectionDisabled(): boolean {
+        return this.forms.get('identification').get('bankingInformation').disabled;
+    }
+
+    /**
+     * Wheter to 'banking informations' section is disabled in formGroup
+     * @return boolean
+     */
+    isRiskConstraintSectionDisabled(): boolean {
+        return this.forms.get('riskProfile').get('investmentConstraint').get('constraints').disabled;
     }
 
     ngOnDestroy() {
@@ -420,7 +433,7 @@ export class NewKycRequestComponent implements OnInit {
  * @return {any[]}
  */
 function removeStepInStepConfig(config: any[], stepId: string): any[] {
-    const index = config.findIndex(d => d.id === stepId);
+    const index = config.findIndex(d => d.dbId === stepId);
     const stepTitle = config[index].title;
     let clone = cloneDeep(config);
     clone.splice(index, 1);

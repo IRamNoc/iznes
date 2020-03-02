@@ -4,6 +4,7 @@ import { select } from '@angular-redux/store';
 import { Subject } from 'rxjs';
 import { takeUntil, filter as rxFilter, map } from 'rxjs/operators';
 import { isEmpty, find, isNil, get as getValue, findIndex } from 'lodash';
+import { PermissionsService } from '@setl/utils';
 
 import { MultilingualService } from '@setl/multilingual';
 import { minimalInvestorStatusTextList } from '@ofi/ofi-main/ofi-kyc/my-requests/requests.config';
@@ -38,6 +39,9 @@ export class KycDetailsComponent implements OnInit, OnDestroy {
     modals = {};
     alreadyCompleted = null;
 
+    isNowCpAm = false;
+    isID2SAm = false;
+
     /* The companies that this user was invited by. */
     public kycPartySelections: PartyCompaniesInterface;
 
@@ -47,6 +51,7 @@ export class KycDetailsComponent implements OnInit, OnDestroy {
         public translate: MultilingualService,
         private changeDetectorRef: ChangeDetectorRef,
         private kycFormHelperService: KycFormHelperService,
+        private permissionsService: PermissionsService,
     ) {
         // Subscribe for party details.
         this.kycFormHelperService.kycPartyCompanies$
@@ -55,9 +60,20 @@ export class KycDetailsComponent implements OnInit, OnDestroy {
             });
     }
 
-    ngOnInit() {
+    async ngOnInit() {
         this.constructPanels();
         this.getBeneficiaries();
+
+        await this.permissionsService.hasPermission('nowCpAM', 'canRead').then(
+            (hasPermission) => {
+                this.isNowCpAm = hasPermission;
+            },
+        );
+        await this.permissionsService.hasPermission('id2sAM', 'canRead').then(
+            (hasPermission) => {
+                this.isID2SAm = hasPermission;
+            },
+        );
     }
 
     getData(kycID) {
@@ -156,6 +172,7 @@ export class KycDetailsComponent implements OnInit, OnDestroy {
             id: 'banking',
             title: this.translate.translate('Banking Information'),
             data: '',
+            hidden: false,
         };
 
         this.kycBanking$
@@ -176,6 +193,19 @@ export class KycDetailsComponent implements OnInit, OnDestroy {
             banking.data = data;
             this.changeDetectorRef.markForCheck();
         });
+
+        /* Hide this section is investor party selection is only ID2S. */
+        if (
+            this.kycPartySelections &&
+            this.kycPartySelections.id2s
+            && !this.kycPartySelections.nowcp && !this.kycPartySelections.iznes) {
+            banking.hidden = true;
+        }
+
+        /* Hide this section if amc is id2s or nowcp */
+        if (this.isID2SAm) {
+            banking.hidden = true;
+        }
 
         return banking;
     }
@@ -243,10 +273,6 @@ export class KycDetailsComponent implements OnInit, OnDestroy {
                 this.getRiskConstraint(),
             ],
         };
-
-        /* Filter out hidden children panels. */
-        riskProfilePanels.children = riskProfilePanels.children
-            .filter((child) => ! child.hidden);
 
         /* Return risk panel. */
         return riskProfilePanels;
@@ -335,10 +361,18 @@ export class KycDetailsComponent implements OnInit, OnDestroy {
             });
         });
 
-        /* Check if we should see this panel. */
-        if (this.kycPartySelections.id2s || this.kycPartySelections.nowcp) {
+        /* Hide this section is investor party selection is ID2S or nowCP, and not iznes. */
+        if (
+            this.kycPartySelections &&
+            (this.kycPartySelections.id2s || this.kycPartySelections.nowcp)
+            && this.kycPartySelections) {
             riskContraints.hidden = true;
         }
+        /* Hide this section if amc is id2s or nowcp */
+        if (this.isNowCpAm || this.isID2SAm) {
+            riskContraints.hidden = true;
+        }
+
 
         return riskContraints;
     }
