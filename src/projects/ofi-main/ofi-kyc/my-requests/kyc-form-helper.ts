@@ -1,6 +1,8 @@
 import { FormGroup, Form } from '@angular/forms';
 import { KycPartySelections } from '../../ofi-store/ofi-kyc/my-informations/model';
+import { InvestorType } from '../../shared/investor-types';
 import { get } from 'lodash';
+
 
 export interface PartyCompaniesInterface {
     iznes: boolean;
@@ -159,8 +161,22 @@ export function getPartyCompanies(selectionState: KycPartySelections): PartyComp
  * @returns {'iznes'|'nowcp'|'id2s'}
  */
 export function getPartyNameFromInvestorType(investorType: number): 'iznes'|'nowcp'|'id2s' {
-    if ([70, 80, 90].indexOf(investorType) !== -1) return 'nowcp';
-    if ([100, 110].indexOf(investorType) !== -1) return 'id2s';
+    const nowcp = [
+        InvestorType.NowCPKycIssuer,
+        InvestorType.NowCPKycInvestor,
+        InvestorType.NowCPKycBothInvestorAndIssuer];
+    if (nowcp.indexOf(investorType) !== -1) {
+        return 'nowcp';
+    }
+
+    const id2s = [
+        InvestorType.ID2SKycIPA,
+        InvestorType.ID2SKycCustodian,
+    ];
+    if (id2s.indexOf(investorType) !== -1) {
+        return 'id2s';
+    }
+
     return 'iznes';
 }
 
@@ -172,15 +188,15 @@ export function getPartyNameFromInvestorType(investorType: number): 'iznes'|'now
  */
 export function getPartySelectionFromInvestorType(investorType: number): KycPartySelections {
     switch (investorType) {
-        case 70:
+        case InvestorType.NowCPKycIssuer:
             return { nowCPIssuer: true };
-        case 80:
+        case InvestorType.NowCPKycInvestor:
             return { nowCPInvestor: true };
-        case 90:
+        case InvestorType.NowCPKycBothInvestorAndIssuer:
             return { nowCPInvestor: true, nowCPIssuer: true };
-        case 100:
+        case InvestorType.ID2SKycIPA:
             return { id2sIPA: true };
-        case 110:
+        case InvestorType.ID2SKycCustodian:
             return { id2sCustodian: true };
         default:
             return { iznes: true };
