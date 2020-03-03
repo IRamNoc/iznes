@@ -68,7 +68,7 @@
         </form-step>
 
         <!-- INVESTMENT OBJECTIVES -->
-        <form-step *ngIf="fullForm">
+        <form-step *ngIf="fullForm && !(!kycPartySelections.iznes && (kycPartySelections.id2s || kycPartySelections.nowcp))">
             <ng-template #stepTemplate>
                 <investment-objective #step [form]="forms.get('riskProfile').get('investmentObjective')" [formConstraint]="forms.get('riskProfile').get('investmentConstraint')" [completedStep]="currentCompletedStep" (submitEvent)="handleSubmit($event)"></investment-objective>
             </ng-template>

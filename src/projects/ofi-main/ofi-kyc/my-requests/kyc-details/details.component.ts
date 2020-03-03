@@ -303,6 +303,11 @@ export class KycDetailsComponent implements OnInit, OnDestroy {
             });
         });
 
+        /* Check if we should see this panel. */
+        if (this.kycPartySelections.id2s || this.kycPartySelections.nowcp) {
+            riskObjectives.hidden = true;
+        }
+
         return riskObjectives;
     }
 

@@ -112,6 +112,7 @@ export class NewKycRequestComponent implements OnInit {
 
         // Subscribe for party details.
         this.kycFormHelperService.kycPartyCompanies$
+            .pipe(takeUntil(this.unsubscribe))
             .subscribe((data) => {
                 this.kycPartySelections = data;
             });
@@ -300,7 +301,14 @@ export class NewKycRequestComponent implements OnInit {
             this.stepsConfig = formStepsFull;
             // remove 'banking Infromation' section if formGroup does not exist
             if (!this.hasBankingInformationSection()) {
-                this.stepsConfig = removeStepInStepConfig(this.stepsConfig, 'step-bank-accounts')
+                this.stepsConfig = removeStepInStepConfig(this.stepsConfig, 'step-bank-accounts');
+            }
+            // remove investment objectives or constraints if we're ID2S or NowCP.
+            if (this.forms.get('riskProfile').get('investmentObjective').disabled) {
+                this.stepsConfig = removeStepInStepConfig(this.stepsConfig, 'step-investment-objectives');
+            }
+            if (this.forms.get('riskProfile').get('investmentConstraint').disabled) {
+                this.stepsConfig = removeStepInStepConfig(this.stepsConfig, 'step-investment-constraints');
             }
         } else {
             this.stepsConfig = formStepsLight;
