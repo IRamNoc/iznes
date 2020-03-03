@@ -16,7 +16,6 @@ import { KycPartySelections } from '../../../ofi-store/ofi-kyc/my-informations/m
 @Component({
     selector: 'kyc-welcome',
     templateUrl: './component.html',
-    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OfiKycWelcomeComponent implements OnInit, AfterViewInit, OnDestroy {
     @Output() completed: EventEmitter<boolean> = new EventEmitter();
@@ -27,6 +26,7 @@ export class OfiKycWelcomeComponent implements OnInit, AfterViewInit, OnDestroy 
     public invitedAs: 'iznes'|'id2s'|'nowcp';
     private unsubscribe: Subject<any> = new Subject();
     public fadeIn: boolean = false;
+    public contentMaxHeight: number;
     @select(['ofi', 'ofiKyc', 'myInformations']) kycMyInformation$: Observable<KycMyInformations>;
     @select(['user', 'connected', 'connectedWallet']) connectedWallet$: Observable<number>;
 
@@ -164,6 +164,31 @@ export class OfiKycWelcomeComponent implements OnInit, AfterViewInit, OnDestroy 
             this.fadeIn = true;
             this.changeDetector.detectChanges();
         }, 200);
+    }
+
+    /**
+     * Returns the content max-height property and calls setMaxHeight
+     *
+     * @param heightWrapper {HTMLElement}
+     * @returns {number}
+     */
+    public getMaxHeight(heightWrapper: any): number {
+        this.setMaxHeight(heightWrapper);
+        return this.contentMaxHeight;
+    }
+
+    /**
+     * Sets the content max-height based on height of content container
+     *
+     * @param heightWrapper {HTMLElement}
+     * @returns {void}
+     */
+    public setMaxHeight(heightWrapper: any): void {
+        const height = Number((heightWrapper || {}).scrollHeight) + 48; // 48px to account for padding
+        if (!Number.isNaN(height) && height !== this.contentMaxHeight) {
+            this.contentMaxHeight = height;
+            this.changeDetector.detectChanges();
+        }
     }
 
     ngOnDestroy(): void {
