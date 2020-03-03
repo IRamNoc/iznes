@@ -1,5 +1,5 @@
 <div class="full-screen-splash" [style.backgroundImage]="'url(assets/images/iznes-login-bg.jpg)'">
-    <div class="content" [class.fade-in]="fadeIn" [style.maxHeight.px]="(heightWrapper?.scrollHeight || 0) + 48">
+    <div class="content" [class.fade-in]="fadeIn" [style.maxHeight.px]="getMaxHeight(heightWrapper)">
         <div #heightWrapper>
             <img *ngIf="invitedAs === 'iznes'" src="assets/images/logo-iznes-only.png" alt="IZNES">
             <img *ngIf="invitedAs === 'nowcp'" src="assets/images/nowcp-logo.png" alt="NowCP">

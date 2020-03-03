@@ -24,7 +24,6 @@ import { FormGroup, FormControl, ValidatorFn } from '@angular/forms';
 @Component({
     styleUrls: ['./component.scss'],
     templateUrl: './component.html',
-    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OfiKycHomeComponent implements AfterViewInit, OnDestroy {
     appConfig: AppConfig;
