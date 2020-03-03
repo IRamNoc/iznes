@@ -1,20 +1,23 @@
 import { Component, OnInit, Input, OnDestroy, Output, EventEmitter, ChangeDetectorRef, AfterViewInit } from '@angular/core';
 import { combineLatest, Subject } from 'rxjs';
-import { takeUntil, filter as rxFilter, tap, map, distinctUntilChanged } from 'rxjs/operators';
+import { takeUntil, filter as rxFilter, tap, map, distinctUntilChanged, take } from 'rxjs/operators';
 import { FormGroup, FormControl } from '@angular/forms';
 import { select, NgRedux } from '@angular-redux/store';
 import { ActivatedRoute } from '@angular/router';
 import { isEmpty, isNil, keyBy, filter, reduce, find, merge } from 'lodash';
 import { formHelper } from '@setl/utils/helper';
+import { SagaHelper } from '../../../../../utils';
+import { SET_KYC_PARTY_SELECTIONS } from '../../../../ofi-store/ofi-kyc/my-informations';
 
-import { ClearMyKycListRequested } from '@ofi/ofi-main/ofi-store/ofi-kyc';
+import { ClearMyKycListRequested, MyKycRequestedIds } from '@ofi/ofi-main/ofi-store/ofi-kyc';
 import { OfiManagementCompanyService } from '@ofi/ofi-main/ofi-req-services/ofi-product/management-company/management-company.service';
 import { OfiKycService } from '@ofi/ofi-main/ofi-req-services/ofi-kyc/service';
 import { RequestsService } from '../../requests.service';
 import { NewRequestService } from '../new-request.service';
 import { SelectAmcService } from './select-amc.service';
 import { KycFormHelperService } from '../../kyc-form-helper.service';
-import { getPartySelectionFromInvestorType } from '../../kyc-form-helper';
+import { getPartyNameFromInvestorType } from '../../kyc-form-helper';
+import { KycPartySelections } from '../../../../ofi-store/ofi-kyc/my-informations/model';
 
 /**
  * Kyc Asset management companie selection screen
@@ -72,6 +75,8 @@ export class NewKycSelectAmcComponent implements OnInit, OnDestroy {
     @Output() registered = new EventEmitter<boolean>();
     // Let parent componet know the am selection screen is submitted and completed.
     @Output() submitEvent: EventEmitter<{completed: boolean; updateView?: boolean}> = new EventEmitter();
+    // Emit event when kyc party selection changed.
+    @Output() kycPartySelectionsChangedEvent: EventEmitter<boolean> = new EventEmitter();
 
     // observable for list of kycs belong to the current investor
     @select(['ofi', 'ofiKyc', 'myKycList', 'kycList']) myKycList$;
@@ -121,7 +126,9 @@ export class NewKycSelectAmcComponent implements OnInit, OnDestroy {
             combineLatest(
                 this.managementCompanyList$,
                 this.myKycList$)
-            .pipe(distinctUntilChanged())
+            .pipe(
+                distinctUntilChanged(),
+            )
             .subscribe(([managementCompanyList, myKycList]) => {
                 if (this.selectedManagementCompanies.length && !this.onboardingSubmitted) {
                     this.handleSubmit();
@@ -164,7 +171,7 @@ export class NewKycSelectAmcComponent implements OnInit, OnDestroy {
             this.managementCompanies = this.requestsService
             .extractManagementCompanyData(managementCompanyList, kycList, requestedKycs)
             // filter out third party management company. if company is third party company and kyc user is iznes investor type.
-            .filter(c => !(c.isThirdPartyKyc && getPartySelectionFromInvestorType(investorType).iznes));
+            .filter(c => this.relevantAMC(c, investorType));
             if (!this.filteredManagementCompanies) this.filteredManagementCompanies = this.managementCompanies;
         });
 
@@ -262,9 +269,9 @@ export class NewKycSelectAmcComponent implements OnInit, OnDestroy {
     toggleManagementCompany(managementCompany) {
         if (!this.submitted) {
             if (this.selectedAMCIDs.has(managementCompany.id)) {
-               this.selectedAMCIDs.delete(managementCompany.id);
+                this.selectedAMCIDs.delete(managementCompany.id);
             } else {
-               this.selectedAMCIDs.add(managementCompany.id);
+                this.selectedAMCIDs.add(managementCompany.id);
             }
             this.onRegisteredChange();
         }
@@ -361,6 +368,9 @@ export class NewKycSelectAmcComponent implements OnInit, OnDestroy {
             ids = await this.selectAmcService.createMultipleDrafts(this.selectedManagementCompanies, this.connectedWallet);
         }
 
+        // if any one the newly created kyc is iznes. update KycPartySelections to container iznes investor.
+        this.updateKycPartySelections(ids);
+
         // Store the newly created kyc detail to redux
         this.newRequestService.storeCurrentKycs(ids);
 
@@ -430,6 +440,62 @@ export class NewKycSelectAmcComponent implements OnInit, OnDestroy {
      */
     isAMCSelected(amcID: number):boolean {
         return this.selectedAMCIDs.has(amcID);
+    }
+
+    /**
+     * Update kyc party selections, if a iznes management company kyc is created by the current kyc user.
+     * @param {MyKycRequestedIds} kycs
+     * return {void}
+     */
+    async updateKycPartySelections(kycs: MyKycRequestedIds) {
+        const hasIznAm = kycs.find(kyc => !kyc.isThirdPartyKyc);
+        if (!!hasIznAm) {
+            const walletId = await this.connectedWallet$.pipe(take(1)).toPromise();
+            let partySelections = await this.kycFormHelperService.kycPartySelections$.pipe(take(1)).toPromise();
+            partySelections = {...partySelections, iznes: true};
+
+            await this.sendKycPartySelectionsRequest(partySelections, walletId);
+            this.kycPartySelectionsChangedEvent.emit(true);
+        }
+    }
+
+    sendKycPartySelectionsRequest(partySelections: KycPartySelections, walletId: number): Promise<any> {
+        const partySelectionsSerialised = JSON.stringify(partySelections);
+        const asyncTaskPipe = this.ofiKycService.setKycPartySelections({ walletId, partySelections: partySelectionsSerialised });
+        return new Promise((resolve, reject) => {
+            this.ngRedux.dispatch(SagaHelper.runAsync(
+                [SET_KYC_PARTY_SELECTIONS],
+                [],
+                asyncTaskPipe,
+                {},
+                () => {
+                    resolve();
+                },
+                () => {
+                    reject()
+                },
+            ));
+        }); 
+    }
+
+    /**
+     * Show mangement company relevant to the user.
+     * 1. if iznes investor. hide all third party management company
+     * 2. if nowcp: show nowcp management company and iznes management company
+     * 3. if id2s: show id2s management company and iznes management company
+     */
+    relevantAMC(amc: any, investorType) {
+        const investorTypeStr = getPartyNameFromInvestorType(investorType);
+        if (investorTypeStr === 'iznes') {
+            return !amc.isThirdPartyKyc;
+        }
+        if (investorTypeStr === 'nowcp') {
+            return !amc.isThirdPartyKyc || amc.managementCompanyType === 'nowcp';
+        }
+        if (investorTypeStr === 'id2s') {
+            return !amc.isThirdPartyKyc || amc.managementCompanyType === 'id2s';
+        }
+        return false;
     }
 
     ngOnDestroy() {

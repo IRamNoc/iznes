@@ -1,4 +1,5 @@
 <form [formGroup]="form" id="step-general-information" (ngSubmit)="handleSubmit($event)">
+    <kyc-clientfile-update-alert *ngIf="!form.valid && isFormReadonly"></kyc-clientfile-update-alert>
 
     <div class="kyc-container">
         <h2>{{ 'General Information' | translate }}</h2>

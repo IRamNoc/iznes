@@ -91,6 +91,8 @@ export class NewKycRequestComponent implements OnInit {
     duplicate: number;
     // investor type that of the user.original invited with.
     kycInvestorType;
+    // Whether make amc select readonly
+    amcSelectReadOnly = false;
 
     /* The companies that this user was invited by. */
     public kycPartySelections: PartyCompaniesInterface;
@@ -239,6 +241,9 @@ export class NewKycRequestComponent implements OnInit {
             .subscribe((amcs) => {
                 // Get the current kyc context as string in this format: kycID1-KycID2, such as '3-23'
                 this.newRequestService.getContext(amcs);
+                if (amcs.length > 0) {
+                    this.amcSelectReadOnly = true;
+                }
             });
 
         // fetch data from query params.
@@ -301,6 +306,21 @@ export class NewKycRequestComponent implements OnInit {
             // remove 'banking Infromation' section if formGroup does not exist
             if (this.isBankingInformationSectionDisabled()) {
                 this.stepsConfig = removeStepInStepConfig(this.stepsConfig, 'bankAccounts')
+            }
+
+            // remove 'Risk Profile' section if all sub-sections are hidden
+            if (!this.showRiskProfileSection()) {
+                this.stepsConfig = removeStepInStepConfig(this.stepsConfig, 'riskProfile')
+            }
+
+            // remove 'RiskInvestmentDetail' section if formGroup does not exist
+            if (this.isRiskInvestmentDetailSectionDisabled()) {
+                this.stepsConfig = removeStepInStepConfig(this.stepsConfig, 'investmentDetails')
+            }
+
+            // remove 'RiskObjective' section if formGroup does not exist
+            if (this.isRiskObjectiveSectionDisabled()) {
+                this.stepsConfig = removeStepInStepConfig(this.stepsConfig, 'investmentObjectives')
             }
 
             // remove 'RiskConstraints' section if formGroup does not exist
@@ -406,7 +426,7 @@ export class NewKycRequestComponent implements OnInit {
     }
 
     /**
-     * Wheter to 'banking informations' section is disabled in formGroup
+     * Whether to 'banking informations' section is disabled in formGroup
      * @return boolean
      */
     isBankingInformationSectionDisabled(): boolean {
@@ -414,11 +434,45 @@ export class NewKycRequestComponent implements OnInit {
     }
 
     /**
-     * Wheter to 'banking informations' section is disabled in formGroup
+     * Whether to 'Risk profile -> investment detail' section is disabled in formGroup
+     * @return boolean
+     */
+    isRiskInvestmentDetailSectionDisabled(): boolean {
+        return this.forms.get('riskProfile').get('investmentNature').get('natures').disabled;
+    }
+
+    /**
+     * Whether to 'Risk profile -> Risk objective' section is disabled in formGroup
+     * @return boolean
+     */
+    isRiskObjectiveSectionDisabled(): boolean {
+        return this.forms.get('riskProfile').get('investmentObjective').get('objectives').disabled;
+    }
+
+    /**
+     * Whether to 'Risk profile -> Risk constraints' section is disabled in formGroup
      * @return boolean
      */
     isRiskConstraintSectionDisabled(): boolean {
         return this.forms.get('riskProfile').get('investmentConstraint').get('constraints').disabled;
+    }
+
+    /**
+     * Whether to show 'Risk Profile' section
+     * @return boolean
+     */
+    showRiskProfileSection(): boolean {
+        return !this.isRiskInvestmentDetailSectionDisabled() ||
+               !this.isRiskObjectiveSectionDisabled() ||
+               !this.isRiskConstraintSectionDisabled();
+    }
+
+    /**
+     * Reload kyc form after kyc party selection is updated.
+     */
+    async reloadKycForm() {
+        await this.initForm();
+        this.initFormSteps('amcSelection');
     }
 
     ngOnDestroy() {

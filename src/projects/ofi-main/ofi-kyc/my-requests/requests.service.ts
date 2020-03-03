@@ -35,7 +35,7 @@ export class RequestsService {
      * @param {any[]} requestKycs: a list of kycs that active for the current kyc from.
      * @return {any[]} full list of management companies that should be shown in the am selection screen.
      */
-    extractManagementCompanyData(companies: any[], kycList, requestedKycs): {id: number; text: string; websiteUrl: string, image: any; register: boolean, isThirdPartyKyc: boolean}[] {
+    extractManagementCompanyData(companies: any[], kycList, requestedKycs): {id: number; text: string; websiteUrl: string, image: any; register: boolean, isThirdPartyKyc: boolean, managementCompanyType: string}[] {
         if (_.isEmpty(companies)) {
             return [];
         }
@@ -52,6 +52,7 @@ export class RequestsService {
             image: company.logoHash,
             registered: false,
             isThirdPartyKyc: company.isThirdPartyKyc,
+            managementCompanyType: company.managementCompanyType,
         }))
         .values()
         .value();

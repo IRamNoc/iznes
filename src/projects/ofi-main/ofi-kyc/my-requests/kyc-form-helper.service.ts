@@ -5,7 +5,7 @@ import { Observable } from 'rxjs/Observable';
 import { tap, takeUntil, map, filter, take } from 'rxjs/operators';
 import { OfiKycService } from '../../ofi-req-services/ofi-kyc/service';
 import { MyUserService } from '../../../core-req-services';
-import { isIZNES, isID2SIPA, getPartyCompanies, PartyCompaniesInterface, isCompanyListed, isCompanyRegulated, isStateOwned } from './kyc-form-helper';
+import { isIZNES, isID2SIPA, getPartyCompanies, PartyCompaniesInterface, isCompanyListed, isCompanyRegulated, isStateOwned, getPartyNameFromInvestorType } from './kyc-form-helper';
 import { InvestorType } from '../../shared/investor-types';
 import { FormGroup } from '@angular/forms';
 
@@ -69,6 +69,34 @@ export class KycFormHelperService {
         return this.kycPartySelections$.pipe(
             takeUntil(this.myUserService.logout$),
             map(isID2SIPA),
+        );
+    }
+
+    /**
+     * Whether user was inivited by id2s management company
+     * @return {boolean}
+     */
+    public get invitedByID2S$(): Observable<boolean> {
+        return this.investorType$.pipe(
+            takeUntil(this.myUserService.logout$),
+            filter(d => !! d),
+            map(getPartyNameFromInvestorType),
+            map(d => d === 'id2s'),
+        );
+    }
+
+    /**
+     * Whether user was inivited by NowCP management company
+     * @return {boolean}
+     */
+    public get invitedByNowCp$(): Observable<boolean> {
+        return this.investorType$.pipe(
+            takeUntil(this.myUserService.logout$),
+            filter(d => !! d),
+            map(getPartyNameFromInvestorType),
+            map(d => {
+                return d === 'nowcp';
+            }),
         );
     }
 

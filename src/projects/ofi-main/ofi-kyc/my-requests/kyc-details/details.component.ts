@@ -272,7 +272,20 @@ export class KycDetailsComponent implements OnInit, OnDestroy {
                 this.getRiskObjective(),
                 this.getRiskConstraint(),
             ],
+            hidden: false,
         };
+
+        /* Hide this section is investor party selection is ID2S, and not iznes. */
+        if (
+            this.kycPartySelections &&
+            (this.kycPartySelections.id2s)
+            && this.kycPartySelections && !this.kycPartySelections.nowcp) {
+            riskProfilePanels.hidden = true;
+        }
+        /* Hide this section if amc is id2s */
+        if (this.isID2SAm) {
+            riskProfilePanels.hidden = true;
+        }
 
         /* Return risk panel. */
         return riskProfilePanels;
@@ -329,6 +342,18 @@ export class KycDetailsComponent implements OnInit, OnDestroy {
             });
         });
 
+        /* Hide this section is investor party selection is ID2S or nowCP, and not iznes. */
+        if (
+            this.kycPartySelections &&
+            (this.kycPartySelections.id2s || this.kycPartySelections.nowcp)
+            && !this.kycPartySelections.iznes) {
+            riskObjectives.hidden = true;
+        }
+        /* Hide this section if amc is id2s or nowcp */
+        if (this.isNowCpAm || this.isID2SAm) {
+            riskObjectives.hidden = true;
+        }
+
         return riskObjectives;
     }
 
@@ -365,7 +390,7 @@ export class KycDetailsComponent implements OnInit, OnDestroy {
         if (
             this.kycPartySelections &&
             (this.kycPartySelections.id2s || this.kycPartySelections.nowcp)
-            && this.kycPartySelections) {
+            && !this.kycPartySelections.iznes) {
             riskContraints.hidden = true;
         }
         /* Hide this section if amc is id2s or nowcp */

@@ -57,6 +57,7 @@ import { IdentificationService } from './request/steps/identification.service';
 import { RiskProfileService } from './request/steps/risk-profile.service';
 import { DocumentsService } from './request/steps/documents.service';
 import { ValidationService } from './request/steps/validation.service';
+import { KycClientFileUpdateAlert } from './request/shared-components/kyc-clientfile-update-alert.component';
 
 @NgModule({
     declarations: [
@@ -93,6 +94,7 @@ import { ValidationService } from './request/steps/validation.service';
         KycDetailsGridComponent,
         KycDetailsStakeholdersComponent,
         KycDetailsStakeholdersModalComponent,
+        KycClientFileUpdateAlert,
     ],
     exports: [
         KycDetailsComponent,

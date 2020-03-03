@@ -8,7 +8,10 @@
     <!-- SELECT AMC -->
     <form-step>
         <ng-template #stepTemplate>
-            <kyc-step-select-amc #step [form]="forms.get('selection')" [onboarding]="onboardingMode" (registered)="registered($event)" [disabled]="currentCompletedStep >= 0" (submitEvent)="handleSubmit($event)" [duplicate]="duplicate"></kyc-step-select-amc>
+            <kyc-step-select-amc #step [form]="forms.get('selection')" [onboarding]="onboardingMode" (registered)="registered($event)"
+                [disabled]="amcSelectReadOnly" (submitEvent)="handleSubmit($event)" [duplicate]="duplicate"
+                (kycPartySelectionsChangedEvent)="reloadKycForm()"
+                ></kyc-step-select-amc>
         </ng-template>
     </form-step>
 
@@ -58,7 +61,7 @@
         </form-step>
 
     <!-- RISK PROFILE -->
-    <form-step *ngIf="fullForm"></form-step>
+    <form-step *ngIf="fullForm && showRiskProfileSection()"></form-step>
 
         <!-- INVESTMENT DETAILS -->
         <form-step *ngIf="fullForm">
@@ -68,7 +71,7 @@
         </form-step>
 
         <!-- INVESTMENT OBJECTIVES -->
-        <form-step *ngIf="fullForm">
+        <form-step *ngIf="fullForm && !isRiskObjectiveSectionDisabled()">
             <ng-template #stepTemplate>
                 <investment-objective #step [form]="forms.get('riskProfile').get('investmentObjective')" [formConstraint]="forms.get('riskProfile').get('investmentConstraint')" [completedStep]="currentCompletedStep" (submitEvent)="handleSubmit($event)"></investment-objective>
             </ng-template>
