@@ -5,8 +5,8 @@
 </div>
 
 <div class="form-container">
-    <div class="steps-slider" [ngStyle]="{'marginLeft': margin}">
-        <ng-content></ng-content>
+    <div class="steps-slider">
+        <ng-container *ngTemplateOutlet="stepsComponentsArray[position]?.template"></ng-container>
     </div>
 
     <div class="button-container">

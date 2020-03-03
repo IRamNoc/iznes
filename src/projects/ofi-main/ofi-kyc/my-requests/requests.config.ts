@@ -3047,7 +3047,7 @@ export const documentTypesList = [
     },
     {
         id: 'kyckbisdoc',
-        text: 'KIBS extract (or equivalent) less than 3 months old',
+        text: 'KBIS extract (or equivalent) less than 3 months old',
     },
     {
         id: 'kycannualreportdoc',

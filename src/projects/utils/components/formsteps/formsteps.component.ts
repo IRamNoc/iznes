@@ -1,15 +1,4 @@
-import {
-    Component,
-    Input,
-    Output,
-    EventEmitter,
-    ViewChild,
-    ContentChildren,
-    AfterContentInit,
-    OnDestroy,
-    ElementRef,
-    ChangeDetectorRef,
-} from '@angular/core';
+import { Component, Input, Output, EventEmitter, ViewChild, ContentChildren, AfterContentInit, OnDestroy, ElementRef, ChangeDetectorRef, ViewChildren } from '@angular/core';
 import { FormstepComponent } from './formstep.component';
 import { get as getValue, debounce } from 'lodash';
 import { Observable } from 'rxjs/Observable';
@@ -51,7 +40,6 @@ export class FormstepsComponent implements AfterContentInit, OnDestroy {
 
     @Output() action: EventEmitter<any> = new EventEmitter<any>();
 
-    margin;
     _position;
     _stepsConfig;
     _onboardingMode;
@@ -60,8 +48,10 @@ export class FormstepsComponent implements AfterContentInit, OnDestroy {
     stepsMap: {} = {};
     mainContentEl: HTMLElement;
     fixStepsProgress: boolean = false;
+
     debounceScroll = debounce(this.handleScroll.bind(this), 10);
     debouncedFixStepsProgress = debounce(this.handleFixStepsProgress.bind(this), 10);
+    public stepsComponentsArray: any[] = [];
 
     get steps() {
         return this.stepComponents.reduce((acc, cur) => acc.concat([cur.step]), []);
@@ -77,6 +67,7 @@ export class FormstepsComponent implements AfterContentInit, OnDestroy {
         this.setSubmitted(this.position);
         this.move();
         this.updateSubmitID();
+        this.changeDetectorRef.detectChanges();
     }
 
     get disabled(): boolean {
@@ -92,10 +83,10 @@ export class FormstepsComponent implements AfterContentInit, OnDestroy {
     constructor(
         private element: ElementRef,
         private changeDetectorRef: ChangeDetectorRef,
-    ) {
-    }
+    ) {}
 
     ngAfterContentInit() {
+        this.stepsComponentsArray = this.stepComponents.toArray();
         this.position = 0;
         this.progress[0].active = true;
         this.mainContentEl = document.querySelector('main.content-area');
@@ -218,8 +209,6 @@ export class FormstepsComponent implements AfterContentInit, OnDestroy {
     }
 
     move() {
-        // Not using translate because we can't have modals (using fixed) as child of translate
-        this.margin = `-${this.position * 100}%`;
         document.querySelector('main.content-area').scrollTop = 0;
     }
 
@@ -267,7 +256,6 @@ export class FormstepsComponent implements AfterContentInit, OnDestroy {
         if (!!this.stepComponents) {
             this.stepComponents.toArray().forEach((component, idx) => {
                 component.active = position === idx;
-                position === idx ? component.stopLastInputTabbing() : component.removeKeydownListeners();
             });
         }
     }
