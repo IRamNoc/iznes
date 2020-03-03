@@ -6,19 +6,6 @@ form-steps {
 
     .steps-slider {
         width: 100%;
-        display: flex;
-
-        .steps-slide {
-            height: 0;
-
-            flex-shrink: 0;
-            width: 100%;
-
-            &.active{
-                height: 100%;
-                overflow-y: visible;
-            }
-        }
     }
 
     .hidden {

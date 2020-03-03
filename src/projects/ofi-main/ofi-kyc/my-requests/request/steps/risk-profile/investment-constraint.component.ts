@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, ViewChild, EventEmitter, ElementRef, OnDestroy } from '@angular/core';
+import { Component, OnInit, Input, Output, ViewChild, EventEmitter, ElementRef, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { isEmpty, values, map, toNumber } from 'lodash';
 import { select } from '@angular-redux/store';
 import { formHelper } from '@setl/utils/helper';
@@ -34,6 +34,7 @@ export class InvestmentConstraintComponent implements OnInit, OnDestroy {
         private element: ElementRef,
         private newRequestService: NewRequestService,
         private riskProfileService: RiskProfileService,
+        private cd: ChangeDetectorRef,
     ) {
     }
 
@@ -130,6 +131,8 @@ export class InvestmentConstraintComponent implements OnInit, OnDestroy {
         constraints.forEach((constraint) => {
             constraintsControl.push(constraint);
         });
+
+        this.cd.detectChanges();
     }
 
     // formPercent is disabled because there are no required fields for non- nowCP investorType
