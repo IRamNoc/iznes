@@ -48,8 +48,9 @@ export class FormstepsComponent implements AfterContentInit, OnDestroy {
     stepsMap: {} = {};
     mainContentEl: HTMLElement;
     fixStepsProgress: boolean = false;
-    debounceScroll = debounce(this.handleScroll.bind(this), 20);
-    debouncedFixStepsProgress = debounce(this.handleFixStepsProgress.bind(this), 20);
+
+    debounceScroll = debounce(this.handleScroll.bind(this), 10);
+    debouncedFixStepsProgress = debounce(this.handleFixStepsProgress.bind(this), 10);
     public stepsComponentsArray: any[] = [];
 
     get steps() {
