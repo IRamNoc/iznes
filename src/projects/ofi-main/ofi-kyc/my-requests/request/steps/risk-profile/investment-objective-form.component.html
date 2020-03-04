@@ -11,7 +11,7 @@
 
 <div class="panel-body" [class.hidden]="!open" [ngClass]="{'objective pl-1': multiple}" [formGroup]="form">
 
-    <div class="checkbox-group" formGroupName="performanceProfile">
+    <div *ngIf="form" class="checkbox-group" formGroupName="performanceProfile">
         <div class="row col-sm-12">
             <div class="form-group required-field col-sm-12">
                 <label class="required-field">{{ 'What performance do you require?' | translate }}</label>

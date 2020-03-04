@@ -112,8 +112,8 @@ export class InvestmentNatureComponent implements OnInit, OnDestroy {
         this.formPercent.refreshFormPercent();
     }
 
-    generateNatures(amcs = []) {
-        const natures = this.newRequestService.createInvestmentNatures(amcs);
+    async generateNatures(amcs = []) {
+        const natures = await this.newRequestService.createInvestmentNatures(amcs);
         const naturesControl = this.form.get('natures');
         const numberOfControls = naturesControl.length;
 

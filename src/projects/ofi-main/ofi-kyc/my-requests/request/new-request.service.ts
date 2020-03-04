@@ -611,19 +611,21 @@ export class NewRequestService {
         return fbGroup;
     }
 
-    createInvestmentNatures(amcs) {
+    async createInvestmentNatures(amcs) {
         const natures = [];
         const length = amcs.length || 1;
 
         for (let i = 0; i < length; i += 1) {
             const id = amcs[i];
-            natures.push(this.createInvestmentNature(id));
+            natures.push(
+                await this.createInvestmentNature(id),
+            );
         }
 
         return natures;
     }
 
-    createInvestmentObjective(id): FormGroup {
+    async createInvestmentObjective(id) {
         const form = this.formBuilder.group({
             assetManagementCompanyID: id ? id : null,
             performanceProfile: this.formBuilder.group(this.transformToForm(this.performanceProfileList), {
@@ -697,33 +699,32 @@ export class NewRequestService {
             ),
         });
 
-        /* Disable this form group for NowCP and ID2S clients. */
-        if (
-            this.kycPartySelections.nowCPIssuer ||
-            this.kycPartySelections.nowCPInvestor ||
-            this.kycPartySelections.id2sIPA || 
-            this.kycPartySelections.id2sCustodian
-        ) {
+        // Disable constraints section for type ID2S or NowCP kyc
+        const id2sOrNowCpTypeKyc = await this.kycFormHelperService.onlyID2SOrNowCP$.toPromise();
+
+        if (id2sOrNowCpTypeKyc) {
             form.disable();
         }
 
         return form;
     }
 
-    createInvestmentObjectives(amcs) {
+    async createInvestmentObjectives(amcs) {
         const objectives = [];
         const length = amcs.length || 1;
 
         for (let i = 0; i < length; i += 1) {
             const id = amcs[i];
-            objectives.push(this.createInvestmentObjective(id));
+            objectives.push(
+                await this.createInvestmentObjective(id)
+            );
         }
 
         return objectives;
     }
 
-    createConstraint(id) {
-        return this.formBuilder.group({
+    async createConstraint(id) {
+        const form = this.formBuilder.group({
             assetManagementCompanyID: id ? id : null,
             statutoryConstraints: ['', Validators.maxLength(255)],
             taxConstraints: ['', Validators.maxLength(255)],
@@ -737,15 +738,26 @@ export class NewRequestService {
             hasEverIssuedNeuCp: [0, Validators.required],
             hasAlreadyInvestedNeuCp: [0, Validators.required],
         });
+
+        // Disable constraints section for type ID2S or NowCP kyc
+        const id2sOrNowCpTypeKyc = await this.kycFormHelperService.onlyID2SOrNowCP$.toPromise();
+
+        if (id2sOrNowCpTypeKyc) {
+            form.disable();
+        }
+
+        return form;
     }
 
-    createConstraints(amcs) {
+    async createConstraints(amcs) {
         const constraints = [];
         const length = amcs.length || 1;
 
         for (let i = 0; i < length; i += 1) {
             const id = amcs[i];
-            constraints.push(this.createConstraint(id));
+            constraints.push(
+                await this.createConstraint(id),
+            );
         }
 
         return constraints;

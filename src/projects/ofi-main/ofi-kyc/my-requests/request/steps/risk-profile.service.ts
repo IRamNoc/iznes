@@ -87,7 +87,7 @@ export class RiskProfileService {
         let promises = [];
         const context = this.newRequestService.context;
 
-        this.requests.forEach((request) => {
+        this.requests.forEach(async (request) => {
             const kycID = request.kycID;
 
             // Objective
@@ -95,7 +95,7 @@ export class RiskProfileService {
             const formGroupConstraint = formConstraint;
             formGroupObjective.get('kycID').setValue(kycID);
             formGroupConstraint.get('kycID').setValue(kycID);
-            const objectivePromises = this.sendRequestObjective(formGroupObjective, formGroupConstraint);
+            const objectivePromises = await this.sendRequestObjective(formGroupObjective, formGroupConstraint);
             promises = promises.concat(objectivePromises);
 
             // Update step
@@ -106,7 +106,7 @@ export class RiskProfileService {
         return Promise.all(promises);
     }
 
-    sendRequestObjective(formGroupObjective, formGroupConstraint) {
+    async sendRequestObjective(formGroupObjective, formGroupConstraint) {
         const promises = [];
         let formGroupValue;
 
@@ -123,13 +123,19 @@ export class RiskProfileService {
         // The request to update data for 'Risk constraints', would need data from 'Risk objectives' as well. we just mock the
         // 'Risk objectives' form control to make the current flow work.
         if (objectivesValue.length === 0) {
-            objectivesValue.push(this.newRequestService.createInvestmentObjective(amcID).value);
+            const invObjectiveForm = await this.newRequestService.createInvestmentObjective(amcID);
+            objectivesValue.push(
+                invObjectiveForm.value,
+            );
         }
 
         // The request to update data for 'Risk objects', would need data from 'Risk constraints' as well. we just mock the
         // 'Risk constraints' form control to make the current flow work.
         if (constraintsValue.length === 0) {
-            constraintsValue.push(this.newRequestService.createConstraint(amcID).value);
+            const invConstraintForm = await this.newRequestService.createConstraint(amcID);
+            constraintsValue.push(
+                invConstraintForm.value,
+            );
         }
 
         let objectiveForAM;
