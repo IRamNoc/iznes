@@ -121,7 +121,7 @@ export class NewKycSelectAmcComponent implements OnInit, OnDestroy {
     ngAfterViewInit() {
         // to do with auto submit draft kyc, when onboarding?
         // this would create the draft kyc and go to next step of the kyc?
-        if (this.onboarding) {
+        if (this.onboarding && !this.submitted) {
 
             combineLatest(
                 this.managementCompanyList$,
@@ -475,7 +475,7 @@ export class NewKycSelectAmcComponent implements OnInit, OnDestroy {
                     reject()
                 },
             ));
-        }); 
+        });
     }
 
     /**

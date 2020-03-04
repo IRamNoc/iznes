@@ -128,8 +128,11 @@
 
             .infos, .infos:hover {
                 background-color: $blue;
-                cursor: pointer;
                 outline: 1px solid $blue;
+                cursor: pointer;
+                &.disabled {
+                    cursor: not-allowed;
+                }
 
                 .logo {
                     border: $border-size solid $blue;
@@ -153,8 +156,11 @@
             margin-bottom: 3px;
             &:hover {
                 background-color: #dddddd;
-                cursor: pointer;
                 outline: 1px solid #dddddd;
+                cursor: pointer;
+                &.disabled {
+                    cursor: not-allowed;
+                }
 
                 .logo {
                     border: $border-size solid #dddddd;
