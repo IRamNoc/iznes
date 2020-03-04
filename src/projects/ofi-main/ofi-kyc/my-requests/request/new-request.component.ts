@@ -9,7 +9,6 @@ import { get as getValue, map, sort, remove, partial, invert, find, merge, clone
 import { Subject, combineLatest, BehaviorSubject } from 'rxjs';
 import { takeUntil, take, filter as rxFilter, map as rxMap } from 'rxjs/operators';
 
-import { clearMyKycRequestedPersist } from '@ofi/ofi-main/ofi-store/ofi-kyc';
 import { MultilingualService } from '@setl/multilingual';
 import { formStepsLight, formStepsFull, formStepsOnboarding } from '../requests.config';
 import { NewRequestService } from './new-request.service';
@@ -210,8 +209,6 @@ export class NewKycRequestComponent implements OnInit {
     }
 
     async ngOnInit() {
-        // Fetch form persisted in redux?
-        this.ngRedux.dispatch(clearMyKycRequestedPersist());
         // Fetch investor info
         this.ofiKycService.fetchInvestor();
 

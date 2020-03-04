@@ -10,10 +10,6 @@ import { countries, investorStatusList } from '../../../requests.config';
 import { FormPercentDirective } from '@setl/utils/directives/form-percent/formpercent';
 import { MultilingualService } from '@setl/multilingual';
 import { formHelper } from '@setl/utils/helper';
-import { PersistRequestService } from '@setl/core-req-services';
-import { PersistService } from '@setl/core-persist';
-import { setMyKycRequestedPersist } from '@ofi/ofi-main/ofi-store/ofi-kyc';
-import { shouldFormSectionPersist } from '../../../kyc-form-helper';
 import { KycFormHelperService } from '../../../kyc-form-helper.service';
 
 @Component({
@@ -31,7 +27,6 @@ export class ClassificationInformationComponent implements OnInit, OnDestroy {
     @Output() submitEvent: EventEmitter<any> = new EventEmitter<any>();
     @select(['ofi', 'ofiKyc', 'myKycRequested', 'kycs']) currentlyRequestedKycs$;
     @select(['ofi', 'ofiProduct', 'ofiManagementCompany', 'investorManagementCompanyList', 'investorManagementCompanyList']) managementCompanyList$;
-    @select(['ofi', 'ofiKyc', 'myKycRequested', 'formPersist']) persistedForms$;
     @select(['ofi', 'ofiKyc', 'myKycRequested', 'kycs']) requests$;
 
     unsubscribe: Subject<any> = new Subject();
@@ -42,7 +37,6 @@ export class ClassificationInformationComponent implements OnInit, OnDestroy {
     natureOfTransactionsList;
     volumeOfTransactionsList;
     amcs = [];
-    ready = false;
     instrumentChecked: {} = {};
     geographicalAreaChecked: {} = {};
 
@@ -52,7 +46,6 @@ export class ClassificationInformationComponent implements OnInit, OnDestroy {
         public translate: MultilingualService,
         public element: ElementRef,
         public kycFormHelperService: KycFormHelperService,
-        private persistService: PersistService,
         private ngRedux: NgRedux<any>,
     ) {
     }
@@ -131,14 +124,11 @@ export class ClassificationInformationComponent implements OnInit, OnDestroy {
         const investorStatus = investorStatusList[investorType];
 
         this.form.get('investorStatus').patchValue(investorStatus);
-        if (this.ready) {
-            this.form.get('optFor').setValue(0);
-        }
+        this.form.get('optFor').setValue(0);
         this.toggleForm(investorType);
     }
 
     ngOnInit() {
-        this.ready = false;
         this.initData();
         this.initCheckForm();
         this.getCurrentFormData();
@@ -164,17 +154,7 @@ export class ClassificationInformationComponent implements OnInit, OnDestroy {
             this.amcs = amcs;
 
             this.generateOptFors(amcs).disable();
-        })
-        ;
-
-        this.persistedForms$
-        .pipe(takeUntil(this.unsubscribe))
-        .subscribe((forms) => {
-            if (forms.identification) {
-                setTimeout(() => { this.ready = true; });
-            }
-        })
-        ;
+        });
 
         this.financialInstrumentsList = this.newRequestService.financialInstrumentsList;
         this.translate.translate(this.financialInstrumentsList);
@@ -373,41 +353,9 @@ export class ClassificationInformationComponent implements OnInit, OnDestroy {
 
                     this.formCheckOptFor(optFor);
                 }
-
-                this.initFormPersist();
             });
         })
         ;
-    }
-
-    /**
-     * Init Form Persist if the step has not been completed
-     */
-    initFormPersist() {
-        if (shouldFormSectionPersist('classification', this.completedStep, '')) this.persistForm();
-    }
-
-    persistForm() {
-        this.persistService.watchForm(
-            'newkycrequest/identification/classificationInformation',
-            this.form,
-            this.newRequestService.context,
-            {
-                reset: false,
-                returnPromise: true,
-            },
-        ).then(() => {
-            this.ngRedux.dispatch(setMyKycRequestedPersist('identification/classificationInformation'));
-            this.setInstrumentCheckboxes();
-        });
-    }
-
-    async clearPersistForm() {
-        this.persistService.refreshState(
-            'newkycrequest/identification/classificationInformation',
-            await this.newRequestService.createIdentificationFormGroup(),
-            this.newRequestService.context,
-        );
     }
 
     isStepValid() {
@@ -432,7 +380,6 @@ export class ClassificationInformationComponent implements OnInit, OnDestroy {
                 this.submitEvent.emit({
                     completed: true,
                 });
-                this.clearPersistForm();
             })
             .catch(() => {
                 this.newRequestService.errorPop();

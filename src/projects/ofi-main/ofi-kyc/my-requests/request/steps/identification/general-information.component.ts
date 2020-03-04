@@ -11,10 +11,6 @@ import { NewRequestService } from '../../new-request.service';
 import { IdentificationService } from '../identification.service';
 import { MultilingualService } from '@setl/multilingual';
 import { formHelper } from '@setl/utils/helper';
-import { PersistRequestService } from '@setl/core-req-services';
-import { PersistService } from '@setl/core-persist';
-import { setMyKycRequestedPersist } from '@ofi/ofi-main/ofi-store/ofi-kyc';
-import { shouldFormSectionPersist } from '../../../kyc-form-helper';
 
 /**
  * Kyc form sub component: Indentification -> General Information
@@ -59,8 +55,6 @@ export class GeneralInformationComponent implements OnInit, OnDestroy {
         private identificationService: IdentificationService,
         public translate: MultilingualService,
         private element: ElementRef,
-        private persistRequestService: PersistRequestService,
-        private persistService: PersistService,
         private ngRedux: NgRedux<any>,
         private formBuilder: FormBuilder,
     ) {
@@ -82,14 +76,6 @@ export class GeneralInformationComponent implements OnInit, OnDestroy {
         this.requestLanguageObj
         .pipe(takeUntil(this.unsubscribe))
         .subscribe(() => this.initLists());
-    }
-
-    /**
-     * Init Form Persist if the step has not been completed
-     * Store this form step to formPersist in database, if the current step 
-     */
-    initFormPersist() {
-        if (shouldFormSectionPersist('generalInformation', this.completedStep, '')) this.persistForm();
     }
 
     /**
@@ -229,40 +215,10 @@ export class GeneralInformationComponent implements OnInit, OnDestroy {
                             this.form.patchValue(formData);
                             this.updateParentForm();
                         }
-                        this.initFormPersist();
                     }).catch((err) => {
-                        this.initFormPersist();
                     });
                 });
             });
-    }
-
-    /**
-     * Initiate form persist, so the form can be auto fill with the data that wasn't save in the current form.
-     */
-    persistForm() {
-        this.persistService.watchForm(
-            'newkycrequest/identification/generalInformation',
-            this.form,
-            this.newRequestService.context,
-            {
-                reset : false,
-                returnPromise: true,
-            },
-        ).then(() => {
-            this.ngRedux.dispatch(setMyKycRequestedPersist('identification/generalInformation'));
-        });
-    }
-
-    /**
-     * Clear form persist, when this section of the kyc form is submitted.
-     */
-    async clearPersistForm() {
-        this.persistService.refreshState(
-            'newkycrequest/identification/generalInformation',
-            await this.newRequestService.createIdentificationFormGroup(),
-            this.newRequestService.context,
-        );
     }
 
     /**
@@ -289,7 +245,6 @@ export class GeneralInformationComponent implements OnInit, OnDestroy {
                 this.submitEvent.emit({
                     completed: true,
                 });
-                this.clearPersistForm();
             })
             .catch(() => {
                 this.newRequestService.errorPop();

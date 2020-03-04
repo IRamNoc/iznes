@@ -13,12 +13,9 @@ import { countries } from '../../../requests.config';
 import { setMyKycStakeholderRelations } from '@ofi/ofi-main/ofi-store/ofi-kyc/kyc-request';
 import { MultilingualService } from '@setl/multilingual';
 import { formHelper } from '@setl/utils/helper';
-import { PersistRequestService } from '@setl/core-req-services';
-import { PersistService } from '@setl/core-persist';
-import { setMyKycRequestedPersist } from '@ofi/ofi-main/ofi-store/ofi-kyc';
 import { KycMyInformations } from '@ofi/ofi-main/ofi-store/ofi-kyc/my-informations';
 import { KycFormHelperService } from '../../../kyc-form-helper.service';
-import { PartyCompaniesInterface, shouldFormSectionPersist } from '../../../kyc-form-helper';
+import { PartyCompaniesInterface } from '../../../kyc-form-helper';
 
 @Component({
     selector: 'company-information',
@@ -37,7 +34,6 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
     // Output event to let parent component hande the submit event.
     @Output() submitEvent: EventEmitter<any> = new EventEmitter<any>();
     @select(['ofi', 'ofiKyc', 'myKycRequested', 'kycs']) requests$;
-    @select(['ofi', 'ofiKyc', 'myKycRequested', 'formPersist']) persistedForms$;
     @select(['user', 'siteSettings', 'language']) requestLanguageObj;
     @select(['ofi', 'ofiKyc', 'myInformations']) kycMyInformations: Observable<KycMyInformations>;
 
@@ -89,23 +85,12 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
         private ngRedux: NgRedux<any>,
         public translate: MultilingualService,
         private element: ElementRef,
-        private persistRequestService: PersistRequestService,
-        private persistService: PersistService,
         private formHelper: KycFormHelperService,
     ) {}
 
     ngOnInit() {
         this.initFormCheck();
         this.getCurrentFormData();
-
-        // clear the form persist for the current form?
-        this.persistedForms$
-            .pipe(takeUntil(this.unsubscribe))
-            .subscribe((forms) => {
-            if (forms.identification) {
-                this.formPercent.refreshFormPercent();
-            }
-        });
 
         this.initLists();
 
@@ -120,13 +105,6 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
                 this.partyCompanies = d;
                 this.handlePartyFormControls();
             });
-    }
-
-    /**
-     * Init Form Persist if the step has not been completed
-     */
-    initFormPersist() {
-        if (shouldFormSectionPersist('companyInformation', this.completedStep, '')) this.persistForm();
     }
 
     /**
@@ -727,38 +705,8 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
                     this.form.patchValue(formData);
                     this.formPercent.refreshFormPercent();
                 }
-                this.initFormPersist();
             });
         });
-    }
-
-
-    /**
-     * Initiate form persist, so the form can be auto fill with the data that wasn't save in the current form.
-     */
-    persistForm() {
-        this.persistService.watchForm(
-            'newkycrequest/identification/companyInformation',
-            this.form,
-            this.newRequestService.context,
-            {
-                reset : false,
-                returnPromise: true,
-            },
-        ).then(() => {
-            this.ngRedux.dispatch(setMyKycRequestedPersist('identification/companyInformation'));
-        });
-    }
-
-    /**
-     * Clear form persist, when this section of the kyc form is submitted.
-     */
-    async clearPersistForm() {
-        this.persistService.refreshState(
-            'newkycrequest/identification/companyInformation',
-            await this.newRequestService.createIdentificationFormGroup(),
-            this.newRequestService.context,
-        );
     }
 
     /**
@@ -795,7 +743,6 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
                 this.submitEvent.emit({
                     completed: true,
                 });
-                this.clearPersistForm();
             })
             .catch(() => {
                 this.newRequestService.errorPop();

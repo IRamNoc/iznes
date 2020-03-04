@@ -6,8 +6,6 @@ export {
 
 export {
     setMyKycRequestedKycs,
-    setMyKycRequestedPersist,
-    clearMyKycRequestedPersist,
     setMyKycStakeholderRelations,
 } from './actions';
 

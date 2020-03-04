@@ -7,8 +7,6 @@ import { filter, map as rxMap, takeUntil, take, distinctUntilChanged } from 'rxj
 import { FormPercentDirective } from '@setl/utils/directives/form-percent/formpercent';
 import { RiskProfileService } from '../risk-profile.service';
 import { NewRequestService } from '../../new-request.service';
-import { PersistService } from '@setl/core-persist';
-import { shouldFormSectionPersist } from '../../../kyc-form-helper';
 
 @Component({
     selector: 'investment-nature',
@@ -28,7 +26,6 @@ export class InvestmentNatureComponent implements OnInit, OnDestroy {
     formWatch: Subject<boolean> = new Subject<boolean>();
 
     constructor(
-        private persistService: PersistService,
         private element: ElementRef,
         private newRequestService: NewRequestService,
         private riskProfileService: RiskProfileService,
@@ -70,8 +67,6 @@ export class InvestmentNatureComponent implements OnInit, OnDestroy {
                     this.form.get('naturesSameInvestmentCrossAm').patchValue(cross, { emitEvent: false });
                     this.formCheckSameNatureCrossAm(cross);
                 }
-
-                this.initFormPersist();
             });
     }
 
@@ -130,35 +125,6 @@ export class InvestmentNatureComponent implements OnInit, OnDestroy {
         this.formPercent.refreshFormPercent();
     }
 
-    /**
-     * Init Form Persist if the step has not been completed
-     */
-    initFormPersist() {
-        if (shouldFormSectionPersist('investmentDetails', this.completedStep, '')) this.persistForm();
-    }
-
-    persistForm() {
-        this.persistService.watchForm(
-            'newkycrequest/riskProfile/investmentNature',
-            this.form,
-            this.newRequestService.context,
-            {
-                reset: false,
-                returnPromise: true,
-            },
-        ).then(() => {
-            this.formWatch.next(true);
-        });
-    }
-
-    async clearPersistForm() {
-        this.persistService.refreshState(
-            'newkycrequest/riskProfile/investmentNature',
-            await this.newRequestService.createRiskProfileFormGroup(),
-            this.newRequestService.context,
-        );
-    }
-
     isStepValid() {
         return this.form.valid;
     }
@@ -179,7 +145,6 @@ export class InvestmentNatureComponent implements OnInit, OnDestroy {
             .subscribe((requests) => {
                 this.riskProfileService.sendRequestInvestmentNature(this.form, requests)
                     .then(() => {
-                        this.clearPersistForm();
                         this.submitEvent.emit({
                             completed: true,
                         });
