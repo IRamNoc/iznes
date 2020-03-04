@@ -516,8 +516,6 @@ export class NewRequestService {
             investmentObjective,
             investmentConstraint,
         });
-
-        return form;
     }
 
     createDocumentsFormGroup() {
