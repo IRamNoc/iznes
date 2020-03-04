@@ -120,10 +120,16 @@ export class RiskProfileService {
         const request = find(this.requests, ['kycID', kycID]);
         const amcID = getValue(request, 'amcID');
 
-        // The request to data for 'Risk object', would need data from 'Risk constraints' as well. we just mock the
+        // The request to update data for 'Risk constraints', would need data from 'Risk objectives' as well. we just mock the
+        // 'Risk objectives' form control to make the current flow work.
+        if (objectivesValue.length === 0) {
+            objectivesValue.push(this.newRequestService.createInvestmentObjective(amcID).value);
+        }
+
+        // The request to update data for 'Risk objects', would need data from 'Risk constraints' as well. we just mock the
         // 'Risk constraints' form control to make the current flow work.
         if (constraintsValue.length === 0) {
-            constraintsValue.push(this.newRequestService.createConstraint(amcID));
+            constraintsValue.push(this.newRequestService.createConstraint(amcID).value);
         }
 
         let objectiveForAM;

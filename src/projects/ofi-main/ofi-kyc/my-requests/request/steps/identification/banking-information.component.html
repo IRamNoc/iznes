@@ -1,4 +1,5 @@
 <form [formGroup]="form" id="step-bank-accounts" (ngSubmit)="handleSubmit($event)">
+    <kyc-clientfile-update-alert *ngIf="!form.valid && isFormReadonly"></kyc-clientfile-update-alert>
 
     <div class="kyc-container sm">
         <h2>{{ 'Bank Accounts' | translate }}</h2>

@@ -3,7 +3,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Subscription, Subject } from 'rxjs';
 import * as _ from 'lodash';
-import { takeUntil } from 'rxjs/operators';
+import { takeUntil, take } from 'rxjs/operators';
 import { NgRedux, select } from '@angular-redux/store';
 import { clearMyKycRequestedIds } from '@ofi/ofi-main/ofi-store/ofi-kyc/kyc-request/actions';
 import { OfiManagementCompanyService } from '@ofi/ofi-main/ofi-req-services/ofi-product/management-company/management-company.service';
@@ -112,6 +112,8 @@ export class MyRequestsComponent implements OnInit, OnDestroy {
                 this.duplicateFromClientFile();
             }
 
+            this.handleRedirectToClientFile();
+
         });
 
         this.openTabs$
@@ -131,6 +133,20 @@ export class MyRequestsComponent implements OnInit, OnDestroy {
 
             if (companies != undefined) this.getInvManagementCompanyIds();
         });
+    }
+
+    /**
+     * Handle redirect to client file if necessary.
+     */
+    handleRedirectToClientFile() {
+        this.route.queryParams
+            .pipe(take(1))
+            .subscribe((queryParams) => {
+                // redirect to open client file.
+                if (queryParams.redirectClientFile) {
+                    this.selectedKyc(this.clientFileKyc);
+                }
+            });
     }
 
     private getInvManagementCompanyIds(): void {

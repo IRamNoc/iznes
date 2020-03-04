@@ -8,7 +8,10 @@
     <!-- SELECT AMC -->
     <form-step>
         <ng-template #stepTemplate>
-            <kyc-step-select-amc #step [form]="forms.get('selection')" [onboarding]="onboardingMode" (registered)="registered($event)" [disabled]="currentCompletedStep >= 0" (submitEvent)="handleSubmit($event)" [duplicate]="duplicate"></kyc-step-select-amc>
+            <kyc-step-select-amc #step [form]="forms.get('selection')" [onboarding]="onboardingMode" (registered)="registered($event)"
+                [disabled]="amcSelectReadOnly" (submitEvent)="handleSubmit($event)" [duplicate]="duplicate"
+                (kycPartySelectionsChangedEvent)="reloadKycForm()"
+                ></kyc-step-select-amc>
         </ng-template>
     </form-step>
 
@@ -44,7 +47,7 @@
         </form-step>
 
         <!-- BANKING INFORMATION -->
-        <form-step *ngIf="fullForm && hasBankingInformationSection()">
+        <form-step *ngIf="fullForm && !isBankingInformationSectionDisabled()">
             <ng-template #stepTemplate>
                 <banking-information #step [isFormReadonly]="isFormReadonly" [form]="forms.get('identification').get('bankingInformation')" [completedStep]="currentCompletedStep" (submitEvent)="handleSubmit($event)"></banking-information>
             </ng-template>
@@ -58,7 +61,7 @@
         </form-step>
 
     <!-- RISK PROFILE -->
-    <form-step *ngIf="fullForm"></form-step>
+    <form-step *ngIf="fullForm && showRiskProfileSection()"></form-step>
 
         <!-- INVESTMENT DETAILS -->
         <form-step *ngIf="fullForm">
@@ -68,14 +71,14 @@
         </form-step>
 
         <!-- INVESTMENT OBJECTIVES -->
-        <form-step *ngIf="fullForm">
+        <form-step *ngIf="fullForm && !isRiskObjectiveSectionDisabled()">
             <ng-template #stepTemplate>
                 <investment-objective #step [form]="forms.get('riskProfile').get('investmentObjective')" [formConstraint]="forms.get('riskProfile').get('investmentConstraint')" [completedStep]="currentCompletedStep" (submitEvent)="handleSubmit($event)"></investment-objective>
             </ng-template>
         </form-step>
 
         <!-- INVESTMENT CONTRAINT -->
-        <form-step *ngIf="fullForm && !(!kycPartySelections.iznes && (kycPartySelections.id2s || kycPartySelections.nowcp))">
+        <form-step *ngIf="fullForm && !isRiskConstraintSectionDisabled()">
             <ng-template #stepTemplate>
                 <investment-constraint #step [form]="forms.get('riskProfile').get('investmentConstraint')" [formObjective]="forms.get('riskProfile').get('investmentObjective')" [completedStep]="currentCompletedStep" (submitEvent)="handleSubmit($event)"></investment-constraint>
             </ng-template>

@@ -1,50 +1,54 @@
-<div *ngFor="let panel of panelDefs" class="well">
-    <!-- Panel header -->
-    <div class="row panel-header">
-        <div class="col-xs-12">
-            <a href="#" (click)="panel.open = !panel.open; $event.preventDefault();">
-                <i class="fa fa-chevron-right" [class.rotate]="panel.open"></i>
-                <h2>{{ panel.title | translate }}</h2>
-            </a>
-        </div>
-    </div>
-
-    <!-- Panel body -->
-    <div class="panel-body" style="padding-left: 35px; margin-bottom: 15px;" [class.hidden]="!panel.open">
-        <div *ngIf="panel.data">
-            <!--Parent contents-->
-            <kyc-details-grid [data]="panel.data"></kyc-details-grid>
-        </div>
-
-        <!--Childs-->
-        <div class="well" *ngFor="let child of panel.children">
-            <!-- Panel header -->
-            <div class="row panel-header">
-                <div class="col-xs-12">
-                    <a href="#" (click)="child.open = !child.open; $event.preventDefault();">
-                        <i class="fa fa-chevron-right" [class.rotate]="child.open"></i>
-                        <h2>{{ child.title | translate }}</h2>
-                    </a>
-                </div>
+<ng-container *ngFor="let panel of panelDefs">
+    <div class="well" *ngIf="!panel.hidden">
+        <!-- Panel header -->
+        <div class="row panel-header">
+            <div class="col-xs-12">
+                <a href="#" (click)="panel.open = !panel.open; $event.preventDefault();">
+                    <i class="fa fa-chevron-right" [class.rotate]="panel.open"></i>
+                    <h2>{{ panel.title | translate }}</h2>
+                </a>
             </div>
-            <!-- Panel body -->
-            <div class="panel-body" style="padding: 10px 0px 30px 47px;" [class.hidden]="!child.open">
-                <!--Child Contents-->
-                <ng-container *ngIf="child.id !== 'banking'">
-                    <kyc-details-grid *ngIf="child.data" [data]="child.data" [id]="child.id" (open)="open($event)"></kyc-details-grid>
+        </div>
 
-                    <div *ngIf="child.id === 'company' && stakeholders.length">
-                        <kyc-details-stakeholders [stakeholders]="stakeholders"></kyc-details-stakeholders>
+        <!-- Panel body -->
+        <div class="panel-body" style="padding-left: 35px; margin-bottom: 15px;" [class.hidden]="!panel.open">
+            <div *ngIf="panel.data">
+                <!--Parent contents-->
+                <kyc-details-grid [data]="panel.data"></kyc-details-grid>
+            </div>
+
+            <!--Childs-->
+            <ng-container *ngFor="let child of panel.children">
+                <div class="well" *ngIf="!child.hidden">
+                    <!-- Panel header -->
+                    <div class="row panel-header">
+                        <div class="col-xs-12">
+                            <a href="#" (click)="child.open = !child.open; $event.preventDefault();">
+                                <i class="fa fa-chevron-right" [class.rotate]="child.open"></i>
+                                <h2>{{ child.title | translate }}</h2>
+                            </a>
+                        </div>
                     </div>
-                </ng-container>
+                    <!-- Panel body -->
+                    <div class="panel-body" style="padding: 10px 0px 30px 47px;" [class.hidden]="!child.open">
+                        <!--Child Contents-->
+                        <ng-container *ngIf="child.id !== 'banking'">
+                            <kyc-details-grid *ngIf="child.data" [data]="child.data" [id]="child.id" (open)="open($event)"></kyc-details-grid>
 
-                <ng-container *ngIf="child.id === 'banking'">
-                    <ng-container *ngFor="let data of child.data">
-                        <kyc-details-grid class="mb-1" *ngIf="data" [data]="data" [id]="child.id"></kyc-details-grid>
-                    </ng-container>
-                </ng-container>
-            </div>
+                            <div *ngIf="child.id === 'company' && stakeholders.length">
+                                <kyc-details-stakeholders [stakeholders]="stakeholders"></kyc-details-stakeholders>
+                            </div>
+                        </ng-container>
+
+                        <ng-container *ngIf="child.id === 'banking'">
+                            <ng-container *ngFor="let data of child.data">
+                                <kyc-details-grid class="mb-1" *ngIf="data" [data]="data" [id]="child.id"></kyc-details-grid>
+                            </ng-container>
+                        </ng-container>
+                    </div>
+                </div>
+            </ng-container>
+
         </div>
-
     </div>
-</div>
+</ng-container>
