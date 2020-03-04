@@ -9,7 +9,7 @@
     </div>
 </div>
 
-<div class="panel-body" [class.hidden]="!open" [ngClass]="{'constraint pl-1': multiple}" [formGroup]="form">
+<div *ngIf="form" class="panel-body" [class.hidden]="!open" [ngClass]="{'constraint pl-1': multiple}" [formGroup]="form">
 
     <div class="row form-group col-sm-12">
         <div class="col-sm-12">

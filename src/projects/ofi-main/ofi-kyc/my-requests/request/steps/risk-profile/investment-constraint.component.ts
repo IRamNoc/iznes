@@ -120,8 +120,8 @@ export class InvestmentConstraintComponent implements OnInit, OnDestroy {
         // this.refreshForm();
     }
 
-    generateConstraints(amcs = []) {
-        const constraints = this.newRequestService.createConstraints(amcs);
+    async generateConstraints(amcs = []) {
+        const constraints = await this.newRequestService.createConstraints(amcs);
         const constraintsControl = this.form.get('constraints');
         const numberOfControls = constraintsControl.length;
 

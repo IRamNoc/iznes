@@ -611,19 +611,21 @@ export class NewRequestService {
         return fbGroup;
     }
 
-    createInvestmentNatures(amcs) {
+    async createInvestmentNatures(amcs) {
         const natures = [];
         const length = amcs.length || 1;
 
         for (let i = 0; i < length; i += 1) {
             const id = amcs[i];
-            natures.push(this.createInvestmentNature(id));
+            natures.push(
+                await this.createInvestmentNature(id),
+            );
         }
 
         return natures;
     }
 
-    async createInvestmentObjective(id): FormGroup {
+    async createInvestmentObjective(id) {
         const form = this.formBuilder.group({
             assetManagementCompanyID: id ? id : null,
             performanceProfile: this.formBuilder.group(this.transformToForm(this.performanceProfileList), {
@@ -707,13 +709,15 @@ export class NewRequestService {
         return form;
     }
 
-    createInvestmentObjectives(amcs) {
+    async createInvestmentObjectives(amcs) {
         const objectives = [];
         const length = amcs.length || 1;
 
         for (let i = 0; i < length; i += 1) {
             const id = amcs[i];
-            objectives.push(this.createInvestmentObjective(id));
+            objectives.push(
+                await this.createInvestmentObjective(id)
+            );
         }
 
         return objectives;
@@ -745,13 +749,15 @@ export class NewRequestService {
         return form;
     }
 
-    createConstraints(amcs) {
+    async createConstraints(amcs) {
         const constraints = [];
         const length = amcs.length || 1;
 
         for (let i = 0; i < length; i += 1) {
             const id = amcs[i];
-            constraints.push(this.createConstraint(id));
+            constraints.push(
+                await this.createConstraint(id),
+            );
         }
 
         return constraints;

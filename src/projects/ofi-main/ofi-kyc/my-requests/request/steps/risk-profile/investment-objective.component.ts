@@ -108,8 +108,8 @@ export class InvestmentObjectiveComponent implements OnInit, OnDestroy {
         this.formPercent.refreshFormPercent();
     }
 
-    generateObjectives(amcs = []) {
-        const objectives = this.newRequestService.createInvestmentObjectives(amcs);
+    async generateObjectives(amcs = []) {
+        const objectives = await this.newRequestService.createInvestmentObjectives(amcs);
         const objectivesControl = this.form.get('objectives');
         const numberOfControls = objectivesControl.length;
 
