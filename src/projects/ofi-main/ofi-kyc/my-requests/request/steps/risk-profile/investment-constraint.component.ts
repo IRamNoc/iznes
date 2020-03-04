@@ -165,10 +165,10 @@ export class InvestmentConstraintComponent implements OnInit, OnDestroy {
         });
     }
 
-    clearPersistForm() {
+    async clearPersistForm() {
         this.persistService.refreshState(
             'newkycrequest/riskProfile/investmentConstraint',
-            this.newRequestService.createRiskProfileFormGroup(),
+            await this.newRequestService.createRiskProfileFormGroup(),
             this.newRequestService.context,
         );
     }

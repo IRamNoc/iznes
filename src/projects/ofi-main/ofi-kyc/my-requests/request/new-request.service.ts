@@ -205,7 +205,7 @@ export class NewRequestService {
         });
 
         const identification = await this.createIdentificationFormGroup();
-        const riskProfile = this.createRiskProfileFormGroup();
+        const riskProfile = await this.createRiskProfileFormGroup();
         const documents = this.createDocumentsFormGroup();
         const validation = this.createValidationFormGroup();
 
@@ -450,7 +450,7 @@ export class NewRequestService {
         const onlyID2STypeKyc = await this.kycFormHelperService.onlyID2S$.toPromise();
 
         if (onlyID2STypeKyc) {
-            delete formBuilderObject.bankingInformation;
+            formBuilderObject.bankingInformation.disable();
         }
 
         return fb.group(formBuilderObject);
@@ -477,7 +477,7 @@ export class NewRequestService {
         return optfors;
     }
 
-    createRiskProfileFormGroup() {
+    async createRiskProfileFormGroup(): Promise<FormGroup> {
         const fb = this.formBuilder;
 
         const investmentNature = fb.group({
@@ -496,22 +496,26 @@ export class NewRequestService {
             constraints: fb.array([]),
         });
 
-        const form = fb.group({
+        // Disable constraints section for type ID2S or NowCP kyc
+        const onlyID2SType = await this.kycFormHelperService.onlyID2S$.toPromise();
+
+        if (onlyID2SType) {
+            investmentNature.get('natures').disable();
+        }
+
+        // Disable constraints section for type ID2S or NowCP kyc
+        const id2sOrNowCpTypeKyc = await this.kycFormHelperService.onlyID2SOrNowCP$.toPromise();
+
+        if (id2sOrNowCpTypeKyc) {
+            investmentObjective.get('objectives').disable();
+            investmentConstraint.get('constraints').disable();
+        }
+
+        return fb.group({
             investmentNature,
             investmentObjective,
             investmentConstraint,
         });
-
-        /* Disable this form group for NowCP and ID2S clients. */
-        if (
-            this.kycPartySelections.nowCPIssuer ||
-            this.kycPartySelections.nowCPInvestor ||
-            this.kycPartySelections.id2sIPA ||
-            this.kycPartySelections.id2sCustodian
-        ) {
-            form.get('investmentObjective').disable();
-            form.get('investmentConstraint').disable();
-        }
 
         return form;
     }
@@ -601,7 +605,7 @@ export class NewRequestService {
         });
 
         // Remove investment vechicles if we're with nowcp.
-        if (this.kycPartySelections.nowCPIssuer || this.kycPartySelections.nowCPInvestor) {
+        if ((this.kycPartySelections.nowCPIssuer || this.kycPartySelections.nowCPInvestor) && !this.kycPartySelections.iznes) {
             fbGroup.get('investmentvehiclesAlreadyUsed').disable();
             fbGroup.get('investmentvehiclesAlreadyUsedSpecification').disable();
         }
@@ -881,10 +885,12 @@ export class NewRequestService {
             await this.createDraft(choice, connectedWallet).then((response) => {
                 const kycID = getValue(response, [1, 'Data', 0, 'kycID']);
                 const amcID = choice.id;
+                const isThirdPartyKyc = getValue(response, [1, 'Data', 0, 'isThirdPartyKyc']);
 
                 ids.push({
                     kycID,
                     amcID,
+                    isThirdPartyKyc,
                 });
             }).catch((err) => {
                 console.error(err);

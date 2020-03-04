@@ -14,6 +14,7 @@ import { PersistRequestService } from '@setl/core-req-services';
 import { PersistService } from '@setl/core-persist';
 import { setMyKycRequestedPersist } from '@ofi/ofi-main/ofi-store/ofi-kyc';
 import { shouldFormSectionPersist } from '../../../kyc-form-helper';
+import { KycFormHelperService } from '../../../kyc-form-helper.service';
 
 @Component({
     selector: 'classification-information',
@@ -50,6 +51,7 @@ export class ClassificationInformationComponent implements OnInit, OnDestroy {
         private identificationService: IdentificationService,
         public translate: MultilingualService,
         public element: ElementRef,
+        public kycFormHelperService: KycFormHelperService,
         private persistService: PersistService,
         private ngRedux: NgRedux<any>,
     ) {
@@ -202,8 +204,9 @@ export class ClassificationInformationComponent implements OnInit, OnDestroy {
         this.updateFormPercent();
     }
 
-    toggleNonPro(action) {
-        if (action === 'enable') {
+    async toggleNonPro(action) {
+        const isIznesKyc = await this.kycFormHelperService.isIZNES$.pipe(take(1)).toPromise();
+        if (action === 'enable' && isIznesKyc) {
             (this.form.get('nonPro') as FormGroup).enable();
             (this.form.get('nonPro.activitiesBenefitFromExperience') as FormControl).updateValueAndValidity();
             (this.form.get('nonPro.trainingKnowledgeSkills') as FormControl).updateValueAndValidity();

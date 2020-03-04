@@ -5,7 +5,7 @@ import { Observable } from 'rxjs/Observable';
 import { tap, takeUntil, map, filter, take } from 'rxjs/operators';
 import { OfiKycService } from '../../ofi-req-services/ofi-kyc/service';
 import { MyUserService } from '../../../core-req-services';
-import { isIZNES, isID2SIPA, getPartyCompanies, PartyCompaniesInterface, isCompanyListed, isCompanyRegulated, isStateOwned } from './kyc-form-helper';
+import { isIZNES, isID2SIPA, getPartyCompanies, PartyCompaniesInterface, isCompanyListed, isCompanyRegulated, isStateOwned, getPartyNameFromInvestorType } from './kyc-form-helper';
 import { InvestorType } from '../../shared/investor-types';
 import { FormGroup } from '@angular/forms';
 
@@ -73,6 +73,34 @@ export class KycFormHelperService {
     }
 
     /**
+     * Whether user was inivited by id2s management company
+     * @return {boolean}
+     */
+    public get invitedByID2S$(): Observable<boolean> {
+        return this.investorType$.pipe(
+            takeUntil(this.myUserService.logout$),
+            filter(d => !! d),
+            map(getPartyNameFromInvestorType),
+            map(d => d === 'id2s'),
+        );
+    }
+
+    /**
+     * Whether user was inivited by NowCP management company
+     * @return {boolean}
+     */
+    public get invitedByNowCp$(): Observable<boolean> {
+        return this.investorType$.pipe(
+            takeUntil(this.myUserService.logout$),
+            filter(d => !! d),
+            map(getPartyNameFromInvestorType),
+            map(d => {
+                return d === 'nowcp';
+            }),
+        );
+    }
+
+    /**
      * Investor type the user was invited by. As observable
      */
     public get investorType$(): Observable<InvestorType> {
@@ -92,6 +120,21 @@ export class KycFormHelperService {
             map((d) => {
                 const selectedCompanies = getPartyCompanies(d);
                 return selectedCompanies.id2s && !selectedCompanies.iznes && !selectedCompanies.nowcp;
+            }),
+            take(1),
+        );
+    }
+
+    /**
+     * whether user selected ID2S or NowCP, and not iznes is not selected. as observable
+     */
+    public get onlyID2SOrNowCP$(): Observable<boolean> {
+        return this.kycPartySelections$.pipe(
+            takeUntil(this.myUserService.logout$),
+            filter(d => !! d),
+            map((d) => {
+                const selectedCompanies = getPartyCompanies(d);
+                return !selectedCompanies.iznes && (selectedCompanies.nowcp || selectedCompanies.id2s);
             }),
             take(1),
         );

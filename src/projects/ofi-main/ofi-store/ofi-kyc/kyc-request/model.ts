@@ -2,6 +2,7 @@ export type MyKycRequestedIds = {
         kycID : number,
         amcID : number,
         completedStep: number,
+        isThirdPartyKyc: number,
 }[];
 
 export interface MyKycRequestedPersist{

@@ -151,10 +151,10 @@ export class InvestmentNatureComponent implements OnInit, OnDestroy {
         });
     }
 
-    clearPersistForm() {
+    async clearPersistForm() {
         this.persistService.refreshState(
             'newkycrequest/riskProfile/investmentNature',
-            this.newRequestService.createRiskProfileFormGroup(),
+            await this.newRequestService.createRiskProfileFormGroup(),
             this.newRequestService.context,
         );
     }
