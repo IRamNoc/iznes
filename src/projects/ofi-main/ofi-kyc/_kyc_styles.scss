@@ -596,6 +596,8 @@ form-steps {
 }
 
 .full-screen-splash {
+    display: flex;
+    justify-content: center;
     background-size: cover;
     background-repeat: no-repeat;
     background-position: left;
@@ -617,19 +619,15 @@ form-steps {
     .content {
         max-width: 1000px;
         width: 92%;
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        -webkit-transform: translateY(-50%) translateX(-50%);
-        transform: translateY(-50%) translateX(-50%);
+        align-self: center;
         background: #ffffff;
         border-radius: 5px;
         padding: 24px;
         text-align: center;
-        height: 95%;
         overflow-y: auto;
         transition: opacity 0.3s linear;
         opacity: 0;
+        z-index: 3;
         &.fade-in {
             opacity: 1;
         }
