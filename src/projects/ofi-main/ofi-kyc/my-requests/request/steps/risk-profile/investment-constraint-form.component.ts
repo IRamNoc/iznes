@@ -84,9 +84,6 @@ export class InvestmentConstraintFormComponent implements OnInit, OnDestroy {
             if (! this.isNowCP()) {
                 this.form.get('hasEverIssuedNeuCp').disable();
                 this.form.get('hasAlreadyInvestedNeuCp').disable();
-            } else {
-                this.form.get('hasEverIssuedNeuCp').enable();
-                this.form.get('hasAlreadyInvestedNeuCp').enable();
             }
         });
     }
