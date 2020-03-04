@@ -166,31 +166,6 @@ export class OfiKycWelcomeComponent implements OnInit, AfterViewInit, OnDestroy 
         }, 200);
     }
 
-    /**
-     * Returns the content max-height property and calls setMaxHeight
-     *
-     * @param heightWrapper {HTMLElement}
-     * @returns {number}
-     */
-    public getMaxHeight(heightWrapper: any): number {
-        this.setMaxHeight(heightWrapper);
-        return this.contentMaxHeight;
-    }
-
-    /**
-     * Sets the content max-height based on height of content container
-     *
-     * @param heightWrapper {HTMLElement}
-     * @returns {void}
-     */
-    public setMaxHeight(heightWrapper: any): void {
-        const height = Number((heightWrapper || {}).scrollHeight) + 48; // 48px to account for padding
-        if (!Number.isNaN(height) && height !== this.contentMaxHeight) {
-            this.contentMaxHeight = height;
-            this.changeDetector.detectChanges();
-        }
-    }
-
     ngOnDestroy(): void {
         this.unsubscribe.next();
         this.unsubscribe.complete();
