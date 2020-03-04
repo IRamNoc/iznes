@@ -623,7 +623,7 @@ export class NewRequestService {
         return natures;
     }
 
-    createInvestmentObjective(id): FormGroup {
+    async createInvestmentObjective(id): FormGroup {
         const form = this.formBuilder.group({
             assetManagementCompanyID: id ? id : null,
             performanceProfile: this.formBuilder.group(this.transformToForm(this.performanceProfileList), {
@@ -697,13 +697,10 @@ export class NewRequestService {
             ),
         });
 
-        /* Disable this form group for NowCP and ID2S clients. */
-        if (
-            this.kycPartySelections.nowCPIssuer ||
-            this.kycPartySelections.nowCPInvestor ||
-            this.kycPartySelections.id2sIPA || 
-            this.kycPartySelections.id2sCustodian
-        ) {
+        // Disable constraints section for type ID2S or NowCP kyc
+        const id2sOrNowCpTypeKyc = await this.kycFormHelperService.onlyID2SOrNowCP$.toPromise();
+
+        if (id2sOrNowCpTypeKyc) {
             form.disable();
         }
 
@@ -722,8 +719,8 @@ export class NewRequestService {
         return objectives;
     }
 
-    createConstraint(id) {
-        return this.formBuilder.group({
+    async createConstraint(id) {
+        const form = this.formBuilder.group({
             assetManagementCompanyID: id ? id : null,
             statutoryConstraints: ['', Validators.maxLength(255)],
             taxConstraints: ['', Validators.maxLength(255)],
@@ -737,6 +734,15 @@ export class NewRequestService {
             hasEverIssuedNeuCp: [0, Validators.required],
             hasAlreadyInvestedNeuCp: [0, Validators.required],
         });
+
+        // Disable constraints section for type ID2S or NowCP kyc
+        const id2sOrNowCpTypeKyc = await this.kycFormHelperService.onlyID2SOrNowCP$.toPromise();
+
+        if (id2sOrNowCpTypeKyc) {
+            form.disable();
+        }
+
+        return form;
     }
 
     createConstraints(amcs) {
