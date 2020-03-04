@@ -48,7 +48,7 @@
         &.complete:not(.sub-step) {
             border-left: solid 4px #60b515;
         }
-        &.complete:hover, &.allow-click:hover {
+        &.complete:not(.no-link):hover, &.allow-click:hover {
             cursor: pointer;
             color: #0079b8;
         }
