@@ -1,7 +1,7 @@
 <div class="kyc-header">
     <ng-container *ngIf="onboardingMode">{{ 'Onboarding' | translate }}</ng-container>
     <ng-container *ngIf="!onboardingMode">{{ 'Make New Request' | translate }}</ng-container>
-    <button *ngIf="formSteps && formSteps.position !== 0" class="btn btn-sm" (click)="handleAction({ type: 'close' })">{{ 'Exit' | translate }}</button>
+    <button *ngIf="formSteps && formSteps.position !== 0" class="btn btn-sm" (click)="handleAction({ type: 'close' })">{{ 'Save and Exit' | translate }}</button>
 </div>
 
 <form-steps *ngIf="stepsConfig" [onboarding]="onboardingMode" [currentCompletedStep$]="currentCompletedStep$" [stepsConfig]="stepsConfig" (action)="handleAction($event)" [@toggle]="animating" (@toggle.done)="applyFullForm()">
