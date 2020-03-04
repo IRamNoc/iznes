@@ -247,22 +247,3 @@ export function isHighRiskCountry(f: FormGroup): boolean {
     const selectedCountry = get(f, 'controls.identification.controls.generalInformation.controls.location.controls.countryRegistration.value[0].id', '')
     return highRiskCountries.indexOf(selectedCountry) !== -1;
 }
-
-/**
- * Check if a form session need to use formPersist.
- * In the full kyc form.
- * @param {string} sectionIdToCheck
- * @param {number} currentCompletedStep
- * @param {string} kycContext
- * @return {boolean}
- */
-export function shouldFormSectionPersist(sectionIdToCheck: string, currentCompletedStep: number, kycContext: string): boolean {
-    if (kycContext === 'done') {
-        return false;
-    }
-    if (!currentCompletedStep) {
-        return true;
-    }
-    const sectionIndex = formStepsFull.findIndex(d => d.dbId === sectionIdToCheck);
-    return currentCompletedStep < sectionIndex;
-}

@@ -20,17 +20,6 @@ export function setMyKycRequestedKycs(kycIds: MyKycRequestedIds) {
 export const CLEAR_MY_KYC_REQUESTED_IDS = `${name}/CLEAR_MY_KYC_REQUESTED_IDS`;
 export const clearMyKycRequestedIds = kAction(CLEAR_MY_KYC_REQUESTED_IDS);
 
-export const SET_MY_KYC_REQUESTED_PERSIST = `${name}/SET_MY_KYC_REQUESTED_PERSIST`;
-export function setMyKycRequestedPersist(formName: string) {
-    return {
-        type: SET_MY_KYC_REQUESTED_PERSIST,
-        payload: formName,
-    };
-}
-
-export const CLEAR_MY_KYC_REQUESTED_PERSIST = `${name}/CLEAR_MY_KYC_REQUESTED_PERSIST`;
-export const clearMyKycRequestedPersist = kAction(CLEAR_MY_KYC_REQUESTED_PERSIST);
-
 export const SET_STAKEHOLDER_RELATIONS = `${name}/SET_STAKEHOLDER_RELATIONS`;
 export function setMyKycStakeholderRelations(stakeholderRelations){
     return {

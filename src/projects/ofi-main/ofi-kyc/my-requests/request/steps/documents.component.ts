@@ -5,7 +5,6 @@ import { select } from '@angular-redux/store';
 import { Subject } from 'rxjs';
 import { filter as rxFilter, map, take, takeUntil } from 'rxjs/operators';
 import { Observable } from 'rxjs/Observable';
-import { PersistService } from '@setl/core-persist';
 import { formHelper } from '@setl/utils/helper';
 import { FormPercentDirective } from '@setl/utils/directives/form-percent/formpercent';
 import { RequestsService } from '../../requests.service';
@@ -13,7 +12,6 @@ import { NewRequestService } from '../new-request.service';
 import { DocumentsService, documentFormPaths } from './documents.service';
 import { KycMyInformations } from '@ofi/ofi-main/ofi-store/ofi-kyc/my-informations';
 import { DocumentPermissions, DocumentMetaCache } from './documents.model';
-import { shouldFormSectionPersist } from '../../kyc-form-helper';
 
 @Component({
     selector: 'kyc-step-documents',
@@ -45,7 +43,6 @@ export class NewKycDocumentsComponent implements OnInit, OnDestroy {
     constructor(
         private requestsService: RequestsService,
         private newRequestService: NewRequestService,
-        private persistService: PersistService,
         private documentsService: DocumentsService,
         private changeDetectorRef : ChangeDetectorRef,
     ) {
@@ -57,20 +54,6 @@ export class NewKycDocumentsComponent implements OnInit, OnDestroy {
     }
 
     initSubscriptions() {
-        this.requests$
-        .pipe(
-            takeUntil(this.unsubscribe),
-            map(kycs => kycs[0]),
-            rxFilter((kyc: any) => {
-                return kyc && kyc.amcID;
-            }),
-        )
-        .subscribe((kyc) => {
-            if (this.shouldPersist(kyc)) {
-                this.persistForm();
-            }
-        });
-
         this.kycMyInformations
             .takeUntil(this.unsubscribe)
             .subscribe((d) => {
@@ -82,10 +65,6 @@ export class NewKycDocumentsComponent implements OnInit, OnDestroy {
             });
     }
 
-    shouldPersist(kyc) {
-        return shouldFormSectionPersist('documents', kyc.completedStep, kyc.context)
-    }
-
     initData() {
         this.connectedWallet$
         .pipe(
@@ -94,25 +73,6 @@ export class NewKycDocumentsComponent implements OnInit, OnDestroy {
         .subscribe((connectedWallet) => {
             this.connectedWallet = connectedWallet;
         });
-    }
-
-    persistForm() {
-        this.persistService.watchForm(
-            'newkycrequest/documents',
-            this.form,
-            this.newRequestService.context,
-            {
-                reset: false,
-            },
-        );
-    }
-
-    clearPersistForm() {
-        this.persistService.refreshState(
-            'newkycrequest/documents',
-            this.newRequestService.createDocumentsFormGroup(),
-            this.newRequestService.context,
-        );
     }
 
     uploadFile($event, formControl: AbstractControl) {
@@ -209,7 +169,6 @@ export class NewKycDocumentsComponent implements OnInit, OnDestroy {
                 .documentsService
                 .sendRequest(this.form, requests, this.connectedWallet)
                 .then(() => {
-                    this.clearPersistForm();
                     this.submitEvent.emit({
                         completed: true,
                     });

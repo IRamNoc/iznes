@@ -5,10 +5,6 @@ export type MyKycRequestedIds = {
         isThirdPartyKyc: number,
 }[];
 
-export interface MyKycRequestedPersist{
-    identification?: boolean;
-}
-
 export type MyKycStakeholderRelations = {
         kycID: number;
         stakeholderIDs: number[];
@@ -16,6 +12,5 @@ export type MyKycStakeholderRelations = {
 
 export interface MyKycRequestedState {
     kycs : MyKycRequestedIds; // list of current kyc(s) combined in the active kyc form.
-    formPersist: MyKycRequestedPersist;
     stakeholderRelations: MyKycStakeholderRelations;
 }

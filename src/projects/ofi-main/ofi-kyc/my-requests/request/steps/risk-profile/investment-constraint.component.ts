@@ -7,8 +7,6 @@ import { filter, takeUntil, take, distinctUntilChanged } from 'rxjs/operators';
 import { FormPercentDirective } from '@setl/utils/directives/form-percent/formpercent';
 import { RiskProfileService } from '../risk-profile.service';
 import { NewRequestService } from '../../new-request.service';
-import { PersistService } from '@setl/core-persist';
-import { shouldFormSectionPersist } from '../../../kyc-form-helper';
 
 @Component({
     selector: 'investment-constraint',
@@ -30,7 +28,6 @@ export class InvestmentConstraintComponent implements OnInit, OnDestroy {
     formWatch: Subject<boolean> = new Subject<boolean>();
 
     constructor(
-        private persistService: PersistService,
         private element: ElementRef,
         private newRequestService: NewRequestService,
         private riskProfileService: RiskProfileService,
@@ -72,7 +69,6 @@ export class InvestmentConstraintComponent implements OnInit, OnDestroy {
                     this.form.get('constraintsSameInvestmentCrossAm').patchValue(cross, { emitEvent: false });
                     this.formCheckSameInvestmentCrossAm(cross);
                 }
-                this.initFormPersist();
             });
     }
 
@@ -144,35 +140,6 @@ export class InvestmentConstraintComponent implements OnInit, OnDestroy {
         return this.newRequestService.hasError(this.form, control, error);
     }
 
-    /**
-     * Init Form Persist if the step has not been completed
-     */
-    initFormPersist() {
-        if (shouldFormSectionPersist('investmentConstraints', this.completedStep, '')) this.persistForm();
-    }
-
-    persistForm() {
-        this.persistService.watchForm(
-            'newkycrequest/riskProfile/investmentConstraint',
-            this.form,
-            this.newRequestService.context,
-            {
-                reset: false,
-                returnPromise: true,
-            },
-        ).then(() => {
-            this.formWatch.next(true);
-        });
-    }
-
-    async clearPersistForm() {
-        this.persistService.refreshState(
-            'newkycrequest/riskProfile/investmentConstraint',
-            await this.newRequestService.createRiskProfileFormGroup(),
-            this.newRequestService.context,
-        );
-    }
-
     isDisabled(path) {
         const control = this.form.get(path);
 
@@ -199,7 +166,6 @@ export class InvestmentConstraintComponent implements OnInit, OnDestroy {
             .subscribe((requests) => {
                 this.riskProfileService.sendRequestInvestmentObjective(this.formObjective, this.form, requests, 'investmentConstraints')
                     .then(() => {
-                        this.clearPersistForm();
                         this.submitEvent.emit({
                             completed: true,
                         });

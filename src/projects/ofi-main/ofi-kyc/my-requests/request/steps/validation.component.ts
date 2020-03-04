@@ -6,7 +6,6 @@ import { filter as rxFilter, map, take, takeUntil } from 'rxjs/operators';
 import { isEmpty, find, get as getValue, castArray } from 'lodash';
 import * as moment from 'moment';
 import { AlertsService } from '@setl/jaspero-ng2-alerts';
-import { PersistService } from '@setl/core-persist';
 import { formHelper } from '@setl/utils/helper';
 
 import { RequestsService } from '../../requests.service';
@@ -19,7 +18,6 @@ import { KycMyInformations } from '@ofi/ofi-main/ofi-store/ofi-kyc/my-informatio
 import { Observable } from 'rxjs/Observable';
 import { OfiKycService } from '@ofi/ofi-main/ofi-req-services/ofi-kyc/service';
 import { getPartyNameFromInvestorType, isIZNES } from '../../kyc-form-helper';
-import { shouldFormSectionPersist } from '../../kyc-form-helper';
 
 @Component({
     selector: 'kyc-step-validation',
@@ -54,7 +52,6 @@ export class NewKycValidationComponent implements OnInit, OnDestroy {
         private validationService: ValidationService,
         private alerts: AlertsService,
         private router: Router,
-        private persistService: PersistService,
         private documentsService: DocumentsService,
         private ngRedux: NgRedux<any>,
         public translate: MultilingualService,
@@ -73,19 +70,6 @@ export class NewKycValidationComponent implements OnInit, OnDestroy {
     }
 
     initSubscriptions() {
-        this.requests$
-        .pipe(
-            takeUntil(this.unsubscribe),
-            map(kycs => kycs[0]),
-            rxFilter((kyc: any) => {
-                return kyc && kyc.amcID;
-            }),
-            )
-            .subscribe((kyc) => {
-                if (this.shouldPersist(kyc)) {
-                    this.persistForm();
-                }
-            });
 
         /* Subscribe for this user's connected info. */
         this.kycMyInformations.takeUntil(this.unsubscribe)
@@ -98,29 +82,6 @@ export class NewKycValidationComponent implements OnInit, OnDestroy {
             this.isIznes = isIZNES(d.kycPartySelections);
             this.firstName = d.firstName;
         });
-    }
-
-    shouldPersist(kyc) {
-        return shouldFormSectionPersist('validation', kyc.completedStep, kyc.context);
-    }
-
-    persistForm() {
-        this.persistService.watchForm(
-            'newkycrequest/validation',
-            this.form,
-            this.newRequestService.context,
-            {
-                reset: false,
-            },
-        );
-    }
-
-    clearPersistForm() {
-        this.persistService.refreshState(
-            'newkycrequest/validation',
-            this.newRequestService.createValidationFormGroup(),
-            this.newRequestService.context,
-        );
     }
 
     initData() {

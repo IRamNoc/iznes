@@ -17,12 +17,8 @@ import { DocumentsService } from '../documents.service';
 import { FormPercentDirective } from '@setl/utils/directives/form-percent/formpercent';
 import { setMyKycStakeholderRelations } from '@ofi/ofi-main/ofi-store/ofi-kyc/kyc-request';
 import { formHelper } from '@setl/utils/helper';
-import { PersistRequestService } from '@setl/core-req-services';
-import { PersistService } from '@setl/core-persist';
-import { setMyKycRequestedPersist, MyKycStakeholderRelations } from '@ofi/ofi-main/ofi-store/ofi-kyc';
+import { MyKycStakeholderRelations } from '@ofi/ofi-main/ofi-store/ofi-kyc';
 import { KycMyInformations } from '@ofi/ofi-main/ofi-store/ofi-kyc/my-informations';
-import { shouldFormSectionPersist } from '../../../kyc-form-helper';
-
 
 /**
  * Stakeholders main view component of kyc form.
@@ -151,8 +147,6 @@ export class BeneficiaryListComponent implements OnInit, OnDestroy {
         private documentsService: DocumentsService,
         private ngRedux: NgRedux<any>,
         private element: ElementRef,
-        private persistRequestService: PersistRequestService,
-        private persistService: PersistService,
     ) {
     }
 
@@ -180,7 +174,7 @@ export class BeneficiaryListComponent implements OnInit, OnDestroy {
 
                     // Get stakeholder data from membernode to build stakeholder formGroups and fill stakeholdersRelationTable(stakeholders ID within kyc) in redux.
                     const promise = this.identificationService.getCurrentFormCompanyBeneficiariesData(request.kycID).then((formData: any[]) => {
-                        // if we have data build the stakeholders, otherwise olny load data from form persist?
+                        // if we have data build the stakeholders
                         if (!isEmpty(formData)) {
                             // create object to 
                             const relation = {
@@ -236,11 +230,8 @@ export class BeneficiaryListComponent implements OnInit, OnDestroy {
                                     this.beneficiaryService.fillInStakeholderSelects(this.form.get('beneficiaries'));
                                     this.beneficiaryService.updateStakeholdersValidity(this.form.get('beneficiaries') as FormArray);
                                     if (this.formPercent) this.formPercent.refreshFormPercent();
-                                    this.initFormPersist();
                                 });
                             }
-                        } else {
-                            this.initFormPersist();
                         }
                     });
 
@@ -347,21 +338,6 @@ export class BeneficiaryListComponent implements OnInit, OnDestroy {
                 this.connectedWallet = connectedWallet;
             });
 
-        // get the first kyc, within the current active kyc form, and load form persist for the kyc.
-        this.requests$
-        .pipe(
-            takeUntil(this.unsubscribe),
-            map(kycs => kycs[0]),
-            rxFilter((kyc: any) => {
-                return kyc && kyc.amcID;
-            }),
-        )
-        .subscribe((kyc) => {
-            if (this.shouldPersist(kyc)) {
-                this.prePersistForm();
-            }
-        });
-
         // Get the investor type.
         this.kycMyInformations
             .takeUntil(this.unsubscribe)
@@ -372,15 +348,6 @@ export class BeneficiaryListComponent implements OnInit, OnDestroy {
                     this.isNowCP = true;
                 }
             });
-    }
-
-    /**
-     * Whether we need to load form persist for th current kyc
-     * @param {any} kyc
-     * @return {boolean}
-     */
-    shouldPersist(kyc) {
-        return shouldFormSectionPersist('stakeholders', kyc.completedStep, kyc.context)
     }
 
     /**
@@ -743,38 +710,6 @@ export class BeneficiaryListComponent implements OnInit, OnDestroy {
         return type === 'naturalPerson';
     }
 
-    /**
-     * Init Form Persist if the step has not been completed
-     */
-    initFormPersist() {
-        if (shouldFormSectionPersist('stakeholders', this.completedStep, '')) this.prePersistForm();
-        return 
-    }
-
-    prePersistForm() {
-        this.persistRequestService
-        .loadFormState('newkycrequest/identification/beneficiaryInformation', this.newRequestService.context)
-        .then((responseData) => {
-            const data = getValue(responseData, [1, 'Data', 0, 'data']);
-
-            if (!data) {
-                throw 'No data';
-            }
-
-            try {
-                const parsed = JSON.parse(data);
-                this.prepareArrayControls(parsed);
-                this.persistForm();
-            } catch (e) {
-                throw 'Error';
-            }
-
-        })
-        .catch((e) => {
-            this.persistForm();
-        });
-    }
-
     prepareArrayControls(parsed) {
         const beneficiaries = getValue(parsed, ['beneficiaries']);
 
@@ -786,31 +721,6 @@ export class BeneficiaryListComponent implements OnInit, OnDestroy {
                 beneficiariesControl.push(this.newRequestService.createBeneficiary());
             }
         }
-    }
-
-    persistForm() {
-        this.persistService.watchForm(
-            'newkycrequest/identification/beneficiaryInformation',
-            this.form.parent as FormGroup,
-            this.newRequestService.context,
-            {
-                reset: false,
-                returnPromise: true,
-            },
-        ).then(() => {
-            this.ngRedux.dispatch(setMyKycRequestedPersist('identification/beneficiaryInformation'));
-            this.form.value.forEach((value, index) => this.disableBeneficiaryType(value, this.form.controls[index]));
-            this.sortStakeholders();
-            this.askRefresh();
-        });
-    }
-
-    async clearPersistForm() {
-        this.persistService.refreshState(
-            'newkycrequest/identification/beneficiaryInformation',
-            await this.newRequestService.createIdentificationFormGroup(),
-            this.newRequestService.context,
-        );
     }
 
     isStepValid() {
@@ -847,7 +757,6 @@ export class BeneficiaryListComponent implements OnInit, OnDestroy {
                         completed: true,
                     });
                 }
-                this.clearPersistForm();
                 this.updateParents();
             })
             .catch(() => {
