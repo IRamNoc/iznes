@@ -81,7 +81,7 @@ export class InvestmentConstraintFormComponent implements OnInit, OnDestroy {
         ).subscribe((t) => {
             if (!t) return;
             this.kycInvestorType = t;
-            if (this.isNowCP()) {
+            if (! this.isNowCP()) {
                 this.form.get('hasEverIssuedNeuCp').disable();
                 this.form.get('hasAlreadyInvestedNeuCp').disable();
             } else {
