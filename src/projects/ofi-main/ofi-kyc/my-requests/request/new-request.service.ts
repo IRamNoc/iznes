@@ -624,7 +624,7 @@ export class NewRequestService {
     }
 
     createInvestmentObjective(id): FormGroup {
-        return this.formBuilder.group({
+        const form = this.formBuilder.group({
             assetManagementCompanyID: id ? id : null,
             performanceProfile: this.formBuilder.group(this.transformToForm(this.performanceProfileList), {
                 validator: (formGroup) => {
@@ -696,6 +696,18 @@ export class NewRequestService {
                 },
             ),
         });
+
+        /* Disable this form group for NowCP and ID2S clients. */
+        if (
+            this.kycPartySelections.nowCPIssuer ||
+            this.kycPartySelections.nowCPInvestor ||
+            this.kycPartySelections.id2sIPA || 
+            this.kycPartySelections.id2sCustodian
+        ) {
+            form.disable();
+        }
+
+        return form;
     }
 
     createInvestmentObjectives(amcs) {

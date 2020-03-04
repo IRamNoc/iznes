@@ -114,6 +114,7 @@ export class NewKycRequestComponent implements OnInit {
 
         // Subscribe for party details.
         this.kycFormHelperService.kycPartyCompanies$
+            .pipe(takeUntil(this.unsubscribe))
             .subscribe((data) => {
                 this.kycPartySelections = data;
             });
@@ -304,6 +305,7 @@ export class NewKycRequestComponent implements OnInit {
         if (this.fullForm) {
             this.stepsConfig = formStepsFull;
             // remove 'banking Infromation' section if formGroup does not exist
+
             if (this.isBankingInformationSectionDisabled()) {
                 this.stepsConfig = removeStepInStepConfig(this.stepsConfig, 'bankAccounts')
             }
