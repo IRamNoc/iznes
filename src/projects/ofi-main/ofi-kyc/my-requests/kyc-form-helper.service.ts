@@ -126,6 +126,36 @@ export class KycFormHelperService {
     }
 
     /**
+     * whether user selected only NowCP. as observable
+     */
+    public get onlyNowCP$(): Observable<boolean> {
+        return this.kycPartySelections$.pipe(
+            takeUntil(this.myUserService.logout$),
+            filter(d => !! d),
+            map((d) => {
+                const selectedCompanies = getPartyCompanies(d);
+                return selectedCompanies.nowcp && !selectedCompanies.iznes && !selectedCompanies.id2s;
+            }),
+            take(1),
+        );
+    }
+
+    /**
+     * whether user selected only IZNES. as observable
+     */
+    public get onlyIznes$(): Observable<boolean> {
+        return this.kycPartySelections$.pipe(
+            takeUntil(this.myUserService.logout$),
+            filter(d => !! d),
+            map((d) => {
+                const selectedCompanies = getPartyCompanies(d);
+                return selectedCompanies.iznes && !selectedCompanies.id2s && !selectedCompanies.nowcp;
+            }),
+            take(1),
+        );
+    }
+
+    /**
      * whether user selected ID2S or NowCP, and not iznes is not selected. as observable
      */
     public get onlyID2SOrNowCP$(): Observable<boolean> {

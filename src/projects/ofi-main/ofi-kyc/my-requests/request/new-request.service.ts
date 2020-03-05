@@ -59,6 +59,8 @@ import {
     listingMarketsList,
     multilateralTradingFacilitiesList,
     typeOfRevenuesList,
+    signingAuthorityDefaultList,
+    signingAuthorityNowCPList,
 } from '../requests.config';
 
 @Injectable()
@@ -97,6 +99,8 @@ export class NewRequestService {
     listingMarketsList;
     multilateralTradingFacilitiesList;
     typeOfRevenuesList;
+    signingAuthorityDefaultList;
+    signingAuthorityNowCPList;
     saveContext = '';
 
     /* Private Properties. */
@@ -157,6 +161,8 @@ export class NewRequestService {
         this.listingMarketsList = listingMarketsList;
         this.multilateralTradingFacilitiesList = multilateralTradingFacilitiesList;
         this.typeOfRevenuesList = typeOfRevenuesList;
+        this.signingAuthorityDefaultList = signingAuthorityDefaultList;
+        this.signingAuthorityNowCPList = signingAuthorityNowCPList;
     }
 
     set context(value) {
@@ -225,6 +231,7 @@ export class NewRequestService {
             kycID: '',
             undersigned: ['', this.getLengthValidator()],
             actingOnBehalfOf: ['', this.getLengthValidator()],
+            signingAuthority: ['', Validators.required],
             doneAt: ['', this.getLengthValidator()],
             doneDate: ['', Validators.required],
             positionRepresentative: ['', this.getLengthValidator()],

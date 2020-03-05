@@ -3195,6 +3195,25 @@ export const identificationNumberList = [
     },
 ];
 
+export const signingAuthorityDefaultList = [
+    {
+        id: 'kbisAuthorizedSignatories',
+        text: 'KBIS authorized signatories',
+    },
+    {
+        id: 'authorizedDelegates',
+        text: 'Authorized delegates',
+    },
+];
+
+export const signingAuthorityNowCPList = [
+    ...signingAuthorityDefaultList,
+    {
+        id: 'personInChargeOfTheIssuanceProgram ',
+        text: 'Person in charge of the issuance program ',
+    },
+];
+
 export const controlToName = {
     // General
     registeredCompanyName: 'Registered Company Name or Legal Name',

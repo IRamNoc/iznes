@@ -17,7 +17,8 @@ import { MultilingualService } from '@setl/multilingual';
 import { KycMyInformations } from '@ofi/ofi-main/ofi-store/ofi-kyc/my-informations';
 import { Observable } from 'rxjs/Observable';
 import { OfiKycService } from '@ofi/ofi-main/ofi-req-services/ofi-kyc/service';
-import { getPartyNameFromInvestorType, isIZNES } from '../../kyc-form-helper';
+import { getPartyNameFromInvestorType } from '../../kyc-form-helper';
+import { KycFormHelperService } from '../../kyc-form-helper.service';
 
 @Component({
     selector: 'kyc-step-validation',
@@ -41,10 +42,11 @@ export class NewKycValidationComponent implements OnInit, OnDestroy {
     open = true;
     showKYCComplete: boolean = false;
     public invitedAs: 'iznes'|'id2s'|'nowcp';
-    public isIznes: boolean;
+    public isOnlyNowCP: boolean;
     firstName: string;
     investorInformationRequested: boolean = false;
     fadeIn: boolean = false;
+    signingAuthorityList: any[];
 
     constructor(
         private requestsService: RequestsService,
@@ -57,13 +59,14 @@ export class NewKycValidationComponent implements OnInit, OnDestroy {
         public translate: MultilingualService,
         public ofiKycService: OfiKycService,
         private changeDetector: ChangeDetectorRef,
-    ) {
-    }
+        public formHelper: KycFormHelperService,
+    ) {}
 
     ngOnInit() {
         this.initData();
         this.getCurrentFormData();
         this.initSubscriptions();
+        this.handlePartyFields();
 
         this.configDate = configDate;
         this.form.get('doneDate').patchValue(moment().format(this.configDate.format));
@@ -79,7 +82,6 @@ export class NewKycValidationComponent implements OnInit, OnDestroy {
                 return this.ofiKycService.fetchInvestor();
             }
             this.invitedAs = getPartyNameFromInvestorType(d.investorType);
-            this.isIznes = isIZNES(d.kycPartySelections);
             this.firstName = d.firstName;
         });
     }
@@ -107,6 +109,18 @@ export class NewKycValidationComponent implements OnInit, OnDestroy {
         .subscribe((connectedWallet) => {
             this.connectedWallet = connectedWallet;
             });
+    }
+
+    async handlePartyFields() {
+        this.isOnlyNowCP = await this.formHelper.onlyNowCP$.toPromise();
+
+        // Set signing authority list
+        this.signingAuthorityList = this.translate.translate(this.isOnlyNowCP
+            ? this.newRequestService.signingAuthorityDefaultList
+            : this.newRequestService.signingAuthorityNowCPList);
+
+        // Disable electronicSignatureDocument for NowCP
+        if (this.isOnlyNowCP) this.form.get('electronicSignatureDocument').disable();
     }
 
     getCompanyNames(requests, managementCompanyList) {
