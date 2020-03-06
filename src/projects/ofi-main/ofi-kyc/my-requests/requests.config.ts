@@ -3090,10 +3090,6 @@ export const documentTypesList = [
         text: 'RIB',
     },
     {
-        id: 'kycinfomemorandumbdfdoc',
-        text: 'Information memorandum approved by BDF',
-    },
-    {
         id: 'kycorgchartdoc',
         text: 'Org chart with key operational teams',
     },
