@@ -541,7 +541,6 @@ export class NewRequestService {
                 kycproofregulationdoc: this.createDocumentFormGroup('kycproofregulationdoc', !this.isProduction),
                 kycwolfsbergdoc: this.createDocumentFormGroup('kycwolfsbergdoc', !this.isProduction),
                 kycribdoc: this.createDocumentFormGroup('kycribdoc', !this.isProduction),
-                kycinfomemorandumbdfdoc: this.createDocumentFormGroup('kycinfomemorandumbdfdoc', !this.isProduction),
                 kycorgchartdoc: this.createDocumentFormGroup('kycorgchartdoc', !this.isProduction),
                 kyccriticalcustomersdoc: this.createDocumentFormGroup('kyccriticalcustomersdoc', !this.isProduction),
                 kycbusinessplandoc: this.createDocumentFormGroup('kycbusinessplandoc', !this.isProduction),
