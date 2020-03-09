@@ -2,7 +2,7 @@ import { Component, Input, Output, OnInit, OnDestroy, ViewChildren, EventEmitter
 import { FormGroup, FormControl } from '@angular/forms';
 import { isEmpty, castArray, find, pick, omit, values, map, assign, findIndex, get as getValue } from 'lodash';
 import { select, NgRedux } from '@angular-redux/store';
-import { Subject, combineLatest } from 'rxjs';
+import { Subject, combineLatest, BehaviorSubject } from 'rxjs';
 import { filter, map as rxMap, takeUntil, take } from 'rxjs/operators';
 import { IdentificationService } from '../identification.service';
 import { NewRequestService } from '../../new-request.service';
@@ -39,6 +39,8 @@ export class ClassificationInformationComponent implements OnInit, OnDestroy {
     amcs = [];
     instrumentChecked: {} = {};
     geographicalAreaChecked: {} = {};
+    // data is fetched from database, and patched value to formgroup.
+    formDataFilled$ = new BehaviorSubject<boolean>(false);
 
     constructor(
         private newRequestService: NewRequestService,
@@ -353,6 +355,7 @@ export class ClassificationInformationComponent implements OnInit, OnDestroy {
 
                     this.formCheckOptFor(optFor);
                 }
+                this.formDataFilled$.next(true);
             });
         })
         ;

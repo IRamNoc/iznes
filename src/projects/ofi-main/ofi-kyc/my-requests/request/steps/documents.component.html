@@ -1,5 +1,5 @@
 <div class="kyc-container sm">
-    <kyc-clientfile-update-alert *ngIf="!form.valid && isFormReadonly"></kyc-clientfile-update-alert>
+    <kyc-clientfile-update-alert *ngIf="(formDataFilled$ | async) && !form.valid && isFormReadonly"></kyc-clientfile-update-alert>
 
     <h2>{{ 'Documents' | translate }}</h2>
 

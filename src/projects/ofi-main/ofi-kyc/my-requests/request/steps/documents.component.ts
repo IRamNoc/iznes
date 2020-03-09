@@ -2,7 +2,7 @@ import { Component, OnInit, Input, OnDestroy, ViewChild, ChangeDetectorRef, Outp
 import { FormGroup, FormControl, AbstractControl } from '@angular/forms';
 import { isEmpty, castArray } from 'lodash';
 import { select } from '@angular-redux/store';
-import { Subject } from 'rxjs';
+import { Subject, BehaviorSubject } from 'rxjs';
 import { filter as rxFilter, map, take, takeUntil } from 'rxjs/operators';
 import { Observable } from 'rxjs/Observable';
 import { formHelper } from '@setl/utils/helper';
@@ -39,6 +39,8 @@ export class NewKycDocumentsComponent implements OnInit, OnDestroy {
     isNowCP: boolean = false;
     /** Allowed file types passed to FileDrop */
     public allowedFileTypes: string[] = ['application/pdf'];
+    // data is fetched from database, and patched value to formgroup.
+    formDataFilled$ = new BehaviorSubject<boolean>(false);
 
     constructor(
         private requestsService: RequestsService,
@@ -210,6 +212,7 @@ export class NewKycDocumentsComponent implements OnInit, OnDestroy {
                     this.form.updateValueAndValidity();
                     this.changeDetectorRef.markForCheck();
                     this.initSubscriptions();
+                    this.formDataFilled$.next(true);
                 });
             });
         });
