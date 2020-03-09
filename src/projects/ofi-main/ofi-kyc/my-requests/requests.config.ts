@@ -3323,7 +3323,7 @@ export const controlToName = {
     withAdviceOfAuthorisedThirdPartyInstitution: 'With the advice of an authorised third party institution',
     mandateEntrustedToManagers: 'By mandate(s) entrusted to a manager(s)',
     frequencyFinancialTransactions: 'Frequency of financial transactions',
-    investmentvehiclesAlreadyUsed: 'Investment vehicles already used',
+    investmentvehiclesAlreadyUsed: 'Which investment vehicles do you currently use',
     investmentvehiclesAlreadyUsedSpecification: 'Investment vehicles already used specification',
     naturesSameInvestmentCrossAm: 'I would like to have the same investment nature for all management companies',
 
