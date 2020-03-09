@@ -56,6 +56,18 @@
                         </div>
                     </div>
 
+                    <!-- has expirence on nowcp -->
+                    <div class="row" *ngIf="investorType === 'nonPro' && !!form.get('optFor').value && (kycFormHelperService.invitedByNowCp$ | async)">
+                        <div class="form-group col-sm-6">
+                            <div class="checkbox-inline">
+                                <input type="checkbox" id="operatorsHasExperienceNeuCP" formControlName="operatorsHasExperienceNeuCP" [attr.disabled]="isFormReadonly === true ? '' : null">
+                                <label for="operatorsHasExperienceNeuCP">
+                                    {{'Do your operators have experience in trading NeuCP?' | translate}}
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
                     <div *ngIf="!isDisabled('optForValues')" class="row mb-2">
                         <div class="col-xs-12">
                             <h4 class="mt-0 mb-1">{{'Classification changes' | translate}}</h4>

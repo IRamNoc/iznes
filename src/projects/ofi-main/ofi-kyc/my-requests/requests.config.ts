@@ -451,6 +451,7 @@ export const booleanControls = [
     'optFor',
     'optForPro',
     'optForNonPro',
+    'operatorsHasExperienceNeuCP',
     'exerciseControl',
     'isLegalRepresentative',
     'isPoliticallyExposed',
@@ -3294,6 +3295,7 @@ export const controlToName = {
     // Classification
     optForPro: 'Asked for professional status',
     optForNonPro: 'Opted for non professional classification',
+    operatorsHasExperienceNeuCP: 'Do your operators have experience in trading NeuCP',
     classificationChangeAccepted: 'Classification change accepted',
     investorStatus: 'Initial investor status',
     excludeProducts: 'Excluded category of products/services',
