@@ -43,7 +43,7 @@ export class KycDetailsComponent implements OnInit, OnDestroy {
     isID2SAm = false;
 
     /* The companies that this user was invited by. */
-    public kycPartySelections: PartyCompaniesInterface;
+    public kycPartyCompanies: PartyCompaniesInterface;
 
     constructor(
         private route: ActivatedRoute,
@@ -55,8 +55,8 @@ export class KycDetailsComponent implements OnInit, OnDestroy {
     ) {
         // Subscribe for party details.
         this.kycFormHelperService.kycPartyCompanies$
-            .subscribe((data) => {
-                this.kycPartySelections = data;
+            .subscribe((data: PartyCompaniesInterface) => {
+                this.kycPartyCompanies = data;
             });
     }
 
@@ -196,9 +196,9 @@ export class KycDetailsComponent implements OnInit, OnDestroy {
 
         /* Hide this section is investor party selection is only ID2S. */
         if (
-            this.kycPartySelections &&
-            this.kycPartySelections.id2s
-            && !this.kycPartySelections.nowcp && !this.kycPartySelections.iznes) {
+            this.kycPartyCompanies &&
+            this.kycPartyCompanies.id2s
+            && !this.kycPartyCompanies.nowcp && !this.kycPartyCompanies.iznes) {
             banking.hidden = true;
         }
 
@@ -216,9 +216,16 @@ export class KycDetailsComponent implements OnInit, OnDestroy {
             data: '',
         };
 
+        /*
+         * Hide field 'operatorsHasExperienceNeuCP' when kyc user is not NowCP
+         * or 'operatorsHasExperienceNeuCP' when isNowCpAm is false 
+         */
+        const hideOperatorsHasExperienceNeuCP = (this.kycPartyCompanies && !this.kycPartyCompanies.nowcp) && !this.isNowCpAm;
+
         this.kycClassification$
         .pipe(
             rxFilter(value => !isEmpty(value)),
+            map(data => conditionallyDeleteField(data, 'operatorsHasExperienceNeuCP', hideOperatorsHasExperienceNeuCP)),
             map(data => this.kycDetailsService.toArray(data)),
             map(data => this.kycDetailsService.order(data)),
             takeUntil(this.unsubscribe),
@@ -277,9 +284,9 @@ export class KycDetailsComponent implements OnInit, OnDestroy {
 
         /* Hide this section is investor party selection is ID2S, and not iznes. */
         if (
-            this.kycPartySelections &&
-            (this.kycPartySelections.id2s)
-            && this.kycPartySelections && !this.kycPartySelections.nowcp) {
+            this.kycPartyCompanies &&
+            (this.kycPartyCompanies.id2s)
+            && this.kycPartyCompanies && !this.kycPartyCompanies.nowcp) {
             riskProfilePanels.hidden = true;
         }
         /* Hide this section if amc is id2s */
@@ -344,9 +351,9 @@ export class KycDetailsComponent implements OnInit, OnDestroy {
 
         /* Hide this section is investor party selection is ID2S or nowCP, and not iznes. */
         if (
-            this.kycPartySelections &&
-            (this.kycPartySelections.id2s || this.kycPartySelections.nowcp)
-            && !this.kycPartySelections.iznes) {
+            this.kycPartyCompanies &&
+            (this.kycPartyCompanies.id2s || this.kycPartyCompanies.nowcp)
+            && !this.kycPartyCompanies.iznes) {
             riskObjectives.hidden = true;
         }
         /* Hide this section if amc is id2s or nowcp */
@@ -388,9 +395,9 @@ export class KycDetailsComponent implements OnInit, OnDestroy {
 
         /* Hide this section is investor party selection is ID2S or nowCP, and not iznes. */
         if (
-            this.kycPartySelections &&
-            (this.kycPartySelections.id2s || this.kycPartySelections.nowcp)
-            && !this.kycPartySelections.iznes) {
+            this.kycPartyCompanies &&
+            (this.kycPartyCompanies.id2s || this.kycPartyCompanies.nowcp)
+            && !this.kycPartyCompanies.iznes) {
             riskContraints.hidden = true;
         }
         /* Hide this section if amc is id2s or nowcp */
@@ -446,4 +453,18 @@ export class KycDetailsComponent implements OnInit, OnDestroy {
         this.unsubscribe.next();
         this.unsubscribe.complete();
     }
+}
+
+/**
+ * Conditionally delete field within kyc data.
+ * @param {any} kycData
+ * @param {string} fieldId
+ * @param {boolean} hide
+ * @return {any}
+ */
+function conditionallyDeleteField(kycData: any, fieldId: string, hide: boolean): any {
+    if (hide) {
+        delete kycData[fieldId];
+    }
+    return kycData;
 }

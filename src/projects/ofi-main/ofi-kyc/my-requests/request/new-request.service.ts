@@ -404,8 +404,9 @@ export class NewRequestService {
         const classificationInformation = fb.group({
             kycID: '',
             investorStatus: 0,
-            optFor: 0,
+            optFor: null,
             optForValues: fb.array([]),
+            operatorsHasExperienceNeuCP: 0,
             excludeProducts: ['', Validators.maxLength(255)],
 
             nonPro: fb.group({
