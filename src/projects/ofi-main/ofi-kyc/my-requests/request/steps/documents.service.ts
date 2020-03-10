@@ -331,7 +331,7 @@ export class DocumentsService {
      * @param permissions {DocumentPermissions} - The document permissions object.
      */
 
-    public shouldShowDocument (docName: string, permissions: DocumentPermissions): {
+    public checkDocument (docName: string, permissions: DocumentPermissions): {
         shouldShow: boolean;
         required: boolean;
     } {
@@ -343,43 +343,50 @@ export class DocumentsService {
             isHighRiskActivity: 'highRiskActivity',
             isHighRiskCountry: 'highRiskCountry',
         };
+        const companyNamesMap = {
+            iznes: 'IZNES',
+            id2s: 'ID2S',
+            nowcp: 'NOWCP',
+        };
 
         // Default vars.
         let shouldShow = false;
         let required = false;
 
-        /* Loop over rules. */
-        for (const rule of Object.keys(permissions.rules)) {
-            const docMatrixRuleMap = companyRulesMap[rule];
-            switch (true) {
-                case !!(
-                        permissions.companies.iznes &&
-                        permissions.rules[rule] &&
-                        this.documentMatrix['IZNES'][docMatrixRuleMap] &&
-                        this.documentMatrix['IZNES'][docMatrixRuleMap][docName]
-                    ):
-                    shouldShow = true;
-                    required = !!(this.documentMatrix['IZNES'][docMatrixRuleMap][docName] === 'required');
-                    break;
-                case !!(
-                        permissions.companies.nowcp &&
-                        permissions.rules[rule] &&
-                        this.documentMatrix['NOWCP'][docMatrixRuleMap] &&
-                        this.documentMatrix['NOWCP'][docMatrixRuleMap][docName]
-                    ):
-                    shouldShow = true;
-                    required = !!(this.documentMatrix['NOWCP'][docMatrixRuleMap][docName] === 'required');
-                    break;
-                case !!(
-                        permissions.companies.id2s &&
-                        permissions.rules[rule] &&
-                        this.documentMatrix['ID2S'][docMatrixRuleMap] &&
-                        this.documentMatrix['ID2S'][docMatrixRuleMap][docName]
-                    ):
-                    shouldShow = true;
-                    required = !!(this.documentMatrix['ID2S'][docMatrixRuleMap][docName] === 'required');
-                    break;
+        let companyNameMap;
+        let ruleNameMap;
+
+        // Loop companies.
+        for (const company of Object.keys(permissions.companies)) {
+            // Continue if not this company.
+            if (!permissions.companies[company]) {
+                continue;
             }
+
+            // Map the company name.
+            companyNameMap = companyNamesMap[company];
+
+            // Loop rules.
+            for (const rule of Object.keys(permissions.rules)) {
+                // Continue if this rule doesn't apply.
+                if (!permissions.rules[rule]) {
+                    continue;
+                }
+
+                // Map the rule name.
+                ruleNameMap = companyRulesMap[rule];
+                if (
+                    // Is a company in the matrix...
+                    this.documentMatrix[companyNameMap] &&
+                    // ...and has a rule in this company...
+                    this.documentMatrix[companyNameMap][ruleNameMap] &&
+                    // ...and has this document in this rule.
+                    this.documentMatrix[companyNameMap][ruleNameMap][docName]
+                ) {
+                    shouldShow = true;
+                    required = !!(this.documentMatrix[companyNameMap][ruleNameMap][docName] === 'required');
+                }
+            }   
         }
 
         // Return document object.
@@ -387,5 +394,24 @@ export class DocumentsService {
             shouldShow,
             required,
         };
+    }
+
+    /**
+     * Creates a permission meta cache for all documents.
+     * 
+     * @param permissions {DocumentPermissions}
+     * 
+     * @return {DocumentMetaCache}
+     */
+    public getDocumentsMeta(permissions: DocumentPermissions): DocumentMetaCache {
+        // Variables.
+        let document, documents = {};
+
+        // Loop over all the documents.
+        for (document of Object.keys(documentFormPaths)) {
+            documents[document] = this.checkDocument(document, permissions);
+        }
+
+        return documents;
     }
 }
