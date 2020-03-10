@@ -36,10 +36,23 @@ export class OfiAmDocumentsComponent implements OnDestroy, OnInit {
     hasPermissionCanManageAllClientFile$: Observable<boolean>;
     hasPermissionCanManageAllClientFile = false;
 
+    hasNowCpAMPermission$: Observable<boolean>;
+    public isNowCpAm: boolean = false;
+    hasID2SAMPermission$: Observable<boolean>;
+    public isID2SAm: boolean = false;
+
     /* Observables. */
     @select(['user', 'siteSettings', 'language']) requestLanguageOb;
     @select(['ofi', 'ofiKyc', 'amKycList', 'requested']) requestedOfiKycListOb;
     @select(['ofi', 'ofiKyc', 'amKycList', 'amKycList']) kycListOb;
+
+    /**
+     * Is common asset manager. for example: not NowCP/ID2s
+     * @return {boolean}
+     */
+    get isCommonAM(): boolean {
+        return !this.isNowCpAm && !this.isID2SAm;
+    }
 
     /* Constructor. */
     constructor(private changeDetectorRef: ChangeDetectorRef,
@@ -56,12 +69,20 @@ export class OfiAmDocumentsComponent implements OnDestroy, OnInit {
 
     ngOnInit() {
         this.hasPermissionCanManageAllClientFile$ = Observable.fromPromise(this.permissionsService.hasPermission('manageAllClientFile', 'canUpdate'));
+        this.hasNowCpAMPermission$ = Observable.fromPromise(this.permissionsService.hasPermission('nowCpAM', 'canRead'));
+        this.hasID2SAMPermission$ = Observable.fromPromise(this.permissionsService.hasPermission('id2sAM', 'canRead'));
 
         this.subscriptions.push(this.requestedOfiKycListOb.subscribe(
             requested => this.requestKycList(requested)));
         this.subscriptions.push(
-            observableCombineLatest(this.kycListOb, this.requestLanguageOb, this.hasPermissionCanManageAllClientFile$).subscribe(async ([amKycListData, _, hasPermission]) => {
-                this.hasPermissionCanManageAllClientFile = hasPermission;
+            observableCombineLatest(this.kycListOb, this.requestLanguageOb, this.hasPermissionCanManageAllClientFile$,
+                                    this.hasNowCpAMPermission$, this.hasID2SAMPermission$)
+                .subscribe(async ([
+                                      amKycListData, _, hasClientFilePermission, hasNowCpAMPermission, hasID2SAMPermission
+                                  ]) => {
+                this.hasPermissionCanManageAllClientFile = hasClientFilePermission;
+                this.isNowCpAm = hasNowCpAMPermission;
+                this.isID2SAm = hasID2SAMPermission;
                 this.updateTable(amKycListData);
             },
         ));
@@ -160,16 +181,18 @@ export class OfiAmDocumentsComponent implements OnDestroy, OnInit {
             '2': [],
             '-2': [],
             '3': [],
+            '4': [],
             'invited': [],
             'all': [],
         };
 
         const replaceStatus = {
             '1': this.translate.translate('To Review'),
-            '-1': this.translate.translate('Accepted'),
+            '-1': this.isCommonAM ? this.translate.translate('Accepted') : this.translate.translate('Validated Onboarding'),
             '2': this.translate.translate('Waiting For More Info'),
             '-2': this.translate.translate('Rejected'),
             '3': this.translate.translate('Pending Client File'),
+            '4': this.translate.translate('KYC File Completed'),
         };
 
         let id = 0;
@@ -177,6 +200,7 @@ export class OfiAmDocumentsComponent implements OnDestroy, OnInit {
             const rowStatus = row['status'];
 
             row['status'] = replaceStatus[rowStatus];
+            row['numberStatus'] = rowStatus;
 
             row['id'] = id;
             id++;
@@ -191,9 +215,7 @@ export class OfiAmDocumentsComponent implements OnDestroy, OnInit {
             tables['all'].push(row);
         });
 
-        const acceptedPanelWording = !this.hasPermissionCanManageAllClientFile ?
-            this.translate.translate('Accepted - Funds Access Authorizations') :
-            this.translate.translate('Accepted');
+        const acceptedPanelWording = this.getAcceptedPanelWording();
 
         this.panelDefs = [
             {
@@ -254,6 +276,18 @@ export class OfiAmDocumentsComponent implements OnDestroy, OnInit {
             this.panelDefs = [...this.panelDefs, ...extraPanels];
         }
 
+        // add section KYC File Accepted, if AM is third party kyc asset management user.
+        if (!this.isCommonAM) {
+            const kycFileCompletedPanel = {
+                id: 'KycFileCompleted',
+                    title: this.translate.translate('KYC File Completed'),
+                columns: [columns[1], columns[2], columns[5], columns[4], columns[6]],
+                open: true,
+                data: tables[4],
+            };
+            this.panelDefs = [...this.panelDefs.slice(0, 1), kycFileCompletedPanel, ...this.panelDefs.slice(1)];
+        }
+
         this.changeDetectorRef.markForCheck();
     }
 
@@ -274,8 +308,8 @@ export class OfiAmDocumentsComponent implements OnDestroy, OnInit {
             !event.target.classList.contains('datagrid-expandable-caret-button') &&
             !event.target.classList.contains('datagrid-expandable-caret-icon')
         ) {
-            let ret = this.getKycLinkTemplate(row.status);
-            const link = this.getKycLinkTemplate(row.status);
+            let ret = this.getKycLinkTemplate(row.numberStatus);
+            const link = this.getKycLinkTemplate(row.numberStatus);
             link.match(/:\w+/g).forEach((match) => {
                 const key = match.substring(1);
                 const regex = new RegExp(match);
@@ -296,9 +330,9 @@ export class OfiAmDocumentsComponent implements OnDestroy, OnInit {
         }
     }
 
-    getKycLinkTemplate(status) {
+    getKycLinkTemplate(status: number) {
         if(!this.hasPermissionCanManageAllClientFile) {
-            if (status === -1 || status === 'Accepted') {
+            if (status === -1) {
                 return  '/client-referential/:kycID'
             } else {
                 return  '/on-boarding/management/:kycID'
@@ -306,5 +340,19 @@ export class OfiAmDocumentsComponent implements OnDestroy, OnInit {
         } else {
             return '/client-file/management/:kycID'
         }
+    }
+
+    /**
+     * Get accepted kyc panel title wording.
+     * @return {string}
+     */
+    getAcceptedPanelWording(): string {
+        if (this.hasPermissionCanManageAllClientFile) {
+            return this.translate.translate('Accepted');
+        }
+        if (this.isCommonAM) {
+            return this.translate.translate('Accepted - Funds Access Authorizations');
+        }
+        return this.translate.translate('Validated Onboarding');
     }
 }
