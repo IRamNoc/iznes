@@ -4,6 +4,7 @@ import * as moment from 'moment';
 import { RequestsService } from '../../requests.service';
 import { NewRequestService } from '../new-request.service';
 import { mapValues, isArray, isObject, reduce, pickBy, merge, omit, fill, find, get as getValue } from 'lodash';
+import { MyUserService } from '../../../../../core-req-services';
 
 @Injectable()
 export class RiskProfileService {
@@ -17,7 +18,9 @@ export class RiskProfileService {
     constructor(
         private newRequestService: NewRequestService,
         private requestsService : RequestsService,
+        private myUserService: MyUserService,
     ) {
+        this.handleOnLogOut();
     }
 
     sendRequestInvestmentNature(form, requests) {
@@ -195,5 +198,17 @@ export class RiskProfileService {
         };
 
         return this.requestsService.sendRequest(messageBody);
+    }
+
+    /**
+     * Clear currentServerData state on Logout
+     *
+     * @returns {void}
+     */
+    private handleOnLogOut(): void {
+        this.myUserService.logout$.subscribe(() => {
+            this.currentServerData.risknature.next({});
+            this.currentServerData.riskobjective.next({});
+        });
     }
 }

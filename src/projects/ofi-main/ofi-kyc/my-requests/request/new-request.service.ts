@@ -411,8 +411,9 @@ export class NewRequestService {
         const classificationInformation = fb.group({
             kycID: '',
             investorStatus: 0,
-            optFor: 0,
+            optFor: null,
             optForValues: fb.array([]),
+            operatorsHasExperienceNeuCP: 0,
             excludeProducts: ['', Validators.maxLength(255)],
 
             nonPro: fb.group({
@@ -548,7 +549,6 @@ export class NewRequestService {
                 kycproofregulationdoc: this.createDocumentFormGroup('kycproofregulationdoc', !this.isProduction),
                 kycwolfsbergdoc: this.createDocumentFormGroup('kycwolfsbergdoc', !this.isProduction),
                 kycribdoc: this.createDocumentFormGroup('kycribdoc', !this.isProduction),
-                kycinfomemorandumbdfdoc: this.createDocumentFormGroup('kycinfomemorandumbdfdoc', !this.isProduction),
                 kycorgchartdoc: this.createDocumentFormGroup('kycorgchartdoc', !this.isProduction),
                 kyccriticalcustomersdoc: this.createDocumentFormGroup('kyccriticalcustomersdoc', !this.isProduction),
                 kycbusinessplandoc: this.createDocumentFormGroup('kycbusinessplandoc', !this.isProduction),
