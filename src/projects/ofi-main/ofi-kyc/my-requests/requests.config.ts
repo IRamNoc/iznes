@@ -451,6 +451,7 @@ export const booleanControls = [
     'optFor',
     'optForPro',
     'optForNonPro',
+    'operatorsHasExperienceNeuCP',
     'exerciseControl',
     'isLegalRepresentative',
     'isPoliticallyExposed',
@@ -3090,10 +3091,6 @@ export const documentTypesList = [
         text: 'RIB',
     },
     {
-        id: 'kycinfomemorandumbdfdoc',
-        text: 'Information memorandum approved by BDF',
-    },
-    {
         id: 'kycorgchartdoc',
         text: 'Org chart with key operational teams',
     },
@@ -3298,6 +3295,7 @@ export const controlToName = {
     // Classification
     optForPro: 'Asked for professional status',
     optForNonPro: 'Opted for non professional classification',
+    operatorsHasExperienceNeuCP: 'Do your operators have experience in trading NeuCP',
     classificationChangeAccepted: 'Classification change accepted',
     investorStatus: 'Initial investor status',
     excludeProducts: 'Excluded category of products/services',
@@ -3327,7 +3325,7 @@ export const controlToName = {
     withAdviceOfAuthorisedThirdPartyInstitution: 'With the advice of an authorised third party institution',
     mandateEntrustedToManagers: 'By mandate(s) entrusted to a manager(s)',
     frequencyFinancialTransactions: 'Frequency of financial transactions',
-    investmentvehiclesAlreadyUsed: 'Investment vehicles already used',
+    investmentvehiclesAlreadyUsed: 'Which investment vehicles do you currently use',
     investmentvehiclesAlreadyUsedSpecification: 'Investment vehicles already used specification',
     naturesSameInvestmentCrossAm: 'I would like to have the same investment nature for all management companies',
 

@@ -21,7 +21,6 @@ export const documentFormPaths = {
     kycwolfsbergdoc: 'common',
 
     kycribdoc: 'common',
-    kycinfomemorandumbdfdoc: 'common',
     kycorgchartdoc: 'common',
 
     // added as new KYC work

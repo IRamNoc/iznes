@@ -33,7 +33,7 @@ export class NewKycDocumentsComponent implements OnInit, OnDestroy {
     public documentPermissions: DocumentPermissions;
 
     // An object used to caache document meta info.
-    private documentsMeta: DocumentMetaCache = {};
+    private documentsMeta: DocumentMetaCache;
 
     open;
     unsubscribe: Subject<any> = new Subject();
@@ -112,7 +112,7 @@ export class NewKycDocumentsComponent implements OnInit, OnDestroy {
         );
 
         console.log('[4] got document meta: ', this.documentsMeta);
-        
+
         this.changeDetectorRef.detectChanges()
     }
 
