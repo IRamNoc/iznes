@@ -3,7 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { select } from '@angular-redux/store';
 import { Subject } from 'rxjs';
 import { takeUntil, filter as rxFilter, map } from 'rxjs/operators';
-import { isEmpty, find, isNil, get as getValue, findIndex } from 'lodash';
+import { isEmpty, find, isNil, get as getValue, findIndex, cloneDeep } from 'lodash';
 import { PermissionsService } from '@setl/utils';
 
 import { MultilingualService } from '@setl/multilingual';
@@ -218,13 +218,14 @@ export class KycDetailsComponent implements OnInit, OnDestroy {
 
         /*
          * Hide field 'operatorsHasExperienceNeuCP' when kyc user is not NowCP
-         * or 'operatorsHasExperienceNeuCP' when isNowCpAm is false 
+         * or 'operatorsHasExperienceNeuCP' when isNowCpAm is false
          */
         const hideOperatorsHasExperienceNeuCP = (this.kycPartyCompanies && !this.kycPartyCompanies.nowcp) && !this.isNowCpAm;
 
         this.kycClassification$
         .pipe(
             rxFilter(value => !isEmpty(value)),
+            map(data => cloneDeep(data)),
             map(data => conditionallyDeleteField(data, 'operatorsHasExperienceNeuCP', hideOperatorsHasExperienceNeuCP)),
             map(data => this.kycDetailsService.toArray(data)),
             map(data => this.kycDetailsService.order(data)),
