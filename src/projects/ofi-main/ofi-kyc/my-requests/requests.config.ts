@@ -529,6 +529,7 @@ export const selectControls = [
     'country',
     'financialRating',
     'regulator',
+    'signingAuthority',
 ];
 
 export const controlOrder = [
@@ -3192,6 +3193,25 @@ export const identificationNumberList = [
     },
 ];
 
+export const signingAuthorityDefaultList = [
+    {
+        id: 'kbisAuthorizedSignatories',
+        text: 'KBIS authorized signatories',
+    },
+    {
+        id: 'authorizedDelegates',
+        text: 'Authorized delegates',
+    },
+];
+
+export const signingAuthorityNowCPList = [
+    ...signingAuthorityDefaultList,
+    {
+        id: 'personInChargeOfTheIssuanceProgram ',
+        text: 'Person in charge of the issuance program ',
+    },
+];
+
 export const controlToName = {
     // General
     registeredCompanyName: 'Registered Company Name or Legal Name',
@@ -3362,6 +3382,7 @@ export const controlToName = {
     doneDate: 'Date',
     positionRepresentative: 'Position of the representative of the Legal Person',
     electronicSignatureDocumentID: 'National Identification Card',
+    signingAuthority: 'Signing authority',
 };
 
 export const controlToList = {
@@ -3423,6 +3444,9 @@ export const controlToList = {
     nationality: 'countries',
     countryTaxResidence: 'countries',
     country: 'countries',
+
+    // Validation
+    signingAuthority: 'signingAuthorityNowCPList',
 };
 
 // Conditionally remove fields from kyc datagrids

@@ -3,21 +3,22 @@ import { NgRedux, select } from '@angular-redux/store';
 import { Router } from '@angular/router';
 import { Subject, combineLatest } from 'rxjs';
 import { filter as rxFilter, map, take, takeUntil } from 'rxjs/operators';
+import { Observable } from 'rxjs/Observable';
 import { isEmpty, find, get as getValue, castArray } from 'lodash';
 import * as moment from 'moment';
-import { AlertsService } from '@setl/jaspero-ng2-alerts';
-import { formHelper } from '@setl/utils/helper';
 
-import { RequestsService } from '../../requests.service';
-import { NewRequestService, configDate } from '../new-request.service';
 import { ValidationService } from './validation.service';
 import { DocumentsService } from './documents.service';
-import { ClearMyKycListRequested } from '@ofi/ofi-main/ofi-store/ofi-kyc';
-import { MultilingualService } from '@setl/multilingual';
-import { KycMyInformations } from '@ofi/ofi-main/ofi-store/ofi-kyc/my-informations';
-import { Observable } from 'rxjs/Observable';
-import { OfiKycService } from '@ofi/ofi-main/ofi-req-services/ofi-kyc/service';
-import { getPartyNameFromInvestorType, isIZNES } from '../../kyc-form-helper';
+import { NewRequestService, configDate } from '../new-request.service';
+import { RequestsService } from '../../requests.service';
+import { getPartyNameFromInvestorType } from '../../kyc-form-helper';
+import { KycFormHelperService } from '../../kyc-form-helper.service';
+import { OfiKycService } from '../../../../../ofi-main/ofi-req-services/ofi-kyc/service';
+import { ClearMyKycListRequested } from '../../../../../ofi-main/ofi-store/ofi-kyc';
+import { KycMyInformations } from '../../../../../ofi-main/ofi-store/ofi-kyc/my-informations';
+import { MultilingualService } from '../../../../../multilingual';
+import { AlertsService } from '../../../../../jaspero-ng2-alerts';
+import { formHelper } from '../../../../../utils/helper';
 
 @Component({
     selector: 'kyc-step-validation',
@@ -41,10 +42,11 @@ export class NewKycValidationComponent implements OnInit, OnDestroy {
     open = true;
     showKYCComplete: boolean = false;
     public invitedAs: 'iznes'|'id2s'|'nowcp';
-    public isIznes: boolean;
+    public isOnlyNowCP: boolean;
     firstName: string;
     investorInformationRequested: boolean = false;
     fadeIn: boolean = false;
+    signingAuthorityList: any[];
 
     constructor(
         private requestsService: RequestsService,
@@ -57,13 +59,14 @@ export class NewKycValidationComponent implements OnInit, OnDestroy {
         public translate: MultilingualService,
         public ofiKycService: OfiKycService,
         private changeDetector: ChangeDetectorRef,
-    ) {
-    }
+        public formHelper: KycFormHelperService,
+    ) {}
 
     ngOnInit() {
         this.initData();
         this.getCurrentFormData();
         this.initSubscriptions();
+        this.handlePartyFields();
 
         this.configDate = configDate;
         this.form.get('doneDate').patchValue(moment().format(this.configDate.format));
@@ -79,7 +82,6 @@ export class NewKycValidationComponent implements OnInit, OnDestroy {
                 return this.ofiKycService.fetchInvestor();
             }
             this.invitedAs = getPartyNameFromInvestorType(d.investorType);
-            this.isIznes = isIZNES(d.kycPartySelections);
             this.firstName = d.firstName;
         });
     }
@@ -107,6 +109,18 @@ export class NewKycValidationComponent implements OnInit, OnDestroy {
         .subscribe((connectedWallet) => {
             this.connectedWallet = connectedWallet;
             });
+    }
+
+    async handlePartyFields() {
+        this.isOnlyNowCP = await this.formHelper.onlyNowCP$.toPromise();
+
+        // Set signing authority list
+        this.signingAuthorityList = this.translate.translate(this.isOnlyNowCP
+            ? this.newRequestService.signingAuthorityNowCPList
+            : this.newRequestService.signingAuthorityDefaultList);
+
+        // Disable electronicSignatureDocument for NowCP
+        if (this.isOnlyNowCP) this.form.get('electronicSignatureDocument').disable();
     }
 
     getCompanyNames(requests, managementCompanyList) {

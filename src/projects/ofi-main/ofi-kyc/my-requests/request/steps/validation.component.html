@@ -75,6 +75,18 @@
 
                     <div class="row col-sm-12">
                         <div class="form-group required-field col-sm-4">
+                            <label class="control-label" for="signingAuthority">{{ 'Signing authority' | translate }}</label>
+                            <ng-select id="signingAuthority"
+                                        [items]="signingAuthorityList"
+                                        [formControl]="form.get('signingAuthority')"
+                                        placeholder="{{ 'Select a signing authority' | translate }}">
+                            </ng-select>
+                            <span class="field-error" *ngIf="hasError('signingAuthority', ['required'])">{{ 'Field is required' | translate }}</span>
+                        </div>
+                    </div>
+
+                    <div class="row col-sm-12">
+                        <div class="form-group required-field col-sm-4">
                             <label for="positionRepresentative">
                                 {{ 'Position of the Representative of the Legal Person' | translate }}:
                             </label>
@@ -86,7 +98,7 @@
                             <span class="field-error" *ngIf="hasError('positionRepresentative', ['maxlength'])">{{ 'Value is too long' | translate }}</span>
                         </div>
 
-                        <div class="form-group required-field col-sm-4">
+                        <div *ngIf="!isOnlyNowCP" class="form-group required-field col-sm-4">
                             <label for="electronicSignatureDocument">
                                 {{ 'As electronic signature, please upload here representative ID\'s card' | translate }}:
                             </label>
@@ -107,7 +119,7 @@
         </div>
     </div>
 
-<input type="submit" class="hidden" />
+    <input type="submit" class="hidden" />
 
 </form>
 
@@ -120,7 +132,13 @@
         <h2>{{ 'Congratulations' | translate }}<ng-container *ngIf="firstName"> {{ firstName }}</ng-container>! 👏</h2>
         <p class="text-center">{{ "We just need to run a few checks, then you will be granted full access to the IZNES platform. We'll let you know when this happens." | translate }}</p>
 
-        <ng-container *ngIf="!isIznes">
+        <!-- Show Finish btn for only IZNES-->
+        <ng-container *ngIf="formHelper.onlyIznes$ | async else iznesPromo">
+            <button class="btn btn-primary" (click)="handleConfirm(true)">{{ 'Finish' | translate }}</button>
+        </ng-container>
+
+        <!-- Show IZNES CTA if other parties selected-->
+        <ng-template #iznesPromo>
             <div class="highlight">
                 <h2>{{ 'One final thing' | translate }}...</h2>
                 <p>{{ 'If you wish you can complete your information to get the following benefits of the IZNES platform:' | translate }}</p>
@@ -136,10 +154,6 @@
                 <button class="btn btn-primary" (click)="handleConfirm(true, true)">{{ 'Go to IZNES' | translate }}</button>
                 <button class="btn" (click)="handleConfirm(true)">{{ 'No thanks' | translate }}</button>
             </div>
-        </ng-container>
-
-        <ng-container *ngIf="isIznes">
-            <button class="btn btn-primary" (click)="handleConfirm(true)">{{ 'Finish' | translate }}</button>
-        </ng-container>
+        </ng-template>
     </div>
 </div>
