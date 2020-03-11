@@ -79,7 +79,6 @@
                             <ng-select id="signingAuthority"
                                         [items]="signingAuthorityList"
                                         [formControl]="form.get('signingAuthority')"
-                                        [isDisabled]="isFormReadonly"
                                         placeholder="{{ 'Select a signing authority' | translate }}">
                             </ng-select>
                             <span class="field-error" *ngIf="hasError('signingAuthority', ['required'])">{{ 'Field is required' | translate }}</span>

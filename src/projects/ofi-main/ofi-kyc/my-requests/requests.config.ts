@@ -529,6 +529,7 @@ export const selectControls = [
     'country',
     'financialRating',
     'regulator',
+    'signingAuthority',
 ];
 
 export const controlOrder = [
@@ -3381,6 +3382,7 @@ export const controlToName = {
     doneDate: 'Date',
     positionRepresentative: 'Position of the representative of the Legal Person',
     electronicSignatureDocumentID: 'National Identification Card',
+    signingAuthority: 'Signing authority',
 };
 
 export const controlToList = {
@@ -3442,6 +3444,9 @@ export const controlToList = {
     nationality: 'countries',
     countryTaxResidence: 'countries',
     country: 'countries',
+
+    // Validation
+    signingAuthority: 'signingAuthorityNowCPList',
 };
 
 // Conditionally remove fields from kyc datagrids

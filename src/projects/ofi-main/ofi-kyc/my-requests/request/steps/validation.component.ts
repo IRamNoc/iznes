@@ -3,22 +3,22 @@ import { NgRedux, select } from '@angular-redux/store';
 import { Router } from '@angular/router';
 import { Subject, combineLatest } from 'rxjs';
 import { filter as rxFilter, map, take, takeUntil } from 'rxjs/operators';
+import { Observable } from 'rxjs/Observable';
 import { isEmpty, find, get as getValue, castArray } from 'lodash';
 import * as moment from 'moment';
-import { AlertsService } from '@setl/jaspero-ng2-alerts';
-import { formHelper } from '@setl/utils/helper';
 
-import { RequestsService } from '../../requests.service';
-import { NewRequestService, configDate } from '../new-request.service';
 import { ValidationService } from './validation.service';
 import { DocumentsService } from './documents.service';
-import { ClearMyKycListRequested } from '@ofi/ofi-main/ofi-store/ofi-kyc';
-import { MultilingualService } from '@setl/multilingual';
-import { KycMyInformations } from '@ofi/ofi-main/ofi-store/ofi-kyc/my-informations';
-import { Observable } from 'rxjs/Observable';
-import { OfiKycService } from '@ofi/ofi-main/ofi-req-services/ofi-kyc/service';
+import { NewRequestService, configDate } from '../new-request.service';
+import { RequestsService } from '../../requests.service';
 import { getPartyNameFromInvestorType } from '../../kyc-form-helper';
 import { KycFormHelperService } from '../../kyc-form-helper.service';
+import { OfiKycService } from '../../../../../ofi-main/ofi-req-services/ofi-kyc/service';
+import { ClearMyKycListRequested } from '../../../../../ofi-main/ofi-store/ofi-kyc';
+import { KycMyInformations } from '../../../../../ofi-main/ofi-store/ofi-kyc/my-informations';
+import { MultilingualService } from '../../../../../multilingual';
+import { AlertsService } from '../../../../../jaspero-ng2-alerts';
+import { formHelper } from '../../../../../utils/helper';
 
 @Component({
     selector: 'kyc-step-validation',
@@ -116,8 +116,8 @@ export class NewKycValidationComponent implements OnInit, OnDestroy {
 
         // Set signing authority list
         this.signingAuthorityList = this.translate.translate(this.isOnlyNowCP
-            ? this.newRequestService.signingAuthorityDefaultList
-            : this.newRequestService.signingAuthorityNowCPList);
+            ? this.newRequestService.signingAuthorityNowCPList
+            : this.newRequestService.signingAuthorityDefaultList);
 
         // Disable electronicSignatureDocument for NowCP
         if (this.isOnlyNowCP) this.form.get('electronicSignatureDocument').disable();
