@@ -3,12 +3,8 @@
 
     <h2>{{ 'Documents' | translate }}</h2>
 
-    <div *ngIf="!isNowCP" class="text-container">
-        <p>{{"Please upload the following documents, which are required to validate your investor status" | translate}}</p>
-    </div>
-
-    <div *ngIf="isNowCP" class="text-container">
-        <p>{{'Please upload the following documents, which are required to validate your investor or issuer status' | translate}}</p>
+    <div class="text-container">
+        <p>{{"Please upload the following documents, which are required to validate your status and your shared KYC file. These documents should be in pdf format" | translate}}</p>
     </div>
 
     <div class="alert alert-info alert-no-bg mt-1" role="alert">
@@ -85,7 +81,7 @@
             <div class="row upload-document" *ngIf="documentsMeta['kycorgchartdoc'].shouldShow" [class.complete]="getDocumentPreset(['common', 'kycorgchartdoc'])">
                 <div class="form-group col-sm-12"  [class.required-field]="documentsMeta['kycorgchartdoc'].required" [class.has-error]="hasError(['common', 'kycorgchartdoc', 'hash'])">
                     <label for="kycorgchartdoc" class="control-label">
-                        {{ 'Org chart with key operational teams' | translate }}
+                        {{ 'Org chart with key operational teams with the name of the enity provided, and dated' | translate }}
                     </label>
                     <div class="filedrop-wrapper">
                         <setl-file-drop filePermission="0" class="form-control" id="kycorgchartdoc"
@@ -124,7 +120,7 @@
             <div class="row upload-document" *ngIf="documentsMeta['kycevidencefloatable'].shouldShow" [class.complete]="getDocumentPreset(['common', 'kycevidencefloatable'])">
                 <div class="form-group col-sm-12"  [class.required-field]="documentsMeta['kycevidencefloatable'].required" [class.has-error]="hasError(['common', 'kycevidencefloatable', 'hash'])" *ngIf="!isDisabled('common.kycevidencefloatable')">
                     <label for="kycevidencefloatable" class="control-label">
-                        {{ 'Evidence of stocklisting and confirmation that 75% of the company\'s shares are floatable and tradable on the market' | translate }}
+                        {{ 'Evidence of stocklisting and confirmation that 75% of the company\'s shares are floatable and tradable on the market(ex: extract of the latest audited report / capital distribution)' | translate }}
                     </label>
                     <div class="filedrop-wrapper">
                         <setl-file-drop filePermission="0" class="form-control" id="kycevidencefloatable"
@@ -201,7 +197,7 @@
             <div class="row upload-document" *ngIf="documentsMeta['kycstatuscertifieddoc'].shouldShow" [class.complete]="getDocumentPreset(['common', 'kycstatuscertifieddoc'])">
                 <div class="form-group col-sm-12"  [class.required-field]="documentsMeta['kycstatuscertifieddoc'].required" [class.has-error]="hasError(['common', 'kycstatuscertifieddoc', 'hash'])">
                     <label for="kycstatuscertifieddoc" class="control-label">
-                        {{ 'Articles of Association - certified true copy by the client\'s duly authorized' | translate }}
+                        {{ 'Articles of Association - certified true copy by the client\'s duly authorized representative' | translate }}
                     </label>
                     <div class="filedrop-wrapper">
                         <setl-file-drop filePermission="0" class="form-control" id="kycstatuscertifieddoc"
@@ -375,7 +371,7 @@
             <div class="row upload-document" *ngIf="documentsMeta['kycannualreportdoc'].shouldShow" [class.complete]="getDocumentPreset(['common', 'kycannualreportdoc'])">
                 <div class="form-group col-sm-12"  [class.required-field]="documentsMeta['kycannualreportdoc'].required" [class.has-error]="hasError(['common', 'kycannualreportdoc', 'hash'])">
                     <label for="kycannualreportdoc" class="control-label">
-                        {{ 'Audited annual reports of last year ' | translate }}
+                        {{ 'Audited annual reports of last year' | translate }}
                     </label>
                     <div class="filedrop-wrapper">
                         <setl-file-drop filePermission="0" class="form-control" id="kycannualreportdoc"

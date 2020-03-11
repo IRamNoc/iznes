@@ -3254,7 +3254,7 @@ export const controlToName = {
     totalFinancialAssetsAlreadyInvested: 'Total Financial assets already invested',
     capitalNature: 'Nature and origin of the capital invested by the Legal Entity',
     otherCapitalNature: 'Nature and origin of the capital invested by the Legal Entity',
-    activityRegulated: 'Is the activity regulated?',
+    activityRegulated: 'Is the activity regulated? (only applicable for financial / banking or insurance company)',
     regulator: 'Regulator or a Supervisory Authority',
     otherRegulator: 'Other Regulator or a Supervisory Authority',
     approvalNumber: 'Approval Number',

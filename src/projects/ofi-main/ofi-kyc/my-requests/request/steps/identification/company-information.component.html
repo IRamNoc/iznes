@@ -108,7 +108,7 @@
                 <div class="row col-sm-12">
                     <div class="form-group col-sm-4">
                         <clr-radio-container clrInline>
-                            <label>{{ 'Is the activity regulated?' | translate }}</label>
+                            <label>{{ 'Is the activity regulated? (only applicable for financial / banking or insurance company)' | translate }}</label>
                             <clr-radio-wrapper>
                                 <input type="radio" clrRadio name="activityRegulated" [value]="0" formControlName="activityRegulated"
                                        [attr.disabled]="isFormReadonly === true ? '' : null"
