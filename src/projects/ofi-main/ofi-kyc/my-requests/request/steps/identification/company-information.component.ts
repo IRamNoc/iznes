@@ -1,6 +1,6 @@
 import { Component, Input, Output, OnInit, OnDestroy, ViewChild, EventEmitter, ElementRef } from '@angular/core';
 import { FormGroup, Validators } from '@angular/forms';
-import { get as getValue, set as isEmpty } from 'lodash';
+import { get as getValue, isEmpty } from 'lodash';
 import { select, NgRedux } from '@angular-redux/store';
 import { Subject } from 'rxjs';
 import { Observable } from 'rxjs/Observable';
