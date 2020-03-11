@@ -67,9 +67,7 @@ export class NewKycValidationComponent implements OnInit, OnDestroy {
         this.getCurrentFormData();
         this.initSubscriptions();
         this.handlePartyFields();
-
         this.configDate = configDate;
-        this.form.get('doneDate').patchValue(moment().format(this.configDate.format));
     }
 
     initSubscriptions() {
@@ -207,21 +205,27 @@ export class NewKycValidationComponent implements OnInit, OnDestroy {
             .subscribe((requests) => {
                 requests.forEach((request) => {
                     this.validationService.getCurrentFormValidationData(request.kycID).then((formData) => {
-                        if(formData){
-                        this.form.patchValue(formData);
+                        const todaysDate = moment().format(this.configDate.format);
 
-                            if(formData.electronicSignatureDocumentID){
-                                this.documentsService.getDocument(formData.electronicSignatureDocumentID).then((document) => {
-                                    const control = this.form.get('electronicSignatureDocument');
+                        if (formData) {
+                            formData.doneDate = todaysDate;
+                            this.form.patchValue(formData);
 
-                                    if(document){
-                                    control.patchValue(document);
-                                }
-                            });
+                                if (formData.electronicSignatureDocumentID){
+                                    this.documentsService.getDocument(formData.electronicSignatureDocumentID).then((document) => {
+                                        const control = this.form.get('electronicSignatureDocument');
+
+                                        if(document){
+                                        control.patchValue(document);
+                                    }
+                                });
+                            }
+                            return;
                         }
-                    }
+
+                        this.form.get('doneDate').patchValue(todaysDate);
+                    });
                 });
-            });
             });
     }
 
