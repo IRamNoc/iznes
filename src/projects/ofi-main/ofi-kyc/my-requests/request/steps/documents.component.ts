@@ -149,8 +149,8 @@ export class NewKycDocumentsComponent implements OnInit, OnDestroy {
                         completed: true,
                     });
                 })
-                .catch(() => {
-                    this.newRequestService.errorPop();
+                .catch((e) => {
+                    this.newRequestService.errorPop(e);
                 })
             ;
 
