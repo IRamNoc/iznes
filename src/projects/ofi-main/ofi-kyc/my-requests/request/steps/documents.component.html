@@ -1,5 +1,5 @@
 <div class="kyc-container sm">
-    <kyc-clientfile-update-alert *ngIf="!form.valid && isFormReadonly"></kyc-clientfile-update-alert>
+    <kyc-clientfile-update-alert *ngIf="(formDataFilled$ | async) && !form.valid && isFormReadonly"></kyc-clientfile-update-alert>
 
     <h2>{{ 'Documents' | translate }}</h2>
 
@@ -23,10 +23,10 @@
     </div>
 
     <div class="col-sm-12 mt-1 p-0">
-        <form [formGroup]="form" id="step-documents" (ngSubmit)="handleSubmit($event)">
+        <form *ngIf="documentsMeta && form" [formGroup]="form" id="step-documents" (ngSubmit)="handleSubmit($event)">
 
-            <div class="row upload-document" *ngIf="showDocument('kyckbisdoc')" [class.complete]="getDocumentPreset(['common', 'kyckbisdoc'])">
-                <div class="form-group required-field col-sm-12" [class.has-error]="hasError(['common', 'kyckbisdoc', 'hash'])">
+            <div class="row upload-document" *ngIf="documentsMeta['kyckbisdoc'].shouldShow" [class.complete]="getDocumentPreset(['common', 'kyckbisdoc'])">
+                <div class="form-group col-sm-12"  [class.required-field]="documentsMeta['kyckbisdoc'].required" [class.has-error]="hasError(['common', 'kyckbisdoc', 'hash'])">
                     <label for="kyckbisdoc" class="control-label">
                         {{ 'KBIS extract (or equivalent) less than 3 months old' | translate }}
                     </label>
@@ -44,8 +44,8 @@
                 </div>
             </div>
 
-            <div class="row upload-document" *ngIf="showDocument('kyclistsigningauthoritiesdoc')" [class.complete]="getDocumentPreset(['common', 'kyclistsigningauthoritiesdoc'])">
-                <div class="form-group required-field col-sm-12" [class.has-error]="hasError(['common', 'kyclistsigningauthoritiesdoc', 'hash'])">
+            <div class="row upload-document" *ngIf="documentsMeta['kyclistsigningauthoritiesdoc'].shouldShow" [class.complete]="getDocumentPreset(['common', 'kyclistsigningauthoritiesdoc'])">
+                <div class="form-group col-sm-12"  [class.required-field]="documentsMeta['kyclistsigningauthoritiesdoc'].required" [class.has-error]="hasError(['common', 'kyclistsigningauthoritiesdoc', 'hash'])">
                     <label for="kyclistsigningauthoritiesdoc" class="control-label">
                         {{ 'List of Signing Authorities if the signatory is not on the KBIS' | translate }}
                     </label>
@@ -63,8 +63,8 @@
                 </div>
             </div>
 
-            <div class="row upload-document" *ngIf="showDocument('kycribdoc')" [class.complete]="getDocumentPreset(['common', 'kycribdoc'])">
-                <div class="form-group required-field col-sm-12" [class.has-error]="hasError(['common', 'kycribdoc', 'hash'])">
+            <div class="row upload-document" *ngIf="documentsMeta['kycribdoc'].shouldShow" [class.complete]="getDocumentPreset(['common', 'kycribdoc'])">
+                <div class="form-group col-sm-12"  [class.required-field]="documentsMeta['kycribdoc'].required" [class.has-error]="hasError(['common', 'kycribdoc', 'hash'])">
                     <label for="kycribdoc" class="control-label">
                         {{ 'RIB' | translate }}
                     </label>
@@ -82,8 +82,8 @@
                 </div>
             </div>
 
-            <div class="row upload-document" *ngIf="showDocument('kycorgchartdoc')" [class.complete]="getDocumentPreset(['common', 'kycorgchartdoc'])">
-                <div class="form-group required-field col-sm-12" [class.has-error]="hasError(['common', 'kycorgchartdoc', 'hash'])">
+            <div class="row upload-document" *ngIf="documentsMeta['kycorgchartdoc'].shouldShow" [class.complete]="getDocumentPreset(['common', 'kycorgchartdoc'])">
+                <div class="form-group col-sm-12"  [class.required-field]="documentsMeta['kycorgchartdoc'].required" [class.has-error]="hasError(['common', 'kycorgchartdoc', 'hash'])">
                     <label for="kycorgchartdoc" class="control-label">
                         {{ 'Org chart with key operational teams' | translate }}
                     </label>
@@ -102,8 +102,8 @@
             </div>
 
             <!-- Listed -->
-            <div class="row upload-document" *ngIf="showDocument('kycisincodedoc')" [class.complete]="getDocumentPreset(['common', 'kycisincodedoc'])">
-                <div class="form-group required-field col-sm-12" [class.has-error]="hasError(['common', 'kycisincodedoc', 'hash'])">
+            <div class="row upload-document" *ngIf="documentsMeta['kycisincodedoc'].shouldShow" [class.complete]="getDocumentPreset(['common', 'kycisincodedoc'])">
+                <div class="form-group col-sm-12"  [class.required-field]="documentsMeta['kycisincodedoc'].required" [class.has-error]="hasError(['common', 'kycisincodedoc', 'hash'])">
                     <label for="kycisincodedoc" class="control-label">
                         {{ 'ISIN Code of the listed share' | translate }}
                     </label>
@@ -121,8 +121,8 @@
                 </div>
             </div>
 
-            <div class="row upload-document" *ngIf="showDocument('kycevidencefloatable')" [class.complete]="getDocumentPreset(['common', 'kycevidencefloatable'])">
-                <div class="form-group required-field col-sm-12" [class.has-error]="hasError(['common', 'kycevidencefloatable', 'hash'])" *ngIf="!isDisabled('common.kycevidencefloatable')">
+            <div class="row upload-document" *ngIf="documentsMeta['kycevidencefloatable'].shouldShow" [class.complete]="getDocumentPreset(['common', 'kycevidencefloatable'])">
+                <div class="form-group col-sm-12"  [class.required-field]="documentsMeta['kycevidencefloatable'].required" [class.has-error]="hasError(['common', 'kycevidencefloatable', 'hash'])" *ngIf="!isDisabled('common.kycevidencefloatable')">
                     <label for="kycevidencefloatable" class="control-label">
                         {{ 'Evidence of stocklisting and confirmation that 75% of the company\'s shares are floatable and tradable on the market' | translate }}
                     </label>
@@ -140,8 +140,8 @@
                 </div>
             </div>
 
-            <div class="row upload-document" *ngIf="showDocument('kycproofregulationdoc')" [class.complete]="getDocumentPreset(['common', 'kycproofregulationdoc'])">
-                <div class="form-group required-field col-sm-12" [class.has-error]="hasError(['common', 'kycproofregulationdoc', 'hash'])">
+            <div class="row upload-document" *ngIf="documentsMeta['kycproofregulationdoc'].shouldShow" [class.complete]="getDocumentPreset(['common', 'kycproofregulationdoc'])">
+                <div class="form-group col-sm-12"  [class.required-field]="documentsMeta['kycproofregulationdoc'].required" [class.has-error]="hasError(['common', 'kycproofregulationdoc', 'hash'])">
                     <label for="kycproofregulationdoc" class="control-label">
                         {{ 'Proof of regulation/supervision from the regulator\'s website' | translate }}
                     </label>
@@ -159,8 +159,8 @@
                 </div>
             </div>
 
-            <div class="row upload-document" *ngIf="showDocument('kycbeneficialownerdoc')" [class.complete]="getDocumentPreset(['common', 'kycbeneficialownerdoc'])">
-                <div class="form-group required-field col-sm-12" [class.has-error]="hasError(['common', 'kycbeneficialownerdoc', 'hash'])">
+            <div class="row upload-document" *ngIf="documentsMeta['kycbeneficialownerdoc'].shouldShow" [class.complete]="getDocumentPreset(['common', 'kycbeneficialownerdoc'])">
+                <div class="form-group col-sm-12"  [class.required-field]="documentsMeta['kycbeneficialownerdoc'].required" [class.has-error]="hasError(['common', 'kycbeneficialownerdoc', 'hash'])">
                     <label for="kycbeneficialownerdoc" class="control-label">
                         {{ 'Ultimate Beneficial Owner Statement' | translate }}
                     </label>
@@ -178,8 +178,8 @@
                 </div>
             </div>
 
-            <div class="row upload-document" *ngIf="showDocument('kycidorpassportdoc')" [class.complete]="getDocumentPreset(['common', 'kycidorpassportdoc'])">
-                <div class="form-group required-field col-sm-12" [class.has-error]="hasError(['common', 'kycidorpassportdoc', 'hash'])">
+            <div class="row upload-document" *ngIf="documentsMeta['kycidorpassportdoc'].shouldShow" [class.complete]="getDocumentPreset(['common', 'kycidorpassportdoc'])">
+                <div class="form-group col-sm-12"  [class.required-field]="documentsMeta['kycidorpassportdoc'].required" [class.has-error]="hasError(['common', 'kycidorpassportdoc', 'hash'])">
                     <label for="kycidorpassportdoc" class="control-label">
                         {{ 'IDs of persons authorised to bind the company' | translate }}
                     </label>
@@ -198,8 +198,8 @@
             </div>
 
             <!-- TBC (kycstatuscertifieddoc) -->
-            <div class="row upload-document" *ngIf="showDocument('kycstatuscertifieddoc')" [class.complete]="getDocumentPreset(['common', 'kycstatuscertifieddoc'])">
-                <div class="form-group required-field col-sm-12" [class.has-error]="hasError(['common', 'kycstatuscertifieddoc', 'hash'])">
+            <div class="row upload-document" *ngIf="documentsMeta['kycstatuscertifieddoc'].shouldShow" [class.complete]="getDocumentPreset(['common', 'kycstatuscertifieddoc'])">
+                <div class="form-group col-sm-12"  [class.required-field]="documentsMeta['kycstatuscertifieddoc'].required" [class.has-error]="hasError(['common', 'kycstatuscertifieddoc', 'hash'])">
                     <label for="kycstatuscertifieddoc" class="control-label">
                         {{ 'Articles of Association - certified true copy by the client\'s duly authorized' | translate }}
                     </label>
@@ -218,8 +218,8 @@
 
             </div>
 
-            <div class="row upload-document" *ngIf="showDocument('kyctaxcertificationdoc')" [class.complete]="getDocumentPreset(['common', 'kyctaxcertificationdoc'])">
-                <div class="form-group required-field col-sm-12"
+            <div class="row upload-document" *ngIf="documentsMeta['kyctaxcertificationdoc'].shouldShow" [class.complete]="getDocumentPreset(['common', 'kyctaxcertificationdoc'])">
+                <div class="form-group col-sm-12"  [class.required-field]="documentsMeta['kyctaxcertificationdoc'].required"
                     [class.has-error]="hasError(['common', 'kyctaxcertificationdoc', 'hash'])">
                     <label for="kyctaxcertificationdoc" class="control-label">
                         {{ 'Tax self certification form (CRS)' | translate }}
@@ -238,8 +238,8 @@
                 </div>
             </div>
 
-            <div class="row upload-document" *ngIf="showDocument('kycw8benefatcadoc')" [class.complete]="getDocumentPreset(['common', 'kycw8benefatcadoc'])">
-                <div class="form-group required-field col-sm-12" [class.has-error]="hasError(['common', 'kycw8benefatcadoc', 'hash'])">
+            <div class="row upload-document" *ngIf="documentsMeta['kycw8benefatcadoc'].shouldShow" [class.complete]="getDocumentPreset(['common', 'kycw8benefatcadoc'])">
+                <div class="form-group col-sm-12"  [class.required-field]="documentsMeta['kycw8benefatcadoc'].required" [class.has-error]="hasError(['common', 'kycw8benefatcadoc', 'hash'])">
                     <label for="kycw8benefatcadoc" class="control-label">
                         {{ 'Form W-8BEN-F (FACTA)' | translate }}
                     </label>
@@ -257,8 +257,8 @@
                 </div>
             </div>
 
-            <div class="row upload-document" *ngIf="showDocument('kyccriticalcustomersdoc')" [class.complete]="getDocumentPreset(['common', 'kyccriticalcustomersdoc'])">
-                <div class="form-group required-field col-sm-12" [class.has-error]="hasError(['common', 'kyccriticalcustomersdoc', 'hash'])">
+            <div class="row upload-document" *ngIf="documentsMeta['kyccriticalcustomersdoc'].shouldShow" [class.complete]="getDocumentPreset(['common', 'kyccriticalcustomersdoc'])">
+                <div class="form-group col-sm-12"  [class.required-field]="documentsMeta['kyccriticalcustomersdoc'].required" [class.has-error]="hasError(['common', 'kyccriticalcustomersdoc', 'hash'])">
                     <label for="kyccriticalcustomersdoc" class="control-label">
                         {{ 'Notification of critical customers' | translate }}
                     </label>
@@ -276,8 +276,8 @@
                 </div>
             </div>
 
-            <div class="row upload-document" *ngIf="showDocument('kycproofofapprovaldoc')" [class.complete]="getDocumentPreset(['common', 'kycproofofapprovaldoc'])">
-                <div class="form-group required-field col-sm-12" [class.has-error]="hasError(['common', 'kycproofofapprovaldoc', 'hash'])">
+            <div class="row upload-document" *ngIf="documentsMeta['kycproofofapprovaldoc'].shouldShow" [class.complete]="getDocumentPreset(['common', 'kycproofofapprovaldoc'])">
+                <div class="form-group col-sm-12"  [class.required-field]="documentsMeta['kycproofofapprovaldoc'].required" [class.has-error]="hasError(['common', 'kycproofofapprovaldoc', 'hash'])">
                     <label for="kycproofofapprovaldoc" class="control-label">
                         {{ 'Proof of approval or copy of order' | translate }}
                     </label>
@@ -295,8 +295,8 @@
                 </div>
             </div>
 
-            <div class="row upload-document" *ngIf="showDocument('kycdisclosureproceduredoc')" [class.complete]="getDocumentPreset(['common', 'kycdisclosureproceduredoc'])">
-                <div class="form-group required-field col-sm-12" [class.has-error]="hasError(['common', 'kycdisclosureproceduredoc', 'hash'])">
+            <div class="row upload-document" *ngIf="documentsMeta['kycdisclosureproceduredoc'].shouldShow" [class.complete]="getDocumentPreset(['common', 'kycdisclosureproceduredoc'])">
+                <div class="form-group col-sm-12"  [class.required-field]="documentsMeta['kycdisclosureproceduredoc'].required" [class.has-error]="hasError(['common', 'kycdisclosureproceduredoc', 'hash'])">
                     <label for="kycdisclosureproceduredoc" class="control-label">
                         {{ 'Disclosure of risk management procedure' | translate }}
                     </label>
@@ -314,8 +314,8 @@
                 </div>
             </div>
 
-            <div class="row upload-document" *ngIf="showDocument('kyccompositioncommitteedoc')" [class.complete]="getDocumentPreset(['common', 'kyccompositioncommitteedoc'])">
-                <div class="form-group required-field col-sm-12" [class.has-error]="hasError(['common', 'kyccompositioncommitteedoc', 'hash'])">
+            <div class="row upload-document" *ngIf="documentsMeta['kyccompositioncommitteedoc'].shouldShow" [class.complete]="getDocumentPreset(['common', 'kyccompositioncommitteedoc'])">
+                <div class="form-group col-sm-12"  [class.required-field]="documentsMeta['kyccompositioncommitteedoc'].required" [class.has-error]="hasError(['common', 'kyccompositioncommitteedoc', 'hash'])">
                     <label for="kyccompositioncommitteedoc" class="control-label">
                         {{ 'Composition of the risk committee' | translate }}
                     </label>
@@ -333,8 +333,8 @@
                 </div>
             </div>
 
-            <div class="row upload-document" *ngIf="showDocument('kycbusinessplandoc')" [class.complete]="getDocumentPreset(['common', 'kycbusinessplandoc'])">
-                <div class="form-group required-field col-sm-12" [class.has-error]="hasError(['common', 'kycbusinessplandoc', 'hash'])">
+            <div class="row upload-document" *ngIf="documentsMeta['kycbusinessplandoc'].shouldShow" [class.complete]="getDocumentPreset(['common', 'kycbusinessplandoc'])">
+                <div class="form-group col-sm-12"  [class.required-field]="documentsMeta['kycbusinessplandoc'].required" [class.has-error]="hasError(['common', 'kycbusinessplandoc', 'hash'])">
                     <label for="kycbusinessplandoc" class="control-label">
                         {{ 'Copy of the business continuity plan' | translate }}
                     </label>
@@ -352,8 +352,8 @@
                 </div>
             </div>
 
-            <div class="row upload-document" *ngIf="showDocument('kycwolfsbergdoc')" [class.complete]="getDocumentPreset(['common', 'kycwolfsbergdoc'])">
-                <div class="form-group required-field col-sm-12" [class.has-error]="hasError(['common', 'kycwolfsbergdoc', 'hash'])">
+            <div class="row upload-document" *ngIf="documentsMeta['kycwolfsbergdoc'].shouldShow" [class.complete]="getDocumentPreset(['common', 'kycwolfsbergdoc'])">
+                <div class="form-group col-sm-12"  [class.required-field]="documentsMeta['kycwolfsbergdoc'].required" [class.has-error]="hasError(['common', 'kycwolfsbergdoc', 'hash'])">
                     <label for="kycwolfsbergdoc" class="control-label">
                         {{ 'Wolfsberg questionnaire or equivalent' | translate }}
                     </label>
@@ -372,8 +372,8 @@
             </div>
 
 
-            <div class="row upload-document" *ngIf="showDocument('kycannualreportdoc')" [class.complete]="getDocumentPreset(['common', 'kycannualreportdoc'])">
-                <div class="form-group required-field col-sm-12" [class.has-error]="hasError(['common', 'kycannualreportdoc', 'hash'])">
+            <div class="row upload-document" *ngIf="documentsMeta['kycannualreportdoc'].shouldShow" [class.complete]="getDocumentPreset(['common', 'kycannualreportdoc'])">
+                <div class="form-group col-sm-12"  [class.required-field]="documentsMeta['kycannualreportdoc'].required" [class.has-error]="hasError(['common', 'kycannualreportdoc', 'hash'])">
                     <label for="kycannualreportdoc" class="control-label">
                         {{ 'Audited annual reports of last year ' | translate }}
                     </label>
@@ -391,8 +391,8 @@
                 </div>
             </div>
 
-            <div class="row upload-document" *ngIf="showDocument('kycannual3yeardoc')" [class.complete]="getDocumentPreset(['common', 'kycannual3yeardoc'])">
-                <div class="form-group required-field col-sm-12" [class.has-error]="hasError(['common', 'kycannual3yeardoc', 'hash'])">
+            <div class="row upload-document" *ngIf="documentsMeta['kycannual3yeardoc'].shouldShow" [class.complete]="getDocumentPreset(['common', 'kycannual3yeardoc'])">
+                <div class="form-group col-sm-12"  [class.required-field]="documentsMeta['kycannual3yeardoc'].required" [class.has-error]="hasError(['common', 'kycannual3yeardoc', 'hash'])">
                     <label for="kycannual3yeardoc" class="control-label">
                         {{ 'Audited annual reports of the last 3 years' | translate }}
                     </label>
@@ -410,8 +410,8 @@
                 </div>
             </div>
 
-            <div class="row upload-document" *ngIf="showDocument('kycannual3yeartaxdoc')" [class.complete]="getDocumentPreset(['common', 'kycannual3yeartaxdoc'])">
-                <div class="form-group required-field col-sm-12" [class.has-error]="hasError(['common', 'kycannual3yeartaxdoc', 'hash'])">
+            <div class="row upload-document" *ngIf="documentsMeta['kycannual3yeartaxdoc'].shouldShow" [class.complete]="getDocumentPreset(['common', 'kycannual3yeartaxdoc'])">
+                <div class="form-group col-sm-12"  [class.required-field]="documentsMeta['kycannual3yeartaxdoc'].required" [class.has-error]="hasError(['common', 'kycannual3yeartaxdoc', 'hash'])">
                     <label for="kycannual3yeartaxdoc" class="control-label">
                         {{ 'Annual accounts certified by CAC or last 3 tax returns' | translate }}
                     </label>

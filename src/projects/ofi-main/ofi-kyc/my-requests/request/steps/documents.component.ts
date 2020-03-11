@@ -2,7 +2,7 @@ import { Component, OnInit, Input, OnDestroy, ViewChild, ChangeDetectorRef, Outp
 import { FormGroup, FormControl, AbstractControl } from '@angular/forms';
 import { isEmpty, castArray } from 'lodash';
 import { select } from '@angular-redux/store';
-import { Subject } from 'rxjs';
+import { Subject, BehaviorSubject } from 'rxjs';
 import { filter as rxFilter, map, take, takeUntil } from 'rxjs/operators';
 import { Observable } from 'rxjs/Observable';
 import { formHelper } from '@setl/utils/helper';
@@ -26,11 +26,14 @@ export class NewKycDocumentsComponent implements OnInit, OnDestroy {
     @Input() form: FormGroup;
     @Input() isFormReadonly = false;
 
-    // Permissions passed in from the parent component.
-    @Input('documents') public documentPermissions: DocumentPermissions;
+    // Permissions observable passed in from the parent component.
+    @Input('documents') private documentObservable: Observable<DocumentPermissions>;
+
+    // Permissions set by subscription of observable above.
+    public documentPermissions: DocumentPermissions;
 
     // An object used to caache document meta info.
-    private documentsMetaCache: DocumentMetaCache = {};
+    public documentsMeta: DocumentMetaCache;
 
     open;
     unsubscribe: Subject<any> = new Subject();
@@ -39,6 +42,8 @@ export class NewKycDocumentsComponent implements OnInit, OnDestroy {
     isNowCP: boolean = false;
     /** Allowed file types passed to FileDrop */
     public allowedFileTypes: string[] = ['application/pdf'];
+    // data is fetched from database, and patched value to formgroup.
+    formDataFilled$ = new BehaviorSubject<boolean>(false);
 
     constructor(
         private requestsService: RequestsService,
@@ -51,6 +56,15 @@ export class NewKycDocumentsComponent implements OnInit, OnDestroy {
     ngOnInit() {
         this.initData();
         this.getCurrentFormData();
+
+        this.documentObservable
+            .pipe(
+                takeUntil(this.unsubscribe),
+            )
+            .subscribe((documentPermissions) => {
+                this.documentPermissions = documentPermissions
+                this.getDocumentMetaObject();
+            });
     }
 
     initSubscriptions() {
@@ -92,54 +106,16 @@ export class NewKycDocumentsComponent implements OnInit, OnDestroy {
     }
 
     /**
-     * Returns a boolean denoting whether this document should be shown.
-     *
-     * @param docName {string} - The code name of the document to check.
-     *
-     * @return {boolean}
+     * Retrieves an object describing documents to be shown and whether they're mandatory.
      */
-    public showDocument(docName: string): boolean {
-        return this.getDocumentMeta(docName).shouldShow || false;
-    }
+    private getDocumentMetaObject (): void {
+        this.documentsMeta = this.documentsService.getDocumentsMeta(
+            this.documentPermissions
+        );
 
-    /**
-     * Returns a boolean denoting whether this document should be optional or required.
-     *
-     * @param docName {string} - The code name of the document to check.
-     *
-     * @return {boolean}
-     */
-    public isDocumentRequired (docName: string): boolean {
-        return this.getDocumentMeta(docName).required || false;
-    }
+        console.log('[4] got document meta: ', this.documentsMeta);
 
-    /**
-     * Queries for a whether a document is viewable or optional.
-     *
-     * @param docName {string} - The code name of the document to check.
-     *
-     * @return {{ shouldShow: boolean; required: boolean; }}
-     */
-    private getDocumentMeta (docName: string): {
-        shouldShow: boolean;
-        required: boolean
-    } {
-        // If not in cache...
-        if (! this.documentsMetaCache[docName]) {
-            // ...fetch it.
-            this.documentsMetaCache[docName] =
-            this.documentsService.shouldShowDocument(
-                docName,
-                this.documentPermissions,
-            );
-        }
-
-        // Disable formControl if not to show.
-        if (! this.documentsMetaCache[docName].shouldShow) {
-            this.form.get('common').get(docName).disable();
-        }
-
-        return this.documentsMetaCache[docName];
+        this.changeDetectorRef.detectChanges()
     }
 
     isDisabled(path) {
@@ -210,6 +186,7 @@ export class NewKycDocumentsComponent implements OnInit, OnDestroy {
                     this.form.updateValueAndValidity();
                     this.changeDetectorRef.markForCheck();
                     this.initSubscriptions();
+                    this.formDataFilled$.next(true);
                 });
             });
         });

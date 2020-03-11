@@ -1,16 +1,16 @@
 import { Component, Input, Output, OnInit, OnDestroy, ViewChild, EventEmitter, ElementRef } from '@angular/core';
-import { FormGroup, FormArray, Validators } from '@angular/forms';
-import { get as getValue, set as setValue, filter, isEmpty, castArray, find } from 'lodash';
+import { FormGroup, Validators } from '@angular/forms';
+import { get as getValue, set as isEmpty } from 'lodash';
 import { select, NgRedux } from '@angular-redux/store';
 import { Subject } from 'rxjs';
 import { Observable } from 'rxjs/Observable';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { filter as rxFilter, map, take, takeUntil } from 'rxjs/operators';
 import { FormPercentDirective } from '@setl/utils/directives/form-percent/formpercent';
-import { IdentificationService, buildBeneficiaryObject } from '../identification.service';
+import { IdentificationService } from '../identification.service';
 import { DocumentsService } from '../documents.service';
 import { NewRequestService } from '../../new-request.service';
 import { countries } from '../../../requests.config';
-import { setMyKycStakeholderRelations } from '@ofi/ofi-main/ofi-store/ofi-kyc/kyc-request';
 import { MultilingualService } from '@setl/multilingual';
 import { formHelper } from '@setl/utils/helper';
 import { KycMyInformations } from '@ofi/ofi-main/ofi-store/ofi-kyc/my-informations';
@@ -77,6 +77,8 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
     otherMultilateralTradingFacilitiesError = false;
     // The parties the investor has selected.
     partyCompanies: PartyCompaniesInterface;
+    // data is fetched from database, and patched value to formgroup.
+    formDataFilled$ = new BehaviorSubject<boolean>(false);
 
     constructor(
         private newRequestService: NewRequestService,
@@ -705,6 +707,7 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
                     this.form.patchValue(formData);
                     this.formPercent.refreshFormPercent();
                 }
+                this.formDataFilled$.next(true);
             });
         });
     }

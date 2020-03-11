@@ -36,6 +36,8 @@ import {
     DuplicateKycRequestData,
     DuplicateKycMessageBody,
     PartySelectionRequestData,
+    CompletedKycFileRequestData,
+    CompletedKycFileMessageBody,
 } from './model';
 
 import { createMemberNodeRequest, createMemberNodeSagaRequest } from '@setl/utils/common';
@@ -423,6 +425,32 @@ export class OfiKycService {
     approve(requestData: ApprovedKycRequestData): any {
         const messageBody: ApprovedKycMessageBody = {
             RequestName: 'iznesapprovekyc',
+            token: this.memberSocketService.token,
+            kycID: _.get(requestData, 'kycID', 0),
+            investorEmail: _.get(requestData, 'investorEmail', ''),
+            investorFirstName: _.get(requestData, 'investorFirstName', ''),
+            investorCompanyName: _.get(requestData, 'investorCompanyName', ''),
+            amCompanyName: _.get(requestData, 'amCompanyName', ''),
+            lang: _.get(requestData, 'lang', ''),
+            invitedID: _.get(requestData, 'invitedID', ''),
+            changeAccepted: _.get(requestData, 'changeAccepted', null),
+            currentClassification: _.get(requestData, 'currentClassification', ''),
+        };
+
+        return createMemberNodeRequest(this.memberSocketService, messageBody);
+    }
+
+    /**
+     * Update kyc status to 'kyc file completed' status.
+     * The 'kyc file completed' status is different with 'kyc completed' status.
+     * The status is only for third-party kyc, such as 'NowCP' / 'ID2S'
+     *
+     * @returns {any}
+     * @param {ApprovedKycRequestData} requestData
+     */
+    completedKycFile(requestData: CompletedKycFileRequestData): any {
+        const messageBody: CompletedKycFileMessageBody = {
+            RequestName: 'iznescompletedkycfile',
             token: this.memberSocketService.token,
             kycID: _.get(requestData, 'kycID', 0),
             investorEmail: _.get(requestData, 'investorEmail', ''),

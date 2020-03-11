@@ -67,7 +67,7 @@
             </div>
 
             <!-- Waiting for approval form -->
-            <div *ngIf="initialStatusId !== -1">
+            <div *ngIf="initialStatusId !== -1 && initialStatusId !== 4">
                 <h2>{{ 'KYC Documents Confirmation' | translate }}</h2>
 
                 <form [formGroup]="waitingApprovalFormGroup" (ngSubmit)="handleSubmitButtonClick()">
@@ -149,6 +149,57 @@
                             <button *ngIf="hasPermissionCanManageAllClientFile" type="button" class="btn btn-primary" (click)="downloadClientFile()">{{'Download Client File' | translate}}</button>
 
                             <button id="submitButton" type="submit" class="btn btn-primary" [disabled]="handleSubmitButtonDisabled()">{{ 'Validate' | translate }}
+                            </button>
+                        </div>
+                    </section>
+                </form>
+            </div>
+
+            <!-- Third party kyc - KYC file accepted -->
+            <div *ngIf="initialStatusId === 4">
+                <h2>{{ 'KYC Convention / Account Opening Form' | translate }}</h2>
+
+                <form [formGroup]="waitingApprovalFormGroup" (ngSubmit)="handleConventionSignedSubmitButtonClick()">
+                    <section class="form-block">
+                        <p>
+                            <strong>{{ 'Please confirm that you validate your client has signed the convention' | translate }} </strong>
+                        </p>
+
+                        <div *ngIf="!canUpdateKyc">
+                            <div class="alert alert-warning">
+                                <div class="alert-items">
+                                    <div class="alert-item static">
+                                        <div class="alert-icon-wrapper">
+                                            <clr-icon class="alert-icon" shape="exclamation-triangle"></clr-icon>
+                                        </div>
+                                        <span class="alert-text">
+                                            {{ 'Please contact the administrator to request permission to validate KYC documents' | translate }}
+                                            <br />
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Checkbox -->
+                        <div class="form-group col-sm-12">
+                            <div class="form-check">
+
+                                <input id="conventionSigned"
+                                       class="form-check-input"
+                                       type="checkbox"
+                                       formControlName="conventionSigned"
+                                       value="false"
+                                       [attr.disabled]="!canUpdateKyc ? 'true' : null">&nbsp;
+                                <label class="form-check-label" for="conventionSigned">{{ 'We hereby validate that this client has signed the convention with us.' | translate }}</label>
+                            </div>
+                        </div>
+
+                        <!-- Back and submit buttons -->
+                        <div class="form-group col-sm-12">
+                            <button id="backButton" type="button" class="btn btn-light" (click)="handleBackButtonClick()">{{ 'Back' | translate }}</button>
+
+                            <button id="submitButton" type="submit" class="btn btn-primary" [disabled]="handleConventionSignedSubmitButtonDisabled()">{{ 'Validate' | translate }}
                             </button>
                         </div>
                     </section>

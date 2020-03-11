@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, Output, OnDestroy, ViewChild, EventEmitter, ElementRef } from '@angular/core';
 import { FormArray, FormControl } from '@angular/forms';
 import { get as getValue, isEmpty, castArray } from 'lodash';
-import { Subject } from 'rxjs';
+import { Subject, BehaviorSubject } from 'rxjs';
 import { filter, map, takeUntil, take } from 'rxjs/operators';
 import { Observable } from 'rxjs/Observable';
 import { select, NgRedux } from '@angular-redux/store';
@@ -32,6 +32,8 @@ export class BankingInformationComponent implements OnInit, OnDestroy {
     countries = countries;
     investorType: number;
     isNowCP: boolean = false;
+    // data is fetched from database, and patched value to formgroup.
+    formDataFilled$ = new BehaviorSubject<boolean>(false);
 
     constructor(
         private newRequestService: NewRequestService,
@@ -108,6 +110,7 @@ export class BankingInformationComponent implements OnInit, OnDestroy {
                             this.form.updateValueAndValidity();
                         }
                     }
+                    this.formDataFilled$.next(true);
                 });
             });
 

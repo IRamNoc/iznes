@@ -5,13 +5,14 @@ import { Location } from '@angular/common';
 import { FormBuilder } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { select, NgRedux } from '@angular-redux/store';
-import { get as getValue, map, sort, remove, partial, invert, find, merge, cloneDeep } from 'lodash';
-import { Subject, combineLatest, BehaviorSubject } from 'rxjs';
-import { takeUntil, take, filter as rxFilter, map as rxMap } from 'rxjs/operators';
+import { get as getValue, map, isEmpty, castArray, remove, partial, cloneDeep, filter } from 'lodash';
+import { Subject, BehaviorSubject, Observable } from 'rxjs';
+import { takeUntil, filter as rxFilter, map as rxMap } from 'rxjs/operators';
 
 import { MultilingualService } from '@setl/multilingual';
 import { formStepsLight, formStepsFull, formStepsOnboarding } from '../requests.config';
 import { NewRequestService } from './new-request.service';
+import { IdentificationService } from './steps/identification.service';
 
 import { FormstepsComponent } from '@setl/utils/components/formsteps/formsteps.component';
 import { OfiKycService } from '../../../ofi-req-services/ofi-kyc/service';
@@ -96,6 +97,21 @@ export class NewKycRequestComponent implements OnInit {
     /* The companies that this user was invited by. */
     public kycPartySelections: PartyCompaniesInterface;
 
+    public documentsPermissionsSubject = new BehaviorSubject<DocumentPermissions>({
+        companies: {
+            iznes: false,
+            id2s: false,
+            nowcp: false,
+        },
+        rules: {
+            isCompanyListed: false,
+            isCompanyUnlisted: false,
+            isStateOwn: false,
+            isHighRiskActivity: false,
+            isHighRiskCountry: false,
+        },
+    });
+
     constructor(
         private formBuilder: FormBuilder,
         private route: ActivatedRoute,
@@ -107,30 +123,18 @@ export class NewKycRequestComponent implements OnInit {
         private ofiKycService: OfiKycService,
         private changeDetectorRef: ChangeDetectorRef,
         private kycFormHelperService: KycFormHelperService,
+        private identificationService: IdentificationService,
     ) {
         // collapse the menu by default
         this.ngRedux.dispatch(setMenuCollapsed(true));
-
-        // Subscribe for party details.
-        this.kycFormHelperService.kycPartyCompanies$
-            .pipe(takeUntil(this.unsubscribe))
-            .subscribe((data) => {
-                this.kycPartySelections = data;
-            });
     }
 
-    /**
-     * Get investor data that used to decide whether to show certain types of document for the kyc form.
-     * this.documetRules is the default investor data.
-     * Not sure why it need to build like this?
-     * @return {DocumentPermissions}
-     */
-    get documents(): DocumentPermissions {
+    public emitDocumentPermissions () {
         // Defaults.
         let companyInfo: PartyCompaniesInterface = {
             iznes: false,
             id2s: false,
-            nowcp: true,
+            nowcp: false,
         };
 
         // Replace with correct object if availible.
@@ -146,15 +150,27 @@ export class NewKycRequestComponent implements OnInit {
 
             // Rules based on other parts of the form.
             rules: {
-                isCompanyListed:      isCompanyListed(this.forms),
-                isCompanyUnlisted:    ! isCompanyListed(this.forms),
-                isStateOwn:           isStateOwned(this.forms),
-                isHighRiskActivity:   isHighRiskActivity(this.forms),
-                isHighRiskCountry:    isHighRiskCountry(this.forms),
+                isCompanyListed: isCompanyListed(this.forms),
+                isCompanyUnlisted: !isCompanyListed(this.forms),
+                isStateOwn: isStateOwned(this.forms),
+                isHighRiskActivity: isHighRiskActivity(this.forms),
+                isHighRiskCountry: isHighRiskCountry(this.forms),
             },
         };
 
-        return permissionsObject;
+        console.log('[3] nexting document permissions: ', JSON.stringify(permissionsObject));
+
+        this.documentsPermissionsSubject.next(permissionsObject);
+    }
+
+    /**
+     * Get investor data that used to decide whether to show certain types of document for the kyc form.
+     * this.documetRules is the default investor data.
+     * Not sure why it need to build like this?
+     * @return {Observable<DocumentPermissions>}
+     */
+    get documents(): Observable<DocumentPermissions> {
+        return this.documentsPermissionsSubject.asObservable();
     }
 
     /**
@@ -216,6 +232,16 @@ export class NewKycRequestComponent implements OnInit {
 
         this.initSubscriptions();
 
+        this.getRequiredBusinessLogicFormData().then(() => {
+            // Subscribe for party details.
+            this.kycFormHelperService.kycPartyCompanies$
+                .pipe(takeUntil(this.unsubscribe))
+                .subscribe((data) => {
+                    this.kycPartySelections = data;
+                    console.log('[2] got party selections: ', data);
+                    this.emitDocumentPermissions();
+                });
+        });
     }
 
     /**
@@ -388,6 +414,45 @@ export class NewKycRequestComponent implements OnInit {
         if (!component.form) {
             component.handleSubmit();
         }
+    }
+
+    /**
+     * Retrieves data for forms, that are required by business logic functions in the KYC helper.
+     */
+    getRequiredBusinessLogicFormData() {
+        return new Promise((resolve0) => {
+            this.requests$
+                .pipe(
+                    rxMap(requests => requests[0]),
+                    rxFilter(request => !!request),
+                    takeUntil(this.unsubscribe),
+                )
+                .subscribe((requests) => {
+                    const promises = [
+                        new Promise((resolve1) => {
+                            this.identificationService.getCurrentFormCompanyData(requests.kycID).then((formData) => {
+                            if (formData) {
+                                this.forms.get('identification').get('companyInformation').patchValue(formData);
+                                resolve1();
+                            }
+                            });
+                        }),
+                        new Promise((resolve2) => {
+                            this.identificationService.getCurrentFormGeneralData(requests.kycID).then((formData) => {
+                                if (formData) {
+                                    this.forms.get('identification').get('generalInformation').patchValue(formData);
+                                    resolve2();
+                                }
+                            });
+                        }),
+                    ];
+                    
+                    Promise.all(promises).then(() => {
+                        console.log('[1] got forms for business rules: ', this.forms);
+                        resolve0();
+                    });
+                });
+        });
     }
 
     /**

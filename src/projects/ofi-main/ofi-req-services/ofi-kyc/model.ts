@@ -84,6 +84,27 @@ export interface ApprovedKycMessageBody extends MemberNodeMessageBody {
     invitedID: number;
 }
 
+export interface CompletedKycFileRequestData {
+    kycID: number;
+    investorEmail: string;
+    investorFirstName: string;
+    investorCompanyName: string;
+    amCompanyName: string;
+    lang: string;
+    invitedID: number;
+}
+
+export interface CompletedKycFileMessageBody extends MemberNodeMessageBody {
+    token: string;
+    kycID: number;
+    investorEmail: string;
+    investorFirstName: string;
+    investorCompanyName: string;
+    amCompanyName: string;
+    lang: string;
+    invitedID: number;
+}
+
 export interface RejectedKycRequestData {
     kycID: number;
     investorEmail: string;
