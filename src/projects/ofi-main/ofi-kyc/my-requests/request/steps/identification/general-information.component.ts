@@ -2,7 +2,7 @@ import { Component, Input, Output, OnInit, OnDestroy, ViewChild, ElementRef, Eve
 import { FormGroup, AbstractControl, Validators, FormBuilder, FormControl } from '@angular/forms';
 import { get as getValue, isEmpty, castArray } from 'lodash';
 import { select, NgRedux } from '@angular-redux/store';
-import { Subject } from 'rxjs';
+import { Subject, BehaviorSubject } from 'rxjs';
 import { filter, take, map, takeUntil } from 'rxjs/operators';
 import { sirenValidator, siretValidator } from '@setl/utils/helper/validators';
 import { FormPercentDirective } from '@setl/utils/directives/form-percent/formpercent';
@@ -49,6 +49,8 @@ export class GeneralInformationComponent implements OnInit, OnDestroy {
     publicEstablishmentList;
     // identification number type list that used in dropdown
     identificationNumberTypeList;
+    // data is fetched from database, and patched value to formgroup.
+    formDataFilled$ = new BehaviorSubject<boolean>(false);
 
     constructor(
         private newRequestService: NewRequestService,
@@ -215,6 +217,7 @@ export class GeneralInformationComponent implements OnInit, OnDestroy {
                             this.form.patchValue(formData);
                             this.updateParentForm();
                         }
+                        this.formDataFilled$.next(true);
                     }).catch((err) => {
                     });
                 });
