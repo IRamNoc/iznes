@@ -32,6 +32,7 @@ enum Statuses {
     askMoreInfo = 2,
     approved = -1,
     rejected = -2,
+    kycFileCompleted = 4,
 }
 
 @Component({
@@ -77,6 +78,9 @@ export class OfiWaitingApprovalComponent implements OnInit, OnDestroy {
     REJECTED_STATUS = Statuses.rejected;
     ASK_FOR_MORE_INFO_STATUS = Statuses.askMoreInfo;
 
+    public isNowCpAm: boolean = false;
+    public isID2SAm: boolean = false;
+
     /* Observables. */
     @select(['user', 'siteSettings', 'language']) requestLanguageObs;
     @select(['user', 'myDetail']) userDetailObs;
@@ -84,8 +88,20 @@ export class OfiWaitingApprovalComponent implements OnInit, OnDestroy {
     @select(['ofi', 'ofiKyc', 'amKycList', 'amKycList']) amKycListObs;
     @select(['ofi', 'ofiKyc', 'kycDetails', 'kycDetailsClassification']) kycClassification$;
 
+    /**
+     * Is common asset manager. for example: not NowCP/ID2s
+     * @return {boolean}
+     */
+    get isCommonAM(): boolean {
+        return !this.isNowCpAm && !this.isID2SAm;
+    }
+
     get canUpdateKyc(): boolean {
         return this.hasPermissionUpdateKycRequests || this.hasPermissionCanManageAllClientFile;
+    }
+
+    get conventionSigned(): boolean {
+        return !!this.waitingApprovalFormGroup.controls['conventionSigned'].value;
     }
 
     /**
@@ -159,6 +175,18 @@ export class OfiWaitingApprovalComponent implements OnInit, OnDestroy {
                 this.hasPermissionCanManageAllClientFile = hasPermission;
             },
         );
+
+        this.permissionsService.hasPermission('nowCpAM', 'canRead').then(
+            (hasPermission) => {
+                this.isNowCpAm = hasPermission;
+            },
+        );
+
+        this.permissionsService.hasPermission('id2sAM', 'canRead').then(
+            (hasPermission) => {
+                this.isID2SAm = hasPermission;
+            },
+        );
     }
 
     ngOnDestroy(): void {
@@ -176,6 +204,7 @@ export class OfiWaitingApprovalComponent implements OnInit, OnDestroy {
             status: [status, Validators.required],
             additionalText: ['', Validators.required],
             isKycAccepted: [false, Validators.required],
+            conventionSigned: [false, Validators.required],
         });
     }
 
@@ -332,6 +361,21 @@ export class OfiWaitingApprovalComponent implements OnInit, OnDestroy {
         }
     }
 
+    /**
+     * Whether to enable convention sign confirm button
+     * @return {boolean}
+     */
+    handleConventionSignedSubmitButtonDisabled() {
+        return !this.conventionSigned;
+    }
+
+    /**
+     * Handle when convention signed form is submitted.
+     */
+    handleConventionSignedSubmitButtonClick() {
+       this.onApproveKyc();
+    }
+
     rejectConfirmation() {
         let additionalText = this.waitingApprovalFormGroup.controls['additionalText'].value.trim();
         additionalText = this.domSanitizer.sanitize(SecurityContext.HTML, additionalText);
@@ -451,9 +495,10 @@ export class OfiWaitingApprovalComponent implements OnInit, OnDestroy {
         this.redux.dispatch({
             type: CLEAR_REQUESTED,
         });
-        this.kycService.approve(payload).then((result) => {
+        this.handleAcceptKyc(payload).then((result) => {
             this.waitingApprovalFormGroup.controls['isKycAccepted'].patchValue(false);
-            this.toast.pop('success', this.translate.translate('The KYC request has been successfully approved.'));
+            const successToaster = this.getSuccessToasterMsg();
+            this.toast.pop('success', successToaster);
 
             InitialisationService.requestWalletDirectory(this.redux, this.walletsService);
 
@@ -466,8 +511,12 @@ export class OfiWaitingApprovalComponent implements OnInit, OnDestroy {
 
             setTimeout(
                 () => {
-                    /* Redirect to fund access page when the kyc is being approved */
-                    this.router.navigate(['client-referential', this.kycId]);
+                    if (this.conventionSigned || this.isCommonAM) {
+                        /* Redirect to fund access page when the kyc is being approved */
+                        this.router.navigate(['client-referential', this.kycId]);
+                    } else {
+                        this.router.navigateByUrl('/on-boarding/management');
+                    }
                 },
                 1000,
             );
@@ -482,6 +531,22 @@ export class OfiWaitingApprovalComponent implements OnInit, OnDestroy {
                 );
             }
         });
+    }
+
+    /**
+     * Handle accept kyc.
+     * There are two possible routes, we handle accepting the kyc
+     * 1. common kyc: send kyc 'approve' request to the membernode.
+     * 2. third party kyc: send kyc 'iznescompletedkycfile' request to the membernode.
+     *
+     * @param {any} payload - payload for the request we sending.
+     * @return {Promise<any>}
+     */
+    handleAcceptKyc(payload: any): Promise<any> {
+        if (this.isCommonAM || this.conventionSigned) {
+           return this.kycService.approve(payload);
+        }
+        return this.kycService.completedKycFile(payload);
     }
 
     openCompleteKycModal() {
@@ -619,5 +684,16 @@ export class OfiWaitingApprovalComponent implements OnInit, OnDestroy {
         };
 
         this.fileDownloader.downLoaderFile(config);
+    }
+
+    /**
+     * Get toaster message after accept request is made.
+     * @return {string}
+     */
+    getSuccessToasterMsg(): string {
+        if (this.isCommonAM || this.conventionSigned) {
+            return this.translate.translate('The KYC request has been successfully approved.')
+        }
+        return this.translate.translate('The KYC file has been successfully updated.')
     }
 }
