@@ -385,7 +385,7 @@ export class DocumentsService {
                     shouldShow = true;
                     required = !!(this.documentMatrix[companyNameMap][ruleNameMap][docName] === 'required');
                 }
-            }   
+            }
         }
 
         // Return document object.
@@ -397,9 +397,9 @@ export class DocumentsService {
 
     /**
      * Creates a permission meta cache for all documents.
-     * 
+     *
      * @param permissions {DocumentPermissions}
-     * 
+     *
      * @return {DocumentMetaCache}
      */
     public getDocumentsMeta(permissions: DocumentPermissions): DocumentMetaCache {

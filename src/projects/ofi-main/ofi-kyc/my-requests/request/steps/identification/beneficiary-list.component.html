@@ -4,14 +4,13 @@
         <h2>{{'Stakeholders - Shareholders and Beneficiaries' | translate}}</h2>
 
         <div *ngIf="!isNowCP" class="text-container">
-            <p>{{"Please provide information about any legal entity or natural person, directly or indirectly, holding more than 10% of your company's shares or voting rights, as well as any legal entity or natural person exercising control or decision-making influence over the company (example: legal representatives)." | translate}}
-            </p>
+            <p>{{'Please provide information on any legal or natural person holding, directly or indirectly, more than 10% of the shares or voting rights in your company (i.e., by going through the entire chain of holdings), as well as on any legal or natural person exercising control or decision-making influence over the company (example: legal representatives)”' | translate}}</p>
+
+            <p>{{ 'Note that, in any case, you must at least complete the identity of a legal representative.' | translate }}</p>
         </div>
 
         <div *ngIf="isNowCP" class="text-container">
-            <p>{{'Please provide information on any legal or natural person holding, directly or indirectly, more than 10% of the shares or voting rights in your company (i.e., by going through the entire chain of holdings), as well as on any legal or natural person exercising control or decision-making influence over the company (example: legal representatives).' | translate}}</p>
-
-            <p>{{ 'Note that, in any case, you must at least complete the identity of a legal representative.' | translate }}</p>
+            <p>{{'Please provide your bank account information used to pay the compensation to NowCP. NowCP invoices maybe paid only from an account opened in the name of your company and domiciled in a banking institution established in France or within the European Union or the European Economic Area.' | translate}}</p>
         </div>
 
         <div class="alert alert-info mt-1" role="alert">

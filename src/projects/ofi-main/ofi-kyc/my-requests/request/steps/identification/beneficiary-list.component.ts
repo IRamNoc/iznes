@@ -344,7 +344,7 @@ export class BeneficiaryListComponent implements OnInit, OnDestroy {
             .subscribe((d) => {
                 this.investorType = d.investorType;
 
-                if (this.investorType === 70 || this.investorType === 80) {
+                if (this.investorType === 70 || this.investorType === 80 || this.investorType === 90) {
                     this.isNowCP = true;
                 }
             });
