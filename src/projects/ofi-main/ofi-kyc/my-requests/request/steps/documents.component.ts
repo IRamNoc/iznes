@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, OnDestroy, ViewChild, ChangeDetectorRef, Output, EventEmitter } from '@angular/core';
-import { FormGroup, FormControl, AbstractControl } from '@angular/forms';
+import { FormGroup, FormControl, AbstractControl, Validators } from '@angular/forms';
 import { isEmpty, castArray } from 'lodash';
 import { select } from '@angular-redux/store';
 import { Subject, BehaviorSubject } from 'rxjs';
@@ -113,7 +113,33 @@ export class NewKycDocumentsComponent implements OnInit, OnDestroy {
             this.documentPermissions
         );
 
+        for (let docName of Object.keys(this.form.controls['common']['controls'])) {
+            if (this.documentsMeta[docName]) {
+                // Disable if missing or hidden.
+                if (! this.documentsMeta[docName].shouldShow) {
+                    this.form.get('common').get(docName).disable();
+                } else {
+                    this.form.get('common').get(docName).enable();
+                }
+
+                // Remove required validaton if not required.
+                if (! this.documentsMeta[docName].required) {
+                    this.form.get('common').get(docName).get('hash').clearValidators();
+                } else {
+                    this.form.get('common').get(docName).get('hash').setValidators(
+                        [ Validators.required ]
+                    );
+                }
+            } else {
+                this.form.get('common').get(docName).disable();
+                this.form.get('common').get(docName).clearValidators();
+            }
+
+            this.form.get('common').get(docName).updateValueAndValidity({ onlySelf: true });
+        }
+
         console.log('[4] got document meta: ', this.documentsMeta);
+        this.form.get('common').updateValueAndValidity();
 
         this.changeDetectorRef.detectChanges()
     }
