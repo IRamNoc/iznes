@@ -113,7 +113,7 @@ export class BeneficiaryListComponent implements OnInit, OnDestroy {
     }
 
     /**
-     * Get the list of stake holder to render in the table. 
+     * Get the list of stake holder to render in the table.
      */
     get listStakeholders() {
         if (this.sortedStakeholders) {
@@ -176,7 +176,7 @@ export class BeneficiaryListComponent implements OnInit, OnDestroy {
                     const promise = this.identificationService.getCurrentFormCompanyBeneficiariesData(request.kycID).then((formData: any[]) => {
                         // if we have data build the stakeholders
                         if (!isEmpty(formData)) {
-                            // create object to 
+                            // create object to
                             const relation = {
                                 kycID: request.kycID,
                                 stakeholderIDs: formData.map(stakeholder => stakeholder.companyBeneficiariesID),
@@ -759,8 +759,8 @@ export class BeneficiaryListComponent implements OnInit, OnDestroy {
                 }
                 this.updateParents();
             })
-            .catch(() => {
-                this.newRequestService.errorPop();
+            .catch((e) => {
+                this.newRequestService.errorPop(e);
             });
         });
     }
