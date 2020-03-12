@@ -927,9 +927,15 @@ export class NewRequestService {
         });
     }
 
-    errorPop() {
-        const translation = this.multilingualService.translate('The server returned an error. Please try again later.');
-        this.toasterService.pop('error', translation);
+    errorPop(e) {
+        const serverErrorMsg = getValue(e, '[1].Data.message', undefined);
+        let errMsg;
+        if (serverErrorMsg) {
+            errMsg = this.multilingualService.translate(serverErrorMsg);
+        } else {
+            errMsg = this.multilingualService.translate('The server returned an error. Please try again later.');
+        }
+        this.toasterService.pop('error', errMsg);
     }
 
     /**

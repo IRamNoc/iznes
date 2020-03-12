@@ -171,7 +171,7 @@ export class NewKycValidationComponent implements OnInit, OnDestroy {
 
                 this.handleConfirm(this.hasClientFile);
             } catch(e) {
-                this.newRequestService.errorPop();
+                this.newRequestService.errorPop(e);
             }
         });
     }
