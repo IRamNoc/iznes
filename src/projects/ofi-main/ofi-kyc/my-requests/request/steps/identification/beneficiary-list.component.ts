@@ -490,9 +490,15 @@ export class BeneficiaryListComponent implements OnInit, OnDestroy {
     }
 
     getRealIndex(index) {
-        const stakeholderInList = this.sortedStakeholders[index];
+        const beneficiariesID = getValue(this.sortedStakeholders[index].value, 'companyBeneficiariesID', -1);
+        // handle if beneficiary ID not found
+        if (beneficiariesID === -1) {
+            return;
+        }
 
-        return this.form.controls.indexOf(stakeholderInList);
+        return this.form.controls.findIndex((control: FormGroup) => {
+           return getValue(control.value, 'companyBeneficiariesID', -1) === beneficiariesID;
+        });
     }
 
     addStakeholder(parentIndex?) {
