@@ -2,17 +2,17 @@ import { KycFormHelperService } from './../kyc-form-helper.service';
 import { Component, OnInit, ViewChild, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { trigger, state, style, transition, animate } from '@angular/animations';
 import { Location } from '@angular/common';
-import { FormBuilder } from '@angular/forms';
+import { FormBuilder, FormArray } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { select, NgRedux } from '@angular-redux/store';
-import { get as getValue, map, isEmpty, castArray, remove, partial, cloneDeep, filter } from 'lodash';
+import { get as getValue, map, isEmpty, castArray, remove, partial, cloneDeep, filter, set as setValue } from 'lodash';
 import { Subject, BehaviorSubject, Observable } from 'rxjs';
 import { takeUntil, filter as rxFilter, map as rxMap } from 'rxjs/operators';
 
 import { MultilingualService } from '@setl/multilingual';
 import { formStepsLight, formStepsFull, formStepsOnboarding } from '../requests.config';
 import { NewRequestService } from './new-request.service';
-import { IdentificationService } from './steps/identification.service';
+import { IdentificationService, buildBeneficiaryObject } from './steps/identification.service';
 
 import { FormstepsComponent } from '@setl/utils/components/formsteps/formsteps.component';
 import { OfiKycService } from '../../../ofi-req-services/ofi-kyc/service';
@@ -24,7 +24,11 @@ import {
     isHighRiskActivity,
     isHighRiskCountry,
     PartyCompaniesInterface,
+    isCompanyRegulated,
+    hasStakeholderPEP,
 } from '../kyc-form-helper';
+import { BeneficiaryService } from './steps/identification/beneficiary.service';
+import { DocumentsService } from './steps/documents.service';
 
 /**
  * KYC main form wrapper component
@@ -124,6 +128,8 @@ export class NewKycRequestComponent implements OnInit {
         private changeDetectorRef: ChangeDetectorRef,
         private kycFormHelperService: KycFormHelperService,
         private identificationService: IdentificationService,
+        private beneficiaryService: BeneficiaryService,
+        private documentsService: DocumentsService,
     ) {
         // collapse the menu by default
         this.ngRedux.dispatch(setMenuCollapsed(true));
@@ -150,15 +156,52 @@ export class NewKycRequestComponent implements OnInit {
 
             // Rules based on other parts of the form.
             rules: {
-                isCompanyListed: isCompanyListed(this.forms),
-                isCompanyUnlisted: !isCompanyListed(this.forms),
-                isStateOwn: isStateOwned(this.forms),
-                isHighRiskActivity: isHighRiskActivity(this.forms),
-                isHighRiskCountry: isHighRiskCountry(this.forms),
+                rule1: (
+                    // Company is listed
+                    isCompanyListed(this.forms)
+                ),
+                rule2: (
+                    // Company is regulated company or state- owned / public entities 
+                    isCompanyRegulated(this.forms) || isStateOwned(this.forms)
+                ),
+                rule3: (
+                    // Company is unregulated, unlisted, not state-owned and does not represent a high risk (risky activity or country):
+                    ! (
+                        isCompanyListed(this.forms) ||
+                        isCompanyRegulated(this.forms) ||
+                        isStateOwned(this.forms) ||
+                        isHighRiskActivity(this.forms) ||
+                        isHighRiskCountry(this.forms)
+                    )
+                ),
+                rule4: (
+                    // Company is unregulated, unlisted, not state-owned with a high activity risk 
+                    ! (
+                        isCompanyListed(this.forms) ||
+                        isCompanyRegulated(this.forms) ||
+                        isStateOwned(this.forms)
+                    ) && isHighRiskActivity(this.forms)
+                ),
+                rule5: (
+                    // Company is unregulated, unlisted, not state-owned with a high country risk 
+                    ! (
+                        isCompanyListed(this.forms) ||
+                        isCompanyRegulated(this.forms) ||
+                        isStateOwned(this.forms)
+                    ) && isHighRiskCountry(this.forms)
+                ) || (
+                    hasStakeholderPEP(this.forms)
+                ),
             },
         };
 
-        console.log('[3] nexting document permissions: ', JSON.stringify(permissionsObject));
+        console.log('[3] nexting document permissions.');
+        console.log(' | companies: ', JSON.stringify(permissionsObject.companies));
+        console.log(' | Company is listed? ', permissionsObject.rules['rule1'])
+        console.log(' | Company is regulated company or state - owned / public entities? ', permissionsObject.rules['rule2'])
+        console.log(' | Company is unregulated, unlisted, not state - owned and does not represent a high risk(risky activity or country)? ', permissionsObject.rules['rule3'])
+        console.log(' | Company is unregulated, unlisted, not state - owned with a high activity risk? ', permissionsObject.rules['rule4'])
+        console.log(' | Company is unregulated, unlisted, not state - owned with a high country risk ? ', permissionsObject.rules['rule5'])
 
         this.documentsPermissionsSubject.next(permissionsObject);
     }
@@ -427,24 +470,100 @@ export class NewKycRequestComponent implements OnInit {
                     rxFilter(request => !!request),
                     takeUntil(this.unsubscribe),
                 )
-                .subscribe((requests) => {
+                .subscribe((request) => {
                     const promises = [
                         new Promise((resolve1) => {
-                            this.identificationService.getCurrentFormCompanyData(requests.kycID).then((formData) => {
+                            this.identificationService.getCurrentFormCompanyData(request.kycID)
+                            .then((formData) => {
                             if (formData) {
                                 this.forms.get('identification').get('companyInformation').patchValue(formData);
                                 resolve1();
                             }
+                            })
+                            .catch((e) => {
+                                console.error('Failed to prefetch identification > companyInformation: ', e);
+                                resolve1();
                             });
                         }),
                         new Promise((resolve2) => {
-                            this.identificationService.getCurrentFormGeneralData(requests.kycID).then((formData) => {
+                            this.identificationService.getCurrentFormGeneralData(request.kycID)
+                            .then((formData) => {
                                 if (formData) {
                                     this.forms.get('identification').get('generalInformation').patchValue(formData);
                                     resolve2();
                                 }
+                            })
+                            .catch((e) => {
+                                console.error('Failed to prefetch identification > generalInformation ', e);
+                                resolve2();
                             });
                         }),
+                        new Promise((resolve3) => {
+                            this.identificationService.getCurrentFormCompanyBeneficiariesData(request.kycID)
+                            .then((formData) => {
+                                // if we have data build the stakeholders
+                                if (!isEmpty(formData)) {
+                                    const beneficiaries: FormArray = this.forms.get('identification').get('beneficiaries').get('beneficiaries');
+
+                                    while (beneficiaries.length) {
+                                        beneficiaries.removeAt(0);
+                                    }
+
+                                    // build the stakeholder formArray
+                                    const beneficiaryPromises = formData.map((controlValue) => {
+                                        // create formGroup for the stakeholder
+                                        const control = this.newRequestService.createBeneficiary();
+                                        const documentID = controlValue.documentID;
+
+                                        // convert the stakeholder stored in database to value that can apply to stakeholder formGroup
+                                        const newControlValue = buildBeneficiaryObject(controlValue);
+
+                                        // dynamically the formControl, depend on the beneficiary type
+                                        this.disableBeneficiaryType(newControlValue, control);
+
+                                        // fetch document data from membernode, and update stakeholder formGroup.
+                                        if (documentID) {
+                                            return this.documentsService.getDocument(documentID).then((document) => {
+                                                if (document) {
+                                                    setValue(newControlValue, ['common', 'document'], {
+                                                        name: document.name,
+                                                        hash: document.hash,
+                                                        kycDocumentID: document.kycDocumentID,
+                                                    });
+                                                }
+                                                control.patchValue(newControlValue);
+                                                beneficiaries.push(control);
+                                            });
+                                        }
+
+                                        // set the stakeholder formgroup value
+                                        control.patchValue(newControlValue);
+
+                                        beneficiaries.push(control);
+                                    });
+
+                                    Promise.race([
+                                        Promise.all(beneficiaryPromises),
+                                        new Promise((timerResolve) => { setTimeout(() => { timerResolve() }, 5000) })
+                                    ]).then(() => {
+                                        if (beneficiaries.value.length) {
+                                            // Update some formcontrol within stakeholder, that depending on the data fetch from membernode.
+                                            this.beneficiaryService.fillInStakeholderSelects(this.forms.get('identification').get('beneficiaries').get('beneficiaries'));
+                                            this.beneficiaryService.updateStakeholdersValidity(this.forms.get('identification').get('beneficiaries').get('beneficiaries'));
+                                        }
+
+                                        // resolve up.
+                                        resolve3();
+                                    }).catch((e) => {
+                                        console.error('Preloaded beneficiaryPromises caught an error: ', e);
+                                    });
+                                }
+                            }).catch((e) => {
+                                // on error, still resolve.
+                                resolve3();
+                                console.error('Failed to prefetch identification > beneficiaries > beneficiaries: ', e);
+                            });
+                        })
                     ];
                     
                     Promise.all(promises).then(() => {
@@ -453,6 +572,23 @@ export class NewKycRequestComponent implements OnInit {
                     });
                 });
         });
+    }
+
+    /**
+     * Update stakeholder formgroup depending on the beneficiary type.
+     * @param {any} values: stakeholder formGroup value
+     * @param {FormGroup} formGroup: stakeholder formGroup
+     */
+    disableBeneficiaryType(values, formgroup) {
+        if (values['beneficiaryType'] === 'legalPerson') {
+            // Disable naturalPerson
+            formgroup.get('naturalPerson').disable();
+            // Enable nationalIdNumberText
+            const nationIdNumberType = getValue(values, 'legalPerson.nationalIdNumberType[0].id', '');
+            this.beneficiaryService.formCheckNationalIdNumberType(formgroup, nationIdNumberType);
+        } else {
+            formgroup.get('legalPerson').disable();
+        }
     }
 
     /**
