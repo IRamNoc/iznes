@@ -101,20 +101,7 @@ export class NewKycRequestComponent implements OnInit {
     /* The companies that this user was invited by. */
     public kycPartySelections: PartyCompaniesInterface;
 
-    public documentsPermissionsSubject = new BehaviorSubject<DocumentPermissions>({
-        companies: {
-            iznes: false,
-            id2s: false,
-            nowcp: false,
-        },
-        rules: {
-            isCompanyListed: false,
-            isCompanyUnlisted: false,
-            isStateOwn: false,
-            isHighRiskActivity: false,
-            isHighRiskCountry: false,
-        },
-    });
+    public documentsPermissionsSubject = new BehaviorSubject<DocumentPermissions>(null);
 
     constructor(
         private formBuilder: FormBuilder,
@@ -274,7 +261,7 @@ export class NewKycRequestComponent implements OnInit {
         await this.initForm();
 
         this.initSubscriptions();
-
+        
         this.getRequiredBusinessLogicFormData().then(() => {
             // Subscribe for party details.
             this.kycFormHelperService.kycPartyCompanies$
@@ -475,10 +462,10 @@ export class NewKycRequestComponent implements OnInit {
                         new Promise((resolve1) => {
                             this.identificationService.getCurrentFormCompanyData(request.kycID)
                             .then((formData) => {
-                            if (formData) {
-                                this.forms.get('identification').get('companyInformation').patchValue(formData);
+                                if (formData) {
+                                    this.forms.get('identification').get('companyInformation').patchValue(formData);
+                                }
                                 resolve1();
-                            }
                             })
                             .catch((e) => {
                                 console.error('Failed to prefetch identification > companyInformation: ', e);
@@ -490,8 +477,8 @@ export class NewKycRequestComponent implements OnInit {
                             .then((formData) => {
                                 if (formData) {
                                     this.forms.get('identification').get('generalInformation').patchValue(formData);
-                                    resolve2();
                                 }
+                                resolve2();
                             })
                             .catch((e) => {
                                 console.error('Failed to prefetch identification > generalInformation ', e);
@@ -557,6 +544,9 @@ export class NewKycRequestComponent implements OnInit {
                                     }).catch((e) => {
                                         console.error('Preloaded beneficiaryPromises caught an error: ', e);
                                     });
+                                } else {
+                                    console.error('Empty form data for identification > beneficiaries > beneficiaries: ', formData);
+                                    resolve3();
                                 }
                             }).catch((e) => {
                                 // on error, still resolve.

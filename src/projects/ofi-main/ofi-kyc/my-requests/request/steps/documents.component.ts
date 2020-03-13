@@ -62,6 +62,7 @@ export class NewKycDocumentsComponent implements OnInit, OnDestroy {
                 takeUntil(this.unsubscribe),
             )
             .subscribe((documentPermissions) => {
+                if (! documentPermissions) return;
                 this.documentPermissions = documentPermissions
                 this.getDocumentMetaObject();
             });
