@@ -35,11 +35,11 @@ export const documentFormPaths = {
 };
 
 class KycDocuments {
-    listed?: { [documentName: string]: 'optional'|'required' };
-    unlisted?: { [documentName: string]: 'optional'|'required' };
-    stateOwned?: { [documentName: string]: 'optional'|'required' };
-    highRiskActivity?: { [documentName: string]: 'optional'|'required' };
-    highRiskCountry?: { [documentName: string]: 'optional'|'required' };
+    rule1?: { [documentName: string]: 'optional'|'required' };
+    rule2?: { [documentName: string]: 'optional'|'required' };
+    rule3?: { [documentName: string]: 'optional'|'required' };
+    rule4?: { [documentName: string]: 'optional'|'required' };
+    rule5?: { [documentName: string]: 'optional'|'required' };
 }
 
 class DocumentMatrix {
@@ -53,190 +53,190 @@ export class DocumentsService {
 
     public documentMatrix: DocumentMatrix = {
         NOWCP: {
-            listed: {
-                kyckbisdoc: 'required',
-                kyclistsigningauthoritiesdoc: 'optional',
-                kycribdoc: 'required',
-                kycorgchartdoc: 'required',
-                kycisincodedoc: 'required',
-                kycevidencefloatable: 'required',
+            rule1: {
+                kyckbisdoc: "required",
+                kyclistsigningauthoritiesdoc: "optional",
+                kycribdoc: "required",
+                kycorgchartdoc: "required",
+                kycisincodedoc: "required",
+                kycevidencefloatable: "required"
             },
-            stateOwned: {
-                kyckbisdoc: 'required',
-                kyclistsigningauthoritiesdoc: 'optional',
-                kycribdoc: 'required',
-                kycorgchartdoc: 'required',
-                kycproofregulationdoc: 'required',
+            rule2: {
+                kyckbisdoc: "required",
+                kyclistsigningauthoritiesdoc: "optional",
+                kycribdoc: "required",
+                kycorgchartdoc: "required",
+                kycproofregulationdoc: "required"
             },
-            unlisted: {
-                kyckbisdoc: 'required',
-                kyclistsigningauthoritiesdoc: 'optional',
-                kycribdoc: 'required',
-                kycorgchartdoc: 'required',
-                kycbeneficialownerdoc: 'required',
-                kycidorpassportdoc: 'required',
-                kycannual3yeardoc: 'required',
+            rule3: {
+                kyckbisdoc: "required",
+                kyclistsigningauthoritiesdoc: "optional",
+                kycribdoc: "required",
+                kycorgchartdoc: "required",
+                kycbeneficialownerdoc: "required",
+                kycidorpassportdoc: "required",
+                kycannual3yeardoc: "required"
             },
-            highRiskActivity: {
-                kyckbisdoc: 'required',
-                kyclistsigningauthoritiesdoc: 'required',
-                kycribdoc: 'required',
-                kycorgchartdoc: 'required',
-                kycbeneficialownerdoc: 'required',
-                kycidorpassportdoc: 'required',
-                kycstatuscertifieddoc: 'required',
-                kycannual3yeartaxdoc: 'required',
+            rule4: {
+                kyckbisdoc: "required",
+                kyclistsigningauthoritiesdoc: "required",
+                kycribdoc: "required",
+                kycorgchartdoc: "required",
+                kycbeneficialownerdoc: "required",
+                kycidorpassportdoc: "required",
+                kycstatuscertifieddoc: "required",
+                kycannual3yeartaxdoc: "required"
             },
-            highRiskCountry: {
-                kyckbisdoc: 'required',
-                kyclistsigningauthoritiesdoc: 'required',
-                kycribdoc: 'required',
-                kycorgchartdoc: 'required',
-                kycbeneficialownerdoc: 'required',
-                kycidorpassportdoc: 'required',
-                kycstatuscertifieddoc: 'required',
-                kycannual3yeartaxdoc: 'required',
-            },
+            rule5: {
+                kyckbisdoc: "required",
+                kyclistsigningauthoritiesdoc: "required",
+                kycribdoc: "required",
+                kycorgchartdoc: "required",
+                kycbeneficialownerdoc: "required",
+                kycidorpassportdoc: "required",
+                kycstatuscertifieddoc: "required",
+                kycannual3yeartaxdoc: "required"
+            }
         },
         ID2S: {
-            listed: {
-                kyckbisdoc: 'required',
-                kyclistsigningauthoritiesdoc: 'optional',
-                kycorgchartdoc: 'required',
-                kycisincodedoc: 'required',
-                kycevidencefloatable: 'optional',
-                kycstatuscertifieddoc: 'required',
-                kyctaxcertificationdoc: 'optional',
-                kycw8benefatcadoc: 'optional',
-                kyccriticalcustomersdoc: 'optional',
-                kycdisclosureproceduredoc: 'optional',
-                kyccompositioncommitteedoc: 'optional',
-                kycbusinessplandoc: 'optional',
-                kycannual3yeardoc: 'required',
+            rule1: {
+                kyckbisdoc: "required",
+                kyclistsigningauthoritiesdoc: "optional",
+                kycorgchartdoc: "required",
+                kycisincodedoc: "required",
+                kycevidencefloatable: "optional",
+                kycstatuscertifieddoc: "required",
+                kyctaxcertificationdoc: "optional",
+                kycw8benefatcadoc: "optional",
+                kyccriticalcustomersdoc: "optional",
+                kycdisclosureproceduredoc: "optional",
+                kyccompositioncommitteedoc: "optional",
+                kycbusinessplandoc: "optional",
+                kycannual3yeardoc: "required"
             },
-            stateOwned: {
-                kyckbisdoc: 'required',
-                kyclistsigningauthoritiesdoc: 'optional',
-                kycorgchartdoc: 'required',
-                kycproofregulationdoc: 'required',
-                kycstatuscertifieddoc: 'required',
-                kyctaxcertificationdoc: 'optional',
-                kycw8benefatcadoc: 'optional',
-                kyccriticalcustomersdoc: 'optional',
-                kycproofofapprovaldoc: 'optional',
-                kycdisclosureproceduredoc: 'optional',
-                kyccompositioncommitteedoc: 'optional',
-                kycbusinessplandoc: 'optional',
-                kycwolfsbergdoc: 'required',
-                kycannual3yeardoc: 'required',
+            rule2: {
+                kyckbisdoc: "required",
+                kyclistsigningauthoritiesdoc: "optional",
+                kycorgchartdoc: "required",
+                kycproofregulationdoc: "required",
+                kycstatuscertifieddoc: "required",
+                kyctaxcertificationdoc: "optional",
+                kycw8benefatcadoc: "optional",
+                kyccriticalcustomersdoc: "optional",
+                kycproofofapprovaldoc: "optional",
+                kycdisclosureproceduredoc: "optional",
+                kyccompositioncommitteedoc: "optional",
+                kycbusinessplandoc: "optional",
+                kycwolfsbergdoc: "required",
+                kycannual3yeardoc: "required"
             },
-            unlisted: {
-                kyckbisdoc: 'required',
-                kyclistsigningauthoritiesdoc: 'optional',
-                kycorgchartdoc: 'required',
-                kycbeneficialownerdoc: 'required',
-                kycstatuscertifieddoc: 'required',
-                kyctaxcertificationdoc: 'optional',
-                kycw8benefatcadoc: 'optional',
-                kyccriticalcustomersdoc: 'optional',
-                kycdisclosureproceduredoc: 'optional',
-                kyccompositioncommitteedoc: 'optional',
-                kycbusinessplandoc: 'optional',
-                kycannual3yeardoc: 'required',
+            rule3: {
+                kyckbisdoc: "required",
+                kyclistsigningauthoritiesdoc: "optional",
+                kycorgchartdoc: "required",
+                kycbeneficialownerdoc: "required",
+                kycstatuscertifieddoc: "required",
+                kyctaxcertificationdoc: "optional",
+                kycw8benefatcadoc: "optional",
+                kyccriticalcustomersdoc: "optional",
+                kycdisclosureproceduredoc: "optional",
+                kyccompositioncommitteedoc: "optional",
+                kycbusinessplandoc: "optional",
+                kycannual3yeardoc: "required"
             },
-            highRiskActivity: {
-                kyckbisdoc: 'required',
-                kyclistsigningauthoritiesdoc: 'required',
-                kycorgchartdoc: 'required',
-                kycbeneficialownerdoc: 'required',
-                kycidorpassportdoc: 'required',
-                kycstatuscertifieddoc: 'required',
-                kyctaxcertificationdoc: 'optional',
-                kycw8benefatcadoc: 'optional',
-                kyccriticalcustomersdoc: 'optional',
-                kycdisclosureproceduredoc: 'optional',
-                kyccompositioncommitteedoc: 'optional',
-                kycbusinessplandoc: 'optional',
-                kycannual3yeartaxdoc: 'required',
+            rule4: {
+                kyckbisdoc: "required",
+                kyclistsigningauthoritiesdoc: "required",
+                kycorgchartdoc: "required",
+                kycbeneficialownerdoc: "required",
+                kycidorpassportdoc: "required",
+                kycstatuscertifieddoc: "required",
+                kyctaxcertificationdoc: "optional",
+                kycw8benefatcadoc: "optional",
+                kyccriticalcustomersdoc: "optional",
+                kycdisclosureproceduredoc: "optional",
+                kyccompositioncommitteedoc: "optional",
+                kycbusinessplandoc: "optional",
+                kycannual3yeartaxdoc: "required"
             },
-            highRiskCountry: {
-                kyckbisdoc: 'required',
-                kyclistsigningauthoritiesdoc: 'required',
-                kycorgchartdoc: 'required',
-                kycbeneficialownerdoc: 'required',
-                kycidorpassportdoc: 'required',
-                kycstatuscertifieddoc: 'required',
-                kyctaxcertificationdoc: 'optional',
-                kycw8benefatcadoc: 'optional',
-                kyccriticalcustomersdoc: 'optional',
-                kycdisclosureproceduredoc: 'optional',
-                kyccompositioncommitteedoc: 'optional',
-                kycbusinessplandoc: 'optional',
-                kycannual3yeartaxdoc: 'required',
-            },
+            rule5: {
+                kyckbisdoc: "required",
+                kyclistsigningauthoritiesdoc: "required",
+                kycorgchartdoc: "required",
+                kycbeneficialownerdoc: "required",
+                kycidorpassportdoc: "required",
+                kycstatuscertifieddoc: "required",
+                kyctaxcertificationdoc: "optional",
+                kycw8benefatcadoc: "optional",
+                kyccriticalcustomersdoc: "optional",
+                kycdisclosureproceduredoc: "optional",
+                kyccompositioncommitteedoc: "optional",
+                kycbusinessplandoc: "optional",
+                kycannual3yeartaxdoc: "required"
+            }
         },
         IZNES: {
-            listed: {
-                kyckbisdoc: 'required',
-                kyclistsigningauthoritiesdoc: 'optional',
-                kycribdoc: 'required',
-                kycorgchartdoc: 'required',
-                kycisincodedoc: 'required',
-                kycevidencefloatable: 'required',
-                kycstatuscertifieddoc: 'required',
-                kyctaxcertificationdoc: 'required',
-                kycw8benefatcadoc: 'required',
-                kycannualreportdoc: 'required',
+            rule1: {
+                kyckbisdoc: "required",
+                kyclistsigningauthoritiesdoc: "optional",
+                kycribdoc: "required",
+                kycorgchartdoc: "required",
+                kycisincodedoc: "required",
+                kycevidencefloatable: "required",
+                kycstatuscertifieddoc: "required",
+                kyctaxcertificationdoc: "required",
+                kycw8benefatcadoc: "required",
+                kycannualreportdoc: "required"
             },
-            stateOwned: {
-                kyckbisdoc: 'required',
-                kyclistsigningauthoritiesdoc: 'optional',
-                kycribdoc: 'required',
-                kycorgchartdoc: 'required',
-                kycproofregulationdoc: 'required',
-                kycstatuscertifieddoc: 'required',
-                kyctaxcertificationdoc: 'required',
-                kycw8benefatcadoc: 'required',
-                kycproofofapprovaldoc: 'optional',
-                kycwolfsbergdoc: 'required',
-                kycannualreportdoc: 'required',
+            rule2: {
+                kyckbisdoc: "required",
+                kyclistsigningauthoritiesdoc: "optional",
+                kycribdoc: "required",
+                kycorgchartdoc: "required",
+                kycproofregulationdoc: "required",
+                kycstatuscertifieddoc: "required",
+                kyctaxcertificationdoc: "required",
+                kycw8benefatcadoc: "required",
+                kycproofofapprovaldoc: "optional",
+                kycwolfsbergdoc: "required",
+                kycannualreportdoc: "required"
             },
-            unlisted: {
-                kyckbisdoc: 'required',
-                kyclistsigningauthoritiesdoc: 'optional',
-                kycribdoc: 'required',
-                kycorgchartdoc: 'required',
-                kycbeneficialownerdoc: 'required',
-                kycstatuscertifieddoc: 'required',
-                kyctaxcertificationdoc: 'required',
-                kycw8benefatcadoc: 'required',
-                kycannual3yeardoc: 'required',
+            rule3: {
+                kyckbisdoc: "required",
+                kyclistsigningauthoritiesdoc: "optional",
+                kycribdoc: "required",
+                kycorgchartdoc: "required",
+                kycbeneficialownerdoc: "required",
+                kycstatuscertifieddoc: "required",
+                kyctaxcertificationdoc: "required",
+                kycw8benefatcadoc: "required",
+                kycannual3yeardoc: "required"
             },
-            highRiskActivity: {
-                kyckbisdoc: 'required',
-                kyclistsigningauthoritiesdoc: 'required',
-                kycribdoc: 'required',
-                kycorgchartdoc: 'required',
-                kycbeneficialownerdoc: 'required',
-                kycidorpassportdoc: 'required',
-                kycstatuscertifieddoc: 'required',
-                kyctaxcertificationdoc: 'required',
-                kycw8benefatcadoc: 'required',
-                kycannual3yeartaxdoc: 'required',
+            rule4: {
+                kyckbisdoc: "required",
+                kyclistsigningauthoritiesdoc: "required",
+                kycribdoc: "required",
+                kycorgchartdoc: "required",
+                kycbeneficialownerdoc: "required",
+                kycidorpassportdoc: "required",
+                kycstatuscertifieddoc: "required",
+                kyctaxcertificationdoc: "required",
+                kycw8benefatcadoc: "required",
+                kycannual3yeartaxdoc: "required"
             },
-            highRiskCountry: {
-                kyckbisdoc: 'required',
-                kyclistsigningauthoritiesdoc: 'required',
-                kycribdoc: 'required',
-                kycorgchartdoc: 'required',
-                kycbeneficialownerdoc: 'required',
-                kycidorpassportdoc: 'required',
-                kycstatuscertifieddoc: 'required',
-                kyctaxcertificationdoc: 'required',
-                kycw8benefatcadoc: 'required',
-                kycannual3yeartaxdoc: 'required',
-            },
-        },
+            rule5: {
+                kyckbisdoc: "required",
+                kyclistsigningauthoritiesdoc: "required",
+                kycribdoc: "required",
+                kycorgchartdoc: "required",
+                kycbeneficialownerdoc: "required",
+                kycidorpassportdoc: "required",
+                kycstatuscertifieddoc: "required",
+                kyctaxcertificationdoc: "required",
+                kycw8benefatcadoc: "required",
+                kycannual3yeartaxdoc: "required"
+            }
+        }
     };
 
     constructor(
@@ -334,27 +334,13 @@ export class DocumentsService {
         shouldShow: boolean;
         required: boolean;
     } {
-        // Map for the rules.
-        const companyRulesMap = {
-            isCompanyListed: 'listed',
-            isCompanyUnlisted: 'unlisted',
-            isStateOwn: 'stateOwned',
-            isHighRiskActivity: 'highRiskActivity',
-            isHighRiskCountry: 'highRiskCountry',
-        };
-        const companyNamesMap = {
-            iznes: 'IZNES',
-            id2s: 'ID2S',
-            nowcp: 'NOWCP',
-        };
-
         // Default vars.
         let shouldShow = false;
         let required = false;
 
+        // Maps
         let companyNameMap;
-        let ruleNameMap;
-
+        
         // Loop companies.
         for (const company of Object.keys(permissions.companies)) {
             // Continue if not this company.
@@ -363,7 +349,7 @@ export class DocumentsService {
             }
 
             // Map the company name.
-            companyNameMap = companyNamesMap[company];
+            companyNameMap = company.toUpperCase();
 
             // Loop rules.
             for (const rule of Object.keys(permissions.rules)) {
@@ -372,18 +358,16 @@ export class DocumentsService {
                     continue;
                 }
 
-                // Map the rule name.
-                ruleNameMap = companyRulesMap[rule];
                 if (
                     // Is a company in the matrix...
                     this.documentMatrix[companyNameMap] &&
                     // ...and has a rule in this company...
-                    this.documentMatrix[companyNameMap][ruleNameMap] &&
+                    this.documentMatrix[companyNameMap][rule] &&
                     // ...and has this document in this rule.
-                    this.documentMatrix[companyNameMap][ruleNameMap][docName]
+                    this.documentMatrix[companyNameMap][rule][docName]
                 ) {
                     shouldShow = true;
-                    required = !!(this.documentMatrix[companyNameMap][ruleNameMap][docName] === 'required');
+                    required = !!(this.documentMatrix[companyNameMap][rule][docName] === 'required');
                 }
             }
         }

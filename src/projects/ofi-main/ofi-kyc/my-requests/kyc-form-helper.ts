@@ -247,3 +247,14 @@ export function isHighRiskCountry(f: FormGroup): boolean {
     const selectedCountry = get(f, 'controls.identification.controls.generalInformation.controls.location.controls.countryRegistration.value[0].id', '')
     return highRiskCountries.indexOf(selectedCountry) !== -1;
 }
+
+/**
+ * High Risk Country comes from Identification > General Information > Location field “Country of Registration” these can be checked against the list in Appendix A8
+ */
+export function hasStakeholderPEP(f: FormGroup): boolean {
+    const stakeholders = get(f, 'controls.identification.controls.beneficiaries.controls.beneficiaries.value', [])
+    for (let stakeholder of stakeholders) {
+        if (stakeholder.naturalperson && stakeholder.naturalperson.isPoliticallyExposed) return true;
+    }
+    return false;
+}
