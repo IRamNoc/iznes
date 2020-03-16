@@ -132,6 +132,12 @@ export class BeneficiaryComponent implements OnInit, OnDestroy {
     setHoldingTypeText() {
         const controlValue = this.form.get('common.holdingType').value;
         if (controlValue && controlValue[0]) {
+            // get text if missing.
+            if (! controlValue[0].text) {
+                const foundText = this.holdingTypesList.find(t => t.id === controlValue[0].id);
+                controlValue[0].text = foundText.text || '';
+            }
+
             this.holdingTypeText = this.translate.translate(controlValue[0].text);
         }
     }
