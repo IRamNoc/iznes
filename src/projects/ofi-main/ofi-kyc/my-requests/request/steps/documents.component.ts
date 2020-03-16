@@ -45,8 +45,6 @@ export class NewKycDocumentsComponent implements OnInit, OnDestroy {
     // data is fetched from database, and patched value to formgroup.
     formDataFilled$ = new BehaviorSubject<boolean>(false);
 
-    public delayTimeout: number;
-
     constructor(
         private requestsService: RequestsService,
         private newRequestService: NewRequestService,
