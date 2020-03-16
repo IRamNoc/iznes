@@ -2,7 +2,7 @@ import { Component, OnInit, Input, OnDestroy, ViewChild, ChangeDetectorRef, Outp
 import { FormGroup, FormControl, AbstractControl, Validators } from '@angular/forms';
 import { isEmpty, castArray } from 'lodash';
 import { select } from '@angular-redux/store';
-import { Subject, BehaviorSubject } from 'rxjs';
+import { Subject, BehaviorSubject, ReplaySubject } from 'rxjs';
 import { filter as rxFilter, map, take, takeUntil } from 'rxjs/operators';
 import { Observable } from 'rxjs/Observable';
 import { formHelper } from '@setl/utils/helper';
@@ -27,7 +27,7 @@ export class NewKycDocumentsComponent implements OnInit, OnDestroy {
     @Input() isFormReadonly = false;
 
     // Permissions observable passed in from the parent component.
-    @Input('documents') private documentObservable: Observable<DocumentPermissions>;
+    @Input('documents') private documentObservable: ReplaySubject<DocumentPermissions>;
 
     // Permissions set by subscription of observable above.
     public documentPermissions: DocumentPermissions;
@@ -44,6 +44,8 @@ export class NewKycDocumentsComponent implements OnInit, OnDestroy {
     public allowedFileTypes: string[] = ['application/pdf'];
     // data is fetched from database, and patched value to formgroup.
     formDataFilled$ = new BehaviorSubject<boolean>(false);
+
+    public delayTimeout: number;
 
     constructor(
         private requestsService: RequestsService,
@@ -63,10 +65,12 @@ export class NewKycDocumentsComponent implements OnInit, OnDestroy {
             )
             .subscribe((documentPermissions) => {
                 if (! documentPermissions) return;
-                this.documentPermissions = documentPermissions
+                this.documentPermissions = documentPermissions;
                 this.getDocumentMetaObject();
             });
     }
+
+
 
     initSubscriptions() {
         this.kycMyInformations

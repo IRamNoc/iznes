@@ -2,11 +2,11 @@ import { KycFormHelperService } from './../kyc-form-helper.service';
 import { Component, OnInit, ViewChild, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { trigger, state, style, transition, animate } from '@angular/animations';
 import { Location } from '@angular/common';
-import { FormBuilder, FormArray } from '@angular/forms';
+import { FormBuilder, FormArray, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { select, NgRedux } from '@angular-redux/store';
 import { get as getValue, map, isEmpty, castArray, remove, partial, cloneDeep, filter, set as setValue } from 'lodash';
-import { Subject, BehaviorSubject, Observable } from 'rxjs';
+import { Subject, BehaviorSubject, Observable, ReplaySubject } from 'rxjs';
 import { takeUntil, filter as rxFilter, map as rxMap } from 'rxjs/operators';
 
 import { MultilingualService } from '@setl/multilingual';
@@ -70,7 +70,7 @@ export class NewKycRequestComponent implements OnInit {
     stepsConfig: any;
 
     // Full kyc form formgroup.
-    forms: any = {};
+    public forms: FormGroup;
     // Whether the form is duplicated from kyc client file. This would make the kyc form readonly if the property is true.
     isDuplicateFromClientFile = false;
     // client file kyc ID, this would be populated by kycList that belong to the current user.
@@ -101,7 +101,8 @@ export class NewKycRequestComponent implements OnInit {
     /* The companies that this user was invited by. */
     public kycPartySelections: PartyCompaniesInterface;
 
-    public documentsPermissionsSubject = new BehaviorSubject<DocumentPermissions>(null);
+    /* A subject that is used to pass document permissions to the document component. */
+    public documentsPermissionsSubject = new ReplaySubject<DocumentPermissions>(1);
 
     constructor(
         private formBuilder: FormBuilder,
@@ -197,10 +198,10 @@ export class NewKycRequestComponent implements OnInit {
      * Get investor data that used to decide whether to show certain types of document for the kyc form.
      * this.documetRules is the default investor data.
      * Not sure why it need to build like this?
-     * @return {Observable<DocumentPermissions>}
+     * @return {ReplaySubject<DocumentPermissions>}
      */
-    get documents(): Observable<DocumentPermissions> {
-        return this.documentsPermissionsSubject.asObservable();
+    get documents(): ReplaySubject<DocumentPermissions> {
+        return this.documentsPermissionsSubject;
     }
 
     /**
@@ -261,16 +262,31 @@ export class NewKycRequestComponent implements OnInit {
         await this.initForm();
 
         this.initSubscriptions();
+
+        /* Subscribe for KYC party selections. */
+        this.kycFormHelperService.kycPartyCompanies$
+            .pipe(takeUntil(this.unsubscribe))
+            .subscribe((data) => {
+                console.log('[2] got party selections: ', data);
+                this.kycPartySelections = data;
+
+                /* Emit on changes to party selections. */
+                this.emitDocumentPermissions();
+            });
         
+        /* Emit on changes to forms. */
+        this.forms.get('identification').get('companyInformation')
+            .valueChanges.subscribe(() => this.kycPartySelections && this.emitDocumentPermissions());
+        this.forms.get('identification').get('generalInformation')
+            .valueChanges.subscribe(() => this.kycPartySelections && this.emitDocumentPermissions());
+        this.forms.get('identification').get('beneficiaries')
+            .valueChanges.subscribe(() => this.kycPartySelections && this.emitDocumentPermissions());
+
+        /* Fetch the initial form states required for business logic, then emit. */
         this.getRequiredBusinessLogicFormData().then(() => {
-            // Subscribe for party details.
-            this.kycFormHelperService.kycPartyCompanies$
-                .pipe(takeUntil(this.unsubscribe))
-                .subscribe((data) => {
-                    this.kycPartySelections = data;
-                    console.log('[2] got party selections: ', data);
-                    this.emitDocumentPermissions();
-                });
+            if (this.kycPartySelections) {
+                this.emitDocumentPermissions();
+            }
         });
     }
 
@@ -490,7 +506,7 @@ export class NewKycRequestComponent implements OnInit {
                             .then((formData) => {
                                 // if we have data build the stakeholders
                                 if (!isEmpty(formData)) {
-                                    const beneficiaries: FormArray = this.forms.get('identification').get('beneficiaries').get('beneficiaries');
+                                    const beneficiaries: any = this.forms.get('identification').get('beneficiaries').get('beneficiaries');
 
                                     while (beneficiaries.length) {
                                         beneficiaries.removeAt(0);
@@ -535,8 +551,8 @@ export class NewKycRequestComponent implements OnInit {
                                     ]).then(() => {
                                         if (beneficiaries.value.length) {
                                             // Update some formcontrol within stakeholder, that depending on the data fetch from membernode.
-                                            this.beneficiaryService.fillInStakeholderSelects(this.forms.get('identification').get('beneficiaries').get('beneficiaries'));
-                                            this.beneficiaryService.updateStakeholdersValidity(this.forms.get('identification').get('beneficiaries').get('beneficiaries'));
+                                            this.beneficiaryService.fillInStakeholderSelects(this.forms.get('identification').get('beneficiaries').get('beneficiaries') as FormArray);
+                                            this.beneficiaryService.updateStakeholdersValidity(this.forms.get('identification').get('beneficiaries').get('beneficiaries') as FormArray);
                                         }
 
                                         // resolve up.
