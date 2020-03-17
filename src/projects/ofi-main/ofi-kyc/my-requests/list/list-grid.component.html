@@ -20,6 +20,7 @@
                 {{ 'Client File Rejected' | translate }}
                 </ng-container>
             </span>
+            <span class="label label-warning" *ngSwitchCase="statusList.KycFileCompleted">{{ 'KYC File Completed' | translate }}</span>
         </clr-dg-cell>
 
         <clr-dg-cell *ngIf="kyc.lastUpdated !== null" id="lastUpdated_cell_{{i}}">{{convertDate(kyc.lastUpdated)}}</clr-dg-cell>

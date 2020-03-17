@@ -73,7 +73,7 @@ export class MyRequestsGridComponent {
     }
 
     buttonToDisplay(status) {
-        if ([statusList.Approved, statusList.WaitingForApproval, statusList.Rejected, statusList.PendingClientFile].indexOf(status) !== -1) {
+        if ([statusList.Approved, statusList.WaitingForApproval, statusList.Rejected, statusList.PendingClientFile, statusList.KycFileCompleted].indexOf(status) !== -1) {
             return 'view';
         }
 
