@@ -15,6 +15,7 @@ export enum KycStatus {
     WaitingForApproval = 1,
     WaitingForMoreInfo = 2,
     PendingClientFile = 3,
+    KycFileCompleted = 4,
 }
 
 @Injectable()
