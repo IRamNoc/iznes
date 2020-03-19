@@ -96,6 +96,10 @@ export class InvestmentNatureFormComponent implements OnInit {
             take(1),
         )
         .subscribe((data: any) => {
+            // Set empty field to object if null or undefined. Missing for some investors.
+            if (! data.investmentvehiclesAlreadyUsed) {
+                data.investmentvehiclesAlreadyUsed = {};
+            }
             this.form.patchValue(data);
         });
     }
