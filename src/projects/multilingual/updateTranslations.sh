@@ -6,7 +6,7 @@ filename='translations.ts'
 # Define constants
 iznesSiteId=1
 apiUrl="http://10.0.2.72"
-apiPort="8000"
+apiPort="8001"
 
 # Set API endpoint
 apiEndpoint="$apiUrl:$apiPort/api/sites/$iznesSiteId/export-translations"

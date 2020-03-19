@@ -35,6 +35,55 @@
             <p class="padding">{{'The IZNES team' | translate}}</p>
         </div>
 
+        <div *ngSwitchCase="'thirdPartyKycApprove'">
+            <p class="padding"><span>{{ 'Dear' | translate }}</span> {{config.investorFirstName}},</p>
+
+            <p class="padding">
+                {{ '@amCompanyName@ approved the KYC documents pertaining to @investorCompanyName@ and confirmed that the convention has been signed.' | translate: {'amCompanyName': config.amCompanyName, 'investorCompanyName': config.investorCompanyName} }}
+            </p>
+
+            <p class="padding">
+                {{ 'Therefore, we have the pleasure to inform you that you have validated your onboarding process.' | translate }}
+            </p>
+
+            <p class="padding">{{'Thank you' | translate}},</p>
+            <p class="padding">{{'The IZNES team' | translate}}</p>
+        </div>
+
+        <div *ngSwitchCase="'thirdPartyKycCompletedKycFile'">
+            <p class="padding"><span>{{ 'Dear' | translate }}</span> {{config.investorFirstName}},</p>
+
+            <p class="padding">
+                {{ 'We have the pleasure to inform you that @amCompanyName@ approved the KYC documents pertaining to @investorCompanyName@.' | translate: {'amCompanyName': config.amCompanyName, 'investorCompanyName': config.investorCompanyName} }}
+            </p>
+
+            <div *ngIf="askedForClassificationChange">
+                <div *ngIf="config.changeAccepted">
+                    <p *ngIf="config.currentClassification">
+                        {{'In addition, your request for a classification change from professional investor to non professional investor has also been accepted' | translate}}
+                    </p>
+                    <p *ngIf="!config.currentClassification">
+                        {{'In addition, your request for a classification change from non professional investor to professional investor has also been accepted' | translate}}
+                    </p>
+                </div>
+                <div *ngIf="!config.changeAccepted">
+                    <p *ngIf="config.currentClassification">
+                        {{'However, your request for a classification change from professional investor to non professional investor has not been accepted.' | translate}}
+                    </p>
+                    <p *ngIf="!config.currentClassification">
+                        {{'However, your request for a classification change from non professional investor to professional investor has not been accepted.' | translate}}
+                    </p>
+                </div>
+            </div>
+
+            <p class="padding">
+                {{ 'Please be aware that only the KYC file has been validated. In order to be on-boarded by @amCompanyName@, you further need to sign the convention' | translate: {'amCompanyName': config.amCompanyName} }}
+            </p>
+
+            <p class="padding">{{'Thank you' | translate}},</p>
+            <p class="padding">{{'The IZNES team' | translate}}</p>
+        </div>
+
         <!-- KYC investor yes -->
         <div *ngSwitchCase="'kycInvestorYes'">
             <p class="padding">{{messageBody.greeting}}</p>
