@@ -199,6 +199,7 @@ export class ClassificationInformationComponent implements OnInit, OnDestroy {
             (this.form.get('nonPro.trainingKnowledgeSkillsSpecification') as FormControl).disable();
             (this.form.get('nonPro.financialInstrumentsSpecification') as FormControl).disable();
         }
+        this.updateFormPercent();
     }
 
     initCheckForm() {
