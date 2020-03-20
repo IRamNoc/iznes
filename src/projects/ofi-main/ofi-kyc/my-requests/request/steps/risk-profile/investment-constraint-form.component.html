@@ -13,22 +13,22 @@
 
     <div class="row form-group col-sm-12">
         <div class="col-sm-12">
-            <label for="statutoryConstraints-{{index}}">
+            <label for="statutoryConstraints-{{formIndex}}">
                 {{ 'Statutory constraints/special rules concerning eligible assets' | translate }}
             </label>
             <textarea class="form-control"
-                        id="statutoryConstraints-{{index}}" formControlName="statutoryConstraints"></textarea>
+                        id="statutoryConstraints-{{formIndex}}" formControlName="statutoryConstraints"></textarea>
             <span class="field-error" *ngIf="hasError('statutoryConstraints', ['maxlength'])">{{ 'Value is too long' | translate }}</span>
         </div>
     </div>
 
     <div class="row form-group col-sm-12">
         <div class="col-sm-12">
-            <label for="taxConstraints-{{index}}">
+            <label for="taxConstraints-{{formIndex}}">
                 {{ 'Tax constraints (specify tax obligations in terms of investment)' | translate }}
             </label>
             <textarea class="form-control"
-                        id="taxConstraints-{{index}}"
+                        id="taxConstraints-{{formIndex}}"
                         formControlName="taxConstraints"></textarea>
             <span class="field-error" *ngIf="hasError('taxConstraints', ['maxlength'])">{{ 'Value is too long' | translate }}</span>
         </div>
@@ -36,11 +36,11 @@
 
     <div class="row form-group col-sm-12">
         <div class="col-sm-12">
-            <label for="otherConstraints-{{index}}">
+            <label for="otherConstraints-{{formIndex}}">
                 {{ 'Others (including SRI, ESG, etc.)' | translate }}
             </label>
             <textarea class="form-control"
-                        id="otherConstraints-{{index}}"
+                        id="otherConstraints-{{formIndex}}"
                         formControlName="otherConstraints"></textarea>
             <span class="field-error" *ngIf="hasError('otherConstraints', ['maxlength'])">{{ 'Value is too long' | translate }}</span>
         </div>
@@ -52,14 +52,14 @@
                 <label>{{ 'Are investment decisions validated by an ad hoc committee?' | translate }}</label>
                 <clr-radio-wrapper>
                     <input type="radio"
-                            clrRadio id="opt-no-{{index}}"
+                            clrRadio id="opt-no-{{formIndex}}"
                             value="no"
                             formControlName="investmentDecisionsAdHocCommittee"/>
                     <label>{{ 'No' | translate }}</label>
                 </clr-radio-wrapper>
                 <clr-radio-wrapper>
                     <input type="radio"
-                            clrRadio id="opt-yes-{{index}}"
+                            clrRadio id="opt-yes-{{formIndex}}"
                             value="yes"
                             formControlName="investmentDecisionsAdHocCommittee"/>
                     <label>{{ 'Yes' | translate }}</label>
@@ -86,7 +86,7 @@
             </label>
 
             <textarea class="form-control"
-                        id="otherPersonsAuthorised-{{index}}" formControlName="otherPersonsAuthorised"></textarea>
+                        id="otherPersonsAuthorised-{{formIndex}}" formControlName="otherPersonsAuthorised"></textarea>
             <span class="field-error" *ngIf="hasError('otherPersonsAuthorised', ['maxlength'])">{{ 'Value is too long' | translate }}</span>
         </div>
     </div>
