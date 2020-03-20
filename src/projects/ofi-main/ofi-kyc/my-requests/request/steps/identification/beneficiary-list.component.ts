@@ -1,5 +1,5 @@
 import { Component, Input, OnInit, Output, EventEmitter, OnDestroy, ViewChild, ElementRef } from '@angular/core';
-import { FormArray, FormGroup } from '@angular/forms';
+import {FormArray, FormBuilder, FormGroup} from '@angular/forms';
 import { select, NgRedux } from '@angular-redux/store';
 import { Subject } from 'rxjs';
 import { filter as rxFilter, map, takeUntil, take } from 'rxjs/operators';
@@ -147,6 +147,7 @@ export class BeneficiaryListComponent implements OnInit, OnDestroy {
         private documentsService: DocumentsService,
         private ngRedux: NgRedux<any>,
         private element: ElementRef,
+        private formBuilder: FormBuilder,
     ) {
     }
 
@@ -186,11 +187,7 @@ export class BeneficiaryListComponent implements OnInit, OnDestroy {
 
                             // only build the stakeholders formcontrol once.
                             if (index === 0) {
-                                const beneficiaries: FormArray = this.form as FormArray;
-
-                                while (beneficiaries.length) {
-                                    beneficiaries.removeAt(0);
-                                }
+                                const beneficiaries = this.formBuilder.array([]);
 
                                 // build the stakeholder formArray
                                 const promises = formData.map((controlValue) => {
@@ -226,6 +223,9 @@ export class BeneficiaryListComponent implements OnInit, OnDestroy {
                                 });
 
                                 Promise.all(promises).then(() => {
+                                    // update the beneficiaries formArray
+                                    this.form = beneficiaries;
+
                                     // Update some formcontrol within stakeholder, that depending on the data fetch from membernode.
                                     this.beneficiaryService.fillInStakeholderSelects(this.form.get('beneficiaries'));
                                     this.beneficiaryService.updateStakeholdersValidity(this.form.get('beneficiaries') as FormArray);
