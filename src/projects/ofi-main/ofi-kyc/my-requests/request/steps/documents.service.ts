@@ -29,6 +29,7 @@ export const documentFormPaths = {
     kycdisclosureproceduredoc: 'common',
     kyccompositioncommitteedoc: 'common',
     kycannual3yeardoc: 'common',
+    kycannual2yeardoc: 'common',
     kycannual3yeartaxdoc: 'common',
     kyccriticalcustomersdoc: 'common',
     kycbusinessplandoc: 'common',
@@ -78,7 +79,7 @@ export class DocumentsService {
                 kycorgchartdoc: "required",
                 kycbeneficialownerdoc: "required",
                 kycidorpassportdoc: "required",
-                kycannual3yeardoc: "required",
+                kycannual2yeardoc: "required",
             },
             rule4: {
                 kyckbisdoc: "required",
