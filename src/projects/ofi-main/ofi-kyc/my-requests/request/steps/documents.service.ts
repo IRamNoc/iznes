@@ -47,6 +47,7 @@ class DocumentMatrix {
     IZNES?: KycDocuments;
     ID2S?: KycDocuments;
     NOWCP?: KycDocuments;
+    IZNES_NOWCP?: KycDocuments;
     IZNES_ID2S?: KycDocuments;
     NOWCP_ID2S?: KycDocuments;
     IZNES_NOWCP_ID2S?: KycDocuments;
@@ -240,6 +241,69 @@ export class DocumentsService {
                 kycw8benefatcadoc: "required",
                 kycannual3yeartaxdoc: "required",
             },
+        },
+        IZNES_NOWCP: {
+            rule1: {
+                kyckbisdoc: "required",
+                kyclistsigningauthoritiesdoc: "optional",
+                kycribdoc: "required",
+                kycorgchartdoc: "required",
+                kycisincodedoc: "required",
+                kycevidencefloatable: "required",
+                kycstatuscertifieddoc: "required",
+                kyctaxcertificationdoc: "required",
+                kycw8benefatcadoc: "required",
+                kycannual2yeardoc: "required"
+            },
+            rule2: {
+                kyckbisdoc: "required",
+                kyclistsigningauthoritiesdoc: "optional",
+                kycribdoc: "required",
+                kycorgchartdoc: "required",
+                kycproofregulationdoc: "required",
+                kycstatuscertifieddoc: "required",
+                kyctaxcertificationdoc: "required",
+                kycw8benefatcadoc: "required",
+                kycproofofapprovaldoc: "optional",
+                kycwolfsbergdoc: "required",
+                kycannual2yeardoc: "required"
+            },
+            rule3: {
+                kyckbisdoc: "required",
+                kyclistsigningauthoritiesdoc: "optional",
+                kycribdoc: "required",
+                kycorgchartdoc: "required",
+                kycbeneficialownerdoc: "required",
+                kycidorpassportdoc: "required",
+                kycstatuscertifieddoc: "required",
+                kyctaxcertificationdoc: "required",
+                kycw8benefatcadoc: "required",
+                kycannual3yeardoc: "required"
+            },
+            rule4: {
+                kyckbisdoc: "required",
+                kyclistsigningauthoritiesdoc: "required",
+                kycribdoc: "required",
+                kycorgchartdoc: "required",
+                kycbeneficialownerdoc: "required",
+                kycidorpassportdoc: "required",
+                kycstatuscertifieddoc: "required",
+                kyctaxcertificationdoc: "required",
+                kycw8benefatcadoc: "required",
+                kycannual3yeartaxdoc: "required"
+            },
+            rule5: {
+                kyckbisdoc: "required",
+                kyclistsigningauthoritiesdoc: "required",
+                kycribdoc: "required",
+                kycorgchartdoc: "required",
+                kycbeneficialownerdoc: "required",
+                kycidorpassportdoc: "required",
+                kycstatuscertifieddoc: "required",
+                kyctaxcertificationdoc: "required",
+                kycw8benefatcadoc: "required",
+                kycannual3yeartaxdoc: "required"
+            }
         },
         IZNES_ID2S: {
             rule1: {
@@ -616,6 +680,14 @@ export class DocumentsService {
                 permissions.companies.nowcp
             ):
                 lookupKey = "NOWCP";
+                break;
+
+            case (
+                permissions.companies.iznes &&
+                !permissions.companies.id2s &&
+                permissions.companies.nowcp
+            ):
+                lookupKey = "IZNES_NOWCP";
                 break;
 
             case (
