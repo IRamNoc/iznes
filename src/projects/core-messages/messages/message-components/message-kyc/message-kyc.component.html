@@ -27,7 +27,7 @@
                 </div>
             </div>
 
-            <p class="padding">
+            <p class="padding" *ngIf="!config.isClientFile">
                 {{ '@amCompanyName@ will shortly enable you to access funds’ shares, in order for your company to be able to invest on the IZNES platform.' | translate: {'amCompanyName': config.amCompanyName} }}
             </p>
 
@@ -38,8 +38,12 @@
         <div *ngSwitchCase="'thirdPartyKycApprove'">
             <p class="padding"><span>{{ 'Dear' | translate }}</span> {{config.investorFirstName}},</p>
 
-            <p class="padding">
+            <p class="padding" *ngIf="config.isNowCP">
                 {{ '@amCompanyName@ approved the KYC documents pertaining to @investorCompanyName@ and confirmed that the convention has been signed.' | translate: {'amCompanyName': config.amCompanyName, 'investorCompanyName': config.investorCompanyName} }}
+            </p>
+
+            <p class="padding" *ngIf="!config.isNowCP">
+                {{ '@amCompanyName@ approved the KYC documents pertaining to @investorCompanyName@ and confirmed that the Account openning form has been signed.' | translate: {'amCompanyName': config.amCompanyName, 'investorCompanyName': config.investorCompanyName} }}
             </p>
 
             <p class="padding">
@@ -76,8 +80,12 @@
                 </div>
             </div>
 
-            <p class="padding">
+            <p class="padding" *ngIf="config.isNowCP">
                 {{ 'Please be aware that only the KYC file has been validated. In order to be on-boarded by @amCompanyName@, you further need to sign the convention' | translate: {'amCompanyName': config.amCompanyName} }}
+            </p>
+
+            <p class="padding" *ngIf="!config.isNowCP">
+                {{ 'Please be aware that only the KYC file has been validated. In order to be on-boarded by @amCompanyName@, you further need to sign the ID2S Account Opening Form' | translate: {'amCompanyName': config.amCompanyName} }}
             </p>
 
             <p class="padding">{{'Thank you' | translate}},</p>
