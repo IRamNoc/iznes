@@ -3112,6 +3112,10 @@ export const documentTypesList = [
         text: 'Composition of the risk committee',
     },
     {
+        id: 'kycannual2yeardoc',
+        text: 'Audited annual reports of the last two years',
+    },
+    {
         id: 'kycannual3yeardoc',
         text: 'Audited annual reports of the last 3 years',
     },

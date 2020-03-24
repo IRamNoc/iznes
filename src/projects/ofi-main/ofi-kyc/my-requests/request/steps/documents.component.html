@@ -405,6 +405,25 @@
                     <span class="field-error">{{ 'File is required' | translate }}</span>
                 </div>
             </div>
+            
+            <div class="row upload-document" *ngIf="documentsMeta['kycannual2yeardoc'].shouldShow"
+                [class.complete]="getDocumentPreset(['common', 'kycannual2yeardoc'])">
+                <div class="form-group col-sm-12" [class.required-field]="documentsMeta['kycannual2yeardoc'].required"
+                    [class.has-error]="hasError(['common', 'kycannual2yeardoc', 'hash'])">
+                    <label for="kycannual2yeardoc" class="control-label">
+                        {{ 'Audited annual reports of the last two years' | translate }}
+                    </label>
+                    <div class="filedrop-wrapper">
+                        <setl-file-drop filePermission="0" class="form-control" id="kycannual2yeardoc"
+                            (onDrop)="uploadFile($event, form.get(['common', 'kycannual2yeardoc']))"
+                            [preset]="getDocumentPreset(['common', 'kycannual2yeardoc'])"
+                            [formControl]="form.get('common').get('kycannual2yeardoc').get('hash')" [inline]="true"
+                            [isDisabled]="isFormReadonly" [allowFileTypes]="allowedFileTypes" ngDefaultControl>
+                        </setl-file-drop>
+                    </div>
+                    <span class="field-error">{{ 'File is required' | translate }}</span>
+                </div>
+            </div>
 
             <div class="row upload-document" *ngIf="documentsMeta['kycannual3yeardoc'].shouldShow" [class.complete]="getDocumentPreset(['common', 'kycannual3yeardoc'])">
                 <div class="form-group col-sm-12"  [class.required-field]="documentsMeta['kycannual3yeardoc'].required" [class.has-error]="hasError(['common', 'kycannual3yeardoc', 'hash'])">
