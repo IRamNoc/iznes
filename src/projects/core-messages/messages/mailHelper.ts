@@ -1,6 +1,6 @@
 import { NgRedux } from '@angular-redux/store';
 import { MyMessagesService } from '@setl/core-req-services/my-messages/my-messages.service';
-import { SagaHelper } from '@setl/utils';
+import { SagaHelper, commonHelper } from '@setl/utils';
 import {
     SET_MESSAGE_LIST,
     setDecryptedContent,
@@ -98,7 +98,13 @@ export class MailHelper {
                     (response) => {
                         this.ngRedux.dispatch(setDecryptedContent(message.mailId, response));
                         if (response.length === 3 && response[1].Data.decryptedMessage) {
-                            let decoded = JSON.parse(response[1].Data.decryptedMessage);
+                            let decoded;
+                            try {
+                                decoded = commonHelper.b64DecodeUnicode(response[1].Data.decryptedMessage);
+                            } catch (e) {
+                                decoded = response[1].Data.decryptedMessage;
+                            }
+                            decoded = JSON.parse(decoded);
                             message.action = decoded.action;
                             message.content = window.atob(decoded.general);
                             if (message.content.substring(0, 11) === '{"general":') {
