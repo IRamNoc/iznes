@@ -250,7 +250,16 @@ function updateDecryptedMessage(rawMessagesData: Array<any>, mailId, newContent)
                     action = decryptedObject.action;
                 }
 
-                if (action == 'null') action = { type: null };
+                if (action == 'null') {
+                    action = { type: null };
+                } else if (typeof action === 'string') {
+                    // To stop character encoding issues, action payloads are now also Base64 encoded
+                    try {
+                        action = commonHelper.b64DecodeUnicode(action);
+                    } catch (e) {
+                        // legacy action messages won't be Base64 encoded so allow if decode fails
+                    }
+                }
 
                 return Object.assign({}, thisMessageDetail, {
                     content, action, isDecrypted
