@@ -474,7 +474,6 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
         const listedShareISINControl = this.form.get('isinCode');
         const floatableSharesControl = this.form.get('floatableShares');
         const balanceSheetTotalControl = this.form.get('balanceSheetTotal');
-        const netRevenuesNetIncomeControl = this.form.get('netRevenuesNetIncome');
         const shareholderEquityControl = this.form.get('shareholderEquity');
 
         if (value) {
@@ -489,7 +488,6 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
             }
 
             balanceSheetTotalControl.disable();
-            netRevenuesNetIncomeControl.disable();
             shareholderEquityControl.disable();
         } else {
             listingMarketsControl.disable();
@@ -500,7 +498,6 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
             floatableSharesControl.disable();
 
             balanceSheetTotalControl.enable();
-            netRevenuesNetIncomeControl.enable();
             shareholderEquityControl.enable();
         }
 

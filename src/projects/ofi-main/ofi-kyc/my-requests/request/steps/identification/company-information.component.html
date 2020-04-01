@@ -406,17 +406,30 @@
                 </div>
 
                 <div class="row col-sm-12">
-                    <div class="form-group required-field col-sm-4" *ngIf="!isDisabled('netRevenuesNetIncome')">
-                        <label class="control-label" for="netRevenuesNetIncome">{{ 'Net Revenues or Net Income' | translate }}</label>
+                    <div class="form-group required-field col-sm-4">
+                        <label class="control-label" for="typeOfRevenues">{{ 'Type of Revenues' | translate }}</label>
+                        <ng-select class="large-select"
+                                    [items]="typeOfRevenuesList"
+                                    id="typeOfRevenues"
+                                    formControlName="typeOfRevenues"
+                                    [isDisabled]="isFormReadonly"
+                                    placeholder="{{ 'Select type of revenues' | translate }}">
+                        </ng-select>
+                        <span class="field-error" *ngIf="hasError('typeOfRevenues')">{{ 'Field is required' | translate }}</span>
+                    </div>
+
+                    <div class="form-group required-field col-sm-4" *ngIf="form.get('typeOfRevenues').value">
+                        <label class="control-label" for="typeOfRevenuesValue">&nbsp;</label>
                         <input type="number"
-                                id="netRevenuesNetIncome"
-                                formControlName="netRevenuesNetIncome"
+                                id="typeOfRevenuesValue"
+                                formControlName="typeOfRevenuesValue"
                                 [readonly]="isFormReadonly"
-                                placeholder="{{ 'Define a value (€)' | translate }}">
-                        <span class="field-error" *ngIf="hasError('netRevenuesNetIncome', ['required'])">{{ 'Field is required' | translate }}</span>
-                        <span class="field-error" *ngIf="hasError('netRevenuesNetIncome', ['min'])">{{ 'Number should not be negative' | translate }}</span>
+                                placeholder="{{ 'Fill in the value of Revenues' | translate }}">
+                        <span class="field-error" *ngIf="hasError('typeOfRevenuesValue', ['required'])">{{ 'Field is required' | translate }}</span>
+                        <span class="field-error" *ngIf="hasError('typeOfRevenuesValue', ['min'])">{{ 'Number should not be negative' | translate }}</span>
                     </div>
                 </div>
+
 
                 <div class="row col-sm-12">
                     <div class="form-group required-field col-sm-4" *ngIf="!isDisabled('shareholderEquity')">
@@ -581,31 +594,6 @@
                                     placeholder="{{ 'Select a range' | translate }}">
                         </ng-select>
                         <span class="field-error" *ngIf="hasError('totalFinancialAssetsAlreadyInvested')">{{ 'Field is required' | translate }}</span>
-                    </div>
-                </div>
-
-                <div class="row col-sm-12">
-                    <div class="form-group required-field col-sm-4">
-                        <label class="control-label" for="typeOfRevenues">{{ 'Type of Revenues' | translate }}</label>
-                        <ng-select class="large-select"
-                                    [items]="typeOfRevenuesList"
-                                    id="typeOfRevenues"
-                                    formControlName="typeOfRevenues"
-                                    [isDisabled]="isFormReadonly"
-                                    placeholder="{{ 'Select type of revenues' | translate }}">
-                        </ng-select>
-                        <span class="field-error" *ngIf="hasError('typeOfRevenues')">{{ 'Field is required' | translate }}</span>
-                    </div>
-
-                    <div class="form-group required-field col-sm-4" *ngIf="form.get('typeOfRevenues').value">
-                        <label class="control-label" for="typeOfRevenuesValue">&nbsp;</label>
-                        <input type="number"
-                                id="typeOfRevenuesValue"
-                                formControlName="typeOfRevenuesValue"
-                                [readonly]="isFormReadonly"
-                                placeholder="{{ 'Fill in the value of Revenues' | translate }}">
-                        <span class="field-error" *ngIf="hasError('typeOfRevenuesValue', ['required'])">{{ 'Field is required' | translate }}</span>
-                        <span class="field-error" *ngIf="hasError('typeOfRevenuesValue', ['min'])">{{ 'Number should not be negative' | translate }}</span>
                     </div>
                 </div>
             </div>

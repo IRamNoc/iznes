@@ -367,10 +367,6 @@ export class NewRequestService {
                 ],
             ],
             balanceSheetTotal: ['', Validators.required],
-            netRevenuesNetIncome: ['', [
-                Validators.required,
-                Validators.min(0),
-            ]],
             shareholderEquity: ['', [
                 Validators.required,
                 Validators.min(0),

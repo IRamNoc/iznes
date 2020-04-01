@@ -462,7 +462,6 @@ export const booleanControls = [
 
 export const currencyControls = [
     'balanceSheetTotal',
-    'netRevenuesNetIncome',
     'shareCapital',
     'shareholderEquity',
     'typeOfRevenuesValue',
@@ -584,7 +583,6 @@ export const controlOrder = [
     'activities',
     'investorOnBehalfThirdParties',
     'balanceSheetTotal',
-    'netRevenuesNetIncome',
     'shareholderEquity',
     'capitalNature',
     'otherCapitalNature',
@@ -3273,7 +3271,6 @@ export const controlToName = {
     companyStateOwned: 'Is the company state-owned?',
     percentCapitalHeldByState: 'Percentage of the capital held by the state',
     balanceSheetTotal: 'Balance Sheet Total (€)',
-    netRevenuesNetIncome: 'Net Revenues or Net Income (€)',
     shareholderEquity: "Shareholder's Equity (€)",
     equityAndReserves: 'Equity & Reserves',
     generalAssets: 'General Assets (Insurance Contracts)',
@@ -3465,6 +3462,6 @@ export const omitConditionalFields = {
     },
     companyListed: {
         condition: [1],
-        fields: ['balanceSheetTotal', 'netRevenuesNetIncome', 'shareholderEquity'],
+        fields: ['balanceSheetTotal', 'shareholderEquity'],
     },
 };
