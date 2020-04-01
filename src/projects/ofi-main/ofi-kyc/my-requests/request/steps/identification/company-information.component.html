@@ -434,10 +434,10 @@
                 <div class="checkbox-group" formGroupName="capitalNature">
                     <div class="row col-sm-12">
                         <div class="form-group required-field col-sm-4">
-                            <label *ngIf="!partyCompanies.nowcp" class="required-field">
+                            <label *ngIf="!partySelections.nowCPIssuer && !partySelections.nowCPInvestor" class="required-field">
                                 {{ 'Nature and origin of the capital (several possible choices)' | translate }}
                             </label>
-                            <label *ngIf="partyCompanies.nowcp" class="required-field">
+                            <label *ngIf="partySelections.nowCPIssuer || partySelections.nowCPInvestor" class="required-field">
                                 {{ 'Nature and origin of the capital invested by the legal entity or paid for the remuneration of nowCP (several possible choices)' | translate }}
                             </label>
                         </div>
