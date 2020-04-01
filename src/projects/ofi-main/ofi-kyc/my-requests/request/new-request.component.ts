@@ -26,6 +26,7 @@ import {
     PartyCompaniesInterface,
     isCompanyRegulated,
     hasStakeholderPEP,
+    isFloatingOver75Percent,
 } from '../kyc-form-helper';
 import { BeneficiaryService } from './steps/identification/beneficiary.service';
 import { DocumentsService } from './steps/documents.service';
@@ -181,6 +182,12 @@ export class NewKycRequestComponent implements OnInit {
                     hasStakeholderPEP(this.forms)
                 ),
             },
+            overrides: {
+                nowcpAndFloating75: (
+                    companyInfo.nowcp &&
+                    isFloatingOver75Percent(this.forms)
+                ),
+            }
         };
 
         console.log('[3] nexting document permissions.');
@@ -190,6 +197,7 @@ export class NewKycRequestComponent implements OnInit {
         console.log(' | Company is unregulated, unlisted, not state - owned and does not represent a high risk(risky activity or country)? ', permissionsObject.rules['rule3'])
         console.log(' | Company is unregulated, unlisted, not state - owned with a high activity risk? ', permissionsObject.rules['rule4'])
         console.log(' | Company is unregulated, unlisted, not state - owned with a high country risk ? ', permissionsObject.rules['rule5'])
+        console.log(' | Overrides: ', JSON.stringify(permissionsObject['overrides']));
 
         this.documentsPermissionsSubject.next(permissionsObject);
     }
