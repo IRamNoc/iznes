@@ -63,7 +63,7 @@ export class DocumentsService {
                 kyclistsigningauthoritiesdoc: "optional",
                 kycribdoc: "required",
                 kycorgchartdoc: "required",
-                kycisincodedoc: "required",
+                kycisincodedoc: "optional",
                 kycevidencefloatable: "required",
             },
             rule2: {
