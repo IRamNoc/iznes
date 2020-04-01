@@ -488,9 +488,7 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
                 otherMultilateralTradingFacilitiesControl.enable();
             }
 
-            balanceSheetTotalControl.disable();
             netRevenuesNetIncomeControl.disable();
-            shareholderEquityControl.disable();
         } else {
             listingMarketsControl.disable();
             multilateralTradingFacilitiesControl.disable();
@@ -499,9 +497,7 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
             bloombergCodesControl.disable();
             floatableSharesControl.disable();
 
-            balanceSheetTotalControl.enable();
             netRevenuesNetIncomeControl.enable();
-            shareholderEquityControl.enable();
         }
 
         this.formPercent.refreshFormPercent();
