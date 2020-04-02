@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, Output, EventEmitter, OnDestroy, ViewChild, ElementRef } from '@angular/core';
+import { Component, Input, OnInit, Output, EventEmitter, OnDestroy, ViewChild, ElementRef, ChangeDetectorRef } from '@angular/core';
 import {FormArray, FormBuilder, FormGroup} from '@angular/forms';
 import { select, NgRedux } from '@angular-redux/store';
 import { Subject } from 'rxjs';
@@ -148,6 +148,7 @@ export class BeneficiaryListComponent implements OnInit, OnDestroy {
         private ngRedux: NgRedux<any>,
         private element: ElementRef,
         private formBuilder: FormBuilder,
+        private changeDetectorRef: ChangeDetectorRef,
     ) {
     }
 
@@ -230,6 +231,8 @@ export class BeneficiaryListComponent implements OnInit, OnDestroy {
                                     this.beneficiaryService.fillInStakeholderSelects(this.form.get('beneficiaries'));
                                     this.beneficiaryService.updateStakeholdersValidity(this.form.get('beneficiaries') as FormArray);
                                     if (this.formPercent) this.formPercent.refreshFormPercent();
+                                    this.sortStakeholders();
+                                    this.changeDetectorRef.detectChanges();
                                 });
                             }
                         }
