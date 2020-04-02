@@ -358,7 +358,7 @@ export class ClassificationInformationComponent implements OnInit, OnDestroy {
 
 
                     const operatorsHasExperienceNeuCP = results.reduce((acc, result) => !!result.operatorsHasExperienceNeuCP || acc, false);
-                    this.form.get('operatorsHasExperienceNeuCP').patchValue(operatorsHasExperienceNeuCP);
+                    this.form.get('operatorsHasExperienceNeuCP').patchValue(operatorsHasExperienceNeuCP ? 1 : 0);
                 }
                 this.formDataFilled$.next(true);
             });
