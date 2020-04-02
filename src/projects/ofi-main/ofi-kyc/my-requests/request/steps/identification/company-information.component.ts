@@ -15,7 +15,7 @@ import { MultilingualService } from '@setl/multilingual';
 import { formHelper } from '@setl/utils/helper';
 import { KycMyInformations } from '@ofi/ofi-main/ofi-store/ofi-kyc/my-informations';
 import { KycFormHelperService } from '../../../kyc-form-helper.service';
-import { PartyCompaniesInterface } from '../../../kyc-form-helper';
+import { KycPartySelections } from '../../../../../ofi-store/ofi-kyc/my-informations/model';
 
 @Component({
     selector: 'company-information',
@@ -76,7 +76,7 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
     // whether 'other multilateral trading facilities' field for the kyc form has error.
     otherMultilateralTradingFacilitiesError = false;
     // The parties the investor has selected.
-    partyCompanies: PartyCompaniesInterface;
+    partySelections: KycPartySelections;
     // data is fetched from database, and patched value to formgroup.
     formDataFilled$ = new BehaviorSubject<boolean>(false);
 
@@ -101,10 +101,10 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
             .subscribe(() => this.initLists());
 
         // set current user's investor type.
-        this.formHelper.kycPartyCompanies$
+        this.formHelper.kycPartySelections$
             .takeUntil(this.unsubscribe)
             .subscribe((d) => {
-                this.partyCompanies = d;
+                this.partySelections = d;
                 this.handlePartyFormControls();
             });
     }
@@ -640,12 +640,13 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
     }
 
     isOnlyID2S(): boolean {
-        return this.partyCompanies.id2s && !this.partyCompanies.iznes && !this.partyCompanies.nowcp;
+        return (this.partySelections.id2sCustodian || this.partySelections.id2sIPA)
+            && !(this.partySelections.iznes || this.partySelections.nowCPInvestor || this.partySelections.nowCPIssuer);
     }
 
     handlePartyFormControls(): void {
         // ID2S is in list of party companies...
-        if (this.partyCompanies.id2s){
+        if (this.partySelections.id2sCustodian || this.partySelections.id2sIPA){
             this.regulatoryStatusList = this.translate.translate(this.newRequestService.regulatoryStatusListID2S);
         }
 
@@ -659,8 +660,8 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
             this.form.get('bloombergCode').setValidators(Validators.maxLength(45));
         }
 
-        // Hide for ID2S and NowCP
-        if (!this.partyCompanies.iznes) {
+        // Hide for Both ID2S and NowCP Issuer
+        if (!this.partySelections.iznes && !this.partySelections.nowCPInvestor) {
             this.form.get('activities').disable();
             this.form.get('investorOnBehalfThirdParties').disable();
             this.form.get('totalFinancialAssetsAlreadyInvested').disable();
