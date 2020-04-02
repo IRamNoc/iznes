@@ -44,7 +44,12 @@
             <div class="row upload-document" *ngIf="documentsMeta['kyclistsigningauthoritiesdoc'].shouldShow" [class.complete]="getDocumentPreset(['common', 'kyclistsigningauthoritiesdoc'])">
                 <div class="form-group col-sm-12"  [class.required-field]="documentsMeta['kyclistsigningauthoritiesdoc'].required" [class.has-error]="hasError(['common', 'kyclistsigningauthoritiesdoc', 'hash'])">
                     <label for="kyclistsigningauthoritiesdoc" class="control-label">
-                        {{ 'List of Signing Authorities if the signatory is not on the KBIS' | translate }}
+                        <ng-container *ngIf="documentsMeta['kyclistsigningauthoritiesdoc'].required">
+                            {{ 'List of Signing Authorities' | translate }}
+                        </ng-container>
+                        <ng-container *ngIf="!documentsMeta['kyclistsigningauthoritiesdoc'].required">
+                            {{ 'List of Signing Authorities if the signatory is not on the KBIS' | translate }}
+                        </ng-container>
                     </label>
                     <div class="filedrop-wrapper">
                         <setl-file-drop filePermission="0" class="form-control" id="kyclistsigningauthoritiesdoc"
