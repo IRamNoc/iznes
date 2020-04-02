@@ -11,7 +11,7 @@ import { ValidationService } from './validation.service';
 import { DocumentsService } from './documents.service';
 import { NewRequestService, configDate } from '../new-request.service';
 import { RequestsService } from '../../requests.service';
-import { getPartyNameFromInvestorType } from '../../kyc-form-helper';
+import { getPartyNameFromInvestorType, PartyCompaniesInterface } from '../../kyc-form-helper';
 import { KycFormHelperService } from '../../kyc-form-helper.service';
 import { OfiKycService } from '../../../../../ofi-main/ofi-req-services/ofi-kyc/service';
 import { ClearMyKycListRequested } from '../../../../../ofi-main/ofi-store/ofi-kyc';
@@ -42,7 +42,7 @@ export class NewKycValidationComponent implements OnInit, OnDestroy {
     open = true;
     showKYCComplete: boolean = false;
     public invitedAs: 'iznes'|'id2s'|'nowcp';
-    public isOnlyNowCP: boolean;
+    public partyCompanies: PartyCompaniesInterface;
     firstName: string;
     investorInformationRequested: boolean = false;
     fadeIn: boolean = false;
@@ -110,15 +110,15 @@ export class NewKycValidationComponent implements OnInit, OnDestroy {
     }
 
     async handlePartyFields() {
-        this.isOnlyNowCP = await this.formHelper.onlyNowCP$.toPromise();
+        this.partyCompanies = await this.formHelper.kycPartyCompanies$.pipe(take(1)).toPromise();
 
-        // Set signing authority list
-        this.signingAuthorityList = this.translate.translate(this.isOnlyNowCP
+        // Set signing authority list (set to NowCP list if they are one of the party selections)
+        this.signingAuthorityList = this.translate.translate(this.partyCompanies.nowcp
             ? this.newRequestService.signingAuthorityNowCPList
             : this.newRequestService.signingAuthorityDefaultList);
 
-        // Disable electronicSignatureDocument for NowCP
-        if (this.isOnlyNowCP) this.form.get('electronicSignatureDocument').disable();
+        // Disable electronicSignatureDocument for NowCP ONLY
+        if (this.partyCompanies.nowcp && !(this.partyCompanies.iznes || this.partyCompanies.id2s)) this.form.get('electronicSignatureDocument').disable();
     }
 
     getCompanyNames(requests, managementCompanyList) {
