@@ -98,6 +98,8 @@ export class NewKycRequestComponent implements OnInit {
     kycInvestorType;
     // Whether make amc select readonly
     amcSelectReadOnly = false;
+    // Whether the disclaimer has been signed
+    disclaimerSigned: boolean = false;
 
     /* The companies that this user was invited by. */
     public kycPartySelections: PartyCompaniesInterface;

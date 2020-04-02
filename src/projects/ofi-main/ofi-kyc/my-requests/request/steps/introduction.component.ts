@@ -1,4 +1,4 @@
-import { Component, Output, EventEmitter } from '@angular/core';
+import { Component, Output, EventEmitter, Input } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { select } from '@angular-redux/store';
 import { RequestsService } from '../../requests.service';
@@ -15,7 +15,7 @@ import { KycFormHelperService } from '../../kyc-form-helper.service';
     styleUrls: ['./introduction.component.scss'],
 })
 export class NewKycIntroductionComponent {
-
+    @Input() disclaimerSigned: boolean;
     @select(['ofi', 'ofiKyc', 'myKycRequested', 'kycs']) requests$;
     @Output() submitEvent: EventEmitter<any> = new EventEmitter<any>();
     readCheckbox: FormControl = new FormControl();
@@ -25,6 +25,12 @@ export class NewKycIntroductionComponent {
         private newRequestService: NewRequestService,
         public helper: KycFormHelperService,
     ) {}
+
+    ngOnInit() {
+        if (this.disclaimerSigned) {
+            this.readCheckbox.patchValue(true);
+        }
+    }
 
     handleSubmit() {
         // emit submitEvent, so the parent kyc wrapper can handle the submit event.
