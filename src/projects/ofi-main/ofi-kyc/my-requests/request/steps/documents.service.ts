@@ -762,6 +762,12 @@ export class DocumentsService {
             documents[document] = this.checkDocument(document, permissions);
         }
 
+        /* Overriding business rules. */
+        switch (true) {
+            case (permissions.overrides.nowcpAndFloating75):
+                documents['kycevidencefloatable']['required'] = true;
+        }
+
         return documents;
     }
 }

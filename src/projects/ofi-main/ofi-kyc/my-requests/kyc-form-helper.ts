@@ -258,3 +258,14 @@ export function hasStakeholderPEP(f: FormGroup): boolean {
     }
     return false;
 }
+
+/**
+ * Is the company floating over 75% of shares; comes from Identification > Company Information > Floatable Shares.
+ * 
+ * @param f {FormGroup} - The KYC form group to be tested.
+ */
+export function isFloatingOver75Percent(f: FormGroup): boolean {
+    const listed = get(f, 'controls.identification.controls.companyInformation.controls.companyListed.value', 0);
+    const floating = get(f, 'controls.identification.controls.companyInformation.controls.floatableShares.value', 0);
+    return (listed && floating > 75) ? true : false;
+}
