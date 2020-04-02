@@ -183,9 +183,8 @@ export class NewKycRequestComponent implements OnInit {
                 ),
             },
             overrides: {
-                nowcpAndFloating75: (
-                    companyInfo.nowcp &&
-                    isFloatingOver75Percent(this.forms)
+                floating75: (
+                    isFloatingOver75Percent(this.forms),
                 ),
             }
         };
