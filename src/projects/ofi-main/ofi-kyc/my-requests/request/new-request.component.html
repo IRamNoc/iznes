@@ -18,7 +18,7 @@
     <!-- INTRODUCTION -->
     <form-step *ngIf="fullForm">
         <ng-template #stepTemplate>
-            <kyc-step-introduction #step (submitEvent)="handleSubmit($event)"></kyc-step-introduction>
+            <kyc-step-introduction #step [disclaimerSigned]="(currentCompletedStep > 0) || disclaimerSigned" (submitEvent)="handleSubmit($event); disclaimerSigned=true"></kyc-step-introduction>
         </ng-template>
     </form-step>
 
