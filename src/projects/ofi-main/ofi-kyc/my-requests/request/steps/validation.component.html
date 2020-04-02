@@ -98,7 +98,7 @@
                             <span class="field-error" *ngIf="hasError('positionRepresentative', ['maxlength'])">{{ 'Value is too long' | translate }}</span>
                         </div>
 
-                        <div *ngIf="!isOnlyNowCP" class="form-group required-field col-sm-4">
+                        <div *ngIf="!form.get('electronicSignatureDocument').disabled" class="form-group required-field col-sm-4">
                             <label for="electronicSignatureDocument">
                                 {{ 'As electronic signature, please upload here the national identity card or valid passport or residence card of the signatory with photograph ID’s card' | translate }}:
                             </label>
