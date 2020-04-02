@@ -63,7 +63,7 @@ export class DocumentsService {
                 kyclistsigningauthoritiesdoc: "optional",
                 kycribdoc: "required",
                 kycorgchartdoc: "required",
-                kycisincodedoc: "required",
+                kycisincodedoc: "optional",
                 kycevidencefloatable: "required",
             },
             rule2: {
@@ -760,6 +760,12 @@ export class DocumentsService {
         // Loop over all the documents.
         for (document of Object.keys(documentFormPaths)) {
             documents[document] = this.checkDocument(document, permissions);
+        }
+
+        /* Overriding business rules. */
+        switch (true) {
+            case (permissions.overrides.nowcpAndFloating75):
+                documents['kycevidencefloatable']['required'] = true;
         }
 
         return documents;

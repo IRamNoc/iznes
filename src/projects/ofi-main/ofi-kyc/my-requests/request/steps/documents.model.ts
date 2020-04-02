@@ -9,6 +9,7 @@ export class DocumentPermissions {
     rules: {
         [ruleName: string]: boolean;
     };
+    overrides: { [key: string]: boolean };
 }
 
 export class DocumentMetaCache {
