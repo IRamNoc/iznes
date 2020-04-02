@@ -221,7 +221,7 @@ export class NewKycRequestComponent implements OnInit {
         activityRegulated = !!Number(activityRegulated);
 
         const balanceSheetTotalValue = this.forms.get('identification.companyInformation.balanceSheetTotal').value;
-        const netRevenuesNetIncomeValue = this.forms.get('identification.companyInformation.netRevenuesNetIncome').value;
+        const netRevenuesNetIncomeValue = this.forms.get('identification.companyInformation.typeOfRevenuesValue').value;
         const shareholderEquityValue = this.forms.get('identification.companyInformation.shareholderEquity').value;
 
         if (activityRegulated) {
