@@ -763,9 +763,12 @@ export class DocumentsService {
         }
 
         /* Overriding business rules. */
-        switch (true) {
-            case (permissions.overrides.nowcpAndFloating75):
-                documents['kycevidencefloatable']['required'] = true;
+        if (permissions.overrides.floating75) {
+            documents['kycevidencefloatable']['required'] = true;
+            documents['kycevidencefloatable']['shouldShow'] = true;
+        } else {
+            documents['kycevidencefloatable']['required'] = false;
+            documents['kycevidencefloatable']['shouldShow'] = false;
         }
 
         return documents;
