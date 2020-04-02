@@ -184,7 +184,7 @@ export class NewKycRequestComponent implements OnInit {
             },
             overrides: {
                 floating75: (
-                    isFloatingOver75Percent(this.forms),
+                    isFloatingOver75Percent(this.forms)
                 ),
             }
         };
