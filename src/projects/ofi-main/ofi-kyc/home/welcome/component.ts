@@ -19,6 +19,7 @@ import { KycPartySelections } from '../../../ofi-store/ofi-kyc/my-informations/m
 })
 export class OfiKycWelcomeComponent implements OnInit, AfterViewInit, OnDestroy {
     @Output() completed: EventEmitter<boolean> = new EventEmitter();
+    @Output('kycPartySelections') kycPartySelectionsOutput: EventEmitter<KycPartySelections> = new EventEmitter();
     public kycPartySelectionsForm: FormGroup;
     public kycPartySelections: KycPartySelections;
     public firstname: string;
@@ -147,6 +148,8 @@ export class OfiKycWelcomeComponent implements OnInit, AfterViewInit, OnDestroy 
                 if (this.invitedAs !== 'iznes') {
                     this.toasterService.pop('success', this.translate.translate('Successfully saved your selections'));
                 }
+
+                this.kycPartySelectionsOutput.next(this.kycPartySelections);
             },
             () => {
                 this.toasterService.pop('error', this.translate.translate('Something went wrong. Please try again later'));

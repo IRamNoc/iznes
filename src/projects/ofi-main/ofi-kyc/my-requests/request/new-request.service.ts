@@ -895,7 +895,9 @@ export class NewRequestService {
         const ids = [];
 
         for (const choice of choices) {
-            await this.createDraft(choice, connectedWallet).then((response) => {
+            const response = await this.createDraft(choice, connectedWallet);
+
+            try {
                 const kycID = getValue(response, [1, 'Data', 0, 'kycID']);
                 const amcID = choice.id;
                 const isThirdPartyKyc = getValue(response, [1, 'Data', 0, 'isThirdPartyKyc']);
@@ -905,9 +907,10 @@ export class NewRequestService {
                     amcID,
                     isThirdPartyKyc,
                 });
-            }).catch((err) => {
-                console.error(err);
-            });
+            } catch (e) {
+                console.error(e);
+            }
+
         }
 
         return ids;

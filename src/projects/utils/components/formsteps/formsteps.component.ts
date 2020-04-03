@@ -87,7 +87,6 @@ export class FormstepsComponent implements AfterContentInit, OnDestroy {
 
     ngAfterContentInit() {
         this.stepsComponentsArray = this.stepComponents.toArray();
-        this.position = 0;
         this.progress[0].active = true;
         this.mainContentEl = document.querySelector('main.content-area');
         this.mainContentEl.addEventListener('scroll', this.debouncedFixStepsProgress);

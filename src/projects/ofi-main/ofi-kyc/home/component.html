@@ -1,7 +1,7 @@
 <ng-container *ngIf="!!investorType">
     <ng-container *ngIf="showOnboardingFlow()">
 
-        <kyc-welcome *ngIf="showWelcomeModal" (completed)="showWelcomeModal = false"></kyc-welcome>
+        <kyc-welcome *ngIf="showWelcomeModal" (kycPartySelections)="kycPartySelections = $event" (completed)="showWelcomeModal = false"></kyc-welcome>
 
         <div class="kyc-header">
             {{ 'Onboarding' | translate }}
