@@ -3209,8 +3209,8 @@ export const signingAuthorityDefaultList = [
 export const signingAuthorityNowCPList = [
     ...signingAuthorityDefaultList,
     {
-        id: 'personInChargeOfTheIssuanceProgram ',
-        text: 'Person in charge of the issuance program ',
+        id: 'personInChargeOfTheIssuanceProgram',
+        text: 'Person in charge of the issuance program',
     },
 ];
 
