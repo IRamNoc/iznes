@@ -378,8 +378,6 @@ export class KycDetailsComponent implements OnInit, OnDestroy {
             'otherConstraints',
             'investmentDecisionsAdHocCommittee',
             'otherPersonsAuthorised',
-            'hasEverIssuedNeuCp',
-            'hasAlreadyInvestedNeuCp',
         ];
 
         this.kycRiskObjective$
