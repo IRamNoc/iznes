@@ -456,8 +456,6 @@ export const booleanControls = [
     'isLegalRepresentative',
     'isPoliticallyExposed',
     // 'investmentDecisionsAdHocCommittee', /* investmentDecisionsAdHocCommittee is VARCHAR in tblIznKycRiskObjective */
-    'hasAlreadyInvestedNeuCp',
-    'hasEverIssuedNeuCp',
 ];
 
 export const currencyControls = [
@@ -3373,8 +3371,6 @@ export const controlToName = {
     investmentDecisionsAdHocCommitteeSpecification: 'Ad hoc committee specification',
     otherPersonsAuthorised: 'Other persons authorised to take investment decisions and give instructions',
     constraintsSameInvestmentCrossAm: 'I would like to have the same investment objectives for all management companies',
-    hasEverIssuedNeuCp: 'Has your company ever issued Neu CPs?',
-    hasAlreadyInvestedNeuCp: 'Has your company already invested in Neu CPs?',
 
     // Validation
     undersigned: 'Identity',

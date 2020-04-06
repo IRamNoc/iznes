@@ -738,8 +738,6 @@ export class NewRequestService {
                 disabled: true,
             }],
             otherPersonsAuthorised: ['', Validators.maxLength(255)],
-            hasEverIssuedNeuCp: [0, Validators.required],
-            hasAlreadyInvestedNeuCp: [0, Validators.required],
         });
 
         // Disable constraints section for type ID2S or NowCP kyc
