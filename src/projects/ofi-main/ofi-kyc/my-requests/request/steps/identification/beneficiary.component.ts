@@ -60,13 +60,10 @@ export class BeneficiaryComponent implements OnInit, OnDestroy {
     ) {
         this.configDate = configDate;
 
-        this.beneficiaryTypesList = this.newRequestService.beneficiaryTypesList;
-        this.translate.translate(this.beneficiaryTypesList);
-        this.relationTypesList = this.newRequestService.relationTypesList;
-        this.translate.translate(this.relationTypesList);
-        this.holdingTypesList = this.newRequestService.holdingTypesList;
-        this.translate.translate(this.holdingTypesList);
-        this.identificationNumberTypeList = this.newRequestService.identificationNumberTypeList;
+        this.beneficiaryTypesList = this.translate.translate(this.newRequestService.beneficiaryTypesList);
+        this.relationTypesList = this.translate.translate(this.newRequestService.relationTypesList);
+        this.holdingTypesList = this.translate.translate(this.newRequestService.holdingTypesList);
+        this.identificationNumberTypeList = this.translate.translate(this.newRequestService.identificationNumberTypeList);
         this.countries = this.translate.translate(countries);
     }
 
