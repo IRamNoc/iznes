@@ -191,12 +191,12 @@ export class OfiKycHomeComponent implements AfterViewInit, OnDestroy {
         const nowCpAmc = companiesList.find(c => c.managementCompanyType === 'nowcp');
 
         // try to get id2s companyID
-        if (companySelections.id2s && invitedAmcId !== id2sAmc.companyID) {
+        if (id2sAmc && companySelections.id2s && invitedAmcId !== id2sAmc.companyID) {
             amcIds.push(id2sAmc.companyID);
         }
 
         // try to get nowCP companyID
-        if (companySelections.nowcp && invitedAmcId !== nowCpAmc.companyID) {
+        if (nowCpAmc && companySelections.nowcp && invitedAmcId !== nowCpAmc.companyID) {
             amcIds.push(nowCpAmc.companyID);
         }
 

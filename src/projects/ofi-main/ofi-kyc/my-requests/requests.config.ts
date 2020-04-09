@@ -3041,7 +3041,7 @@ export const capitalNatureList = [
 export const documentTypesList = [
     {
         id: 'kycstatuscertifieddoc',
-        text: 'Articles of Association',
+        text: 'Articles of Association - certified true copy by the client\'s duly authorized representative',
     },
     {
         id: 'kyckbisdoc',
@@ -3061,7 +3061,7 @@ export const documentTypesList = [
     },
     {
         id: 'kycw8benefatcadoc',
-        text: 'Form W-8BEN-F (FACTA)',
+        text: 'Form W-8BEN-E (FATCA)',
     },
     {
         id: 'kycisincodedoc',
@@ -3089,7 +3089,7 @@ export const documentTypesList = [
     },
     {
         id: 'kycorgchartdoc',
-        text: 'Org chart with key operational teams',
+        text: 'Org chart with key operational teams with the name of the enity provided, and dated',
     },
     {
         id: 'kyclistsigningauthoritiesdoc',
