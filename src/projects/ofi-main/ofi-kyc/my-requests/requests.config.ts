@@ -3061,7 +3061,7 @@ export const documentTypesList = [
     },
     {
         id: 'kycw8benefatcadoc',
-        text: 'Form W-8BEN-F (FACTA)',
+        text: 'Form W-8BEN-E (FATCA)',
     },
     {
         id: 'kycisincodedoc',
