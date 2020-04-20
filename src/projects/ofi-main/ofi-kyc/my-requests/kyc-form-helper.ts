@@ -267,5 +267,5 @@ export function hasStakeholderPEP(f: FormGroup): boolean {
 export function isFloatingOver75Percent(f: FormGroup): boolean {
     const listed = get(f, 'controls.identification.controls.companyInformation.controls.companyListed.value', 0);
     const floating = get(f, 'controls.identification.controls.companyInformation.controls.floatableShares.value', 0);
-    return (listed && floating > 75) ? true : false;
+    return (listed && floating >= 75) ? true : false;
 }
