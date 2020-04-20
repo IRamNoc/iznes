@@ -41,6 +41,9 @@ class KycDocuments {
     rule3?: { [documentName: string]: 'optional'|'required' };
     rule4?: { [documentName: string]: 'optional'|'required' };
     rule5?: { [documentName: string]: 'optional'|'required' };
+    rule6?: { [documentName: string]: 'optional'|'required' };
+    rule7?: { [documentName: string]: 'optional'|'required' };
+    rule8?: { [documentName: string]: 'optional'|'required' };
 }
 
 class DocumentMatrix {
@@ -63,15 +66,15 @@ export class DocumentsService {
                 kyclistsigningauthoritiesdoc: "optional",
                 kycribdoc: "required",
                 kycorgchartdoc: "required",
-                kycisincodedoc: "optional",
-                kycevidencefloatable: "required",
+                kycisincodedoc: "required",
+                kycevidencefloatable: "required"
             },
             rule2: {
                 kyckbisdoc: "required",
                 kyclistsigningauthoritiesdoc: "optional",
                 kycribdoc: "required",
                 kycorgchartdoc: "required",
-                kycproofregulationdoc: "required",
+                kycproofregulationdoc: "required"
             },
             rule3: {
                 kyckbisdoc: "required",
@@ -80,7 +83,7 @@ export class DocumentsService {
                 kycorgchartdoc: "required",
                 kycbeneficialownerdoc: "required",
                 kycidorpassportdoc: "required",
-                kycannual2yeardoc: "required",
+                kycannual3yeardoc: "required"
             },
             rule4: {
                 kyckbisdoc: "required",
@@ -90,7 +93,7 @@ export class DocumentsService {
                 kycbeneficialownerdoc: "required",
                 kycidorpassportdoc: "required",
                 kycstatuscertifieddoc: "required",
-                kycannual3yeartaxdoc: "required",
+                kycannual3yeartaxdoc: "required"
             },
             rule5: {
                 kyckbisdoc: "required",
@@ -100,8 +103,41 @@ export class DocumentsService {
                 kycbeneficialownerdoc: "required",
                 kycidorpassportdoc: "required",
                 kycstatuscertifieddoc: "required",
-                kycannual3yeartaxdoc: "required",
+                kycannual3yeartaxdoc: "required"
             },
+            rule6: {
+                kyckbisdoc: "required",
+                kyclistsigningauthoritiesdoc: "required",
+                kycribdoc: "required",
+                kycorgchartdoc: "required",
+                kycisincodedoc: "required",
+                kycevidencefloatable: "required",
+                kycbeneficialownerdoc: "required",
+                kycidorpassportdoc: "required",
+                kycstatuscertifieddoc: "required",
+                kycannual3yeartaxdoc: "required"
+            },
+            rule7: {
+                kyckbisdoc: "required",
+                kyclistsigningauthoritiesdoc: "required",
+                kycribdoc: "required",
+                kycorgchartdoc: "required",
+                kycproofregulationdoc: "required",
+                kycbeneficialownerdoc: "required",
+                kycidorpassportdoc: "required",
+                kycstatuscertifieddoc: "required",
+                kycannual3yeartaxdoc: "required"
+            },
+            rule8: {
+                kyckbisdoc: "required",
+                kyclistsigningauthoritiesdoc: "required",
+                kycribdoc: "required",
+                kycorgchartdoc: "required",
+                kycbeneficialownerdoc: "required",
+                kycidorpassportdoc: "required",
+                kycstatuscertifieddoc: "required",
+                kycannual3yeartaxdoc: "required"
+            }
         },
         ID2S: {
             rule1: {
@@ -117,7 +153,7 @@ export class DocumentsService {
                 kycdisclosureproceduredoc: "optional",
                 kyccompositioncommitteedoc: "optional",
                 kycbusinessplandoc: "optional",
-                kycannual3yeardoc: "required",
+                kycannual3yeardoc: "required"
             },
             rule2: {
                 kyckbisdoc: "required",
@@ -133,7 +169,7 @@ export class DocumentsService {
                 kyccompositioncommitteedoc: "optional",
                 kycbusinessplandoc: "optional",
                 kycwolfsbergdoc: "required",
-                kycannual3yeardoc: "required",
+                kycannual3yeardoc: "required"
             },
             rule3: {
                 kyckbisdoc: "required",
@@ -147,7 +183,7 @@ export class DocumentsService {
                 kycdisclosureproceduredoc: "optional",
                 kyccompositioncommitteedoc: "optional",
                 kycbusinessplandoc: "optional",
-                kycannual3yeardoc: "required",
+                kycannual3yeardoc: "required"
             },
             rule4: {
                 kyckbisdoc: "required",
@@ -162,7 +198,7 @@ export class DocumentsService {
                 kycdisclosureproceduredoc: "optional",
                 kyccompositioncommitteedoc: "optional",
                 kycbusinessplandoc: "optional",
-                kycannual3yeartaxdoc: "required",
+                kycannual3yeartaxdoc: "required"
             },
             rule5: {
                 kyckbisdoc: "required",
@@ -177,8 +213,58 @@ export class DocumentsService {
                 kycdisclosureproceduredoc: "optional",
                 kyccompositioncommitteedoc: "optional",
                 kycbusinessplandoc: "optional",
-                kycannual3yeartaxdoc: "required",
+                kycannual3yeartaxdoc: "required"
             },
+            rule6: {
+                kyckbisdoc: "required",
+                kyclistsigningauthoritiesdoc: "required",
+                kycorgchartdoc: "required",
+                kycisincodedoc: "required",
+                kycevidencefloatable: "required",
+                kycbeneficialownerdoc: "required",
+                kycidorpassportdoc: "required",
+                kycstatuscertifieddoc: "required",
+                kyctaxcertificationdoc: "optional",
+                kycw8benefatcadoc: "optional",
+                kyccriticalcustomersdoc: "optional",
+                kycdisclosureproceduredoc: "optional",
+                kyccompositioncommitteedoc: "optional",
+                kycbusinessplandoc: "optional",
+                kycannual3yeartaxdoc: "required"
+            },
+            rule7: {
+                kyckbisdoc: "required",
+                kyclistsigningauthoritiesdoc: "required",
+                kycorgchartdoc: "required",
+                kycproofregulationdoc: "required",
+                kycbeneficialownerdoc: "required",
+                kycidorpassportdoc: "required",
+                kycstatuscertifieddoc: "required",
+                kyctaxcertificationdoc: "optional",
+                kycw8benefatcadoc: "optional",
+                kyccriticalcustomersdoc: "optional",
+                kycproofofapprovaldoc: "optional",
+                kycdisclosureproceduredoc: "optional",
+                kyccompositioncommitteedoc: "optional",
+                kycbusinessplandoc: "optional",
+                kycwolfsbergdoc: "required",
+                kycannual3yeartaxdoc: "required"
+            },
+            rule8: {
+                kyckbisdoc: "required",
+                kyclistsigningauthoritiesdoc: "required",
+                kycorgchartdoc: "required",
+                kycbeneficialownerdoc: "required",
+                kycidorpassportdoc: "required",
+                kycstatuscertifieddoc: "required",
+                kyctaxcertificationdoc: "optional",
+                kycw8benefatcadoc: "optional",
+                kyccriticalcustomersdoc: "optional",
+                kycdisclosureproceduredoc: "optional",
+                kyccompositioncommitteedoc: "optional",
+                kycbusinessplandoc: "optional",
+                kycannual3yeartaxdoc: "required"
+            }
         },
         IZNES: {
             rule1: {
@@ -191,7 +277,7 @@ export class DocumentsService {
                 kycstatuscertifieddoc: "required",
                 kyctaxcertificationdoc: "required",
                 kycw8benefatcadoc: "required",
-                kycannualreportdoc: "required",
+                kycannualreportdoc: "required"
             },
             rule2: {
                 kyckbisdoc: "required",
@@ -204,7 +290,7 @@ export class DocumentsService {
                 kycw8benefatcadoc: "required",
                 kycproofofapprovaldoc: "optional",
                 kycwolfsbergdoc: "required",
-                kycannualreportdoc: "required",
+                kycannualreportdoc: "required"
             },
             rule3: {
                 kyckbisdoc: "required",
@@ -215,7 +301,7 @@ export class DocumentsService {
                 kycstatuscertifieddoc: "required",
                 kyctaxcertificationdoc: "required",
                 kycw8benefatcadoc: "required",
-                kycannual3yeardoc: "required",
+                kycannual3yeardoc: "required"
             },
             rule4: {
                 kyckbisdoc: "required",
@@ -227,7 +313,7 @@ export class DocumentsService {
                 kycstatuscertifieddoc: "required",
                 kyctaxcertificationdoc: "required",
                 kycw8benefatcadoc: "required",
-                kycannual3yeartaxdoc: "required",
+                kycannual3yeartaxdoc: "required"
             },
             rule5: {
                 kyckbisdoc: "required",
@@ -239,8 +325,49 @@ export class DocumentsService {
                 kycstatuscertifieddoc: "required",
                 kyctaxcertificationdoc: "required",
                 kycw8benefatcadoc: "required",
-                kycannual3yeartaxdoc: "required",
+                kycannual3yeartaxdoc: "required"
             },
+            rule6: {
+                kyckbisdoc: "required",
+                kyclistsigningauthoritiesdoc: "required",
+                kycribdoc: "required",
+                kycorgchartdoc: "required",
+                kycisincodedoc: "required",
+                kycevidencefloatable: "required",
+                kycbeneficialownerdoc: "required",
+                kycidorpassportdoc: "required",
+                kycstatuscertifieddoc: "required",
+                kyctaxcertificationdoc: "required",
+                kycw8benefatcadoc: "required",
+                kycannual3yeartaxdoc: "required"
+            },
+            rule7: {
+                kyckbisdoc: "required",
+                kyclistsigningauthoritiesdoc: "required",
+                kycribdoc: "required",
+                kycorgchartdoc: "required",
+                kycproofregulationdoc: "required",
+                kycbeneficialownerdoc: "required",
+                kycidorpassportdoc: "required",
+                kycstatuscertifieddoc: "required",
+                kyctaxcertificationdoc: "required",
+                kycw8benefatcadoc: "required",
+                kycproofofapprovaldoc: "optional",
+                kycwolfsbergdoc: "required",
+                kycannual3yeartaxdoc: "required"
+            },
+            rule8: {
+                kyckbisdoc: "required",
+                kyclistsigningauthoritiesdoc: "required",
+                kycribdoc: "required",
+                kycorgchartdoc: "required",
+                kycbeneficialownerdoc: "required",
+                kycidorpassportdoc: "required",
+                kycstatuscertifieddoc: "required",
+                kyctaxcertificationdoc: "required",
+                kycw8benefatcadoc: "required",
+                kycannual3yeartaxdoc: "required"
+            }
         },
         IZNES_NOWCP: {
             rule1: {
@@ -253,7 +380,7 @@ export class DocumentsService {
                 kycstatuscertifieddoc: "required",
                 kyctaxcertificationdoc: "required",
                 kycw8benefatcadoc: "required",
-                kycannual2yeardoc: "required"
+                kycannualreportdoc: "required"
             },
             rule2: {
                 kyckbisdoc: "required",
@@ -266,7 +393,7 @@ export class DocumentsService {
                 kycw8benefatcadoc: "required",
                 kycproofofapprovaldoc: "optional",
                 kycwolfsbergdoc: "required",
-                kycannual2yeardoc: "required"
+                kycannualreportdoc: "required"
             },
             rule3: {
                 kyckbisdoc: "required",
@@ -303,6 +430,47 @@ export class DocumentsService {
                 kyctaxcertificationdoc: "required",
                 kycw8benefatcadoc: "required",
                 kycannual3yeartaxdoc: "required"
+            },
+            rule6: {
+                kyckbisdoc: "required",
+                kyclistsigningauthoritiesdoc: "required",
+                kycribdoc: "required",
+                kycorgchartdoc: "required",
+                kycisincodedoc: "required",
+                kycevidencefloatable: "required",
+                kycbeneficialownerdoc: "required",
+                kycidorpassportdoc: "required",
+                kycstatuscertifieddoc: "required",
+                kyctaxcertificationdoc: "required",
+                kycw8benefatcadoc: "required",
+                kycannual3yeartaxdoc: "required"
+            },
+            rule7: {
+                kyckbisdoc: "required",
+                kyclistsigningauthoritiesdoc: "required",
+                kycribdoc: "required",
+                kycorgchartdoc: "required",
+                kycproofregulationdoc: "required",
+                kycbeneficialownerdoc: "required",
+                kycidorpassportdoc: "required",
+                kycstatuscertifieddoc: "required",
+                kyctaxcertificationdoc: "required",
+                kycw8benefatcadoc: "required",
+                kycproofofapprovaldoc: "optional",
+                kycwolfsbergdoc: "required",
+                kycannual3yeartaxdoc: "required"
+            },
+            rule8: {
+                kyckbisdoc: "required",
+                kyclistsigningauthoritiesdoc: "required",
+                kycribdoc: "required",
+                kycorgchartdoc: "required",
+                kycbeneficialownerdoc: "required",
+                kycidorpassportdoc: "required",
+                kycstatuscertifieddoc: "required",
+                kyctaxcertificationdoc: "required",
+                kycw8benefatcadoc: "required",
+                kycannual3yeartaxdoc: "required"
             }
         },
         IZNES_ID2S: {
@@ -320,7 +488,7 @@ export class DocumentsService {
                 kycdisclosureproceduredoc: "optional",
                 kyccompositioncommitteedoc: "optional",
                 kycbusinessplandoc: "optional",
-                kycannual3yeardoc: "required",
+                kycannual3yeardoc: "required"
             },
             rule2: {
                 kyckbisdoc: "required",
@@ -337,7 +505,7 @@ export class DocumentsService {
                 kyccompositioncommitteedoc: "optional",
                 kycbusinessplandoc: "optional",
                 kycwolfsbergdoc: "required",
-                kycannual3yeardoc: "required",
+                kycannual3yeardoc: "required"
             },
             rule3: {
                 kyckbisdoc: "required",
@@ -352,7 +520,7 @@ export class DocumentsService {
                 kycdisclosureproceduredoc: "optional",
                 kyccompositioncommitteedoc: "optional",
                 kycbusinessplandoc: "optional",
-                kycannual3yeardoc: "required",
+                kycannual3yeardoc: "required"
             },
             rule4: {
                 kyckbisdoc: "required",
@@ -368,7 +536,7 @@ export class DocumentsService {
                 kycdisclosureproceduredoc: "optional",
                 kyccompositioncommitteedoc: "optional",
                 kycbusinessplandoc: "optional",
-                kycannual3yeartaxdoc: "required",
+                kycannual3yeartaxdoc: "required"
             },
             rule5: {
                 kyckbisdoc: "required",
@@ -384,8 +552,61 @@ export class DocumentsService {
                 kycdisclosureproceduredoc: "optional",
                 kyccompositioncommitteedoc: "optional",
                 kycbusinessplandoc: "optional",
-                kycannual3yeartaxdoc: "required",
+                kycannual3yeartaxdoc: "required"
             },
+            rule6: {
+                kyckbisdoc: "required",
+                kyclistsigningauthoritiesdoc: "required",
+                kycribdoc: "required",
+                kycorgchartdoc: "required",
+                kycisincodedoc: "required",
+                kycevidencefloatable: "required",
+                kycbeneficialownerdoc: "required",
+                kycidorpassportdoc: "required",
+                kycstatuscertifieddoc: "required",
+                kyctaxcertificationdoc: "required",
+                kycw8benefatcadoc: "required",
+                kyccriticalcustomersdoc: "optional",
+                kycdisclosureproceduredoc: "optional",
+                kyccompositioncommitteedoc: "optional",
+                kycbusinessplandoc: "optional",
+                kycannual3yeartaxdoc: "required"
+            },
+            rule7: {
+                kyckbisdoc: "required",
+                kyclistsigningauthoritiesdoc: "required",
+                kycribdoc: "required",
+                kycorgchartdoc: "required",
+                kycproofregulationdoc: "required",
+                kycbeneficialownerdoc: "required",
+                kycidorpassportdoc: "required",
+                kycstatuscertifieddoc: "required",
+                kyctaxcertificationdoc: "required",
+                kycw8benefatcadoc: "required",
+                kyccriticalcustomersdoc: "optional",
+                kycproofofapprovaldoc: "optional",
+                kycdisclosureproceduredoc: "optional",
+                kyccompositioncommitteedoc: "optional",
+                kycbusinessplandoc: "optional",
+                kycwolfsbergdoc: "required",
+                kycannual3yeartaxdoc: "required"
+            },
+            rule8: {
+                kyckbisdoc: "required",
+                kyclistsigningauthoritiesdoc: "required",
+                kycribdoc: "required",
+                kycorgchartdoc: "required",
+                kycbeneficialownerdoc: "required",
+                kycidorpassportdoc: "required",
+                kycstatuscertifieddoc: "required",
+                kyctaxcertificationdoc: "required",
+                kycw8benefatcadoc: "required",
+                kyccriticalcustomersdoc: "optional",
+                kycdisclosureproceduredoc: "optional",
+                kyccompositioncommitteedoc: "optional",
+                kycbusinessplandoc: "optional",
+                kycannual3yeartaxdoc: "required"
+            }
         },
         NOWCP_ID2S: {
             rule1: {
@@ -402,7 +623,7 @@ export class DocumentsService {
                 kycdisclosureproceduredoc: "optional",
                 kyccompositioncommitteedoc: "optional",
                 kycbusinessplandoc: "optional",
-                kycannual3yeardoc: "required",
+                kycannual3yeardoc: "required"
             },
             rule2: {
                 kyckbisdoc: "required",
@@ -419,7 +640,7 @@ export class DocumentsService {
                 kyccompositioncommitteedoc: "optional",
                 kycbusinessplandoc: "optional",
                 kycwolfsbergdoc: "required",
-                kycannual3yeardoc: "required",
+                kycannual3yeardoc: "required"
             },
             rule3: {
                 kyckbisdoc: "required",
@@ -435,7 +656,7 @@ export class DocumentsService {
                 kycdisclosureproceduredoc: "optional",
                 kyccompositioncommitteedoc: "optional",
                 kycbusinessplandoc: "optional",
-                kycannual3yeardoc: "required",
+                kycannual3yeardoc: "required"
             },
             rule4: {
                 kyckbisdoc: "required",
@@ -451,7 +672,7 @@ export class DocumentsService {
                 kycdisclosureproceduredoc: "optional",
                 kyccompositioncommitteedoc: "optional",
                 kycbusinessplandoc: "optional",
-                kycannual3yeartaxdoc: "required",
+                kycannual3yeartaxdoc: "required"
             },
             rule5: {
                 kyckbisdoc: "required",
@@ -467,8 +688,61 @@ export class DocumentsService {
                 kycdisclosureproceduredoc: "optional",
                 kyccompositioncommitteedoc: "optional",
                 kycbusinessplandoc: "optional",
-                kycannual3yeartaxdoc: "required",
+                kycannual3yeartaxdoc: "required"
             },
+            rule6: {
+                kyckbisdoc: "required",
+                kyclistsigningauthoritiesdoc: "required",
+                kycribdoc: "required",
+                kycorgchartdoc: "required",
+                kycisincodedoc: "required",
+                kycevidencefloatable: "required",
+                kycbeneficialownerdoc: "required",
+                kycidorpassportdoc: "required",
+                kycstatuscertifieddoc: "required",
+                kyctaxcertificationdoc: "optional",
+                kycw8benefatcadoc: "optional",
+                kyccriticalcustomersdoc: "optional",
+                kycdisclosureproceduredoc: "optional",
+                kyccompositioncommitteedoc: "optional",
+                kycbusinessplandoc: "optional",
+                kycannual3yeartaxdoc: "required"
+            },
+            rule7: {
+                kyckbisdoc: "required",
+                kyclistsigningauthoritiesdoc: "required",
+                kycribdoc: "required",
+                kycorgchartdoc: "required",
+                kycproofregulationdoc: "required",
+                kycbeneficialownerdoc: "required",
+                kycidorpassportdoc: "required",
+                kycstatuscertifieddoc: "required",
+                kyctaxcertificationdoc: "optional",
+                kycw8benefatcadoc: "optional",
+                kyccriticalcustomersdoc: "optional",
+                kycproofofapprovaldoc: "optional",
+                kycdisclosureproceduredoc: "optional",
+                kyccompositioncommitteedoc: "optional",
+                kycbusinessplandoc: "optional",
+                kycwolfsbergdoc: "required",
+                kycannual3yeartaxdoc: "required"
+            },
+            rule8: {
+                kyckbisdoc: "required",
+                kyclistsigningauthoritiesdoc: "required",
+                kycribdoc: "required",
+                kycorgchartdoc: "required",
+                kycbeneficialownerdoc: "required",
+                kycidorpassportdoc: "required",
+                kycstatuscertifieddoc: "required",
+                kyctaxcertificationdoc: "optional",
+                kycw8benefatcadoc: "optional",
+                kyccriticalcustomersdoc: "optional",
+                kycdisclosureproceduredoc: "optional",
+                kyccompositioncommitteedoc: "optional",
+                kycbusinessplandoc: "optional",
+                kycannual3yeartaxdoc: "required"
+            }
         },
         IZNES_NOWCP_ID2S: {
             rule1: {
@@ -485,7 +759,7 @@ export class DocumentsService {
                 kycdisclosureproceduredoc: "optional",
                 kyccompositioncommitteedoc: "optional",
                 kycbusinessplandoc: "optional",
-                kycannual3yeardoc: "required",
+                kycannual3yeardoc: "required"
             },
             rule2: {
                 kyckbisdoc: "required",
@@ -502,7 +776,7 @@ export class DocumentsService {
                 kyccompositioncommitteedoc: "optional",
                 kycbusinessplandoc: "optional",
                 kycwolfsbergdoc: "required",
-                kycannual3yeardoc: "required",
+                kycannual3yeardoc: "required"
             },
             rule3: {
                 kyckbisdoc: "required",
@@ -518,7 +792,7 @@ export class DocumentsService {
                 kycdisclosureproceduredoc: "optional",
                 kyccompositioncommitteedoc: "optional",
                 kycbusinessplandoc: "optional",
-                kycannual3yeardoc: "required",
+                kycannual3yeardoc: "required"
             },
             rule4: {
                 kyckbisdoc: "required",
@@ -534,7 +808,7 @@ export class DocumentsService {
                 kycdisclosureproceduredoc: "optional",
                 kyccompositioncommitteedoc: "optional",
                 kycbusinessplandoc: "optional",
-                kycannual3yeartaxdoc: "required",
+                kycannual3yeartaxdoc: "required"
             },
             rule5: {
                 kyckbisdoc: "required",
@@ -550,8 +824,61 @@ export class DocumentsService {
                 kycdisclosureproceduredoc: "optional",
                 kyccompositioncommitteedoc: "optional",
                 kycbusinessplandoc: "optional",
-                kycannual3yeartaxdoc: "required",
+                kycannual3yeartaxdoc: "required"
             },
+            rule6: {
+                kyckbisdoc: "required",
+                kyclistsigningauthoritiesdoc: "required",
+                kycribdoc: "required",
+                kycorgchartdoc: "required",
+                kycisincodedoc: "required",
+                kycevidencefloatable: "required",
+                kycbeneficialownerdoc: "required",
+                kycidorpassportdoc: "required",
+                kycstatuscertifieddoc: "required",
+                kyctaxcertificationdoc: "required",
+                kycw8benefatcadoc: "required",
+                kyccriticalcustomersdoc: "optional",
+                kycdisclosureproceduredoc: "optional",
+                kyccompositioncommitteedoc: "optional",
+                kycbusinessplandoc: "optional",
+                kycannual3yeartaxdoc: "required"
+            },
+            rule7: {
+                kyckbisdoc: "required",
+                kyclistsigningauthoritiesdoc: "required",
+                kycribdoc: "required",
+                kycorgchartdoc: "required",
+                kycproofregulationdoc: "required",
+                kycbeneficialownerdoc: "required",
+                kycidorpassportdoc: "required",
+                kycstatuscertifieddoc: "required",
+                kyctaxcertificationdoc: "required",
+                kycw8benefatcadoc: "required",
+                kyccriticalcustomersdoc: "optional",
+                kycproofofapprovaldoc: "optional",
+                kycdisclosureproceduredoc: "optional",
+                kyccompositioncommitteedoc: "optional",
+                kycbusinessplandoc: "optional",
+                kycwolfsbergdoc: "required",
+                kycannual3yeartaxdoc: "required"
+            },
+            rule8: {
+                kyckbisdoc: "required",
+                kyclistsigningauthoritiesdoc: "required",
+                kycribdoc: "required",
+                kycorgchartdoc: "required",
+                kycbeneficialownerdoc: "required",
+                kycidorpassportdoc: "required",
+                kycstatuscertifieddoc: "required",
+                kyctaxcertificationdoc: "required",
+                kycw8benefatcadoc: "required",
+                kyccriticalcustomersdoc: "optional",
+                kycdisclosureproceduredoc: "optional",
+                kyccompositioncommitteedoc: "optional",
+                kycbusinessplandoc: "optional",
+                kycannual3yeartaxdoc: "required"
+            }
         }
     };
 
