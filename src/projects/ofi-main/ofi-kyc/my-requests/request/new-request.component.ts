@@ -147,16 +147,16 @@ export class NewKycRequestComponent implements OnInit {
 
             // Rules based on other parts of the form.
             rules: {
+                /* Company is listed */
                 rule1: (
-                    // Company is listed
                     isCompanyListed(this.forms)
                 ),
+                /* Company is regulated company or state- owned / public entities  */
                 rule2: (
-                    // Company is regulated company or state- owned / public entities 
                     isCompanyRegulated(this.forms) || isStateOwned(this.forms)
                 ),
+                /* Company is unregulated, unlisted, not state-owned and does not represent a high risk (risky activity or country): */
                 rule3: (
-                    // Company is unregulated, unlisted, not state-owned and does not represent a high risk (risky activity or country):
                     ! (
                         isCompanyListed(this.forms) ||
                         isCompanyRegulated(this.forms) ||
@@ -165,22 +165,37 @@ export class NewKycRequestComponent implements OnInit {
                         isHighRiskCountry(this.forms)
                     )
                 ),
+                /* Company is unregulated, unlisted, not state-owned with a high activity risk  */
                 rule4: (
-                    // Company is unregulated, unlisted, not state-owned with a high activity risk 
                     ! (
                         isCompanyListed(this.forms) ||
                         isCompanyRegulated(this.forms) ||
                         isStateOwned(this.forms)
                     ) && isHighRiskActivity(this.forms)
                 ),
+                /* Company is unregulated, unlisted, not state-owned with a high country risk  */
                 rule5: (
-                    // Company is unregulated, unlisted, not state-owned with a high country risk 
                     ! (
                         isCompanyListed(this.forms) ||
                         isCompanyRegulated(this.forms) ||
                         isStateOwned(this.forms)
                     ) && isHighRiskCountry(this.forms)
                 ) || (
+                    hasStakeholderPEP(this.forms)
+                ),
+                /* Company is listed with a PEP */
+                rule6: (
+                    isCompanyListed(this.forms) &&
+                    hasStakeholderPEP(this.forms)
+                ),
+                /* Company is regulated company with a PEP */
+                rule7: (
+                    isCompanyRegulated(this.forms) &&
+                    hasStakeholderPEP(this.forms)
+                ),
+                /* Company is state-owned/public entities with a PEP */
+                rule8: (
+                    isStateOwned(this.forms) &&
                     hasStakeholderPEP(this.forms)
                 ),
             },
@@ -198,6 +213,9 @@ export class NewKycRequestComponent implements OnInit {
         console.log(' | Company is unregulated, unlisted, not state - owned and does not represent a high risk(risky activity or country)? ', permissionsObject.rules['rule3'])
         console.log(' | Company is unregulated, unlisted, not state - owned with a high activity risk? ', permissionsObject.rules['rule4'])
         console.log(' | Company is unregulated, unlisted, not state - owned with a high country risk ? ', permissionsObject.rules['rule5'])
+        console.log(' | Company is listed with a PEP ? ', permissionsObject.rules['rule6'])
+        console.log(' | Company is regulated company with a PEP ? ', permissionsObject.rules['rule7'])
+        console.log(' | Company is state-owned/public entities with a PEP ? ', permissionsObject.rules['rule8'])
         console.log(' | Overrides: ', JSON.stringify(permissionsObject['overrides']));
 
         this.documentsPermissionsSubject.next(permissionsObject);

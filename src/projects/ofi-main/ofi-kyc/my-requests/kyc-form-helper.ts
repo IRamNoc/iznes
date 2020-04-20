@@ -254,7 +254,7 @@ export function isHighRiskCountry(f: FormGroup): boolean {
 export function hasStakeholderPEP(f: FormGroup): boolean {
     const stakeholders = get(f, 'controls.identification.controls.beneficiaries.controls.beneficiaries.value', [])
     for (let stakeholder of stakeholders) {
-        if (stakeholder.naturalperson && stakeholder.naturalperson.isPoliticallyExposed) return true;
+        if (stakeholder.naturalPerson && stakeholder.naturalPerson.isPoliticallyExposed === 1) return true;
     }
     return false;
 }
