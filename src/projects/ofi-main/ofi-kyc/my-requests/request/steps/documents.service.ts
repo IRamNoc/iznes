@@ -393,7 +393,7 @@ export class DocumentsService {
                 kycw8benefatcadoc: "required",
                 kycproofofapprovaldoc: "optional",
                 kycwolfsbergdoc: "required",
-                kycannualreportdoc: "required",
+                kycannual2yeardoc: "required",
             },
             rule3: {
                 kyckbisdoc: "required",
