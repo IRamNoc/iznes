@@ -83,7 +83,7 @@ export class DocumentsService {
                 kycorgchartdoc: "required",
                 kycbeneficialownerdoc: "required",
                 kycidorpassportdoc: "required",
-                kycannual3yeardoc: "required",
+                kycannual2yeardoc: "required",
             },
             rule4: {
                 kyckbisdoc: "required",
