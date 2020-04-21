@@ -3089,7 +3089,7 @@ export const documentTypesList = [
     },
     {
         id: 'kycorgchartdoc',
-        text: 'Org chart with key operational teams with the name of the enity provided, and dated',
+        text: 'Org chart with key operational teams with the name of the entity provided, and dated',
     },
     {
         id: 'kyclistsigningauthoritiesdoc',
