@@ -96,7 +96,7 @@ import { SetlBalancesComponent, SetlIssueComponent, SetlTransactionsComponent } 
 import { ConnectionComponent } from '@setl/core-connections/connections/component';
 import { SetlMessagesComponent } from '@setl/core-messages';
 import { OfiWaitingApprovalComponent } from '@ofi/ofi-main/ofi-kyc/waiting-approval/component';
-import { SetlLoginComponent, SetlLogoutComponent, SignupComponent } from '@setl/core-login';
+import { SetlLoginComponent, SetlLogoutComponent, SignupComponent, LoginSSOEngieComponent } from '@setl/core-login';
 
 /* Portfolio manager */
 import {
@@ -130,6 +130,10 @@ export const ROUTES: Routes = [
             {
                 path: 'reset-two-factor/:twofactortoken',
                 component: SetlLoginComponent,
+            },
+            {
+                path: 'sso-engie',
+                component: LoginSSOEngieComponent,
             },
         ],
     },

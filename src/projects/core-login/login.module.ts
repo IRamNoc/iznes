@@ -8,6 +8,9 @@ import { RouterModule } from '@angular/router';
 import { SetlLoginComponent } from './login.component';
 import { SetlLogoutComponent } from './logout.component';
 
+/* SSO Login Engie view. */
+import { LoginSSOEngieComponent } from './login-ssoengie/login-ssoengie.component';
+
 /* Signup */
 import { SignupComponent } from './signup/component';
 
@@ -28,6 +31,7 @@ import { LoginService } from './login.service';
         SignupComponent,
         EnrollComponent,
         AuthenticateComponent,
+        LoginSSOEngieComponent,
     ],
     imports: [
         ToasterModule,
@@ -45,6 +49,7 @@ import { LoginService } from './login.service';
         SignupComponent,
         EnrollComponent,
         AuthenticateComponent,
+        LoginSSOEngieComponent,
     ],
     providers: [
         ToasterService,
