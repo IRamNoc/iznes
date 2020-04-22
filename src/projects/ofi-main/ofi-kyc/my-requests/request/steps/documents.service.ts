@@ -67,7 +67,7 @@ export class DocumentsService {
                 kyclistsigningauthoritiesdoc: "optional",
                 kycribdoc: "required",
                 kycorgchartdoc: "required",
-                kycisincodedoc: "required",
+                kycisincodedoc: "optional",
                 kycevidencefloatable: "required"
             },
             rule2: {
@@ -90,7 +90,7 @@ export class DocumentsService {
                 kycorgchartdoc: "required",
                 kycbeneficialownerdoc: "required",
                 kycidorpassportdoc: "required",
-                kycannual3yeardoc: "required"
+                kycannual2yeardoc: "required"
             },
             rule5: {
                 kyckbisdoc: "required",
@@ -152,7 +152,7 @@ export class DocumentsService {
                 kyclistsigningauthoritiesdoc: "optional",
                 kycorgchartdoc: "required",
                 kycisincodedoc: "required",
-                kycevidencefloatable: "required",
+                kycevidencefloatable: "optional",
                 kycstatuscertifieddoc: "required",
                 kyctaxcertificationdoc: "optional",
                 kycw8benefatcadoc: "optional",
@@ -193,7 +193,7 @@ export class DocumentsService {
             },
             rule4: {
                 kyckbisdoc: "required",
-                kyclistsigningauthoritiesdoc: "optional",
+                kyclistsigningauthoritiesdoc: "required",
                 kycorgchartdoc: "required",
                 kycbeneficialownerdoc: "required",
                 kycstatuscertifieddoc: "required",
@@ -324,7 +324,7 @@ export class DocumentsService {
             },
             rule4: {
                 kyckbisdoc: "required",
-                kyclistsigningauthoritiesdoc: "optional",
+                kyclistsigningauthoritiesdoc: "required",
                 kycribdoc: "required",
                 kycorgchartdoc: "required",
                 kycbeneficialownerdoc: "required",
@@ -437,7 +437,7 @@ export class DocumentsService {
             },
             rule4: {
                 kyckbisdoc: "required",
-                kyclistsigningauthoritiesdoc: "optional",
+                kyclistsigningauthoritiesdoc: "required",
                 kycribdoc: "required",
                 kycorgchartdoc: "required",
                 kycbeneficialownerdoc: "required",
@@ -563,7 +563,7 @@ export class DocumentsService {
             },
             rule4: {
                 kyckbisdoc: "required",
-                kyclistsigningauthoritiesdoc: "optional",
+                kyclistsigningauthoritiesdoc: "required",
                 kycribdoc: "required",
                 kycorgchartdoc: "required",
                 kycbeneficialownerdoc: "required",
@@ -669,7 +669,7 @@ export class DocumentsService {
                 kycribdoc: "required",
                 kycorgchartdoc: "required",
                 kycisincodedoc: "required",
-                kycevidencefloatable: "required",
+                kycevidencefloatable: "optional",
                 kycstatuscertifieddoc: "required",
                 kyctaxcertificationdoc: "optional",
                 kycw8benefatcadoc: "optional",
@@ -712,7 +712,7 @@ export class DocumentsService {
             },
             rule4: {
                 kyckbisdoc: "required",
-                kyclistsigningauthoritiesdoc: "optional",
+                kyclistsigningauthoritiesdoc: "required",
                 kycribdoc: "required",
                 kycorgchartdoc: "required",
                 kycbeneficialownerdoc: "required",
@@ -862,7 +862,7 @@ export class DocumentsService {
             },
             rule4: {
                 kyckbisdoc: "required",
-                kyclistsigningauthoritiesdoc: "optional",
+                kyclistsigningauthoritiesdoc: "required",
                 kycribdoc: "required",
                 kycorgchartdoc: "required",
                 kycbeneficialownerdoc: "required",
