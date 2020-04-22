@@ -12,33 +12,37 @@ export class DocumentPermissions {
          */
         rule1: boolean;
         /**
-         * Company is regulated company or state- owned / public entities 
+         * Company is regulated company
          */
         rule2: boolean;
         /**
-         * Company is unregulated, unlisted, not state-owned and does not represent a high risk (risky activity or country):
+         * Company is state-owned/public entities
          */
         rule3: boolean;
         /**
-         * Company is unregulated, unlisted, not state-owned with a high activity risk 
+         * Company is unregulated, unlisted, not state-owned and does not represent a high risk (risky activity or country):
          */
         rule4: boolean;
         /**
-         * Company is unregulated, unlisted, not state-owned with a high country risk 
+         * Company is unregulated, unlisted, not state-owned with a high activity risk 
          */
         rule5: boolean;
         /**
-         * Company is listed with a PEP
+         * Company is unregulated, unlisted, not state-owned with a high country risk 
          */
         rule6: boolean;
         /**
-         * Company is regulated company with a PEP
+         * Company is listed with a PEP
          */
         rule7: boolean;
         /**
-         * Company is state-owned/public entities with a PEP
+         * Company is regulated company with a PEP
          */
         rule8: boolean;
+        /**
+         * Company is state-owned/public entities with a PEP
+         */
+        rule9: boolean;
     };
     overrides: { [key: string]: boolean };
 }
