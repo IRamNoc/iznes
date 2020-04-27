@@ -232,4 +232,8 @@ export class KycFormHelperService {
         if (!this.kycForm) return false;
         return isHighRiskCountry(this.kycForm);
     }
+
+    public kycFormValueChange$(): Observable<any> {
+       return this.kycForm.valueChanges;
+    }
 }
