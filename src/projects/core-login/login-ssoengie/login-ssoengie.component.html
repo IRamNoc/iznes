@@ -1,4 +1,5 @@
-<p>
-  login-ssoengie works!
-  <button ng-click="login()">LOGIN NOW</button>
-</p>
+<div>
+  <div class="display-1">Test</div>
+    <div *ngIf="!isAuthenticated">Utilisateur non authentifié</div>
+    <button *ngIf="isAuthenticated" (click)="showInfo()"> Display User Info </button>
+</div>

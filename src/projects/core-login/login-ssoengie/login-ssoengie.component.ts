@@ -3,16 +3,13 @@ import { OktaAuthService } from '@okta/okta-angular';
 
 @Component({
   selector: 'app-login-ssoengie',
-  template: `
-    <button *ngIf="!isAuthenticated" (click)="login()"> Login </button>
-  `,
+  templateUrl: './login-ssoengie.component.html',
 })
 
-export class LoginSSOEngieComponent {
+export class LoginSSOEngieComponent implements OnInit {
   isAuthenticated: boolean;
 
   constructor(public oktaAuth: OktaAuthService) {
-    // Subscribe to authentication state changes
     this.oktaAuth.$authenticationState.subscribe(
       (isAuthenticated: boolean) => this.isAuthenticated = isAuthenticated
     );
@@ -20,9 +17,13 @@ export class LoginSSOEngieComponent {
 
   async ngOnInit() {
     this.isAuthenticated = await this.oktaAuth.isAuthenticated();
+    if (!this.isAuthenticated) return this.oktaAuth.loginRedirect('/sso-engie');
+    console.log("Already Authenticated")
+    let accessToken = await this.oktaAuth.getAccessToken();
   }
 
-  login() {
-    this.oktaAuth.loginRedirect('/profile');
+  async showInfo() {
+    const userClaims = await this.oktaAuth.getUser();
+    console.log(userClaims)
   }
 }

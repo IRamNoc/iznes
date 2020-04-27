@@ -6,6 +6,7 @@ import { SagaHelper, Common } from '@setl/utils';
 import { createMemberNodeRequest, createMemberNodeSagaRequest } from '@setl/utils/common';
 import {
     LoginRequestMessageBody,
+    LoginSSORequestMessageBody,
     UserDetailsRequestMessageBody,
     SaveUserDetailsRequestBody,
     SetTwoFactorAuthenticationBody,
@@ -41,6 +42,10 @@ import {Router} from "@angular/router";
 interface LoginRequestData {
     username: string;
     password: string;
+}
+
+interface LoginSSORequestData {
+    accessToken: string;
 }
 
 interface UserDetailsData {
@@ -220,6 +225,15 @@ export class MyUserService implements OnDestroy {
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+    }
+
+    loginSSORequest(loginSSOData: LoginSSORequestData): any {
+        const messageBody: LoginSSORequestMessageBody = {
+            RequestName: 'LoginSSO',
+            accessToken: loginSSOData.accessToken
+        };
+
+        return createMemberNodeRequest(this.memberSocketService, messageBody);
     }
 
     requestMyUserDetails(): any {

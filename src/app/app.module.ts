@@ -146,9 +146,8 @@ export function memberSocketServiceFactory() {
             {
             issuer: 'https://dev-698165.okta.com/oauth2/default',
             clientId: '0oaa4oazwg6RcoBlw4x6',
-            redirectUri: 'http://192.168.1.85:4200/implicit/callback',
+            redirectUri: 'https://testing.iznes.io:4200/implicit/callback',
             pkce: true,
-            secure: false
           }
         },
 

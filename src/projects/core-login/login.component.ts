@@ -47,6 +47,8 @@ import { MultilingualService } from '@setl/multilingual';
 import { passwordValidator } from '@setl/utils/helper/validators/password.directive';
 import { LoginService } from './login.service';
 import { ClrLoadingState } from '@clr/angular';
+// Okta SSO Engie
+//import { OktaAuthService } from '@okta/okta-angular';
 
 export interface LoginRedirect {
     loginedRedirect(redirect: string, urlParams: any): void;
@@ -126,6 +128,8 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit, Log
 
     alert: any = { show: false, type: '', content: '' };
 
+    oktaAuthenticated: boolean; // SSO Engie
+
     private userAuthenticationState: any;
 
     private queryParams: any;
@@ -163,6 +167,7 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit, Log
                 private changeDetectorRef: ChangeDetectorRef,
                 private confirmationService: ConfirmationService,
                 private loginService: LoginService,
+                //public oktaAuth: OktaAuthService,
                 @Inject(APP_CONFIG) appConfig: AppConfig) {
 
         this.appConfig = appConfig;
@@ -177,6 +182,10 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit, Log
         this.subscriptionsArray.push(this.requestLanguageObj.subscribe(requested => this.getLanguage(requested)));
 
         this.setupForms();
+
+        /*this.oktaAuth.$authenticationState.subscribe(
+            (oktaAuthenticated: boolean) => this.oktaAuthenticated = oktaAuthenticated
+        );*/
     }
 
     setupForms() {
@@ -250,7 +259,12 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit, Log
         }
     }
 
-    ngOnInit() {
+    async ngOnInit() {
+        //this.oktaAuthenticated = await this.oktaAuth.isAuthenticated();
+        this.oktaAuthenticated = true
+        if (this.oktaAuthenticated) {
+            this.loginUsingSSO()
+        }
         this.isLogin = false;
 
         this.getQueryParams();
@@ -309,6 +323,19 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit, Log
             return;
         }
         this.usernameEl.nativeElement.focus();
+    }
+
+    async loginUsingSSO() {
+        //const oktaAccessToken = (await this.oktaAuth.getUser()).sub;
+        const oktaAccessToken = "00u98w6n5y7Q2ZZnY4x6"
+        const loginRequestAction = loginRequestAC();
+        this.ngRedux.dispatch(loginRequestAction);
+
+        const asyncTaskPipe = this.myUserService.loginSSORequest({
+            accessToken: oktaAccessToken
+        })
+
+        console.log(asyncTaskPipe)
     }
 
     login(value) {
