@@ -5,7 +5,17 @@ import { Observable } from 'rxjs/Observable';
 import { tap, takeUntil, map, filter, take } from 'rxjs/operators';
 import { OfiKycService } from '../../ofi-req-services/ofi-kyc/service';
 import { MyUserService } from '../../../core-req-services';
-import { isIZNES, isID2SIPA, getPartyCompanies, PartyCompaniesInterface, isCompanyListed, isCompanyRegulated, isStateOwned, getPartyNameFromInvestorType } from './kyc-form-helper';
+import {
+    isIZNES,
+    isID2SIPA,
+    getPartyCompanies,
+    PartyCompaniesInterface,
+    isCompanyListed,
+    isCompanyRegulated,
+    isStateOwned,
+    getPartyNameFromInvestorType,
+    isHighRiskActivity, isHighRiskCountry
+} from './kyc-form-helper';
 import { InvestorType } from '../../shared/investor-types';
 import { FormGroup } from '@angular/forms';
 
@@ -211,5 +221,19 @@ export class KycFormHelperService {
     public isStateOwned(): boolean {
         if (!this.kycForm) return false;
         return isStateOwned(this.kycForm);
+    }
+
+    public isHighRiskActivity(): boolean {
+        if (!this.kycForm) return false;
+        return isHighRiskActivity(this.kycForm);
+    }
+
+    public isHighRiskCountry(): boolean {
+        if (!this.kycForm) return false;
+        return isHighRiskCountry(this.kycForm);
+    }
+
+    public kycFormValueChange$(): Observable<any> {
+       return this.kycForm.valueChanges;
     }
 }
