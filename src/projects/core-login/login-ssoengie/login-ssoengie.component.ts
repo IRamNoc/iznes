@@ -17,9 +17,9 @@ export class LoginSSOEngieComponent implements OnInit {
 
   async ngOnInit() {
     this.isAuthenticated = await this.oktaAuth.isAuthenticated();
-    if (!this.isAuthenticated) return this.oktaAuth.loginRedirect('/sso-engie');
     console.log("Already Authenticated")
     let accessToken = await this.oktaAuth.getAccessToken();
+    console.log(accessToken)
   }
 
   async showInfo() {

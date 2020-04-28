@@ -236,7 +236,7 @@ export class MyUserService implements OnDestroy {
             CFCountry: '.',
         };
 
-        return createMemberNodeRequest(this.memberSocketService, messageBody);
+        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
     }
 
     requestMyUserDetails(): any {

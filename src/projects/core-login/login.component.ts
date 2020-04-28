@@ -48,7 +48,7 @@ import { passwordValidator } from '@setl/utils/helper/validators/password.direct
 import { LoginService } from './login.service';
 import { ClrLoadingState } from '@clr/angular';
 // Okta SSO Engie
-//import { OktaAuthService } from '@okta/okta-angular';
+import { OktaAuthService } from '@okta/okta-angular';
 
 export interface LoginRedirect {
     loginedRedirect(redirect: string, urlParams: any): void;
@@ -167,7 +167,7 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit, Log
                 private changeDetectorRef: ChangeDetectorRef,
                 private confirmationService: ConfirmationService,
                 private loginService: LoginService,
-                //public oktaAuth: OktaAuthService,
+                public oktaAuth: OktaAuthService,
                 @Inject(APP_CONFIG) appConfig: AppConfig) {
 
         this.appConfig = appConfig;
@@ -183,9 +183,9 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit, Log
 
         this.setupForms();
 
-        /*this.oktaAuth.$authenticationState.subscribe(
+        this.oktaAuth.$authenticationState.subscribe(
             (oktaAuthenticated: boolean) => this.oktaAuthenticated = oktaAuthenticated
-        );*/
+        );
     }
 
     setupForms() {
@@ -260,11 +260,8 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit, Log
     }
 
     async ngOnInit() {
-        //this.oktaAuthenticated = await this.oktaAuth.isAuthenticated();
-        this.oktaAuthenticated = true
-        if (this.oktaAuthenticated) {
-            //this.loginUsingSSO()
-        }
+        this.oktaAuthenticated = await this.oktaAuth.isAuthenticated();
+        console.log("Is Auth : ", this.oktaAuthenticated)
         this.isLogin = false;
 
         this.getQueryParams();
@@ -315,6 +312,9 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit, Log
         window.onbeforeunload = null;
 
         this.logService.log(this.router);
+        if (this.oktaAuthenticated) {
+            this.loginUsingSSO()
+        }
     }
 
     ngAfterViewInit() {
@@ -322,38 +322,44 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit, Log
             this.passwordEl.nativeElement.focus();
             return;
         }
+
         this.usernameEl.nativeElement.focus();
     }
 
     async loginUsingSSO() {
-        //const oktaAccessToken = (await this.oktaAuth.getUser()).sub;
-        this.submitBtnState = ClrLoadingState.LOADING;
-        
+        //this.submitBtnState = ClrLoadingState.LOADING;
         const oktaEmailAddress = "amc1@setl.io"
         const oktaAccessToken = "00u98w6n5y7Q2ZZnY4x6"
              
+        // Dispatch a login request action.
         const loginRequestAction = loginRequestAC();
         this.ngRedux.dispatch(loginRequestAction);
 
         const asyncTaskPipe = this.myUserService.loginSSORequest({
             emailAddress: oktaEmailAddress,
-            accessToken: oktaAccessToken
+            accessToken: oktaAccessToken,
         })
-        /*
+        
+        // Send a saga action.
+        // Actions to dispatch, when request success:  LOGIN_SUCCESS.
+        // Actions to dispatch, when request fail:  RESET_LOGIN_DETAIL.
+        // saga pipe function descriptor.
+        
         this.ngRedux.dispatch(SagaHelper.runAsync(
             [SET_FORCE_TWO_FACTOR, SET_LOGIN_DETAIL, SET_AUTH_LOGIN_DETAIL, SET_PRODUCTION],
             [RESET_LOGIN_DETAIL, RESET_AUTH_LOGIN_DETAIL],
             asyncTaskPipe,
             {},
             (data) => {
-                console.log(data)
+                this.loginService.postLoginRequests();
             },
             // Fail to login
             (data) => {
-                console.log(data)
+                this.submitBtnState = ClrLoadingState.DEFAULT;
+                this.showTwoFactorModal = false;
+                this.handleLoginFailMessage(data);
             },
         ));
-        */
 
         return false;
     }
@@ -376,11 +382,13 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit, Log
             password: value.password,
         });
 
+        console.log(asyncTaskPipe)
+
         // Send a saga action.
         // Actions to dispatch, when request success:  LOGIN_SUCCESS.
         // Actions to dispatch, when request fail:  RESET_LOGIN_DETAIL.
         // saga pipe function descriptor.
-        /*
+        
         this.ngRedux.dispatch(SagaHelper.runAsync(
             [SET_FORCE_TWO_FACTOR, SET_LOGIN_DETAIL, SET_AUTH_LOGIN_DETAIL, SET_PRODUCTION],
             [RESET_LOGIN_DETAIL, RESET_AUTH_LOGIN_DETAIL],
@@ -400,7 +408,6 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit, Log
                 this.handleLoginFailMessage(data);
             },
         ));
-        */
 
         return false;
     }
