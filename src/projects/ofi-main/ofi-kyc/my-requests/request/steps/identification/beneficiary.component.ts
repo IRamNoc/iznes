@@ -80,6 +80,7 @@ export class BeneficiaryComponent implements OnInit, OnDestroy {
         this.setHoldingTypeText();
 
         this.handleKbisandIDValidation();
+
     }
 
     initFormCheck() {
@@ -124,6 +125,20 @@ export class BeneficiaryComponent implements OnInit, OnDestroy {
             .valueChanges
             .pipe(takeUntil(this.unsubscribe))
             .subscribe(() => this.handleKbisandIDValidation());
+
+        // // handle beneficiary document deletion
+        this.form.get('common').get('document').get('hash').valueChanges
+            .pipe(takeUntil(this.unsubscribe))
+            .subscribe((data) => {
+                if (data == null || data.length == 0) {
+                    const formControl = this.form.get('common.document.kycDocumentID');
+
+                    formControl.setValue(null);
+                    formControl.updateValueAndValidity();
+
+                    this.refresh.emit();
+                }
+            });
     }
 
     setHoldingTypeText() {
@@ -189,10 +204,18 @@ export class BeneficiaryComponent implements OnInit, OnDestroy {
             required = false;
         }
 
-        if (isPoliticallyExposed) {
+        const highRisk = this.kycHelper.isHighRiskActivity() || this.kycHelper.isHighRiskCountry();
+        if (highRisk) {
             required = true;
-            this.form.get('common.document').markAsTouched();
         }
+
+        const beneficiaryType = this.form.get('beneficiaryType').value;
+        const isNaturalPerson = beneficiaryType === 'naturalPerson';
+
+        if ((isPoliticallyExposed && isNaturalPerson)  ) {
+            required = true;
+        }
+
         this.toggleKbisAndIdRequired(required);
     }
 
@@ -212,6 +235,7 @@ export class BeneficiaryComponent implements OnInit, OnDestroy {
             control.clearValidators();
         }
 
+        this.form.get('common.document').markAsTouched();
         this.form.get('common.document.hash').updateValueAndValidity();
     }
 
@@ -260,5 +284,11 @@ export class BeneficiaryComponent implements OnInit, OnDestroy {
     ngOnDestroy() {
         this.unsubscribe.next();
         this.unsubscribe.complete();
+    }
+
+    getDocumentPreset(formItem: string[]) {
+        const value = this.form.get(formItem).value;
+
+        return !value.hash ? undefined : value;
     }
 }

@@ -306,7 +306,7 @@ export class NewKycRequestComponent implements OnInit {
                 /* Emit on changes to party selections. */
                 this.emitDocumentPermissions();
             });
-        
+
         /* Emit on changes to forms. */
         this.forms.get('identification').get('companyInformation')
             .valueChanges.subscribe(() => this.kycPartySelections && this.emitDocumentPermissions());
@@ -525,7 +525,8 @@ export class NewKycRequestComponent implements OnInit {
                             this.identificationService.getCurrentFormGeneralData(request.kycID)
                             .then((formData) => {
                                 if (formData) {
-                                    this.forms.get('identification').get('generalInformation').patchValue(formData);
+                                    this.forms.get('identification').get('generalInformation').get('entity').patchValue(formData);
+                                    this.forms.get('identification').get('generalInformation').get('location').patchValue(formData);
                                 }
                                 resolve2();
                             })
@@ -604,7 +605,7 @@ export class NewKycRequestComponent implements OnInit {
                             });
                         })
                     ];
-                    
+
                     Promise.all(promises).then(() => {
                         console.log('[1] got forms for business rules: ', this.forms);
                         resolve0();

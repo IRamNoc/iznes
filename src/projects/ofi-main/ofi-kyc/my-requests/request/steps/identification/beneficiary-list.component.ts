@@ -1,5 +1,5 @@
 import { Component, Input, OnInit, Output, EventEmitter, OnDestroy, ViewChild, ElementRef, ChangeDetectorRef } from '@angular/core';
-import {FormArray, FormBuilder, FormGroup} from '@angular/forms';
+import {FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
 import { select, NgRedux } from '@angular-redux/store';
 import { Subject } from 'rxjs';
 import { filter as rxFilter, map, takeUntil, take } from 'rxjs/operators';
@@ -19,6 +19,7 @@ import { setMyKycStakeholderRelations } from '@ofi/ofi-main/ofi-store/ofi-kyc/ky
 import { formHelper } from '@setl/utils/helper';
 import { MyKycStakeholderRelations } from '@ofi/ofi-main/ofi-store/ofi-kyc';
 import { KycMyInformations } from '@ofi/ofi-main/ofi-store/ofi-kyc/my-informations';
+import {KycFormHelperService} from "../../../kyc-form-helper.service";
 
 /**
  * Stakeholders main view component of kyc form.
@@ -149,6 +150,7 @@ export class BeneficiaryListComponent implements OnInit, OnDestroy {
         private element: ElementRef,
         private formBuilder: FormBuilder,
         private changeDetectorRef: ChangeDetectorRef,
+        private kycFormHelperService: KycFormHelperService,
     ) {
     }
 
@@ -232,6 +234,8 @@ export class BeneficiaryListComponent implements OnInit, OnDestroy {
                                     this.beneficiaryService.updateStakeholdersValidity(this.form.get('beneficiaries') as FormArray);
                                     if (this.formPercent) this.formPercent.refreshFormPercent();
                                     this.sortStakeholders();
+                                    // update other stakeholder validators and validity.
+                                    this.updateBeneficiariesValidity();
                                     this.changeDetectorRef.detectChanges();
                                 });
                             }
@@ -753,6 +757,9 @@ export class BeneficiaryListComponent implements OnInit, OnDestroy {
             return;
         }
 
+        // update other stakeholder validators and validity.
+        this.updateBeneficiariesValidity();
+
         this.requests$
         .pipe(take(1))
         .subscribe((requests) => {
@@ -776,6 +783,45 @@ export class BeneficiaryListComponent implements OnInit, OnDestroy {
 
     stopTabbing(e) {
         if (e.keyCode === 9) e.preventDefault();
+    }
+
+    /**
+     * Update beneficiary list validity.
+     * 'If any client is regulated, listed or state-owned then the KBIS or ID in each stakeholder should be optional'
+     * 'If the field “Is the stakeholder a political exposed person?” is Yes KBIS or ID in each stakeholder should be required – overwriting the above rule'
+     */
+    updateBeneficiariesValidity() {
+       const beneficiariesValue: any[] = this.form.value;
+       let kbisAndIDRequired = true;
+
+        if (this.kycFormHelperService.isStateOwned() || this.kycFormHelperService.isCompanyRegulated() || this.kycFormHelperService.isCompanyListed()) {
+            kbisAndIDRequired = false;
+        }
+
+        const highRisk = this.kycFormHelperService.isHighRiskActivity() || this.kycFormHelperService.isHighRiskCountry();
+        if (highRisk) {
+            kbisAndIDRequired = true;
+        }
+
+       for (const beneficiaryValue of beneficiariesValue) {
+           const beneficiaryType = beneficiaryValue.beneficiaryType;
+           const isNaturalPerson = beneficiaryType === 'naturalPerson';
+           const isPoliticallyExposed = getValue(beneficiaryValue, ['naturalPerson', 'isPoliticallyExposed'], 0) === 1;
+
+           if (isPoliticallyExposed && isNaturalPerson) {
+              kbisAndIDRequired = true;
+              break;
+           }
+       }
+
+       if (kbisAndIDRequired) {
+           for (const beneficiaryFormGroup of (this.form as FormArray).controls) {
+               beneficiaryFormGroup.get(['common', 'document', 'hash']).setValidators([Validators.required]);
+               beneficiaryFormGroup.get(['common', 'document', 'hash']).updateValueAndValidity();
+               this.changeDetectorRef.markForCheck();
+           }
+       }
+
     }
 
     ngOnDestroy() {
