@@ -45,6 +45,7 @@ interface LoginRequestData {
 }
 
 interface LoginSSORequestData {
+    emailAddress: string;
     accessToken: string;
 }
 
@@ -230,7 +231,9 @@ export class MyUserService implements OnDestroy {
     loginSSORequest(loginSSOData: LoginSSORequestData): any {
         const messageBody: LoginSSORequestMessageBody = {
             RequestName: 'LoginSSO',
-            accessToken: loginSSOData.accessToken
+            emailAddress: loginSSOData.emailAddress,
+            accessToken: loginSSOData.accessToken,
+            CFCountry: '.',
         };
 
         return createMemberNodeRequest(this.memberSocketService, messageBody);

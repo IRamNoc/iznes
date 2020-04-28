@@ -263,7 +263,7 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit, Log
         //this.oktaAuthenticated = await this.oktaAuth.isAuthenticated();
         this.oktaAuthenticated = true
         if (this.oktaAuthenticated) {
-            this.loginUsingSSO()
+            //this.loginUsingSSO()
         }
         this.isLogin = false;
 
@@ -327,15 +327,35 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit, Log
 
     async loginUsingSSO() {
         //const oktaAccessToken = (await this.oktaAuth.getUser()).sub;
+        this.submitBtnState = ClrLoadingState.LOADING;
+        
+        const oktaEmailAddress = "amc1@setl.io"
         const oktaAccessToken = "00u98w6n5y7Q2ZZnY4x6"
+             
         const loginRequestAction = loginRequestAC();
         this.ngRedux.dispatch(loginRequestAction);
 
         const asyncTaskPipe = this.myUserService.loginSSORequest({
+            emailAddress: oktaEmailAddress,
             accessToken: oktaAccessToken
         })
+        /*
+        this.ngRedux.dispatch(SagaHelper.runAsync(
+            [SET_FORCE_TWO_FACTOR, SET_LOGIN_DETAIL, SET_AUTH_LOGIN_DETAIL, SET_PRODUCTION],
+            [RESET_LOGIN_DETAIL, RESET_AUTH_LOGIN_DETAIL],
+            asyncTaskPipe,
+            {},
+            (data) => {
+                console.log(data)
+            },
+            // Fail to login
+            (data) => {
+                console.log(data)
+            },
+        ));
+        */
 
-        console.log(asyncTaskPipe)
+        return false;
     }
 
     login(value) {
@@ -360,6 +380,7 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit, Log
         // Actions to dispatch, when request success:  LOGIN_SUCCESS.
         // Actions to dispatch, when request fail:  RESET_LOGIN_DETAIL.
         // saga pipe function descriptor.
+        /*
         this.ngRedux.dispatch(SagaHelper.runAsync(
             [SET_FORCE_TWO_FACTOR, SET_LOGIN_DETAIL, SET_AUTH_LOGIN_DETAIL, SET_PRODUCTION],
             [RESET_LOGIN_DETAIL, RESET_AUTH_LOGIN_DETAIL],
@@ -379,6 +400,7 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit, Log
                 this.handleLoginFailMessage(data);
             },
         ));
+        */
 
         return false;
     }
