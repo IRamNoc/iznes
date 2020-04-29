@@ -70,6 +70,8 @@ export class BeneficiaryListComponent implements OnInit, OnDestroy {
     // is the user is type of nowCP.
     isNowCP: boolean = false;
 
+    globalHasPEP = false;
+
     /**
      * Get temporary stakeholderID, that store in the frontend.
      * @return {number}
@@ -804,12 +806,14 @@ export class BeneficiaryListComponent implements OnInit, OnDestroy {
         }
 
        for (const beneficiaryValue of beneficiariesValue) {
+           this.globalHasPEP = false;
            const beneficiaryType = beneficiaryValue.beneficiaryType;
            const isNaturalPerson = beneficiaryType === 'naturalPerson';
            const isPoliticallyExposed = getValue(beneficiaryValue, ['naturalPerson', 'isPoliticallyExposed'], 0) === 1;
 
            if (isPoliticallyExposed && isNaturalPerson) {
               kbisAndIDRequired = true;
+              this.globalHasPEP = true;
               break;
            }
        }
