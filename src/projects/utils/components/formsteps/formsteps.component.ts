@@ -9,7 +9,7 @@ import {
     OnDestroy,
     ElementRef,
     ChangeDetectorRef,
-    OnChanges, SimpleChanges, OnInit, QueryList
+    OnChanges, SimpleChanges, QueryList
 } from '@angular/core';
 import { FormstepComponent } from './formstep.component';
 import { get as getValue, debounce } from 'lodash';
@@ -21,7 +21,7 @@ import {Subject} from "rxjs";
     selector: 'form-steps',
     templateUrl: './formsteps.component.html',
 })
-export class FormstepsComponent implements OnInit, AfterContentInit, OnDestroy, OnChanges {
+export class FormstepsComponent implements AfterContentInit, OnDestroy, OnChanges {
 
     @ViewChild('submit', { read: ElementRef }) button;
     @ContentChildren(FormstepComponent) stepComponents: QueryList<FormstepComponent>;
@@ -99,9 +99,6 @@ export class FormstepsComponent implements OnInit, AfterContentInit, OnDestroy, 
         private element: ElementRef,
         private changeDetectorRef: ChangeDetectorRef,
     ) {}
-
-    ngOnInit(): void {
-    }
 
     ngAfterContentInit() {
         this.stepsComponentsArray = this.stepComponents.toArray();
