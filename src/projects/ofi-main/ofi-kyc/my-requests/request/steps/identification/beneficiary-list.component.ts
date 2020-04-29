@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, Output, EventEmitter, OnDestroy, ViewChild, ElementRef, ChangeDetectorRef } from '@angular/core';
+import { Component, Input, OnInit, Output, EventEmitter, OnDestroy, ViewChild, ElementRef, ChangeDetectorRef, ViewRef } from '@angular/core';
 import {FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
 import { select, NgRedux } from '@angular-redux/store';
 import { Subject } from 'rxjs';
@@ -818,7 +818,7 @@ export class BeneficiaryListComponent implements OnInit, OnDestroy {
            for (const beneficiaryFormGroup of (this.form as FormArray).controls) {
                beneficiaryFormGroup.get(['common', 'document', 'hash']).setValidators([Validators.required]);
                beneficiaryFormGroup.get(['common', 'document', 'hash']).updateValueAndValidity();
-               this.changeDetectorRef.markForCheck();
+               if (! (this.changeDetectorRef as ViewRef).destroyed) this.changeDetectorRef.markForCheck();
            }
        }
 
