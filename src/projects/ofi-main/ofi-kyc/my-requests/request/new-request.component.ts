@@ -477,6 +477,8 @@ export class NewKycRequestComponent implements OnInit {
         if (event.updateView) {
             this.changeDetectorRef.detectChanges();
         }
+
+        this.getRequiredBusinessLogicFormData();
     }
 
     /**
