@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, OnInit, OnDestroy, HostBinding } from '@angular/core';
+import {Component, Input, Output, EventEmitter, OnInit, OnDestroy, HostBinding, ChangeDetectorRef} from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { Subject, Observable } from 'rxjs';
 import { takeUntil, tap, map } from 'rxjs/operators';
@@ -28,6 +28,7 @@ export class BeneficiaryComponent implements OnInit, OnDestroy {
             text: this.registeredCompanyName,
         });
     }
+    @Input() globalHasPEP: boolean;
 
     get parents() {
         return this.parentsFiltered;
@@ -57,6 +58,7 @@ export class BeneficiaryComponent implements OnInit, OnDestroy {
         public translate: MultilingualService,
         private beneficiaryService: BeneficiaryService,
         private kycHelper: KycFormHelperService,
+        private changeDetectorRef: ChangeDetectorRef,
     ) {
         this.configDate = configDate;
 
@@ -207,13 +209,15 @@ export class BeneficiaryComponent implements OnInit, OnDestroy {
         const highRisk = this.kycHelper.isHighRiskActivity() || this.kycHelper.isHighRiskCountry();
         if (highRisk) {
             required = true;
+            // this.form.get('common.document').markAsTouched();
         }
 
         const beneficiaryType = this.form.get('beneficiaryType').value;
         const isNaturalPerson = beneficiaryType === 'naturalPerson';
 
-        if ((isPoliticallyExposed && isNaturalPerson)  ) {
+        if ((isPoliticallyExposed && isNaturalPerson) || this.globalHasPEP) {
             required = true;
+            // this.form.get('common.document').markAsTouched();
         }
 
         this.toggleKbisAndIdRequired(required);
@@ -235,8 +239,8 @@ export class BeneficiaryComponent implements OnInit, OnDestroy {
             control.clearValidators();
         }
 
-        this.form.get('common.document').markAsTouched();
         this.form.get('common.document.hash').updateValueAndValidity();
+        this.changeDetectorRef.markForCheck();
     }
 
     /**
