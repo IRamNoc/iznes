@@ -100,6 +100,8 @@ export class MyRequestsGridComponent {
                 amcID: kyc.amManagementCompanyID,
                 context: kyc.context,
                 completedStep,
+                isThirdPartyKyc: kyc.isThirdPartyKyc,
+                managementCompanyType: kyc.managementCompanyType,
             });
         });
 

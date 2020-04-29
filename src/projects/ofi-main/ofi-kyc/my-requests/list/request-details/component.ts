@@ -150,6 +150,8 @@ export class MyRequestsDetailsComponent implements OnInit, AfterViewInit, OnDest
                 amcID: kyc.amManagementCompanyID,
                 context: kyc.context,
                 completedStep,
+                isThirdPartyKyc: kyc.isThirdPartyKyc,
+                managementCompanyType: kyc.managementCompanyType,
             });
         });
 
