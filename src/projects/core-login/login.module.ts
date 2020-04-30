@@ -23,6 +23,7 @@ import { SetlDirectivesModule, SetlPipesModule, SetlComponentsModule } from '@se
 import { EnrollComponent } from './two-factor/enroll/enroll.component';
 import { AuthenticateComponent } from './two-factor/authenticate/authenticate.component';
 import { LoginService } from './login.service';
+import { OktaAuthService } from './okta-auth.service';
 
 @NgModule({
     declarations: [
@@ -54,6 +55,7 @@ import { LoginService } from './login.service';
     providers: [
         ToasterService,
         LoginService,
+        OktaAuthService,
     ],
 })
 
