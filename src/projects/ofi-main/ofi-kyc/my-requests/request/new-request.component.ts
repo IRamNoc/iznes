@@ -409,7 +409,7 @@ export class NewKycRequestComponent implements OnInit {
     initFormSteps(completedStep): void {
 
         if (this.fullForm) {
-            this.stepsConfig = formStepsFull;
+            this.stepsConfig = cloneDeep(formStepsFull);
             // remove 'banking Infromation' section if formGroup does not exist
 
             if (this.isBankingInformationSectionDisabled()) {

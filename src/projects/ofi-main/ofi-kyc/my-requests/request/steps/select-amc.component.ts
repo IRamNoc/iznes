@@ -385,7 +385,7 @@ export class NewKycSelectAmcComponent implements OnInit, OnDestroy {
         }
 
         // if any one the newly created kyc is iznes. update KycPartySelections to container iznes investor.
-        this.updateKycPartySelections(ids);
+        await this.updateKycPartySelections(ids);
 
         // Store the newly created kyc detail to redux
         this.newRequestService.storeCurrentKycs(ids);
