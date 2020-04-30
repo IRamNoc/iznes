@@ -42,7 +42,18 @@ export class RiskProfileService {
             promises.push(updateStepPromise);
         });
 
-        return Promise.all(promises);
+        return new Promise((resolve, reject) => {
+            Promise.all(promises)
+            .then(() => {
+                this.requests.forEach((request) => {
+                    this.getCurrentFormNatureData(request.kycID);
+                });
+                resolve();
+            })
+            .catch((e) => {
+                reject(e);
+            });
+        })
     }
 
     sendRequestNature(formGroupNature) {
