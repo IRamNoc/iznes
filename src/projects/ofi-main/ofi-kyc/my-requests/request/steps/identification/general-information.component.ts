@@ -31,7 +31,7 @@ export class GeneralInformationComponent implements OnInit, OnDestroy {
     // whether the form should render in readonly mode.
     @Input() isFormReadonly = false;
     // Output event to let parent component hande the submit event.
-    @Output() submitEvent: EventEmitter<{completed: boolean; updateView?: boolean}> = new EventEmitter<any>();
+    @Output() submitEvent: EventEmitter<{completed?: boolean; updateView?: boolean; invalid?: boolean}> = new EventEmitter<any>();
     @select(['ofi', 'ofiKyc', 'myKycRequested', 'kycs']) requests$;
     @select(['user', 'siteSettings', 'language']) requestLanguageObj;
 
@@ -234,6 +234,7 @@ export class GeneralInformationComponent implements OnInit, OnDestroy {
         if (!this.form.valid) {
             formHelper.dirty(this.form);
             formHelper.scrollToFirstError(this.element.nativeElement);
+            this.submitEvent.emit({ invalid: true });
             return;
         }
 
