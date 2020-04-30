@@ -30,6 +30,7 @@ import {
 } from '../kyc-form-helper';
 import { BeneficiaryService } from './steps/identification/beneficiary.service';
 import { DocumentsService } from './steps/documents.service';
+import {clearFormArray} from "../../../../utils/helper/forms";
 
 /**
  * KYC main form wrapper component
@@ -501,8 +502,6 @@ export class NewKycRequestComponent implements OnInit {
         if (event.updateView) {
             this.changeDetectorRef.detectChanges();
         }
-
-        this.getRequiredBusinessLogicFormData();
     }
 
     /**
@@ -586,9 +585,7 @@ export class NewKycRequestComponent implements OnInit {
                                 if (!isEmpty(formData)) {
                                     const beneficiaries: any = this.forms.get('identification').get('beneficiaries').get('beneficiaries');
 
-                                    while (beneficiaries.length) {
-                                        beneficiaries.removeAt(0);
-                                    }
+                                    clearFormArray(beneficiaries);
 
                                     // build the stakeholder formArray
                                     const beneficiaryPromises = formData.map((controlValue) => {

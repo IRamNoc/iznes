@@ -20,6 +20,7 @@ import { formHelper } from '@setl/utils/helper';
 import { MyKycStakeholderRelations } from '@ofi/ofi-main/ofi-store/ofi-kyc';
 import { KycMyInformations } from '@ofi/ofi-main/ofi-store/ofi-kyc/my-informations';
 import {KycFormHelperService} from "../../../kyc-form-helper.service";
+import {clearFormArray} from "../../../../../../utils/helper/forms";
 
 /**
  * Stakeholders main view component of kyc form.
@@ -192,7 +193,7 @@ export class BeneficiaryListComponent implements OnInit, OnDestroy {
 
                             // only build the stakeholders formcontrol once.
                             if (index === 0) {
-                                const beneficiaries = this.formBuilder.array([]);
+                                clearFormArray(this.form);
 
                                 // build the stakeholder formArray
                                 const promises = formData.map((controlValue) => {
@@ -217,19 +218,18 @@ export class BeneficiaryListComponent implements OnInit, OnDestroy {
                                                 });
                                             }
                                             control.patchValue(newControlValue);
-                                            beneficiaries.push(control);
+                                            this.form.push(control);
                                         });
                                     }
 
                                     // set the stakeholder formgroup value
                                     control.patchValue(newControlValue);
 
-                                    beneficiaries.push(control);
+                                    this.form.push(control);
                                 });
 
                                 Promise.all(promises).then(() => {
                                     // update the beneficiaries formArray
-                                    this.form = beneficiaries;
 
                                     // Update some formcontrol within stakeholder, that depending on the data fetch from membernode.
                                     this.beneficiaryService.fillInStakeholderSelects(this.form.get('beneficiaries'));
