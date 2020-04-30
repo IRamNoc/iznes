@@ -2,25 +2,24 @@ import { Injectable } from '@angular/core';
 import * as OktaAuth from '@okta/okta-auth-js';
 
 @Injectable({
-	providedIn: 'root'
+    providedIn: 'root'
 })
 export class OktaAuthService {
-	CLIENT_ID = '0oaakvvb46DXdpxBB4x6';
-	ISSUER = 'https://dev-698165.okta.com/oauth2/default'
-	LOGIN_REDIRECT_URI = 'https://192.168.1.85:4200/implicit-callback';
-	LOGOUT_REDIRECT_URI = 'https://192.168.1.85:4200/implicit-callback';
-	oktaAuth = new OktaAuth({
-		clientId: this.CLIENT_ID,
-		issuer: this.ISSUER,
-		redirectUri: this.LOGIN_REDIRECT_URI,
-		responseMode: 'fragment',
-		pkce: true
-	});
-	
-	constructor() {
-	}
+    CLIENT_ID = '0oaakvvb46DXdpxBB4x6';
+    ISSUER = 'https://dev-698165.okta.com/oauth2/default'
+    LOGIN_REDIRECT_URI = 'https://192.168.1.85/redirect-callback.html';
+    LOGOUT_REDIRECT_URI = 'https://192.168.1.85/redirect-callback.html';
+    oktaAuth = new OktaAuth({
+        clientId: this.CLIENT_ID,
+        issuer: this.ISSUER,
+        redirectUri: this.LOGIN_REDIRECT_URI,
+        pkce: true
+    });
 
-	// Check if user have okta Token in the token Manager
+    constructor() {
+    }
+
+    // Check if user have okta Token in the token Manager
     async haveToken() {
         const authenticated = await this.oktaAuth.tokenManager.get("accessToken");
         if (authenticated === undefined)
@@ -36,8 +35,15 @@ export class OktaAuthService {
         return await this.oktaAuth.tokenManager.get('idToken')
     }
 
+    // Get Okta user informations by getting accessToken and idToken
+    async getUserInfo() {
+        const accessToken = await this.oktaAuth.tokenManager.get("accessToken");
+        const idToken = await this.oktaAuth.tokenManager.get("idToken");
+        return (await this.oktaAuth.token.getUserInfo(accessToken, idToken));
+    }
+
     // Redirecting into Okta server to login in Okta account
-    async initiateLogin() {
+    initiateLogin() {
         sessionStorage.setItem('okta-app-url', 'https://192.168.1.85:4200');
         this.oktaAuth.token.getWithRedirect({
             scopes: ['openid', 'email', 'profile']

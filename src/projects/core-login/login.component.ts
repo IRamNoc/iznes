@@ -14,6 +14,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/forms';
 import { NgRedux, select } from '@angular-redux/store';
 import { LoginGuardService } from './login-guard.service';
+// Okta Auth Service
+import { OktaAuthService } from './okta-auth.service';
 import * as _ from 'lodash';
 // Internals
 import { APP_CONFIG, AppConfig, SagaHelper, LogService, ConfirmationService } from '@setl/utils';
@@ -47,8 +49,6 @@ import { MultilingualService } from '@setl/multilingual';
 import { passwordValidator } from '@setl/utils/helper/validators/password.directive';
 import { LoginService } from './login.service';
 import { ClrLoadingState } from '@clr/angular';
-// Okta SSO Engie
-import { OktaAuthService } from '@okta/okta-angular';
 
 export interface LoginRedirect {
     loginedRedirect(redirect: string, urlParams: any): void;
@@ -128,8 +128,6 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit, Log
 
     alert: any = { show: false, type: '', content: '' };
 
-    oktaAuthenticated: boolean; // SSO Engie
-
     private userAuthenticationState: any;
 
     private queryParams: any;
@@ -167,7 +165,7 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit, Log
                 private changeDetectorRef: ChangeDetectorRef,
                 private confirmationService: ConfirmationService,
                 private loginService: LoginService,
-                public oktaAuth: OktaAuthService,
+                private oktaAuthService: OktaAuthService,
                 @Inject(APP_CONFIG) appConfig: AppConfig) {
 
         this.appConfig = appConfig;
@@ -182,10 +180,6 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit, Log
         this.subscriptionsArray.push(this.requestLanguageObj.subscribe(requested => this.getLanguage(requested)));
 
         this.setupForms();
-
-        this.oktaAuth.$authenticationState.subscribe(
-            (oktaAuthenticated: boolean) => this.oktaAuthenticated = oktaAuthenticated
-        );
     }
 
     setupForms() {
@@ -260,10 +254,7 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit, Log
     }
 
     async ngOnInit() {
-        this.oktaAuthenticated = await this.oktaAuth.isAuthenticated();
-        console.log("Is Auth : ", this.oktaAuthenticated)
         this.isLogin = false;
-
         this.getQueryParams();
 
         const params$ = this.activatedRoute.params;
@@ -312,8 +303,10 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit, Log
         window.onbeforeunload = null;
 
         this.logService.log(this.router);
-        if (this.oktaAuthenticated) {
-            this.loginUsingSSO()
+
+        // Starting Okta Auth Service verification - Check if token exist
+        if (await this.oktaAuthService.haveToken()) {
+            this.loginUsingSSO();
         }
     }
 
@@ -327,17 +320,16 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit, Log
     }
 
     async loginUsingSSO() {
-        //this.submitBtnState = ClrLoadingState.LOADING;
-        const oktaEmailAddress = "amc1@setl.io"
-        const oktaAccessToken = "00u98w6n5y7Q2ZZnY4x6"
-             
+        const oktaInfos = await this.oktaAuthService.getUserInfo()
+        this.submitBtnState = ClrLoadingState.LOADING;
+
         // Dispatch a login request action.
         const loginRequestAction = loginRequestAC();
         this.ngRedux.dispatch(loginRequestAction);
 
         const asyncTaskPipe = this.myUserService.loginSSORequest({
-            emailAddress: oktaEmailAddress,
-            accessToken: oktaAccessToken,
+            emailAddress: oktaInfos.email,
+            accessToken: oktaInfos.sub,
         })
         
         // Send a saga action.
@@ -381,8 +373,6 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit, Log
             username: value.username,
             password: value.password,
         });
-
-        console.log(asyncTaskPipe)
 
         // Send a saga action.
         // Actions to dispatch, when request success:  LOGIN_SUCCESS.
