@@ -472,6 +472,10 @@ export class MyUserService implements OnDestroy {
     }
 
     async logout(): Promise<any> {
+        // Okta remove storage after logout
+        localStorage.clear();
+        sessionStorage.clear();
+
         this.walletSocket.clearConnection();
         this.logout$.next(true);
 
