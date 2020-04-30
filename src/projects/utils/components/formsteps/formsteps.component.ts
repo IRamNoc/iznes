@@ -207,6 +207,17 @@ export class FormstepsComponent implements AfterContentInit, OnDestroy {
         }
     }
 
+    /**
+     * Dispatch an action to request to jump to the passed in step
+     *
+     * @param step
+     */
+    requestJumpToStep(step) {
+        if (typeof step !== 'undefined') {
+            this.action.emit({ type: 'jump', requestedStep: step });
+        }
+    }
+
     move() {
         document.querySelector('main.content-area').scrollTop = 0;
     }

@@ -162,6 +162,7 @@ export class NewKycDocumentsComponent implements OnInit, OnDestroy {
 
         if (!this.form.valid) {
             formHelper.dirty(this.form);
+            this.submitEvent.emit({ invalid: true });
             return;
         }
 
