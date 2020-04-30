@@ -97,7 +97,6 @@ import { ConnectionComponent } from '@setl/core-connections/connections/componen
 import { SetlMessagesComponent } from '@setl/core-messages';
 import { OfiWaitingApprovalComponent } from '@ofi/ofi-main/ofi-kyc/waiting-approval/component';
 import { SetlLoginComponent, SetlLogoutComponent, SignupComponent, LoginSSOEngieComponent } from '@setl/core-login';
-import { OktaCallbackComponent } from '@okta/okta-angular';
 
 /* Portfolio manager */
 import {
@@ -109,7 +108,6 @@ import {
 export const ROUTES: Routes = [
     { path: '', redirectTo: 'login', pathMatch: 'full' },
     { path: 'sso-engie', component: LoginSSOEngieComponent, pathMatch: 'full' },
-    { path: 'implicit/callback', component: OktaCallbackComponent, pathMatch: 'full' },
     { path: 'user-administration', redirectTo: 'user-administration/users', pathMatch: 'full' },
     { path: 'connections', redirectTo: 'connections/my-connections', pathMatch: 'full' },
     { path: 'ui-elements', redirectTo: 'ui-elements/form', pathMatch: 'full' },

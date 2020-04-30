@@ -80,11 +80,6 @@ import { AppState } from './store/app.reducer';
 import { environment } from '../environments/environment';
 
 /**
- * Okta Auth Module
- */
-import { OktaAuthModule, OKTA_CONFIG } from '@okta/okta-angular';
-
-/**
  * Membersocket service factory
  */
 export function memberSocketServiceFactory() {
@@ -135,22 +130,10 @@ export function memberSocketServiceFactory() {
         SetlServicesModule,
         ConnectionsModule,
         SetlLayoutModule,
-
-        /* Okta Modules */
-        OktaAuthModule,
     ],
     providers: [
         { provide: ErrorHandler, useClass: GlobalErrorHandler },
         { provide: LocationStrategy, useClass: HashLocationStrategy },
-        { provide: OKTA_CONFIG, useValue:
-            {
-            issuer: 'https://dev-698165.okta.com/oauth2/default',
-            clientId: '0oaa4oazwg6RcoBlw4x6',
-            redirectUri: 'https://testing.iznes.io:4200/implicit/callback',
-            pkce: true,
-          }
-        },
-
         {
             provide: MemberSocketService,
             useFactory: memberSocketServiceFactory,
@@ -160,7 +143,6 @@ export function memberSocketServiceFactory() {
             provide: APP_CONFIG,
             useValue: environment,
         },
-
         NodeAlertsService,
         CommonRequestService,
         WalletNodeSocketService,
