@@ -8,7 +8,7 @@ import { select, NgRedux } from '@angular-redux/store';
 import { get as getValue, map, isEmpty, castArray, remove, partial, cloneDeep, filter, set as setValue } from 'lodash';
 import { Subject, BehaviorSubject, Observable, ReplaySubject } from 'rxjs';
 import { takeUntil, filter as rxFilter, map as rxMap } from 'rxjs/operators';
-
+import { ToasterService } from 'angular2-toaster';
 import { MultilingualService } from '@setl/multilingual';
 import { formStepsLight, formStepsFull, formStepsOnboarding } from '../requests.config';
 import { NewRequestService } from './new-request.service';
@@ -107,6 +107,9 @@ export class NewKycRequestComponent implements OnInit {
     /* A subject that is used to pass document permissions to the document component. */
     public documentsPermissionsSubject = new ReplaySubject<DocumentPermissions>(1);
 
+    /** The step the user has requested to navigate to */
+    private requestedDestination: number;
+
     constructor(
         private formBuilder: FormBuilder,
         private route: ActivatedRoute,
@@ -121,6 +124,7 @@ export class NewKycRequestComponent implements OnInit {
         private identificationService: IdentificationService,
         private beneficiaryService: BeneficiaryService,
         private documentsService: DocumentsService,
+        private toasterService: ToasterService,
     ) {
         // collapse the menu by default
         this.ngRedux.dispatch(setMenuCollapsed(true));
@@ -462,6 +466,20 @@ export class NewKycRequestComponent implements OnInit {
         if (type === 'close') {
             this.router.navigateByUrl('/onboarding-requests/list');
         }
+
+        // User has requested to jump to specific step
+        if (type === 'jump') {
+            // Save the step they want to navigate to
+            this.requestedDestination = event.requestedStep;
+
+            // Attempt to submit the existing step
+            const noHandler = this.submitCurrentStepComponent(true);
+
+            // Navigate to step if there is no submit handler
+            if (noHandler) {
+                this.handleStepDestination();
+            }
+        }
     }
 
     /**
@@ -469,9 +487,15 @@ export class NewKycRequestComponent implements OnInit {
      * @param {{completed: boolean; updateView: boolean}} event
      * @return void
      */
-    handleSubmit(event: {completed: boolean; updateView: boolean}): void {
+    handleSubmit(event: {completed?: boolean; updateView?: boolean, invalid?: boolean}): void {
+        if (event.invalid) {
+            this.toasterService.pop('error', this.translate.translate('Invalid form. Please check your information and try again.'));
+            this.requestedDestination = undefined;
+            return;
+        }
+        
         if (event.completed) {
-            this.formSteps.next();
+            this.handleStepDestination();
         }
 
         if (event.updateView) {
@@ -482,9 +506,22 @@ export class NewKycRequestComponent implements OnInit {
     }
 
     /**
+     * Navigates a user to their requested step if one exists, or takes them to the next step if not
+     */
+    handleStepDestination() {
+        if (this.requestedDestination !== undefined) {
+            this.formSteps.goToStep(this.requestedDestination);
+            this.requestedDestination = undefined;
+            return;
+        }
+
+        this.formSteps.next();
+    }
+
+    /**
      * Fetch the active kyc substep component. and call handleSubmit method for the component.
      */
-    submitCurrentStepComponent() {
+    submitCurrentStepComponent(sideNavClick: boolean = false) {
         const position = this.formSteps.position;
 
         const component = this.formSteps.steps[position];
@@ -494,6 +531,11 @@ export class NewKycRequestComponent implements OnInit {
         }
         if (!component.form) {
             component.handleSubmit();
+            return;
+        }
+        // Call the submit method directly if user clicked on side nav and not a button (the button triggers the navtive submit on the form)
+        if (sideNavClick) {
+            component.handleSubmit(new Event('click')); // dispatch a dummy click event to work with existing logid in submit handlers
         }
     }
 

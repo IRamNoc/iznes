@@ -1,5 +1,5 @@
 <div class="steps-container" [class.fixed]="fixStepsProgress" (wheel)="debounceScroll($event)">
-    <form-steps-progress [config]="progress" (jumpToStep)="goToStep($event)">
+    <form-steps-progress [config]="progress" (jumpToStep)="requestJumpToStep($event)">
         <div *ngIf="_onboardingMode" class="kyc-step complete no-link"><span></span> {{ 'User Profile' | translate }}</div>
     </form-steps-progress>
 </div>

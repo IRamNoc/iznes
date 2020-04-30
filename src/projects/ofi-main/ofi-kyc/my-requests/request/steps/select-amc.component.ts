@@ -80,7 +80,7 @@ export class NewKycSelectAmcComponent implements OnInit, OnDestroy {
     // Whether the kyc is 'light kyc'.
     @Output() registered = new EventEmitter<boolean>();
     // Let parent componet know the am selection screen is submitted and completed.
-    @Output() submitEvent: EventEmitter<{completed: boolean; updateView?: boolean}> = new EventEmitter();
+    @Output() submitEvent: EventEmitter<{completed?: boolean; updateView?: boolean, invalid?: boolean}> = new EventEmitter();
     // Emit event when kyc party selection changed.
     @Output() kycPartySelectionsChangedEvent: EventEmitter<boolean> = new EventEmitter();
 
@@ -371,6 +371,7 @@ export class NewKycSelectAmcComponent implements OnInit, OnDestroy {
         // if this.selectedManagementCompanies is not exist. stop here, and mark form dirty, so form can show error?
         if (!this.selectedManagementCompanies.length) {
             formHelper.dirty(this.form);
+            this.submitEvent.emit({ invalid: true });
             return;
         }
 
