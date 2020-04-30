@@ -24,7 +24,7 @@ import {Subject} from "rxjs";
 export class FormstepsComponent implements AfterContentInit, OnDestroy, OnChanges {
 
     @ViewChild('submit', { read: ElementRef }) button;
-    @ContentChildren(FormstepComponent) stepComponents: QueryList<FormstepComponent>;
+    @ContentChildren(FormstepComponent) stepComponents;
 
     @Input() set stepsConfig(stepsConfig) {
         this.progress = [];
