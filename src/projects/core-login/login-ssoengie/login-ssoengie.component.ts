@@ -1,29 +1,15 @@
 import { Component, OnInit } from '@angular/core';
-import { OktaAuthService } from '@okta/okta-angular';
+import { OktaAuthService } from '../okta-auth.service';
 
 @Component({
-  selector: 'app-login-ssoengie',
-  templateUrl: './login-ssoengie.component.html',
+    selector: 'app-login-ssoengie',
+    templateUrl: './login-ssoengie.component.html',
 })
 
 export class LoginSSOEngieComponent implements OnInit {
-  isAuthenticated: boolean;
+    constructor(private oktaAuth: OktaAuthService) { }
 
-  constructor(public oktaAuth: OktaAuthService) {
-    this.oktaAuth.$authenticationState.subscribe(
-      (isAuthenticated: boolean) => this.isAuthenticated = isAuthenticated
-    );
-  }
-
-  async ngOnInit() {
-    this.isAuthenticated = await this.oktaAuth.isAuthenticated();
-    console.log("Already Authenticated")
-    let accessToken = await this.oktaAuth.getAccessToken();
-    console.log(accessToken)
-  }
-
-  async showInfo() {
-    const userClaims = await this.oktaAuth.getUser();
-    console.log(userClaims)
-  }
+    async ngOnInit() {
+        this.oktaAuth.initiateLogin()
+    }
 }
