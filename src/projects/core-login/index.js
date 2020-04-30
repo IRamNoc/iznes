@@ -8,3 +8,4 @@ export {name} from './__init__';
 export {SignupComponent} from './signup/component';
 export {ISignupConfiguration, ISignupForm} from './signup/model';
 export {LoginService} from './login.service';
+export {OktaAuthService} from './okta-auth.service';
