@@ -184,8 +184,7 @@ export class NewKycRequestComponent implements OnInit {
                         isCompanyListed(this.forms) ||
                         isCompanyRegulated(this.forms) ||
                         isStateOwned(this.forms)
-                    ) && isHighRiskActivity(this.forms) &&
-                    ! hasStakeholderPEP(this.forms)
+                    ) && isHighRiskActivity(this.forms)
                 ),
                 /* Company is unregulated, unlisted, not state-owned with a high country risk or a pep  */
                 rule6: (
