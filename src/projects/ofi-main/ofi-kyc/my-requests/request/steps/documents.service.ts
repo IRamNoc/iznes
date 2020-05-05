@@ -437,7 +437,7 @@ export class DocumentsService {
             },
             rule4: {
                 kyckbisdoc: "required",
-                kyclistsigningauthoritiesdoc: "required",
+                kyclistsigningauthoritiesdoc: "optional",
                 kycribdoc: "required",
                 kycorgchartdoc: "required",
                 kycbeneficialownerdoc: "required",
