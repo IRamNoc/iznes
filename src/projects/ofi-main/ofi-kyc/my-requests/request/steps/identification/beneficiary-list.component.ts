@@ -819,12 +819,14 @@ export class BeneficiaryListComponent implements OnInit, OnDestroy {
            }
        }
 
-       if (kbisAndIDRequired) {
-           for (const beneficiaryFormGroup of (this.form as FormArray).controls) {
+       for (const beneficiaryFormGroup of (this.form as FormArray).controls) {
+           if (kbisAndIDRequired) {
                beneficiaryFormGroup.get(['common', 'document', 'hash']).setValidators([Validators.required]);
-               beneficiaryFormGroup.get(['common', 'document', 'hash']).updateValueAndValidity();
-               if (! (this.changeDetectorRef as ViewRef).destroyed) this.changeDetectorRef.markForCheck();
+           } else {
+               beneficiaryFormGroup.get(['common', 'document', 'hash']).clearValidators();
            }
+           beneficiaryFormGroup.get(['common', 'document', 'hash']).updateValueAndValidity();
+           if (! (this.changeDetectorRef as ViewRef).destroyed) this.changeDetectorRef.markForCheck();
        }
 
     }
