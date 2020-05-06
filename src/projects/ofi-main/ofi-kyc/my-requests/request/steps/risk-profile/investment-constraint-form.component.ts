@@ -51,7 +51,6 @@ export class InvestmentConstraintFormComponent implements OnInit, OnDestroy {
 
                     return !this.multiple || (dataAMCId === currentAMCId);
                 }),
-                take(1),
             )
             .subscribe((data: any) => {
                 this.form.patchValue(data);
