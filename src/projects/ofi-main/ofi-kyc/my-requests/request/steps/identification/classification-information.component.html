@@ -49,8 +49,8 @@
                                 </label>
                                 <label for="optFor" *ngIf="investorType !== 'nonPro'">
                                     {{'As a professional customer, you can opt for non professional status' | translate}}
-                                    <span *ngIf="!!form.get('optFor').value && (kycFormHelperService.invitedByID2S$ | async)" class="helper-text">{{'If you decide to opt-out the professional status, you could not be onboarded by ID2S'}}</span>
-                                    <span *ngIf="!!form.get('optFor').value && (kycFormHelperService.invitedByNowCp$ | async)" class="helper-text">{{'If you decide to opt-out the professional status, you could not be onboarded on NowCP'}}</span>
+                                    <span *ngIf="!!form.get('optFor').value && (kycFormHelperService.invitedByID2S$ | async)" class="helper-text">{{'If you decide to opt-out the professional status, you could not be onboarded by ID2S' | translate}}</span>
+                                    <span *ngIf="!!form.get('optFor').value && (kycFormHelperService.invitedByNowCp$ | async)" class="helper-text">{{'If you decide to opt-out the professional status, you could not be onboarded on NowCP' | translate}}</span>
                                 </label>
                             </div>
                         </div>

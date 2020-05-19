@@ -3263,7 +3263,7 @@ export const controlToName = {
     otherListingMarkets: 'Listing market(s) specification',
     multilateralTradingFacilities: 'Multilateral Trading Facilities',
     otherMultilateralTradingFacilities: 'Other Multilateral Trading Facilities',
-    bloombergCode: 'Bloomberg Code',
+    bloombergCode: 'Bloomberg Code of the company',
     isinCode: 'ISIN code of the listed share',
     floatableShares: 'Percentage of floatable and tradable company\'s shares',
     companyStateOwned: 'Is the company state-owned?',
