@@ -107,9 +107,9 @@ to_iznes:
         - ssh-keyscan gitlab.com >> ~/.ssh/known_hosts
         - chmod 644 ~/.ssh/known_hosts
     script:
-        - git remote add orange git@gitlab.com:iznes/frontend.git
+        - git remote add iznes git@gitlab.com:iznes/frontend.git
         - git branch
         - git checkout master
-        - git push -u orange master --force
+        - git push -u iznes master --force
         - git push --tags
 
