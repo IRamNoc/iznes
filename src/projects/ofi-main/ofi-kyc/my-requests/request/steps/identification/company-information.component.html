@@ -254,7 +254,7 @@
 
                 <div class="row col-sm-12" *ngIf="!isDisabled('multilateralTradingFacilities')">
                     <div class="form-group required-field col-sm-4">
-                        <label class="control-label" for="multilateralTradingFacilities">{{ 'Multilateral Trading Facility' | translate }}</label>
+                        <label class="control-label" for="multilateralTradingFacilities">{{ 'Multilateral Trading Facilities' | translate }}</label>
                         <ng-select class="large-select"
                                     [multiple]="true"
                                     [items]="multilateralTradingFacilitiesList"
@@ -272,7 +272,7 @@
                                 id="otherMultilateralTradingFacilities"
                                 formControlName="otherMultilateralTradingFacilities"
                                 [readonly]="isFormReadonly"
-                                placeholder="{{ 'Fill in the listing market(s)' | translate }}">
+                                placeholder="{{ 'Fill in multilateral trading facilities (MTF)' | translate }}">
                         <span class="field-error" *ngIf="hasError('otherMultilateralTradingFacilities', ['required'])">{{ 'Field is required' | translate }}</span>
                         <span class="field-error" *ngIf="otherMultilateralTradingFacilitiesError">{{ 'Trading Facility must not already exist in the Multilateral Trading Facilities list' | translate }}</span>
                     </div>
@@ -285,7 +285,7 @@
                                 id="bloombergCode"
                                 formControlName="bloombergCode"
                                 [readonly]="isFormReadonly"
-                                placeholder="{{ 'Fill in a Bloomberg\'s code' | translate }}">
+                                placeholder="{{ 'Fill in a Bloomberg Code of the company' | translate }}">
                         <span class="field-error" *ngIf="hasError('bloombergCode', ['required'])">{{ 'Field is required' | translate }}</span>
                         <span class="field-error" *ngIf="hasError('bloombergCode', ['maxlength'])">{{ 'Field is too long' | translate }}</span>
                     </div>
