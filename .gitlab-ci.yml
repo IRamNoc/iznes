@@ -43,7 +43,7 @@ stages:
 #             - coverage/
 
 build:
-    image: docker:git
+    image: docker:git:1.39
     tags:
         - dind
     services:
