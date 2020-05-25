@@ -484,7 +484,9 @@
                         <clr-dg-cell *ngIf="isAssetManager" class="right" [ngSwitch]="order.paymentMsgStatus">
                             <span *ngSwitchCase="'sent'" class="label label-success">{{ 'Sent' | translate }}</span>
                             <span *ngSwitchCase="'ready'" class="label label-success">{{ 'Sent' | translate }}</span>
-                            <input type="checkbox" clrCheckbox *ngSwitchCase="'pending'" [formControl]="order.markedForPayment" (change)="updatePaymentCheckBoxState(order.orderID, $event)"  [disabled]="!order.readyForPayment">
+                            <span *ngIf="order.orderStatus >= 3">
+                                <input type="checkbox" clrCheckbox *ngSwitchCase="'pending'" [formControl]="order.markedForPayment" (change)="updatePaymentCheckBoxState(order.orderID, $event)"  [disabled]="!order.readyForPayment">
+                            </span>
                         </clr-dg-cell>
                         <clr-dg-cell *ngIf="!isIznesAdmin" [ngSwitch]="order.orderStatus" class="right">
                             <!--&lt;!&ndash; Actions &ndash;&gt;-->
