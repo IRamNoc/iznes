@@ -231,6 +231,7 @@ function formatManageOrderDataResponse(rawData: any[]): ManageOrderDetails[] {
                 label: item.get('label'),
                 lastName: item.get('lastName'),
                 maximumNumDecimal: item.get('maximumNumDecimal'),
+                initialized: item.get('initialized'),
                 navEntered: item.get('navEntered'),
                 orderID: item.get('orderID'),
                 orderDate: item.get('orderDate'),
