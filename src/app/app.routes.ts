@@ -45,6 +45,7 @@ import {
     FundAuditComponent,
     OfiInviteMandateInvestorsComponent,
     OfiManagementCompanyComponent,
+    CreateTransferComponent,
 } from '@ofi/ofi-main';
 
 import { requestsRoute } from '@ofi/ofi-main/ofi-kyc/my-requests/requests-route.config';
@@ -736,6 +737,10 @@ export const ROUTES: Routes = [
                         component: ManageOrdersComponent,
                     },
                 ],
+            },
+            {
+                path: 'transfer-in-out/create',
+                component: CreateTransferComponent,
             },
             {
                 path: 'my-holdings',

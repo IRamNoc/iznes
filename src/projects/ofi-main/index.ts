@@ -128,6 +128,12 @@ export {
 export { OfiMainModule } from './module';
 
 /**
+ * Ofi transfer in and out
+ */
+export { OfiTransferInOutModule } from './ofi-transfer-in-out/ofi-transfer-in-out.module';
+export { CreateTransferComponent } from './ofi-transfer-in-out/create-transfer/create-transfer.component';
+
+/**
  * Sub portfolio
  */
 export { OfiSubPortfolioComponent } from './ofi-sub-portfolio/sub-portfolio/component';
