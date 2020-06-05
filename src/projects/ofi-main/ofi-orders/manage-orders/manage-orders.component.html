@@ -496,8 +496,8 @@
                             <!--</ng-template>-->
 
                             <ng-container *ngSwitchCase="1">
-                                <button type="button" class="btn btn-sm btn-danger" (click)="cancelOrder(i)" *ngIf="!hasPermissionActionOnOrders" disabled>{{ 'Cancel' | translate }}</button>
-                                <button type="button" class="btn btn-sm btn-danger" (click)="cancelOrder(i)" *ngIf="hasPermissionActionOnOrders">{{ 'Cancel' | translate }}</button>
+                                <button type="button" class="btn btn-sm btn-danger" (click)="cancelOrder(i)" *ngIf="!hasPermissionActionOnOrders || order.initialized" disabled>{{ 'Cancel' | translate }}</button>
+                                <button type="button" class="btn btn-sm btn-danger" (click)="cancelOrder(i)" *ngIf="hasPermissionActionOnOrders && !order.initialized">{{ 'Cancel' | translate }}</button>
                             </ng-container>
 
                             <!-- <button type="button" class="btn btn-sm btn-danger" (click)="cancelOrder(i)" *ngSwitchCase="1">{{ 'Cancel' | translate }}</button> -->
