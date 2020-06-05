@@ -750,7 +750,7 @@ export const ROUTES: Routes = [
                     {
                         path: 'manage',
                         component: ManageTransfersComponent,
-                    }
+                    },
                 ],
             },
             {
