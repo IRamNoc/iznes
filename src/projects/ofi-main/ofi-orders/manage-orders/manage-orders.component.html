@@ -484,7 +484,9 @@
                         <clr-dg-cell *ngIf="isAssetManager" class="right" [ngSwitch]="order.paymentMsgStatus">
                             <span *ngSwitchCase="'sent'" class="label label-success">{{ 'Sent' | translate }}</span>
                             <span *ngSwitchCase="'ready'" class="label label-success">{{ 'Sent' | translate }}</span>
-                            <input type="checkbox" clrCheckbox *ngSwitchCase="'pending'" [formControl]="order.markedForPayment" (change)="updatePaymentCheckBoxState(order.orderID, $event)"  [disabled]="!order.readyForPayment">
+                            <span *ngIf="order.orderStatus >= 3" style="float: left; margin-left: 40%;">
+                                <input type="checkbox" clrCheckbox *ngSwitchCase="'pending'" [formControl]="order.markedForPayment" (change)="updatePaymentCheckBoxState(order.orderID, $event)"  [disabled]="!order.readyForPayment">
+                            </span>
                         </clr-dg-cell>
                         <clr-dg-cell *ngIf="!isIznesAdmin" [ngSwitch]="order.orderStatus" class="right">
                             <!--&lt;!&ndash; Actions &ndash;&gt;-->
@@ -494,8 +496,8 @@
                             <!--</ng-template>-->
 
                             <ng-container *ngSwitchCase="1">
-                                <button type="button" class="btn btn-sm btn-danger" (click)="cancelOrder(i)" *ngIf="!hasPermissionActionOnOrders" disabled>{{ 'Cancel' | translate }}</button>
-                                <button type="button" class="btn btn-sm btn-danger" (click)="cancelOrder(i)" *ngIf="hasPermissionActionOnOrders">{{ 'Cancel' | translate }}</button>
+                                <button type="button" class="btn btn-sm btn-danger" (click)="cancelOrder(i)" *ngIf="!hasPermissionActionOnOrders || order.initialized" disabled>{{ 'Cancel' | translate }}</button>
+                                <button type="button" class="btn btn-sm btn-danger" (click)="cancelOrder(i)" *ngIf="hasPermissionActionOnOrders && !order.initialized">{{ 'Cancel' | translate }}</button>
                             </ng-container>
 
                             <!-- <button type="button" class="btn btn-sm btn-danger" (click)="cancelOrder(i)" *ngSwitchCase="1">{{ 'Cancel' | translate }}</button> -->
