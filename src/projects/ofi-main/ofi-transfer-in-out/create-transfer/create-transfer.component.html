@@ -1,3 +1,17 @@
-<p>
-  BHAVESH IS BEAU IRL
-</p>
+<!-- Breadcrumbs. -->
+<div class="header-breadcrumbs">
+  <h1>
+      <i class="fa fa-shopping-basket"></i> Default breadcrumb
+  </h1>
+</div>
+
+<!-- Subscription/Redemption tab -->
+<clr-tabs>
+  <clr-tab>
+      <clr-tab-content *clrIfActive>
+          <form (ngSubmit)="handleSubmitButtonClick()">
+              <a> Start new </a>
+          </form>
+      </clr-tab-content>
+  </clr-tab>
+</clr-tabs>
