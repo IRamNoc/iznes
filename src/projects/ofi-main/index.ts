@@ -132,6 +132,7 @@ export { OfiMainModule } from './module';
  */
 export { OfiTransferInOutModule } from './ofi-transfer-in-out/ofi-transfer-in-out.module';
 export { CreateTransferComponent } from './ofi-transfer-in-out/create-transfer/create-transfer.component';
+export { ManageTransfersComponent } from './ofi-transfer-in-out/manage-transfers/manage-transfers.component';
 
 /**
  * Sub portfolio

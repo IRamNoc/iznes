@@ -45,6 +45,7 @@ import {
     FundAuditComponent,
     OfiInviteMandateInvestorsComponent,
     OfiManagementCompanyComponent,
+    ManageTransfersComponent,
     CreateTransferComponent,
 } from '@ofi/ofi-main';
 
@@ -739,8 +740,18 @@ export const ROUTES: Routes = [
                 ],
             },
             {
-                path: 'transfer-in-out/create',
-                component: CreateTransferComponent,
+                path: 'transfer-in-out',
+                canActivate: [LoginGuardService],
+                children: [
+                    {
+                        path: 'create',
+                        component: CreateTransferComponent,
+                    },
+                    {
+                        path: 'manage',
+                        component: ManageTransfersComponent,
+                    }
+                ],
             },
             {
                 path: 'my-holdings',
