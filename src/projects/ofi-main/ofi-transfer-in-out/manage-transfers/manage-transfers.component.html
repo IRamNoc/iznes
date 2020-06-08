@@ -5,8 +5,15 @@
   </h1>
 </div>
 
-<div class="wrapper wrapper-content">
-    <div class="panel-body">
+<div class="well">
+
+    <div class="row panel-header">
+        <div class="col-md-6">
+          <h2>History</h2>
+        </div>
+      </div>
+
+    <div class="row panel-body">
         <clr-datagrid (clrDgRefresh)="refresh($event)" [clrDgLoading]="loading" clrDgSortIcon #ordersDataGrid>
           <clr-dg-column [clrDgField]="'orderRef'" clrDgSortIcon clrDgSortNoSearch id="Order-REF">
               <ng-container *clrDgHideableColumn="{hidden: false}">Référence de l'opération
