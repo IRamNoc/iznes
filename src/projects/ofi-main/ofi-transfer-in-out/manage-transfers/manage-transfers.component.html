@@ -1,312 +1,314 @@
 <!-- Breadcrumbs. -->
 <div class="header-breadcrumbs">
   <h1>
-      <i class="fa fa-list ul"></i> Transfers In & Out
+      <i class="fa fa-list ul"></i> Transfer In & Out
   </h1>
 </div>
 
-<clr-datagrid (clrDgRefresh)="refresh($event)" [clrDgLoading]="loading" clrDgSortIcon #ordersDataGrid>
-  <clr-dg-column [clrDgField]="'orderRef'" clrDgSortIcon clrDgSortNoSearch id="Order-REF">
-      <ng-container *clrDgHideableColumn="{hidden: false}">Référence de l'opération
-          <span class="column-label"></span>
-      </ng-container>
-  </clr-dg-column>
-  <clr-dg-column [clrDgField]="'orderType'" clrDgSortIcon clrDgSortNoSearch id="Order-Type">
-      <ng-container *clrDgHideableColumn="{hidden: false}">Type
-          <span class="column-label"></span>
-      </ng-container>
-  </clr-dg-column>
-  <clr-dg-column [clrDgField]="'investorCompanyName'" clrDgSortIcon clrDgSortNoSearch id="Order-Investor">
-      <ng-container *clrDgHideableColumn="{hidden: false}"> Société de gestion
-          <span class="column-label"></span>
-      </ng-container>
-  </clr-dg-column>
-  <clr-dg-column *ngIf="isIznesAdmin" [clrDgField]="'portfolio'" clrDgSortIcon clrDgSortNoSearch id="Order-Portfolio">
-      <ng-container *clrDgHideableColumn="{hidden: false}">Investisseur
-          <span class="column-label"></span>
-      </ng-container>
-  </clr-dg-column>
-  <clr-dg-column [clrDgField]="'isin'" clrDgSortIcon clrDgSortNoSearch id="Order-ISIN">
-      <ng-container *clrDgHideableColumn="{hidden: false}">Portefeuille
-          <span class="column-label"></span>
-      </ng-container>
-  </clr-dg-column>
-  <clr-dg-column [clrDgField]="'shareName'" clrDgSortIcon clrDgSortNoSearch id="Order-Share-Name">
-      <ng-container *clrDgHideableColumn="{hidden: false}">ISIN
-          <span class="column-label"></span>
-      </ng-container>
-  </clr-dg-column>
-  <clr-dg-column [clrDgField]="'assetManagementCompany'" clrDgSortIcon clrDgSortNoSearch id="Order-Asset-Manager-Company">
-      <ng-container *clrDgHideableColumn="{hidden: true}">Nom de la part
-          <span class="column-label"></span>
-      </ng-container>
-  </clr-dg-column>
-  <clr-dg-column [clrDgField]="'shareCurrency'" clrDgSortIcon clrDgSortNoSearch id="Order-Share-Currency">
-      <ng-container *clrDgHideableColumn="{hidden: false}">Devise
-          <span class="column-label"></span>
-      </ng-container>
-  </clr-dg-column>
-  <clr-dg-column [clrDgField]="'quantity'" clrDgSortIcon clrDgSortNoSearch id="Order-Quantity" class="right">
-      <ng-container *clrDgHideableColumn="{hidden: false}">Quantité
-          <span class="column-label"></span>
-      </ng-container>
-  </clr-dg-column>
-  <clr-dg-column [clrDgField]="'tradedBy'" clrDgSortIcon clrDgSortNoSearch id="Order-Traded-By">
-      <ng-container *clrDgHideableColumn="{hidden: false}">Prix
-          <span class="column-label"></span>
-      </ng-container>
-  </clr-dg-column>
-  <clr-dg-column [clrDgField]="'latestNAV'" clrDgSortIcon clrDgSortNoSearch id="Order-Latest-NAV" class="right">
-      <ng-container *clrDgHideableColumn="{hidden: true}">Montant
-          <span class="column-label"></span>
-      </ng-container>
-  </clr-dg-column>
-  <clr-dg-column [clrDgField]="'grossAmount'" clrDgSortIcon clrDgSortNoSearch id="Order-Trade-Amount" class="right">
-      <ng-container *clrDgHideableColumn="{hidden: false}">Date d'impact sur le stock
-          <span class="column-label"></span>
-      </ng-container>
-  </clr-dg-column>
-  <clr-dg-column [clrDgField]="'feesAmount'" clrDgSortIcon clrDgSortNoSearch id="Order-Fee-Amount" class="right">
-      <ng-container *clrDgHideableColumn="{hidden: true}">Statut
-          <span class="column-label"></span>
-      </ng-container>
-  </clr-dg-column>
-  <clr-dg-column [clrDgField]="'orderDate'" clrDgSortIcon clrDgSortNoSearch id="Order-Order-Date">
-      <ng-container *clrDgHideableColumn="{hidden: false}">Date de la saisie
-          <span class="column-label"></span>
-      </ng-container>
-  </clr-dg-column>
-  <clr-dg-column [clrDgField]="'cutOffDate'" clrDgSortIcon clrDgSortNoSearch id="Order-Cut-Off-Date">
-      <ng-container *clrDgHideableColumn="{hidden: false}">Action
-          <span class="column-label"></span>
-      </ng-container>
-  </clr-dg-column>
-  <clr-dg-column *ngIf="isAssetManager" class="right">
-      <span class="text-center">{{ 'Payment' | translate }}</span>
-  </clr-dg-column>
-  <!-- ACTIONS -->
-  <clr-dg-column *ngIf="!isIznesAdmin" id="Order-Action" class="right">
-      <span class="text-center">{{ 'Actions' | translate }}</span>
-  </clr-dg-column>
-
-  <clr-dg-row *ngFor="let order of ordersList; let i = index" clrDgRowClickable>
-      <clr-dg-cell (click)="buildLink(order, $event)">
-          <!-- orderRef -->
-          {{ order.orderRef }}
-          <div *ngIf="showColumnSpacer" class="column-spacer">{{getColumnSpaceText(order.orderRef)}}</div>
-      </clr-dg-cell>
-      <clr-dg-cell (click)="buildLink(order, $event)">
-          <!-- orderType -->
-          <span>{{ order.orderTypeStr }}</span>
-          <div *ngIf="showColumnSpacer" class="column-spacer">{{getColumnSpaceText(order.orderTypeStr)}}</div>
-      </clr-dg-cell>
-      <clr-dg-cell (click)="buildLink(order, $event)">
-          <!-- investor {{showInvestor(order)}} -->
-          {{order.investorCompanyName}}
-          <div *ngIf="showColumnSpacer" class="column-spacer">{{getColumnSpaceText(order.investorCompanyName)}}</div>
-      </clr-dg-cell>
-      <clr-dg-cell *ngIf="isIznesAdmin" (click)="buildLink(order, $event)">
-          {{order.label}}
-          <div *ngIf="showColumnSpacer" class="column-spacer">{{getColumnSpaceText(order.label)}}</div>
-      </clr-dg-cell>
-      <clr-dg-cell *ngIf="isInvestorUser">
-          <!-- isin -->
-          <button
-              class="btn btn-link btn-sm"
-              [routerLink]="['/' + getLinkRoute() + '/product-characteristic', order.isin]">{{order.isin}}
-          </button>
-
-          <div *ngIf="showColumnSpacer" class="column-spacer">{{getColumnSpaceText(order.isin)}}</div>
-      </clr-dg-cell>
-      <clr-dg-cell *ngIf="!isInvestorUser" (click)="buildLink(order, $event)">
-          <!-- isin -->
-          {{order.isin}}
-          <div *ngIf="showColumnSpacer" class="column-spacer">{{getColumnSpaceText(order.isin)}}</div>
-      </clr-dg-cell>
-      <clr-dg-cell *ngIf="isInvestorUser">
-          <!-- shareName -->
-          <button
-              class="btn btn-link btn-sm"
-              [routerLink]="['/' + getLinkRoute() + '/product-characteristic', order.isin]">
-              {{order.fundShareName}}
-          </button>
-      </clr-dg-cell>
-      <clr-dg-cell *ngIf="!isInvestorUser" (click)="buildLink(order, $event)">
-          <!-- shareName -->
-          {{order.fundShareName}}
-          <div *ngIf="showColumnSpacer" class="column-spacer">{{getColumnSpaceText(order.fundShareName)}}</div>
-      </clr-dg-cell>
-      <clr-dg-cell (click)="buildLink(order, $event)">
-          <!-- assetManagementCompany -->{{order.amCompanyName}}
-          <div *ngIf="showColumnSpacer" class="column-spacer">{{getColumnSpaceText(order.amCompanyName)}}</div>
-      </clr-dg-cell>
-      <clr-dg-cell (click)="buildLink(order, $event)">
-          <!-- shareCurrency -->{{ showCurrency(order) }}
-          <div *ngIf="showColumnSpacer" class="column-spacer">{{getColumnSpaceText(showCurrency(order))}}</div>
-      </clr-dg-cell>
-      <clr-dg-cell class="right" (click)="buildLink(order, $event)">
-          <!-- quantity -->{{ order.quantity | moneyValue: 5 }}
-          <div *ngIf="showColumnSpacer" class="column-spacer">{{getColumnSpaceText(order.quantity)}}</div>
-      </clr-dg-cell>
-      <clr-dg-cell (click)="buildLink(order, $event)">
-          <!-- byAmountOrQuantity -->
-          <span *ngIf="order.byAmountOrQuantity === 1">
-              {{ 'Quantity' | translate }}
-          </span>
-          <span *ngIf="order.byAmountOrQuantity === 2">
-              {{ 'Amount' | translate }}
-          </span>
-      </clr-dg-cell>
-      <clr-dg-cell class="right" (click)="buildLink(order, $event)">
-          <!-- latestNAV -->{{ order.price | moneyValue: 4 }}
-          <div *ngIf="showColumnSpacer" class="column-spacer">{{getColumnSpaceText(order.price)}}</div>
-      </clr-dg-cell>
-      <clr-dg-cell class="right" (click)="buildLink(order, $event)">
-          <!-- grossAmount -->{{ order.amountWithCost | moneyValue: 2 }}
-          <div *ngIf="showColumnSpacer" class="column-spacer">{{getColumnSpaceText(order.amountWithCost)}}</div>
-      </clr-dg-cell>
-      <clr-dg-cell class="right" (click)="buildLink(order, $event)">
-          <!-- feesAmount -->{{ order.fee | moneyValue: 2 }}
-          <div *ngIf="showColumnSpacer" class="column-spacer">{{getColumnSpaceText(order.fee)}}</div>
-      </clr-dg-cell>
-      <clr-dg-cell (click)="buildLink(order, $event)">
-          <!-- orderDate -->
-          <div style="min-width: 145px">{{ getDateTime(order.orderDate) }}</div>
-      </clr-dg-cell>
-      <clr-dg-cell (click)="buildLink(order, $event)">
-          <!-- cutOffDate -->
-          <div style="min-width: 145px">{{ getDateTime(order.cutoffDate) }}</div>
-      </clr-dg-cell>
-      <clr-dg-cell (click)="buildLink(order, $event)">
-          <!-- NAVDate -->{{ getOnlyDate(order.valuationDate) }}
-          <div *ngIf="showColumnSpacer" class="column-spacer">{{getColumnSpaceText(getOnlyDate(order.valuationDate))}}</div>
-      </clr-dg-cell>
-      <clr-dg-cell (click)="buildLink(order, $event)">
-          <!-- settlementDate -->{{ getOnlyDate(order.settlementDate) }}
-          <div *ngIf="showColumnSpacer" class="column-spacer">{{getColumnSpaceText(getOnlyDate(order.settlementDate))}}</div>
-      </clr-dg-cell>
-      <clr-dg-cell (click)="buildLink(order, $event)">
-          <span *ngIf="order.orderStatus == 1" class="label label-warning">{{ 'Initiated' | translate }}
-          </span>
-
-          <span *ngIf="order.orderStatus == 2" class="label label-info">{{ 'Waiting NAV' | translate }}
-          </span>
-
-          <span *ngIf="order.orderStatus == 3" class="label label-info">{{ 'Waiting Settlement' | translate }}
-          </span>
-
-          <span *ngIf="order.orderStatus == 4 && order.orderUnpaid == false" class="label label-error">{{ 'Unpaid' | translate }}
-          </span>
-
-          <span *ngIf="order.orderStatus == 4 && order.orderUnpaid == true" class="label label-info">{{ 'Waiting Settlement' | translate }}
-          </span>
-
-          <span *ngIf="order.orderStatus == -1" class="label label-success">{{ 'Settled' | translate }}
-          </span>
-
-          <span *ngIf="order.orderStatus == 0" class="label label-error">{{ 'Cancelled' | translate }}
-          </span>
-      </clr-dg-cell>
-      <clr-dg-cell *ngIf="isAssetManager" class="right" [ngSwitch]="order.paymentMsgStatus">
-          <span *ngSwitchCase="'sent'" class="label label-success">{{ 'Sent' | translate }}</span>
-          <span *ngSwitchCase="'ready'" class="label label-success">{{ 'Sent' | translate }}</span>
-          <input type="checkbox" clrCheckbox *ngSwitchCase="'pending'" [formControl]="order.markedForPayment" (change)="updatePaymentCheckBoxState(order.orderID, $event)"  [disabled]="!order.readyForPayment">
-      </clr-dg-cell>
-      <clr-dg-cell *ngIf="!isIznesAdmin" [ngSwitch]="order.orderStatus" class="right">
-          <!--&lt;!&ndash; Actions &ndash;&gt;-->
-          <!--<button type="button" *ngIf="order.orderStatus == 1; else cancelDisabled" (click)="cancelOrder(i)" class="btn btn-sm btn-danger">{{ 'Cancel' | translate }}</button>-->
-          <!--<ng-template #cancelDisabled>-->
-          <!--<button type="button" class="btn btn-sm btn-info" disabled>{{ 'Cancel' | translate }}</button>-->
-          <!--</ng-template>-->
-
-          <ng-container *ngSwitchCase="1">
-              <button type="button" class="btn btn-sm btn-danger" (click)="cancelOrder(i)" *ngIf="!hasPermissionActionOnOrders" disabled>{{ 'Cancel' | translate }}</button>
-              <button type="button" class="btn btn-sm btn-danger" (click)="cancelOrder(i)" *ngIf="hasPermissionActionOnOrders">{{ 'Cancel' | translate }}</button>
-          </ng-container>
-
-          <!-- <button type="button" class="btn btn-sm btn-danger" (click)="cancelOrder(i)" *ngSwitchCase="1">{{ 'Cancel' | translate }}</button> -->
-          <ng-container *ngSwitchCase="4">
-              <button type="button" *ngIf="isInvestorUser" class="btn btn-sm btn-info" disabled>{{ 'Cancel' | translate }}</button>
-              <button type="button" *ngIf="!isInvestorUser && hasPermissionActionOnOrders" class="btn btn-sm btn-primary" (click)="settleOrder(i)">{{ 'Settle' | translate }}</button>
-              <button type="button" *ngIf="!isInvestorUser && !hasPermissionActionOnOrders" class="btn btn-sm btn-primary" disabled>{{ 'Settle' | translate }}</button>
-          </ng-container>
-          <button type="button" class="btn btn-sm btn-info" disabled *ngSwitchDefault> {{ 'Cancel' | translate }}</button>
-
-      </clr-dg-cell>
-      <clr-dg-row-detail *clrIfExpanded>
-          <div class="additionalInfos">
-              <div class="row">
-                  <div class="form-group col-sm-3">
-                      <table>
-                          <tbody>
-                          <tr>
-                              <td>
-                                  <b>{{ 'Asset Management Company' | translate }}</b>
-                              </td>
-                              <td>{{order.amCompanyName}}</td>
-                          </tr>
-                          </tbody>
-                      </table>
+<div class="wrapper wrapper-content">
+    <div class="panel-body">
+        <clr-datagrid (clrDgRefresh)="refresh($event)" [clrDgLoading]="loading" clrDgSortIcon #ordersDataGrid>
+          <clr-dg-column [clrDgField]="'orderRef'" clrDgSortIcon clrDgSortNoSearch id="Order-REF">
+              <ng-container *clrDgHideableColumn="{hidden: false}">Référence de l'opération
+                  <span class="column-label"></span>
+              </ng-container>
+          </clr-dg-column>
+          <clr-dg-column [clrDgField]="'orderType'" clrDgSortIcon clrDgSortNoSearch id="Order-Type">
+              <ng-container *clrDgHideableColumn="{hidden: false}">Type
+                  <span class="column-label"></span>
+              </ng-container>
+          </clr-dg-column>
+          <clr-dg-column [clrDgField]="'investorCompanyName'" clrDgSortIcon clrDgSortNoSearch id="Order-Investor">
+              <ng-container *clrDgHideableColumn="{hidden: false}"> Société de gestion
+                  <span class="column-label"></span>
+              </ng-container>
+          </clr-dg-column>
+          <clr-dg-column *ngIf="isIznesAdmin" [clrDgField]="'portfolio'" clrDgSortIcon clrDgSortNoSearch id="Order-Portfolio">
+              <ng-container *clrDgHideableColumn="{hidden: false}">Investisseur
+                  <span class="column-label"></span>
+              </ng-container>
+          </clr-dg-column>
+          <clr-dg-column [clrDgField]="'isin'" clrDgSortIcon clrDgSortNoSearch id="Order-ISIN">
+              <ng-container *clrDgHideableColumn="{hidden: false}">Portefeuille
+                  <span class="column-label"></span>
+              </ng-container>
+          </clr-dg-column>
+          <clr-dg-column [clrDgField]="'shareName'" clrDgSortIcon clrDgSortNoSearch id="Order-Share-Name">
+              <ng-container *clrDgHideableColumn="{hidden: false}">ISIN
+                  <span class="column-label"></span>
+              </ng-container>
+          </clr-dg-column>
+          <clr-dg-column [clrDgField]="'assetManagementCompany'" clrDgSortIcon clrDgSortNoSearch id="Order-Asset-Manager-Company">
+              <ng-container *clrDgHideableColumn="{hidden: true}">Nom de la part
+                  <span class="column-label"></span>
+              </ng-container>
+          </clr-dg-column>
+          <clr-dg-column [clrDgField]="'shareCurrency'" clrDgSortIcon clrDgSortNoSearch id="Order-Share-Currency">
+              <ng-container *clrDgHideableColumn="{hidden: false}">Devise
+                  <span class="column-label"></span>
+              </ng-container>
+          </clr-dg-column>
+          <clr-dg-column [clrDgField]="'quantity'" clrDgSortIcon clrDgSortNoSearch id="Order-Quantity" class="right">
+              <ng-container *clrDgHideableColumn="{hidden: false}">Quantité
+                  <span class="column-label"></span>
+              </ng-container>
+          </clr-dg-column>
+          <clr-dg-column [clrDgField]="'tradedBy'" clrDgSortIcon clrDgSortNoSearch id="Order-Traded-By">
+              <ng-container *clrDgHideableColumn="{hidden: false}">Prix
+                  <span class="column-label"></span>
+              </ng-container>
+          </clr-dg-column>
+          <clr-dg-column [clrDgField]="'latestNAV'" clrDgSortIcon clrDgSortNoSearch id="Order-Latest-NAV" class="right">
+              <ng-container *clrDgHideableColumn="{hidden: true}">Montant
+                  <span class="column-label"></span>
+              </ng-container>
+          </clr-dg-column>
+          <clr-dg-column [clrDgField]="'grossAmount'" clrDgSortIcon clrDgSortNoSearch id="Order-Trade-Amount" class="right">
+              <ng-container *clrDgHideableColumn="{hidden: false}">Date d'impact sur le stock
+                  <span class="column-label"></span>
+              </ng-container>
+          </clr-dg-column>
+          <clr-dg-column [clrDgField]="'feesAmount'" clrDgSortIcon clrDgSortNoSearch id="Order-Fee-Amount" class="right">
+              <ng-container *clrDgHideableColumn="{hidden: true}">Statut
+                  <span class="column-label"></span>
+              </ng-container>
+          </clr-dg-column>
+          <clr-dg-column [clrDgField]="'orderDate'" clrDgSortIcon clrDgSortNoSearch id="Order-Order-Date">
+              <ng-container *clrDgHideableColumn="{hidden: false}">Date de la saisie
+                  <span class="column-label"></span>
+              </ng-container>
+          </clr-dg-column>
+          <clr-dg-column [clrDgField]="'cutOffDate'" clrDgSortIcon clrDgSortNoSearch id="Order-Cut-Off-Date">
+              <ng-container *clrDgHideableColumn="{hidden: false}">Action
+                  <span class="column-label"></span>
+              </ng-container>
+          </clr-dg-column>
+          <clr-dg-column *ngIf="isAssetManager" class="right">
+              <span class="text-center">{{ 'Payment' | translate }}</span>
+          </clr-dg-column>
+          <!-- ACTIONS -->
+          <clr-dg-column *ngIf="!isIznesAdmin" id="Order-Action" class="right">
+              <span class="text-center">{{ 'Actions' | translate }}</span>
+          </clr-dg-column>
+      
+          <clr-dg-row *ngFor="let order of ordersList; let i = index" clrDgRowClickable>
+              <clr-dg-cell (click)="buildLink(order, $event)">
+                  <!-- orderRef -->
+                  {{ order.orderRef }}
+                  <div *ngIf="showColumnSpacer" class="column-spacer">{{getColumnSpaceText(order.orderRef)}}</div>
+              </clr-dg-cell>
+              <clr-dg-cell (click)="buildLink(order, $event)">
+                  <!-- orderType -->
+                  <span>{{ order.orderTypeStr }}</span>
+                  <div *ngIf="showColumnSpacer" class="column-spacer">{{getColumnSpaceText(order.orderTypeStr)}}</div>
+              </clr-dg-cell>
+              <clr-dg-cell (click)="buildLink(order, $event)">
+                  <!-- investor {{showInvestor(order)}} -->
+                  {{order.investorCompanyName}}
+                  <div *ngIf="showColumnSpacer" class="column-spacer">{{getColumnSpaceText(order.investorCompanyName)}}</div>
+              </clr-dg-cell>
+              <clr-dg-cell (click)="buildLink(order, $event)">
+                  {{order.portfolio}}
+                  <div *ngIf="showColumnSpacer" class="column-spacer">{{getColumnSpaceText(order.portfolio)}}</div>
+              </clr-dg-cell>
+              <clr-dg-cell *ngIf="isIznesAdmin" (click)="buildLink(order, $event)">
+                  {{order.label}}
+                  <div *ngIf="showColumnSpacer" class="column-spacer">{{getColumnSpaceText(order.label)}}</div>
+              </clr-dg-cell>
+              <clr-dg-cell *ngIf="isInvestorUser">
+                  <!-- isin -->
+                  <button
+                      class="btn btn-link btn-sm"
+                      [routerLink]="['/' + getLinkRoute() + '/product-characteristic', order.isin]">{{order.isin}}
+                  </button>
+              
+                  <div *ngIf="showColumnSpacer" class="column-spacer">{{getColumnSpaceText(order.isin)}}</div>
+              </clr-dg-cell>
+              <clr-dg-cell *ngIf="!isInvestorUser" (click)="buildLink(order, $event)">
+                  <!-- isin -->
+                  {{order.isin}}
+                  <div *ngIf="showColumnSpacer" class="column-spacer">{{getColumnSpaceText(order.isin)}}</div>
+              </clr-dg-cell>
+              <clr-dg-cell *ngIf="isInvestorUser">
+                  <!-- shareName -->
+                  <button
+                      class="btn btn-link btn-sm"
+                      [routerLink]="['/' + getLinkRoute() + '/product-characteristic', order.isin]">
+                      {{order.fundShareName}}
+                  </button>
+              </clr-dg-cell>
+              <clr-dg-cell *ngIf="!isInvestorUser" (click)="buildLink(order, $event)">
+                  <!-- shareName -->
+                  {{order.fundShareName}}
+                  <div *ngIf="showColumnSpacer" class="column-spacer">{{getColumnSpaceText(order.fundShareName)}}</div>
+              </clr-dg-cell>
+              <clr-dg-cell (click)="buildLink(order, $event)">
+                  <!-- assetManagementCompany -->{{order.amCompanyName}}
+                  <div *ngIf="showColumnSpacer" class="column-spacer">{{getColumnSpaceText(order.amCompanyName)}}</div>
+              </clr-dg-cell>
+              <clr-dg-cell (click)="buildLink(order, $event)">
+                  <!-- shareCurrency -->{{ showCurrency(order) }}
+                  <div *ngIf="showColumnSpacer" class="column-spacer">{{getColumnSpaceText(showCurrency(order))}}</div>
+              </clr-dg-cell>
+              <clr-dg-cell class="right" (click)="buildLink(order, $event)">
+                  <!-- quantity -->{{ order.quantity | moneyValue: 5 }}
+                  <div *ngIf="showColumnSpacer" class="column-spacer">{{getColumnSpaceText(order.quantity)}}</div>
+              </clr-dg-cell>
+              <clr-dg-cell (click)="buildLink(order, $event)">
+                  <!-- byAmountOrQuantity -->
+                  <span *ngIf="order.byAmountOrQuantity === 1">
+                      {{ 'Quantity' | translate }}
+                  </span>
+                  <span *ngIf="order.byAmountOrQuantity === 2">
+                      {{ 'Amount' | translate }}
+                  </span>
+              </clr-dg-cell>
+              <clr-dg-cell class="right" (click)="buildLink(order, $event)">
+                  <!-- latestNAV -->{{ order.price | moneyValue: 4 }}
+                  <div *ngIf="showColumnSpacer" class="column-spacer">{{getColumnSpaceText(order.price)}}</div>
+              </clr-dg-cell>
+              <clr-dg-cell class="right" (click)="buildLink(order, $event)">
+                  <!-- grossAmount -->{{ order.amountWithCost | moneyValue: 2 }}
+                  <div *ngIf="showColumnSpacer" class="column-spacer">{{getColumnSpaceText(order.amountWithCost)}}</div>
+              </clr-dg-cell>
+              <clr-dg-cell class="right" (click)="buildLink(order, $event)">
+                  <!-- feesAmount -->{{ order.fee | moneyValue: 2 }}
+                  <div *ngIf="showColumnSpacer" class="column-spacer">{{getColumnSpaceText(order.fee)}}</div>
+              </clr-dg-cell>
+              <clr-dg-cell (click)="buildLink(order, $event)">
+                  <!-- orderDate -->
+                  <div style="min-width: 145px">{{ getDateTime(order.orderDate) }}</div>
+              </clr-dg-cell>
+              <clr-dg-cell (click)="buildLink(order, $event)">
+                  <!-- cutOffDate -->
+                  <div style="min-width: 145px">{{ getDateTime(order.cutoffDate) }}</div>
+              </clr-dg-cell>
+              <clr-dg-cell (click)="buildLink(order, $event)">
+                  <!-- NAVDate -->{{ getOnlyDate(order.valuationDate) }}
+                  <div *ngIf="showColumnSpacer" class="column-spacer">{{getColumnSpaceText(getOnlyDate(order.valuationDate))}}</div>
+              </clr-dg-cell>
+              <clr-dg-cell (click)="buildLink(order, $event)">
+                  <!-- settlementDate -->{{ getOnlyDate(order.settlementDate) }}
+                  <div *ngIf="showColumnSpacer" class="column-spacer">{{getColumnSpaceText(getOnlyDate(order.settlementDate))}}</div>
+              </clr-dg-cell>
+              <clr-dg-cell (click)="buildLink(order, $event)">
+                  <span *ngIf="order.orderStatus == 1" class="label label-warning">{{ 'Initiated' | translate }}
+                  </span>
+              
+                  <span *ngIf="order.orderStatus == 2" class="label label-info">{{ 'Waiting NAV' | translate }}
+                  </span>
+              
+                  <span *ngIf="order.orderStatus == 3" class="label label-info">{{ 'Waiting Settlement' | translate }}
+                  </span>
+              
+                  <span *ngIf="order.orderStatus == 4 && order.orderUnpaid == false" class="label label-error">{{ 'Unpaid' | translate }}
+                  </span>
+              
+                  <span *ngIf="order.orderStatus == 4 && order.orderUnpaid == true" class="label label-info">{{ 'Waiting Settlement' | translate }}
+                  </span>
+              
+                  <span *ngIf="order.orderStatus == -1" class="label label-success">{{ 'Settled' | translate }}
+                  </span>
+              
+                  <span *ngIf="order.orderStatus == 0" class="label label-error">{{ 'Cancelled' | translate }}
+                  </span>
+              </clr-dg-cell>
+              <clr-dg-cell *ngIf="isAssetManager" class="right" [ngSwitch]="order.paymentMsgStatus">
+                  <span *ngSwitchCase="'sent'" class="label label-success">{{ 'Sent' | translate }}</span>
+                  <span *ngSwitchCase="'ready'" class="label label-success">{{ 'Sent' | translate }}</span>
+                  <input type="checkbox" clrCheckbox *ngSwitchCase="'pending'" [formControl]="order.markedForPayment" (change)="updatePaymentCheckBoxState(order.orderID, $event)"  [disabled]="!order.readyForPayment">
+              </clr-dg-cell>
+              <clr-dg-cell *ngIf="!isIznesAdmin" [ngSwitch]="order.orderStatus" class="right">
+            
+                  <ng-container *ngSwitchCase="1">
+                      <button type="button" class="btn btn-sm btn-danger" (click)="cancelOrder(i)" *ngIf="!hasPermissionActionOnOrders" disabled>{{ 'Cancel' | translate }}</button>
+                      <button type="button" class="btn btn-sm btn-danger" (click)="cancelOrder(i)" *ngIf="hasPermissionActionOnOrders">{{ 'Cancel' | translate }}</button>
+                  </ng-container>
+              
+                  <ng-container *ngSwitchCase="4">
+                      <button type="button" *ngIf="isInvestorUser" class="btn btn-sm btn-info" disabled>{{ 'Cancel' | translate }}</button>
+                      <button type="button" *ngIf="!isInvestorUser && hasPermissionActionOnOrders" class="btn btn-sm btn-primary" (click)="settleOrder(i)">{{ 'Settle' | translate }}</button>
+                      <button type="button" *ngIf="!isInvestorUser && !hasPermissionActionOnOrders" class="btn btn-sm btn-primary" disabled>{{ 'Settle' | translate }}</button>
+                  </ng-container>
+                  <button type="button" class="btn btn-sm btn-info" disabled *ngSwitchDefault> {{ 'Cancel' | translate }}</button>
+              
+              </clr-dg-cell>
+              <clr-dg-row-detail *clrIfExpanded>
+                  <div class="additionalInfos">
+                      <div class="row">
+                          <div class="form-group col-sm-3">
+                              <table>
+                                  <tbody>
+                                  <tr>
+                                      <td>
+                                          <b>{{ 'Asset Management Company' | translate }}</b>
+                                      </td>
+                                      <td>{{order.amCompanyName}}</td>
+                                  </tr>
+                                  </tbody>
+                              </table>
+                          </div>
+                          <div class="form-group col-sm-3">
+                              <table>
+                                  <tbody>
+                                  <tr>
+                                      <td>
+                                          <b>{{ 'Latest NAV' | translate }}</b>
+                                      </td>
+                                      <td [class]="getPriceStatusCss(order)">{{order.price | moneyValue: 2}}</td>
+                                  </tr>
+                                  </tbody>
+                              </table>
+                          </div>
+                          <div class="form-group col-sm-3">
+                              <table>
+                                  <tbody>
+                                  <tr>
+                                      <td>
+                                          <b>{{ 'Fees Amount' | translate }}</b>
+                                      </td>
+                                      <td>{{ order.fee | moneyValue: 2 }}</td>
+                                  </tr>
+                                  </tbody>
+                              </table>
+                          </div>
+                          <div class="form-group col-sm-3">
+                              <table>
+                                  <tbody>
+                                  <tr>
+                                      <td>
+                                          <b>{{' NAV Date' | translate }}</b>
+                                      </td>
+                                      <td>{{getOnlyDate(order.valuationDate)}}</td>
+                                  </tr>
+                                  </tbody>
+                              </table>
+                          </div>
+                      </div>
                   </div>
-                  <div class="form-group col-sm-3">
-                      <table>
-                          <tbody>
-                          <tr>
-                              <td>
-                                  <b>{{ 'Latest NAV' | translate }}</b>
-                              </td>
-                              <td [class]="getPriceStatusCss(order)">{{order.price | moneyValue: 2}}</td>
-                          </tr>
-                          </tbody>
-                      </table>
-                  </div>
-                  <div class="form-group col-sm-3">
-                      <table>
-                          <tbody>
-                          <tr>
-                              <td>
-                                  <b>{{ 'Fees Amount' | translate }}</b>
-                              </td>
-                              <td>{{ order.fee | moneyValue: 2 }}</td>
-                          </tr>
-                          </tbody>
-                      </table>
-                  </div>
-                  <div class="form-group col-sm-3">
-                      <table>
-                          <tbody>
-                          <tr>
-                              <td>
-                                  <b>{{' NAV Date' | translate }}</b>
-                              </td>
-                              <td>{{getOnlyDate(order.valuationDate)}}</td>
-                          </tr>
-                          </tbody>
-                      </table>
-                  </div>
-              </div>
-          </div>
-      </clr-dg-row-detail>
-  </clr-dg-row>
-
-  <clr-dg-footer class="full-options">
-      <!-- Optional customization of hide/show columns toggle -->
-      <clr-dg-column-toggle>
-          <clr-dg-column-toggle-title>{{ 'Show/Hide Fields' | translate }}
-          </clr-dg-column-toggle-title>
-          <!--<clr-dg-column-toggle-button clrType="selectAll">-->
-          <!--<button type="button" class="btn btn-primary">-->
-          <!--Select All-->
-          <!--</button>-->
-          <!--</clr-dg-column-toggle-button>-->
-          <clr-dg-column-toggle-button clrType="ok">
-              <button type="button" class="btn btn-primary" style="padding:0 20px">
-                  <clr-icon shape="check"></clr-icon>
-              </button>
-          </clr-dg-column-toggle-button>
-      </clr-dg-column-toggle>
-
-      <!--{{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}-->
-      <!-- <clr-dg-pagination #pagination [clrDgPageSize]="itemPerPage" [clrDgLastPage]="lastPage"></clr-dg-pagination> -->
-  </clr-dg-footer>
-</clr-datagrid>
+              </clr-dg-row-detail>
+          </clr-dg-row>
+      
+          <clr-dg-footer class="full-options">
+              <!-- Optional customization of hide/show columns toggle -->
+              <clr-dg-column-toggle>
+                  <clr-dg-column-toggle-title>{{ 'Show/Hide Fields' | translate }}
+                  </clr-dg-column-toggle-title>
+                  <clr-dg-column-toggle-button clrType="selectAll">
+                  <button type="button" class="btn btn-primary">
+                  Select All
+                  </button>
+                  </clr-dg-column-toggle-button>
+                  <clr-dg-column-toggle-button clrType="ok">
+                      <button type="button" class="btn btn-primary" style="padding:0 20px">
+                          <clr-icon shape="check"></clr-icon>
+                      </button>
+                  </clr-dg-column-toggle-button>
+              </clr-dg-column-toggle>
+          
+              <!--{{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}-->
+              <!-- <clr-dg-pagination #pagination [clrDgPageSize]="itemPerPage" [clrDgLastPage]="lastPage"></clr-dg-pagination> -->
+          </clr-dg-footer>
+        </clr-datagrid>
+    </div>
+</div>
