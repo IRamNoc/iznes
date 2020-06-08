@@ -1,17 +1,179 @@
 <!-- Breadcrumbs. -->
 <div class="header-breadcrumbs">
   <h1>
-      <i class="fa fa-shopping-basket"></i> Default breadcrumb
+    <clr-icon shape="switch"></clr-icon> Transfer In & Out
   </h1>
 </div>
 
 <!-- Subscription/Redemption tab -->
-<clr-tabs>
-  <clr-tab>
-      <clr-tab-content *clrIfActive>
-          <form (ngSubmit)="handleSubmitButtonClick()">
-              <a> Start new </a>
-          </form>
-      </clr-tab-content>
-  </clr-tab>
-</clr-tabs>
+<div class="well">
+  <!-- Panel header -->
+  <div class="row panel-header">
+    <div class="col-md-6">
+      <h2>Créer un nouveau transfert</h2>
+      Please fill in the following information to create a new transfer
+    </div>
+  </div>
+
+  <!-- Panel body -->
+  <div class="row panel-body">
+    <div class="col-md-12">
+      <form clrForm>
+        <section class="form-group">
+          <div class="row">
+            <div class="col-md-6">
+              <label class="clr-col-12 clr-col-md-12" for="orderReference">Société de Gestion</label>
+              <input id="orderReference" class="form-control" type="text">
+            </div>
+
+            <div class="col-md-6">
+              <label class="clr-col-12 clr-col-md-12" for="quantity"></label>
+              <input id="quantity" class="form-control" type="text" value="Exemple société gestion selectionné"
+                disabled>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-6">
+              <label class="clr-col-12 clr-col-md-12" for="quantity">ISIN</label>
+              <input id="quantity" class="form-control" type="number">
+            </div>
+
+            <!-- Amount -->
+            <div class="col-md-6">
+              <label class="clr-col-12 clr-col-md-12" for="quantity"></label>
+              <input id="quantity" class="form-control" type="text" value="Exemple ISIN selectionné" disabled>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-6">
+              <label class="clr-col-12 clr-col-md-12" for="quantity">Investisseur</label>
+              <input id="quantity" class="form-control" type="number">
+            </div>
+
+            <!-- Amount -->
+            <div class="col-md-6">
+              <label class="clr-col-12 clr-col-md-12" for="quantity"></label>
+              <input id="quantity" class="form-control" type="text" value="Exemple investisseur selectionné" disabled>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-6">
+              <label class="clr-col-12 clr-col-md-12" for="quantity">Portfeuille</label>
+              <input id="quantity" class="form-control" type="number">
+            </div>
+
+            <!-- Amount -->
+            <div class="col-md-6">
+              <label class="clr-col-12 clr-col-md-12" for="quantity"></label>
+              <input id="quantity" class="form-control" type="text" value="Exemple portefeuille sélectionné" disabled>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-3">
+              <label class="clr-col-12 clr-col-md-12" for="type">Type</label>
+              <div class="btn-group">
+                <div class="radio btn">
+                  <input type="radio" id="btn-radio-operation" (click)="actionBy = 'o'" [checked]="actionBy === 'o'">
+                  <label for="btn-radio-operation">Opération</label>
+                </div>
+                <div class="radio btn">
+                  <input type="radio" id="btn-radio-stock" (click)="actionBy = 's'" [checked]="actionBy === 's'">
+                  <label for="btn-radio-stock">Stock</label>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-3 offset-md-1">
+              <label class="clr-col-12 clr-col-md-12" for="sens">Sens</label>
+              <div class="btn-group">
+                <div class="radio btn">
+                  <input type="radio" id="btn-radio-in" (click)="actionBy = 'i'" [checked]="actionBy === 'i'">
+                  <label for="btn-radio-in">In</label>
+                </div>
+                <div class="radio btn">
+                  <input type="radio" id="btn-radio-out" (click)="actionBy = 'out'" [checked]="actionBy === 'out'">
+                  <label for="btn-radio-out">Out</label>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-4">
+              <label class="clr-col-12 clr-col-md-12" for="quantity">Quantité</label>
+              <input id="quantity" class="form-control" type="number">
+            </div>
+
+            <div class="col-md-4">
+              <label class="clr-col-12 clr-col-md-12" for="quantity">Prix unitaire</label>
+              <input id="quantity" class="form-control" type="number">
+            </div>
+          </div>
+
+          <div class="row">
+
+            <div class="col-md-4">
+              <label class="clr-col-12 clr-col-md-12" for="quantity">Montant</label>
+              <input id="quantity" class="form-control" type="number">
+            </div>
+
+            <div class="col-md-4">
+              <label class="clr-col-12 clr-col-md-12" for="quantity">Devise</label>
+              <input id="quantity" class="form-control" type="number">
+            </div>
+          </div>
+
+          <div class="row">
+
+            <div class="col-md-4">
+              <label class="clr-col-12 clr-col-md-12" for="quantity">Date et heure théorique d'entrée au registre
+                d'IZNES</label>
+              <input id="quantity" class="form-control" type="number">
+            </div>
+
+            <div class="col-md-4">
+              <label class="clr-col-12 clr-col-md-12" for="quantity">Date et heure initiale de l'opération</label>
+              <input id="quantity" class="form-control" type="number">
+            </div>
+
+          </div>
+
+          <div class="row">
+
+            <div class="col-md-4">
+              <label class="clr-col-12 clr-col-md-12" for="quantity">Référence externe</label>
+              <input id="quantity" class="form-control" type="number">
+            </div>
+
+            <div class="col-md-4">
+              <label class="clr-col-12 clr-col-md-12" for="quantity">Teneur de compte historique</label>
+              <input id="quantity" class="form-control" type="number">
+            </div>
+
+          </div>
+
+          <div class="col-md-8">
+            <label class="clr-col-12 clr-col-md-12" for="quantity">Commentaire</label>
+            <textarea class="form-control" formControlName="comment" autocomplete="off"></textarea>
+          </div>
+
+          <div class="row">
+            <div class="col-md-4">
+              <label class="clr-col-12 clr-col-md-12" for="quantity">Transfert saisi par</label>
+              <input id="quantity" class="form-control" type="number">
+            </div>
+
+            <div class="col-md-4">
+              <label class="clr-col-12 clr-col-md-12" for="quantity">Date et heure de saisie du transfert</label>
+              <input id="quantity" class="form-control" type="number">
+            </div>
+          </div>
+        </section>
+      </form>
+    </div>
+  </div>
+</div>

@@ -7,21 +7,22 @@ import { LogService } from '@setl/utils';
 import { MultilingualService } from '@setl/multilingual';
 
 @Component({
-  selector: 'app-create-transfer',
-  templateUrl: './create-transfer.component.html',
-  styleUrls: ['./create-transfer.component.scss']
+    selector: 'app-create-transfer',
+    templateUrl: './create-transfer.component.html',
+    styleUrls: ['./create-transfer.component.scss'],
 })
 export class CreateTransferComponent implements OnInit {
+    placeTransferFormGroup = FormGroup;
 
-  constructor(private fb: FormBuilder,
-    private cdr: ChangeDetectorRef,
-    private router: Router,
-    private redux: NgRedux<any>,
-    private logService: LogService,
-    public translate: MultilingualService,
-    private route: ActivatedRoute) { }
+    constructor(private fb: FormBuilder,
+                private cdr: ChangeDetectorRef,
+                private router: Router,
+                private redux: NgRedux<any>,
+                private logService: LogService,
+                public translate: MultilingualService,
+                private route: ActivatedRoute) { }
 
-  ngOnInit() {
-  }
+    ngOnInit() {
+    }
 
 }
