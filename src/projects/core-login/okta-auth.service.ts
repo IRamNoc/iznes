@@ -5,10 +5,11 @@ import * as OktaAuth from '@okta/okta-auth-js';
     providedIn: 'root'
 })
 export class OktaAuthService {
-    CLIENT_ID = '0oaakvvb46DXdpxBB4x6';
-    ISSUER = 'https://dev-698165.okta.com/oauth2/default'
-    LOGIN_REDIRECT_URI = 'https://192.168.1.85/redirect-callback.html';
-    LOGOUT_REDIRECT_URI = 'https://192.168.1.85/redirect-callback.html';
+    URL_BASE = location.origin;
+    CLIENT_ID = '0oah49n1tfxhVKmvh0x6';
+    ISSUER = 'https://engieapppreview.oktapreview.com/.well-known/openid-configuration';
+    LOGIN_REDIRECT_URI = `${this.URL_BASE}/engie-callback`;
+    LOGOUT_REDIRECT_URI = this.URL_BASE;
     oktaAuth = new OktaAuth({
         clientId: this.CLIENT_ID,
         issuer: this.ISSUER,
@@ -18,6 +19,7 @@ export class OktaAuthService {
 
     constructor() {
     }
+    
 
     // Check if user have okta Token in the token Manager
     async haveToken() {
@@ -44,7 +46,7 @@ export class OktaAuthService {
 
     // Redirecting into Okta server to login in Okta account
     initiateLogin() {
-        sessionStorage.setItem('okta-app-url', 'https://192.168.1.85:4200');
+        sessionStorage.setItem('okta-app-url', this.URL_BASE);
         this.oktaAuth.token.getWithRedirect({
             scopes: ['openid', 'email', 'profile']
             , responseMode: "query"
