@@ -354,7 +354,7 @@ export class FundShare {
         this.setListItemValue(this.characteristic.mandatory.subscriptionCurrency, fundShare.subscriptionCurrency);
         this.characteristic.mandatory.minInitialSubscriptionInShare.control.setValue(this.numberConverter.toFrontEnd(fundShare.minInitialSubscriptionInShare));
         this.characteristic.mandatory.minInitialSubscriptionInAmount.control.setValue(this.numberConverter.toFrontEnd(fundShare.minInitialSubscriptionInAmount));
-        this.characteristic.mandatory.minSubsequentSubscriptionInShare.control.setValue(this.numberConverter.toFrontEnd(fundShare.minSubsequentRedemptionInShare));
+        this.characteristic.mandatory.minSubsequentSubscriptionInShare.control.setValue(this.numberConverter.toFrontEnd(fundShare.minSubsequentSubscriptionInShare));
         this.characteristic.mandatory.minSubsequentSubscriptionInAmount.control.setValue(this.numberConverter.toFrontEnd(fundShare.minSubsequentSubscriptionInAmount));
         this.setListItemValue(this.characteristic.mandatory.redemptionCategory, fundShare.redemptionCategory);
         this.setListItemValue(this.characteristic.mandatory.redemptionCurrency, fundShare.redemptionCurrency);
