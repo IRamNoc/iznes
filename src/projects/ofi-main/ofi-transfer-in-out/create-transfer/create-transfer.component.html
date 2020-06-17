@@ -18,57 +18,56 @@
   <!-- Panel body -->
   <div class="row panel-body">
     <div class="col-md-12">
-      <form clrForm>
+      <form [formGroup]="placeTransferFormGroup" (click)="handleSubmitButtonClick()" clrForm>
         <section class="form-group">
           <div class="row">
             <div class="col-md-6">
-              <label class="clr-col-12 clr-col-md-12" for="orderReference">Société de Gestion</label>
-              <input id="orderReference" class="form-control" type="text">
+              <label class="clr-col-12 clr-col-md-12" for="amCompany">Société de Gestion</label>
+              <input id="amCompany" formControlName="amCompany" class="form-control" type="text">
             </div>
 
             <div class="col-md-6">
-              <label class="clr-col-12 clr-col-md-12" for="quantity"></label>
-              <input id="quantity" class="form-control" type="text" value="Exemple société gestion selectionné"
-                disabled>
-            </div>
-          </div>
-
-          <div class="row">
-            <div class="col-md-6">
-              <label class="clr-col-12 clr-col-md-12" for="quantity">ISIN</label>
-              <input id="quantity" class="form-control" type="number">
-            </div>
-
-            <!-- Amount -->
-            <div class="col-md-6">
-              <label class="clr-col-12 clr-col-md-12" for="quantity"></label>
-              <input id="quantity" class="form-control" type="text" value="Exemple ISIN selectionné" disabled>
+              <label class="clr-col-12 clr-col-md-12" for="amBic"></label>
+              <input id="amBic" class="form-control" formControlName="amBic" type="text" value="Exemple société gestion selectionné">
             </div>
           </div>
 
           <div class="row">
             <div class="col-md-6">
-              <label class="clr-col-12 clr-col-md-12" for="quantity">Investisseur</label>
-              <input id="quantity" class="form-control" type="number">
+              <label class="clr-col-12 clr-col-md-12" for="amShareFund">ISIN</label>
+              <input id="amShareFund" formControlName="amShareFund" class="form-control" type="text">
             </div>
 
             <!-- Amount -->
             <div class="col-md-6">
-              <label class="clr-col-12 clr-col-md-12" for="quantity"></label>
-              <input id="quantity" class="form-control" type="text" value="Exemple investisseur selectionné" disabled>
+              <label class="clr-col-12 clr-col-md-12" for="amShareFundISIN"></label>
+              <input id="amShareFundISIN" formControlName="amShareFundISIN" class="form-control" type="text" value="Exemple ISIN selectionné">
             </div>
           </div>
 
           <div class="row">
             <div class="col-md-6">
-              <label class="clr-col-12 clr-col-md-12" for="quantity">Portfeuille</label>
-              <input id="quantity" class="form-control" type="number">
+              <label class="clr-col-12 clr-col-md-12" for="investorCompany">Investisseur</label>
+              <input id="investorCompany" formControlName="investorCompany" class="form-control" type="text">
             </div>
 
             <!-- Amount -->
             <div class="col-md-6">
-              <label class="clr-col-12 clr-col-md-12" for="quantity"></label>
-              <input id="quantity" class="form-control" type="text" value="Exemple portefeuille sélectionné" disabled>
+              <label class="clr-col-12 clr-col-md-12" for="investorReference"></label>
+              <input id="investorReference" formControlName="investorReference" class="form-control" type="text" value="Exemple investisseur selectionné">
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-6">
+              <label class="clr-col-12 clr-col-md-12" for="investorWallet">Portfeuille</label>
+              <input id="investorWallet" formControlName="investorWallet" class="form-control" type="number">
+            </div>
+
+            <!-- Amount -->
+            <div class="col-md-6">
+              <label class="clr-col-12 clr-col-md-12" for="investorWalletReference"></label>
+              <input id="investorWalletReference" formControlName="investorWalletReference" class="form-control" type="text" value="Exemple portefeuille sélectionné">
             </div>
           </div>
 
@@ -77,12 +76,12 @@
               <label class="clr-col-12 clr-col-md-12" for="type">Type</label>
               <div class="btn-group">
                 <div class="radio btn">
-                  <input type="radio" id="btn-radio-operation" (click)="actionBy = 'o'" [checked]="actionBy === 'o'">
-                  <label for="btn-radio-operation">Opération</label>
+                  <input type="radio" id="btn-radio-operation" (click)="type = 'operation'" [checked]="type === 'operation'">
+                  <label class="clr-col-12 clr-col-md-12"  for="btn-radio-operation">Opération</label>
                 </div>
                 <div class="radio btn">
-                  <input type="radio" id="btn-radio-stock" (click)="actionBy = 's'" [checked]="actionBy === 's'">
-                  <label for="btn-radio-stock">Stock</label>
+                  <input type="radio" id="btn-radio-stock" (click)="type = 'stock'" [checked]="type === 'stock'">
+                  <label class="clr-col-12 clr-col-md-12"  for="btn-radio-stock">Stock</label>
                 </div>
               </div>
             </div>
@@ -91,12 +90,12 @@
               <label class="clr-col-12 clr-col-md-12" for="sens">Sens</label>
               <div class="btn-group">
                 <div class="radio btn">
-                  <input type="radio" id="btn-radio-in" (click)="actionBy = 'i'" [checked]="actionBy === 'i'">
-                  <label for="btn-radio-in">In</label>
+                  <input type="radio" id="btn-radio-in" (click)="direction = 'in'" [checked]="direction === 'in'">
+                  <label class="clr-col-12 clr-col-md-12"  for="btn-radio-in">In</label>
                 </div>
                 <div class="radio btn">
-                  <input type="radio" id="btn-radio-out" (click)="actionBy = 'out'" [checked]="actionBy === 'out'">
-                  <label for="btn-radio-out">Out</label>
+                  <input type="radio" id="btn-radio-out" (click)="direction = 'out'" [checked]="direction === 'out'">
+                  <label class="clr-col-12 clr-col-md-12"  for="btn-radio-out">Out</label>
                 </div>
               </div>
             </div>
@@ -105,75 +104,84 @@
           <div class="row">
             <div class="col-md-4">
               <label class="clr-col-12 clr-col-md-12" for="quantity">Quantité</label>
-              <input id="quantity" class="form-control" type="number">
+              <input id="quantity" formControlName="quantity" class="form-control" type="number">
             </div>
 
             <div class="col-md-4">
-              <label class="clr-col-12 clr-col-md-12" for="quantity">Prix unitaire</label>
-              <input id="quantity" class="form-control" type="number">
-            </div>
-          </div>
-
-          <div class="row">
-
-            <div class="col-md-4">
-              <label class="clr-col-12 clr-col-md-12" for="quantity">Montant</label>
-              <input id="quantity" class="form-control" type="number">
-            </div>
-
-            <div class="col-md-4">
-              <label class="clr-col-12 clr-col-md-12" for="quantity">Devise</label>
-              <input id="quantity" class="form-control" type="number">
+              <label class="clr-col-12 clr-col-md-12" for="unitPrice">Prix unitaire</label>
+              <input id="unitPrice" formControlName="unitPrice" class="form-control" type="number">
             </div>
           </div>
 
           <div class="row">
 
             <div class="col-md-4">
-              <label class="clr-col-12 clr-col-md-12" for="quantity">Date et heure théorique d'entrée au registre
+              <label class="clr-col-12 clr-col-md-12" for="amount">Montant</label>
+              <input id="amount" formControlName="amount" class="form-control" type="number">
+            </div>
+
+            <div class="col-md-4">
+              <label class="clr-col-12 clr-col-md-12" for="currency">Devise</label>
+              <input id="currency" formControlName="currency" class="form-control" type="text">
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-4">
+              <label class="clr-col-12 clr-col-md-12" for="theoricalDate">Date et heure théorique d'entrée au registre
                 d'IZNES</label>
-              <input id="quantity" class="form-control" type="number">
+              <input id="theoricalDate" formControlName="theoricalDate" class="form-control" type="datetime">
             </div>
 
             <div class="col-md-4">
-              <label class="clr-col-12 clr-col-md-12" for="quantity">Date et heure initiale de l'opération</label>
-              <input id="quantity" class="form-control" type="number">
+              <label class="clr-col-12 clr-col-md-12" for="initialDate">Date et heure initiale de l'opération</label>
+              <input id="initialDate" formControlName="initialDate" class="form-control" type="datetime">
             </div>
 
           </div>
 
           <div class="row">
-
             <div class="col-md-4">
-              <label class="clr-col-12 clr-col-md-12" for="quantity">Référence externe</label>
-              <input id="quantity" class="form-control" type="number">
+              <label class="clr-col-12 clr-col-md-12" for="externalReference">Référence externe</label>
+              <input id="externalReference" formControlName="externalReference" class="form-control" type="text">
             </div>
 
             <div class="col-md-4">
-              <label class="clr-col-12 clr-col-md-12" for="quantity">Teneur de compte historique</label>
-              <input id="quantity" class="form-control" type="number">
+              <label class="clr-col-12 clr-col-md-12" for="accountKeeper">Teneur de compte historique</label>
+              <ng-select id="accountKeeper" 
+              [placeholder]="translate.translate('Select an investment portfolio')" 
+              [items]="accountKeeperList" 
+              [allowClear]="true" 
+              [formControl]="placeTransferFormGroup.controls['accountKeeper']" 
+              (selected)="handleDropdownItemSelect($event, 'accountKeeper')">
+  </ng-select>
             </div>
 
           </div>
 
           <div class="col-md-8">
-            <label class="clr-col-12 clr-col-md-12" for="quantity">Commentaire</label>
+            <label class="clr-col-12 clr-col-md-12" for="comment">Commentaire</label>
             <textarea class="form-control" formControlName="comment" autocomplete="off"></textarea>
           </div>
 
           <div class="row">
             <div class="col-md-4">
-              <label class="clr-col-12 clr-col-md-12" for="quantity">Transfert saisi par</label>
-              <input id="quantity" class="form-control" type="number">
+              <label class="clr-col-12 clr-col-md-12" for="createdBy">Transfert saisi par</label>
+              <input id="createdBy" formControlName="createdBy" class="form-control" type="text">
             </div>
 
             <div class="col-md-4">
-              <label class="clr-col-12 clr-col-md-12" for="quantity">Date et heure de saisie du transfert</label>
-              <input id="quantity" class="form-control" type="number">
+              <label class="clr-col-12 clr-col-md-12" for="dateEntered">Date et heure de saisie du transfert</label>
+              <input id="dateEntered" formControlName="dateEntered" class="form-control" type="datetime">
             </div>
           </div>
         </section>
       </form>
+
+      <div class="form-group col-sm-12">
+        <button id="cancelButton" type="button" class="btn btn-light" (click)="handleCancelButtonClick()">{{ 'Cancel' | translate }}</button>
+        <button id="saveButton" type="submit"class="btn btn-primary" >{{ 'Save' | translate }}</button>
+    </div>
     </div>
   </div>
 </div>
