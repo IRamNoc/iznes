@@ -23,12 +23,17 @@
           <div class="row">
             <div class="col-md-6">
               <label class="clr-col-12 clr-col-md-12" for="amCompany">Société de Gestion</label>
-              <input id="amCompany" formControlName="amCompany" class="form-control" type="text">
+              <ng-select id="amCompany" [placeholder]="translate.translate('Select an investment portfolio')"
+                [items]="mananagementCompanyItems" [allowClear]="false"
+                [formControl]="placeTransferFormGroup.controls['amCompany']"
+                (selected)="updateBicOnAmSelect($event)">
+              </ng-select>
             </div>
 
             <div class="col-md-6">
-              <label class="clr-col-12 clr-col-md-12" for="amBic"></label>
-              <input id="amBic" class="form-control" formControlName="amBic" type="text" value="Exemple société gestion selectionné">
+              <label class="clr-col-12 clr-col-md-12" for="amBic">BIC</label>
+              <input id="amBic" class="form-control" formControlName="amBic" type="text"
+                value="{{ managementCompanySelected.bic }}">
             </div>
           </div>
 
@@ -41,7 +46,8 @@
             <!-- Amount -->
             <div class="col-md-6">
               <label class="clr-col-12 clr-col-md-12" for="amShareFundISIN"></label>
-              <input id="amShareFundISIN" formControlName="amShareFundISIN" class="form-control" type="text" value="Exemple ISIN selectionné">
+              <input id="amShareFundISIN" formControlName="amShareFundISIN" class="form-control" type="text"
+                value="Exemple ISIN selectionné">
             </div>
           </div>
 
@@ -54,7 +60,8 @@
             <!-- Amount -->
             <div class="col-md-6">
               <label class="clr-col-12 clr-col-md-12" for="investorReference"></label>
-              <input id="investorReference" formControlName="investorReference" class="form-control" type="text" value="Exemple investisseur selectionné">
+              <input id="investorReference" formControlName="investorReference" class="form-control" type="text"
+                value="Exemple investisseur selectionné">
             </div>
           </div>
 
@@ -67,7 +74,8 @@
             <!-- Amount -->
             <div class="col-md-6">
               <label class="clr-col-12 clr-col-md-12" for="investorWalletReference"></label>
-              <input id="investorWalletReference" formControlName="investorWalletReference" class="form-control" type="text" value="Exemple portefeuille sélectionné">
+              <input id="investorWalletReference" formControlName="investorWalletReference" class="form-control"
+                type="text" value="Exemple portefeuille sélectionné">
             </div>
           </div>
 
@@ -76,12 +84,13 @@
               <label class="clr-col-12 clr-col-md-12" for="type">Type</label>
               <div class="btn-group">
                 <div class="radio btn">
-                  <input type="radio" id="btn-radio-operation" (click)="type = 'operation'" [checked]="type === 'operation'">
-                  <label class="clr-col-12 clr-col-md-12"  for="btn-radio-operation">Opération</label>
+                  <input type="radio" id="btn-radio-operation" (click)="type = 'operation'"
+                    [checked]="type === 'operation'">
+                  <label class="clr-col-12 clr-col-md-12" for="btn-radio-operation">Opération</label>
                 </div>
                 <div class="radio btn">
                   <input type="radio" id="btn-radio-stock" (click)="type = 'stock'" [checked]="type === 'stock'">
-                  <label class="clr-col-12 clr-col-md-12"  for="btn-radio-stock">Stock</label>
+                  <label class="clr-col-12 clr-col-md-12" for="btn-radio-stock">Stock</label>
                 </div>
               </div>
             </div>
@@ -91,11 +100,11 @@
               <div class="btn-group">
                 <div class="radio btn">
                   <input type="radio" id="btn-radio-in" (click)="direction = 'in'" [checked]="direction === 'in'">
-                  <label class="clr-col-12 clr-col-md-12"  for="btn-radio-in">In</label>
+                  <label class="clr-col-12 clr-col-md-12" for="btn-radio-in">In</label>
                 </div>
                 <div class="radio btn">
                   <input type="radio" id="btn-radio-out" (click)="direction = 'out'" [checked]="direction === 'out'">
-                  <label class="clr-col-12 clr-col-md-12"  for="btn-radio-out">Out</label>
+                  <label class="clr-col-12 clr-col-md-12" for="btn-radio-out">Out</label>
                 </div>
               </div>
             </div>
@@ -148,13 +157,11 @@
 
             <div class="col-md-4">
               <label class="clr-col-12 clr-col-md-12" for="accountKeeper">Teneur de compte historique</label>
-              <ng-select id="accountKeeper" 
-              [placeholder]="translate.translate('Select an investment portfolio')" 
-              [items]="accountKeeperList" 
-              [allowClear]="true" 
-              [formControl]="placeTransferFormGroup.controls['accountKeeper']" 
-              (selected)="handleDropdownItemSelect($event, 'accountKeeper')">
-  </ng-select>
+              <ng-select id="accountKeeper" [placeholder]="translate.translate('Select an investment portfolio')"
+                [items]="accountKeeperList" [allowClear]="true"
+                [formControl]="placeTransferFormGroup.controls['accountKeeper']"
+                (selected)="handleDropdownItemSelect($event, 'accountKeeper')">
+              </ng-select>
             </div>
 
           </div>
@@ -179,9 +186,10 @@
       </form>
 
       <div class="form-group col-sm-12">
-        <button id="cancelButton" type="button" class="btn btn-light" (click)="handleCancelButtonClick()">{{ 'Cancel' | translate }}</button>
-        <button id="saveButton" type="submit"class="btn btn-primary" >{{ 'Save' | translate }}</button>
-    </div>
+        <button id="cancelButton" type="button" class="btn btn-light"
+          (click)="handleCancelButtonClick()">{{ 'Cancel' | translate }}</button>
+        <button id="saveButton" type="submit" class="btn btn-primary">{{ 'Save' | translate }}</button>
+      </div>
     </div>
   </div>
 </div>

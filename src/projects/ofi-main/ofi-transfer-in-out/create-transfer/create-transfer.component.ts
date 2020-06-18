@@ -5,7 +5,12 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { LogService } from '@setl/utils';
 import { TransferInOutService } from '../transfer-in-out.service';
+import { OfiFundService } from '@ofi/ofi-main/ofi-req-services/ofi-product/fund/fund.service';
+import { OfiFundShareService } from '@ofi/ofi-main/ofi-req-services/ofi-product/fund-share/service';
 import { MultilingualService } from '@setl/multilingual';
+import {
+    OfiManagementCompanyService,
+} from '../../ofi-req-services/ofi-product/management-company/management-company.service';
 
 @Component({
     selector: 'app-create-transfer',
@@ -16,17 +21,44 @@ export class CreateTransferComponent implements OnInit {
     placeTransferFormGroup: FormGroup;
     type = 'operation';
     direction = 'in';
+    managementCompanyAccessList = [];
+    mananagementCompanyItems = [];
+    managementCompanySelected: any = {};
+    shareList = [];
+    filteredShareList = [];
+    subscriptions: Array<Subscription> = [];
     accountKeeperList =  [
-        { id: 1, text: "Société Générale Securities Services France"},
-        { id: 2, text: "Société Générale Securities Services Luxembourg"},
-        { id: 3, text: "BNP Paribas Securities France"},
-        { id: 4, text: "BNP Paribas Securities Luxembourg"},
-        { id: 5, text: "CACEIS Fund Administration"},
-        { id: 6, text: "CACEIS Bank, Luxembourg"},
-        { id: 7, text: "JPMORGAN Bank Luxembourg"},
-        { id: 8, text: "State Street Bank Luxembourg"},
-        { id: 9, text: "State Street Global Services France" },
+        { id: 1, text: 'Société Générale Securities Services France' },
+        { id: 2, text: 'Société Générale Securities Services Luxembourg' },
+        { id: 3, text: 'BNP Paribas Securities France' },
+        { id: 4, text: 'BNP Paribas Securities Luxembourg' },
+        { id: 5, text: 'CACEIS Fund Administration' },
+        { id: 6, text: 'CACEIS Bank, Luxembourg' },
+        { id: 7, text: 'JPMORGAN Bank Luxembourg' },
+        { id: 8, text: 'State Street Bank Luxembourg' },
+        { id: 9, text: 'State Street Global Services France' },
     ];
+
+    /*
+        getmanagementcompanylist
+        izngetadminfundlist
+        izngetadminfundsharelist
+    */
+
+    @select([
+        'ofi',
+        'ofiProduct',
+        'ofiManagementCompany',
+        'managementCompanyList',
+        'managementCompanyList',
+    ]) managementCompanyAccessListOb;
+    @select(['ofi', 'ofiProduct', 'ofiFund', 'fundList', 'iznFundList']) fundListObs;
+    @select(['ofi', 'ofiProduct', 'ofiFundShareList', 'requestedIznesShare']) requestedShareListObs;
+    @select(['ofi', 'ofiProduct', 'ofiFundShareList', 'iznShareList']) shareListObs;
+
+    /* For IZNES Admins */
+    @select(['ofi', 'ofiProduct', 'ofiFundShare', 'requested']) requestedFundShareObs;
+    @select(['ofi', 'ofiProduct', 'ofiFundShare', 'fundShare']) fundShareObs;
 
     constructor(private fb: FormBuilder,
                 private cdr: ChangeDetectorRef,
@@ -34,11 +66,26 @@ export class CreateTransferComponent implements OnInit {
                 private redux: NgRedux<any>,
                 private logService: LogService,
                 private transferService: TransferInOutService,
+                private ofiFundService: OfiFundService,
+                private ofiManagementCompanyService: OfiManagementCompanyService,
+                private ofiFundShareService: OfiFundShareService,
                 public translate: MultilingualService,
                 private route: ActivatedRoute) { }
 
     ngOnInit() {
         this.initForm();
+        this.subscriptions.push(this.managementCompanyAccessListOb
+            .subscribe(d => {
+                this.managementCompanyAccessList = d;
+                this.mananagementCompanyItems = Object.values(this.managementCompanyAccessList).map((element) => {
+                    return { id: element.companyID, text: element.companyName };
+                });
+            }),
+        );
+        this.subscriptions.push(this.requestedShareListObs
+            .subscribe(requested => this.ofiFundShareService.fetchIznesAdminShareList());
+        this.subscriptions.push(this.shareListObs.subscribe(shares => console.log(shares)));
+        this.ofiManagementCompanyService.getManagementCompanyList();
     }
 
     initForm() {
@@ -67,6 +114,13 @@ export class CreateTransferComponent implements OnInit {
 
     handleDropdownItemSelect(event, value) {
         return this.placeTransferFormGroup.controls[value].setValue(event.text);
+    }
+
+    updateBicOnAmSelect(event) {
+        this.managementCompanySelected = Object.values(this.managementCompanyAccessList)
+        .find(val => val.companyID === event.id);
+
+        console.log(this.shareList);
     }
 
     handleSubmitButtonClick() {
