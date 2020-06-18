@@ -75,16 +75,20 @@ export class CreateTransferComponent implements OnInit {
     ngOnInit() {
         this.initForm();
         this.subscriptions.push(this.managementCompanyAccessListOb
-            .subscribe(d => {
+            .subscribe((d) => {
                 this.managementCompanyAccessList = d;
-                this.mananagementCompanyItems = Object.values(this.managementCompanyAccessList).map((element) => {
-                    return { id: element.companyID, text: element.companyName };
+                this.mananagementCompanyItems = Object.keys(this.managementCompanyAccessList).map((key) => {
+                    return {
+                        id: this.managementCompanyAccessList[key].companyID,
+                        text: this.managementCompanyAccessList[key].companyName,
+                    };
                 });
             }),
         );
-        this.subscriptions.push(this.requestedShareListObs
-            .subscribe(requested => this.ofiFundShareService.fetchIznesAdminShareList());
-        this.subscriptions.push(this.shareListObs.subscribe(shares => console.log(shares)));
+
+        this.subscriptions.push(this.requestedFundShareObs
+            .subscribe(() => this.ofiFundShareService.fetchIznesAdminShareList()));
+        this.subscriptions.push(this.fundShareObs.subscribe(shares => this.shareList = shares));
         this.ofiManagementCompanyService.getManagementCompanyList();
     }
 
@@ -117,8 +121,8 @@ export class CreateTransferComponent implements OnInit {
     }
 
     updateBicOnAmSelect(event) {
-        this.managementCompanySelected = Object.values(this.managementCompanyAccessList)
-        .find(val => val.companyID === event.id);
+        this.managementCompanySelected = Object.keys(this.managementCompanyAccessList)
+        .find(key => this.managementCompanyAccessList[key].companyID === event.id);
 
         console.log(this.shareList);
     }
