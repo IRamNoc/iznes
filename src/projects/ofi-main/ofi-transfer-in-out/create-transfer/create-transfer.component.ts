@@ -121,9 +121,15 @@ export class CreateTransferComponent implements OnInit {
     }
 
     updateBicOnAmSelect(event) {
+        /*
         this.managementCompanySelected = Object.keys(this.managementCompanyAccessList)
-        .find(key => this.managementCompanyAccessList[key].companyID === event.id);
-
+        .find((key) => {
+            if (this.managementCompanyAccessList[key].companyID === event.id) {
+                return this.managementCompanyAccessList[key];
+            }
+        });
+        */
+        console.log('result :', this.managementCompanySelected);
         console.log(this.shareList);
     }
 
