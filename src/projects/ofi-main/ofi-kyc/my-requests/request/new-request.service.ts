@@ -335,7 +335,6 @@ export class NewRequestService {
             ],
             multilateralTradingFacilities: [
                 { value: '', disabled: true },
-                Validators.required,
             ],
             otherMultilateralTradingFacilities: [
                 { value: '', disabled: true },

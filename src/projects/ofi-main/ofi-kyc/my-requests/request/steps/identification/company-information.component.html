@@ -73,7 +73,7 @@
 
                 <div class="row col-sm-12">
                     <div class="form-group required-field col-sm-4">
-                        <label class="control-label" for="geographicalAreaOfActivity">{{ 'Geographical area of the activity' | translate }}</label>
+                        <label class="control-label" for="geographicalAreaOfActivity">{{ 'Primary Geographical Area of the Activity' | translate }}</label>
                         <ng-select class="large-select multiline"
                                     id="geographicalAreaOfActivity"
                                     [items]="geographicalAreaList"
@@ -253,7 +253,7 @@
                 </div>
 
                 <div class="row col-sm-12" *ngIf="!isDisabled('multilateralTradingFacilities')">
-                    <div class="form-group required-field col-sm-4">
+                    <div class="form-group col-sm-4">
                         <label class="control-label" for="multilateralTradingFacilities">{{ 'Multilateral Trading Facilities' | translate }}</label>
                         <ng-select class="large-select"
                                     [multiple]="true"

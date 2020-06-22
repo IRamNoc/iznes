@@ -1,7 +1,6 @@
 <div class="full-screen-splash" [style.backgroundImage]="'url(assets/images/iznes-login-bg.jpg)'">
-    <div class="content" [class.fade-in]="fadeIn">
+    <div class="content" [class.fade-in]="fadeIn" *ngIf="invitedAs !== 'nowcp'">
         <img *ngIf="invitedAs === 'iznes'" src="assets/images/logo-iznes-only.png" alt="IZNES">
-        <img *ngIf="invitedAs === 'nowcp'" src="assets/images/nowcp-logo.png" alt="NowCP">
         <img *ngIf="invitedAs === 'id2s'" src="assets/images/id2s-logo.png" alt="ID2S">
 
         <h2>{{ 'Welcome' | translate }}<ng-container *ngIf="firstname"> {{ firstname }}</ng-container> 👋</h2>
@@ -47,6 +46,52 @@
                 <p *ngIf="kycPartySelectionsForm.invalid" class="text-danger">{{ 'ID2S Final Custodian and ID2S IPA cannot both be selected.' | translate }}</p>
             </form>
         </ng-container>
+
+
+        <p>{{ 'Please note that all supporting documents must be in pdf format.' | translate }}</p>
+
+        <button class="btn btn-primary" (click)="handleSavePartySelection()" [disabled]="kycPartySelectionsForm.invalid">{{ 'Start' | translate }}</button>
+    </div>
+
+
+    <!-- NowCP Investors-->
+    <div class="content" [class.fade-in]="fadeIn" *ngIf="invitedAs === 'nowcp'">
+        <img src="assets/images/nowcp-logo.png" alt="NowCP">
+
+        <h2>{{ 'Welcome' | translate }}<ng-container *ngIf="firstname"> {{ firstname }}</ng-container> 👋</h2>
+
+        <p>{{ 'You will start to fill in your customer file.' | translate }}</p>
+        <p>{{ 'NowCP, remains responsible for the collection of information, supporting documents and controls.' | translate }}</p>
+        <p>{{ 'At your request, the data entered and the documents submitted can be shared with other players present on the platform.' | translate }}</p>
+
+        <p>{{ 'In order to ensure the best user experience, we invite you to choose from now on the activities that are likely to interest you; this will allow us to ask you in one go for all the necessary and sufficient information and documents (multiple choices possible):' | translate }}</p>
+
+        <form [formGroup]="kycPartySelectionsForm">
+            <clr-checkbox-container class="text-left">
+                <clr-checkbox-wrapper>
+                    <input formControlName="nowCPIssuer" type="checkbox" clrCheckbox />
+                    <label><strong>{{'NowCP / Issuer: NeuCP issue (reserved for professional clients)' | translate}}</strong></label>
+                </clr-checkbox-wrapper>
+                <clr-checkbox-wrapper>
+                    <input formControlName="nowCPInvestor"  type="checkbox" clrCheckbox />
+                    <label><strong>{{'NowCP / Investor: purchase and sale of NeuCP (reserved for professional clients)' | translate}}</strong></label>
+                </clr-checkbox-wrapper>
+                <clr-checkbox-wrapper>
+                    <input formControlName="id2sCustodian" type="checkbox" clrCheckbox />
+                    <label><strong>{{'ID2S: final custodian (reserved for professional clients)' | translate}}</strong></label>
+                </clr-checkbox-wrapper>
+                <clr-checkbox-wrapper>
+                    <input formControlName="id2sIPA" type="checkbox" clrCheckbox />
+                    <label><strong>{{'ID2S: issuer, paying agent (IPA) (reserved for professional clients)' | translate}}</strong></label>
+                </clr-checkbox-wrapper>
+                <clr-checkbox-wrapper>
+                    <input formControlName="iznes" type="checkbox" clrCheckbox />
+                    <label><strong>{{'IZNES: subscriptions and redemptions of fund units (UCIs)' | translate}}</strong></label>
+                </clr-checkbox-wrapper>
+            </clr-checkbox-container>
+
+            <p *ngIf="kycPartySelectionsForm.invalid" class="text-danger">{{ 'ID2S Final Custodian and ID2S IPA cannot both be selected.' | translate }}</p>
+        </form>
 
 
         <p>{{ 'Please note that all supporting documents must be in pdf format.' | translate }}</p>
