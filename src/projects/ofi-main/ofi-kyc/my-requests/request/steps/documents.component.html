@@ -89,7 +89,7 @@
             <div class="row upload-document" *ngIf="documentsMeta['kycorgchartdoc'].shouldShow" [class.complete]="getDocumentPreset(['common', 'kycorgchartdoc'])">
                 <div class="form-group col-sm-12"  [class.required-field]="documentsMeta['kycorgchartdoc'].required" [class.has-error]="hasError(['common', 'kycorgchartdoc', 'hash'])">
                     <label for="kycorgchartdoc" class="control-label">
-                        {{ 'Org chart with key operational teams with the name of the entity provided, and dated' | translate }}
+                        {{ 'Org chart with key operational teams (with the name of the entity provided and dated) or other document presenting the organisation of the company' | translate }}
                     </label>
                     <div class="filedrop-wrapper">
                         <setl-file-drop filePermission="0" class="form-control" id="kycorgchartdoc"

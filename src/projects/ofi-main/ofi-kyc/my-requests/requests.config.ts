@@ -3089,7 +3089,7 @@ export const documentTypesList = [
     },
     {
         id: 'kycorgchartdoc',
-        text: 'Org chart with key operational teams with the name of the entity provided, and dated',
+        text: 'Org chart with key operational teams (with the name of the entity provided and dated) or other document presenting the organisation of the company',
     },
     {
         id: 'kyclistsigningauthoritiesdoc',
@@ -3249,7 +3249,7 @@ export const controlToName = {
     corporatePurpose: 'Corporate Purpose',
     activities: 'Management in behalf of',
     investorOnBehalfThirdParties: 'Third parties type',
-    geographicalAreaOfActivity: 'Geographical area of the activity',
+    geographicalAreaOfActivity: 'Primary Geographical Area of the Activity',
     geographicalAreaOfActivitySpecification: 'Geographical area of the activity specification',
     totalFinancialAssetsAlreadyInvested: 'Total Financial assets already invested',
     capitalNature: 'Nature and origin of the capital invested by the Legal Entity',
