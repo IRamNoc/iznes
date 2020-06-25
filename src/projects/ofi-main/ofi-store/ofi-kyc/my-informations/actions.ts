@@ -4,6 +4,7 @@ import {Action} from 'redux';
 
 export const SET_INFORMATIONS_FROM_API = `${name}/SET_INFORMATIONS_FROM_API`;
 export const SET_INFORMATIONS = `${name}/SET_INFORMATIONS`;
+export const SET_KYC_PARTY_SELECTIONS = `${name}/SET_KYC_PARTY_SELECTIONS`;
 
 export interface KycMyInformationsAction extends Action {
     type: string;

@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, ViewChild, EventEmitter, ElementRef, OnDestroy } from '@angular/core';
+import { Component, OnInit, Input, Output, ViewChild, EventEmitter, ElementRef, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { isEmpty, values, map, toNumber } from 'lodash';
 import { select } from '@angular-redux/store';
 import { formHelper } from '@setl/utils/helper';
@@ -7,8 +7,6 @@ import { filter, takeUntil, take, distinctUntilChanged } from 'rxjs/operators';
 import { FormPercentDirective } from '@setl/utils/directives/form-percent/formpercent';
 import { RiskProfileService } from '../risk-profile.service';
 import { NewRequestService } from '../../new-request.service';
-import { PersistService } from '@setl/core-persist';
-import { steps } from '../../../requests.config';
 
 @Component({
     selector: 'investment-constraint',
@@ -19,7 +17,7 @@ export class InvestmentConstraintComponent implements OnInit, OnDestroy {
     // @ViewChild(FormPercentDirective) formPercent: FormPercentDirective;
     @Input() form;
     @Input() formObjective;
-    @Input() completedStep: string;
+    @Input() completedStep: number;
     @Output() submitEvent: EventEmitter<any> = new EventEmitter<any>();
     @select(['ofi', 'ofiKyc', 'myKycRequested', 'kycs']) currentlyRequestedKycs$;
     @select(['ofi', 'ofiKyc', 'myKycRequested', 'kycs']) requests$;
@@ -30,10 +28,10 @@ export class InvestmentConstraintComponent implements OnInit, OnDestroy {
     formWatch: Subject<boolean> = new Subject<boolean>();
 
     constructor(
-        private persistService: PersistService,
         private element: ElementRef,
         private newRequestService: NewRequestService,
         private riskProfileService: RiskProfileService,
+        private cd: ChangeDetectorRef,
     ) {
     }
 
@@ -71,7 +69,6 @@ export class InvestmentConstraintComponent implements OnInit, OnDestroy {
                     this.form.get('constraintsSameInvestmentCrossAm').patchValue(cross, { emitEvent: false });
                     this.formCheckSameInvestmentCrossAm(cross);
                 }
-                this.initFormPersist();
             });
     }
 
@@ -119,8 +116,8 @@ export class InvestmentConstraintComponent implements OnInit, OnDestroy {
         // this.refreshForm();
     }
 
-    generateConstraints(amcs = []) {
-        const constraints = this.newRequestService.createConstraints(amcs);
+    async generateConstraints(amcs = []) {
+        const constraints = await this.newRequestService.createConstraints(amcs);
         const constraintsControl = this.form.get('constraints');
         const numberOfControls = constraintsControl.length;
 
@@ -130,6 +127,8 @@ export class InvestmentConstraintComponent implements OnInit, OnDestroy {
         constraints.forEach((constraint) => {
             constraintsControl.push(constraint);
         });
+
+        this.cd.detectChanges();
     }
 
     // formPercent is disabled because there are no required fields for non- nowCP investorType
@@ -139,35 +138,6 @@ export class InvestmentConstraintComponent implements OnInit, OnDestroy {
 
     hasError(control, error = []) {
         return this.newRequestService.hasError(this.form, control, error);
-    }
-
-    /**
-     * Init Form Persist if the step has not been completed
-     */
-    initFormPersist() {
-        if (!this.completedStep || (steps[this.completedStep] < steps.investmentConstraints)) this.persistForm();
-    }
-
-    persistForm() {
-        this.persistService.watchForm(
-            'newkycrequest/riskProfile/investmentConstraint',
-            this.form,
-            this.newRequestService.context,
-            {
-                reset: false,
-                returnPromise: true,
-            },
-        ).then(() => {
-            this.formWatch.next(true);
-        });
-    }
-
-    clearPersistForm() {
-        this.persistService.refreshState(
-            'newkycrequest/riskProfile/investmentConstraint',
-            this.newRequestService.createRiskProfileFormGroup(),
-            this.newRequestService.context,
-        );
     }
 
     isDisabled(path) {
@@ -186,6 +156,7 @@ export class InvestmentConstraintComponent implements OnInit, OnDestroy {
         if (!this.form.valid) {
             formHelper.dirty(this.form);
             formHelper.scrollToFirstError(this.element.nativeElement);
+            this.submitEvent.emit({ invalid: true });
             return;
         }
 
@@ -196,13 +167,12 @@ export class InvestmentConstraintComponent implements OnInit, OnDestroy {
             .subscribe((requests) => {
                 this.riskProfileService.sendRequestInvestmentObjective(this.formObjective, this.form, requests, 'investmentConstraints')
                     .then(() => {
-                        this.clearPersistForm();
                         this.submitEvent.emit({
                             completed: true,
                         });
                     })
-                    .catch(() => {
-                        this.newRequestService.errorPop();
+                    .catch((e) => {
+                        this.newRequestService.errorPop(e);
                     })
                     ;
             });

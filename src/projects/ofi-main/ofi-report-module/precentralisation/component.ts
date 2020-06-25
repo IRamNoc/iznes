@@ -356,7 +356,7 @@ export class PrecentralisationReportComponent implements OnInit, OnDestroy {
 
         this.fundsList = listImu.reduce(
             (result, item) => {
-                const isLei = (item.get('lei') === '' || item.get('lei') === null) ? '' : ' (' + item.get('isin') + ')';
+                const isLei = (item.get('lei') === '' || item.get('lei') === null) ? '' : ' (' + item.get('lei') + ')';
                 result.push({
                     id: item.get('fundId'),
                     text: item.get('fundName') + isLei,

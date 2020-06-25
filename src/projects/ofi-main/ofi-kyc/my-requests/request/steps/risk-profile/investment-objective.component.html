@@ -15,22 +15,22 @@
 
             <div class="row panel-body">
                 <div class="row col-sm-12 p-0">
-                    <div class="row" *ngIf="amcs?.length > 1">
-                        <div class="form-group col-sm-12">
-                            <p>
-                                {{ 'The following information can be completed for all counterparties or for each of them depending on your investment objectives' | translate }}
-                            </p>
+<!--                    <div class="row" *ngIf="amcs?.length > 1">-->
+<!--                        <div class="form-group col-sm-12">-->
+<!--                            <p>-->
+<!--                                {{ 'The following information can be completed for all counterparties or for each of them depending on your investment objectives' | translate }}-->
+<!--                            </p>-->
 
-                            <div class="checkbox-inline">
-                                <input type="checkbox"
-                                        id="objectivesSameInvestmentCrossAm"
-                                        formControlName="objectivesSameInvestmentCrossAm">
-                                <label for="objectivesSameInvestmentCrossAm">
-                                    {{ 'I would like to have the same investment objectives for all counterparties' | translate }}
-                                </label>
-                            </div>
-                        </div>
-                    </div>
+<!--                            <div class="checkbox-inline">-->
+<!--                                <input type="checkbox"-->
+<!--                                        id="objectivesSameInvestmentCrossAm"-->
+<!--                                        formControlName="objectivesSameInvestmentCrossAm">-->
+<!--                                <label for="objectivesSameInvestmentCrossAm">-->
+<!--                                    {{ 'I would like to have the same investment objectives for all counterparties' | translate }}-->
+<!--                                </label>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </div>-->
 
                     <investment-objective-form *ngFor="let objective of objectiveControls; let i = index" [form]="objective" [multiple]="objectiveControls?.length > 1" [index]="i" (refreshForm)="refreshForm()"></investment-objective-form>
 

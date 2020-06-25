@@ -4,6 +4,7 @@ import * as moment from 'moment';
 import { RequestsService } from '../../requests.service';
 import { NewRequestService } from '../new-request.service';
 import { mapValues, isArray, isObject, reduce, pickBy, merge, omit, fill, find, get as getValue } from 'lodash';
+import { MyUserService } from '../../../../../core-req-services';
 
 @Injectable()
 export class RiskProfileService {
@@ -17,7 +18,9 @@ export class RiskProfileService {
     constructor(
         private newRequestService: NewRequestService,
         private requestsService : RequestsService,
+        private myUserService: MyUserService,
     ) {
+        this.handleOnLogOut();
     }
 
     sendRequestInvestmentNature(form, requests) {
@@ -39,7 +42,18 @@ export class RiskProfileService {
             promises.push(updateStepPromise);
         });
 
-        return Promise.all(promises);
+        return new Promise((resolve, reject) => {
+            Promise.all(promises)
+            .then(() => {
+                this.requests.forEach((request) => {
+                    this.getCurrentFormNatureData(request.kycID);
+                });
+                resolve();
+            })
+            .catch((e) => {
+                reject(e);
+            });
+        })
     }
 
     sendRequestNature(formGroupNature) {
@@ -81,12 +95,13 @@ export class RiskProfileService {
     }
 
     sendRequestInvestmentObjective(formObjective, formConstraint, requests, completedStep) {
+
         this.requests = requests;
 
         let promises = [];
         const context = this.newRequestService.context;
 
-        this.requests.forEach((request) => {
+        this.requests.forEach(async (request) => {
             const kycID = request.kycID;
 
             // Objective
@@ -94,7 +109,7 @@ export class RiskProfileService {
             const formGroupConstraint = formConstraint;
             formGroupObjective.get('kycID').setValue(kycID);
             formGroupConstraint.get('kycID').setValue(kycID);
-            const objectivePromises = this.sendRequestObjective(formGroupObjective, formGroupConstraint);
+            const objectivePromises = await this.sendRequestObjective(formGroupObjective, formGroupConstraint);
             promises = promises.concat(objectivePromises);
 
             // Update step
@@ -105,7 +120,7 @@ export class RiskProfileService {
         return Promise.all(promises);
     }
 
-    sendRequestObjective(formGroupObjective, formGroupConstraint) {
+    async sendRequestObjective(formGroupObjective, formGroupConstraint) {
         const promises = [];
         let formGroupValue;
 
@@ -118,6 +133,24 @@ export class RiskProfileService {
         const kycID = formGroupObjective.get('kycID').value;
         const request = find(this.requests, ['kycID', kycID]);
         const amcID = getValue(request, 'amcID');
+
+        // The request to update data for 'Risk constraints', would need data from 'Risk objectives' as well. we just mock the
+        // 'Risk objectives' form control to make the current flow work.
+        if (objectivesValue.length === 0) {
+            const invObjectiveForm = await this.newRequestService.createInvestmentObjective(amcID);
+            objectivesValue.push(
+                invObjectiveForm.value,
+            );
+        }
+
+        // The request to update data for 'Risk objects', would need data from 'Risk constraints' as well. we just mock the
+        // 'Risk constraints' form control to make the current flow work.
+        if (constraintsValue.length === 0) {
+            const invConstraintForm = await this.newRequestService.createConstraint(amcID);
+            constraintsValue.push(
+                invConstraintForm.value,
+            );
+        }
 
         let objectiveForAM;
         let constraintForAM;
@@ -176,5 +209,17 @@ export class RiskProfileService {
         };
 
         return this.requestsService.sendRequest(messageBody);
+    }
+
+    /**
+     * Clear currentServerData state on Logout
+     *
+     * @returns {void}
+     */
+    private handleOnLogOut(): void {
+        this.myUserService.logout$.subscribe(() => {
+            this.currentServerData.risknature.next({});
+            this.currentServerData.riskobjective.next({});
+        });
     }
 }

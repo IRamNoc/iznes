@@ -1,12 +1,10 @@
 <div class="kyc-container sm">
+    <kyc-clientfile-update-alert *ngIf="(formDataFilled$ | async) && !form.valid && isFormReadonly"></kyc-clientfile-update-alert>
+
     <h2>{{ 'Documents' | translate }}</h2>
 
-    <div *ngIf="!isNowCP" class="text-container">
-        <p>{{"Please upload the following documents, which are required to validate your investor status" | translate}}</p>
-    </div>
-
-    <div *ngIf="isNowCP" class="text-container">
-        <p>{{'Please upload the following documents, which are required to validate your investor or issuer status' | translate}}</p>
+    <div class="text-container">
+        <p>{{"Please upload the following documents, which are required to validate your status and your shared KYC file. These documents should be in pdf format" | translate}}</p>
     </div>
 
     <div class="alert alert-info alert-no-bg mt-1" role="alert">
@@ -21,39 +19,19 @@
     </div>
 
     <div class="col-sm-12 mt-1 p-0">
-        <form [formGroup]="form" id="step-documents" (ngSubmit)="handleSubmit($event)">
+        <form *ngIf="documentsMeta && form" [formGroup]="form" id="step-documents" (ngSubmit)="handleSubmit($event)">
 
-            <!-- Common documents -->
-            <div class="row upload-document" [class.complete]="getDocumentPreset(['common', 'kycstatuscertifieddoc'])">
-                <div class="form-group required-field col-sm-12" [class.has-error]="hasError(['common', 'kycstatuscertifieddoc', 'hash'])">
-                    <label for="kycstatuscertifieddoc" class="control-label">
-                        {{ 'Statuses "certified" by the duly authorized representative of the client' | translate }}
-                    </label>
-                    <div class="filedrop-wrapper">
-                        <setl-file-drop filePermission="0" class="form-control" id="kycstatuscertifieddoc"
-                                        (onDrop)="uploadFile($event, form.get(['common', 'kycstatuscertifieddoc']))"
-                                        [preset]="getDocumentPreset(['common', 'kycstatuscertifieddoc'])"
-                                        [inline]="true"
-                                        [isDisabled]="isFormReadonly"
-                                        [allowFileTypes]="allowedFileTypes"
-                                        ngDefaultControl>
-                        </setl-file-drop>
-                    </div>
-                    <span class="field-error">{{ 'File is required' | translate }}</span>
-                </div>
-
-            </div>
-
-            <div class="row upload-document" [class.complete]="getDocumentPreset(['common', 'kyckbisdoc'])">
-                <div class="form-group required-field col-sm-12" [class.has-error]="hasError(['common', 'kyckbisdoc', 'hash'])">
+            <div class="row upload-document" *ngIf="documentsMeta['kyckbisdoc'].shouldShow" [class.complete]="getDocumentPreset(['common', 'kyckbisdoc'])">
+                <div class="form-group col-sm-12"  [class.required-field]="documentsMeta['kyckbisdoc'].required" [class.has-error]="hasError(['common', 'kyckbisdoc', 'hash'])">
                     <label for="kyckbisdoc" class="control-label">
-                        {{ 'Kbis extract (or equivalent) less than 3 months old' | translate }}
+                        {{ 'KBIS extract (or equivalent) less than 3 months old' | translate }}
                     </label>
                     <div class="filedrop-wrapper">
                         <setl-file-drop filePermission="0" class="form-control" id="kyckbisdoc"
                             (onDrop)="uploadFile($event, form.get(['common', 'kyckbisdoc']))"
                             [isDisabled]="isFormReadonly"
                             [preset]="getDocumentPreset(['common', 'kyckbisdoc'])"
+                            [formControl]="form.get('common').get('kyckbisdoc').get('hash')"
                             [inline]="true"
                             [allowFileTypes]="allowedFileTypes"
                             ngDefaultControl>
@@ -63,15 +41,21 @@
                 </div>
             </div>
 
-            <div class="row upload-document" [class.complete]="getDocumentPreset(['common', 'kycannualreportdoc'])">
-                <div class="form-group required-field col-sm-12" [class.has-error]="hasError(['common', 'kycannualreportdoc', 'hash'])">
-                    <label for="kycannualreportdoc" class="control-label">
-                        {{ 'Latest audited annual report' | translate }}
+            <div class="row upload-document" *ngIf="documentsMeta['kyclistsigningauthoritiesdoc'].shouldShow" [class.complete]="getDocumentPreset(['common', 'kyclistsigningauthoritiesdoc'])">
+                <div class="form-group col-sm-12"  [class.required-field]="documentsMeta['kyclistsigningauthoritiesdoc'].required" [class.has-error]="hasError(['common', 'kyclistsigningauthoritiesdoc', 'hash'])">
+                    <label for="kyclistsigningauthoritiesdoc" class="control-label">
+                        <ng-container *ngIf="documentsMeta['kyclistsigningauthoritiesdoc'].required">
+                            {{ 'List of Signing Authorities' | translate }}
+                        </ng-container>
+                        <ng-container *ngIf="!documentsMeta['kyclistsigningauthoritiesdoc'].required">
+                            {{ 'List of Signing Authorities if the signatory is not on the KBIS' | translate }}
+                        </ng-container>
                     </label>
                     <div class="filedrop-wrapper">
-                        <setl-file-drop filePermission="0" class="form-control" id="kycannualreportdoc"
-                                        (onDrop)="uploadFile($event, form.get(['common', 'kycannualreportdoc']))"
-                                        [preset]="getDocumentPreset(['common', 'kycannualreportdoc'])"
+                        <setl-file-drop filePermission="0" class="form-control" id="kyclistsigningauthoritiesdoc"
+                                        (onDrop)="uploadFile($event, form.get(['common', 'kyclistsigningauthoritiesdoc']))"
+                                        [preset]="getDocumentPreset(['common', 'kyclistsigningauthoritiesdoc'])"
+                                        [formControl]="form.get('common').get('kyclistsigningauthoritiesdoc').get('hash')"
                                         [inline]="true"
                                         [isDisabled]="isFormReadonly"
                                         [allowFileTypes]="allowedFileTypes"
@@ -82,56 +66,38 @@
                 </div>
             </div>
 
-            <div class="row upload-document" [class.complete]="getDocumentPreset(['common', 'kycidorpassportdoc'])">
-                <div class="form-group required-field col-sm-12" [class.has-error]="hasError(['common', 'kycidorpassportdoc', 'hash'])">
-                    <label for="kycidorpassportdoc" class="control-label">
-                        {{ 'National identity card or valid passport or residence card of the signatory with photograph' | translate }}
+            <div class="row upload-document" *ngIf="documentsMeta['kycribdoc'].shouldShow" [class.complete]="getDocumentPreset(['common', 'kycribdoc'])">
+                <div class="form-group col-sm-12"  [class.required-field]="documentsMeta['kycribdoc'].required" [class.has-error]="hasError(['common', 'kycribdoc', 'hash'])">
+                    <label for="kycribdoc" class="control-label">
+                        {{ 'RIB' | translate }}
                     </label>
                     <div class="filedrop-wrapper">
-                        <setl-file-drop filePermission="0" class="form-control" id="kycidorpassportdoc"
-                            (onDrop)="uploadFile($event, form.get(['common', 'kycidorpassportdoc']))"
-                            [isDisabled]="isFormReadonly"
-                            [preset]="getDocumentPreset(['common', 'kycidorpassportdoc'])"
-                            [inline]="true"
-                            [allowFileTypes]="allowedFileTypes"
-                            ngDefaultControl>
-                        </setl-file-drop>
-                    </div>
-                    <span class="field-error">{{ 'File is required' | translate }}</span>
-                </div>
-            </div>
-
-            <div class="row upload-document" [class.complete]="getDocumentPreset(['common', 'kyctaxcertificationdoc'])">
-                <div class="form-group required-field col-sm-12"
-                    [class.has-error]="hasError(['common', 'kyctaxcertificationdoc', 'hash'])">
-                    <label for="kyctaxcertificationdoc" class="control-label">
-                        {{ 'Tax self-certification form (CRS)' | translate }}
-                    </label>
-                    <div class="filedrop-wrapper">
-                        <setl-file-drop filePermission="0" class="form-control" id="kyctaxcertificationdoc"
-                            (onDrop)="uploadFile($event, form.get(['common', 'kyctaxcertificationdoc']))"
-                            [isDisabled]="isFormReadonly"
-                            [preset]="getDocumentPreset(['common', 'kyctaxcertificationdoc'])"
-                            [inline]="true"
-                            [allowFileTypes]="allowedFileTypes"
-                            ngDefaultControl>
-                        </setl-file-drop>
-                    </div>
-                    <span class="field-error">{{ 'File is required' | translate }}</span>
-                </div>
-            </div>
-
-            <div class="row upload-document" [class.complete]="getDocumentPreset(['common', 'kycw8benefatcadoc'])">
-                <div class="form-group required-field col-sm-12" [class.has-error]="hasError(['common', 'kycw8benefatcadoc', 'hash'])">
-                    <label for="kycw8benefatcadoc" class="control-label">
-                        {{ 'Form W-8BEN-E (FACTA)' | translate }}
-                    </label>
-                    <div class="filedrop-wrapper">
-                        <setl-file-drop filePermission="0" class="form-control" id="kycw8benefatcadoc"
-                                        (onDrop)="uploadFile($event, form.get(['common', 'kycw8benefatcadoc']))"
-                                        [preset]="getDocumentPreset(['common', 'kycw8benefatcadoc'])"
-                                        [isDisabled]="isFormReadonly"
+                        <setl-file-drop filePermission="0" class="form-control" id="kycribdoc"
+                                        (onDrop)="uploadFile($event, form.get(['common', 'kycribdoc']))"
+                                        [preset]="getDocumentPreset(['common', 'kycribdoc'])"
+                                        [formControl]="form.get('common').get('kycribdoc').get('hash')"
                                         [inline]="true"
+                                        [isDisabled]="isFormReadonly"
+                                        [allowFileTypes]="allowedFileTypes"
+                                        ngDefaultControl>
+                        </setl-file-drop>
+                    </div>
+                    <span class="field-error">{{ 'File is required' | translate }}</span>
+                </div>
+            </div>
+
+            <div class="row upload-document" *ngIf="documentsMeta['kycorgchartdoc'].shouldShow" [class.complete]="getDocumentPreset(['common', 'kycorgchartdoc'])">
+                <div class="form-group col-sm-12"  [class.required-field]="documentsMeta['kycorgchartdoc'].required" [class.has-error]="hasError(['common', 'kycorgchartdoc', 'hash'])">
+                    <label for="kycorgchartdoc" class="control-label">
+                        {{ 'Org chart with key operational teams (with the name of the entity provided and dated) or other document presenting the organisation of the company' | translate }}
+                    </label>
+                    <div class="filedrop-wrapper">
+                        <setl-file-drop filePermission="0" class="form-control" id="kycorgchartdoc"
+                                        (onDrop)="uploadFile($event, form.get(['common', 'kycorgchartdoc']))"
+                                        [preset]="getDocumentPreset(['common', 'kycorgchartdoc'])"
+                                        [formControl]="form.get('common').get('kycorgchartdoc').get('hash')"
+                                        [inline]="true"
+                                        [isDisabled]="isFormReadonly"
                                         [allowFileTypes]="allowedFileTypes"
                                         ngDefaultControl>
                         </setl-file-drop>
@@ -141,15 +107,16 @@
             </div>
 
             <!-- Listed -->
-            <div class="row upload-document" *ngIf="!isDisabled('listed')" [class.complete]="getDocumentPreset(['listed', 'kycisincodedoc'])">
-                <div class="form-group required-field col-sm-12" [class.has-error]="hasError(['listed', 'kycisincodedoc', 'hash'])">
+            <div class="row upload-document" *ngIf="documentsMeta['kycisincodedoc'].shouldShow" [class.complete]="getDocumentPreset(['common', 'kycisincodedoc'])">
+                <div class="form-group col-sm-12"  [class.required-field]="documentsMeta['kycisincodedoc'].required" [class.has-error]="hasError(['common', 'kycisincodedoc', 'hash'])">
                     <label for="kycisincodedoc" class="control-label">
-                        {{ 'ISIN code of the listed share' | translate }}
+                        {{ 'ISIN Code of the listed share' | translate }}
                     </label>
                     <div class="filedrop-wrapper">
                         <setl-file-drop filePermission="0" class="form-control" id="kycisincodedoc"
-                                        (onDrop)="uploadFile($event, form.get(['listed', 'kycisincodedoc']))"
-                                        [preset]="getDocumentPreset(['listed', 'kycisincodedoc'])"
+                                        (onDrop)="uploadFile($event, form.get(['common', 'kycisincodedoc']))"
+                                        [preset]="getDocumentPreset(['common', 'kycisincodedoc'])"
+                                        [formControl]="form.get('common').get('kycisincodedoc').get('hash')"
                                         [isDisabled]="isFormReadonly"
                                         [inline]="true"
                                         [allowFileTypes]="allowedFileTypes"
@@ -160,15 +127,16 @@
                 </div>
             </div>
 
-            <div class="row upload-document" *ngIf="!isDisabled('listed')" [class.complete]="getDocumentPreset(['listed', 'kycevidencefloatable'])">
-                <div class="form-group required-field col-sm-12" [class.has-error]="hasError(['listed', 'kycevidencefloatable', 'hash'])" *ngIf="!isDisabled('listed.kycevidencefloatable')">
+            <div class="row upload-document" *ngIf="documentsMeta['kycevidencefloatable'].shouldShow" [class.complete]="getDocumentPreset(['common', 'kycevidencefloatable'])">
+                <div class="form-group col-sm-12"  [class.required-field]="documentsMeta['kycevidencefloatable'].required" [class.has-error]="hasError(['common', 'kycevidencefloatable', 'hash'])" *ngIf="!isDisabled('common.kycevidencefloatable')">
                     <label for="kycevidencefloatable" class="control-label">
-                        {{ 'Evidence of stocklisting and confirmation that 75% of the company\'s shares are floatable and tradable on the market' | translate }}
+                        {{ 'Evidence of stocklisting and confirmation that 75% of the company\'s shares are floatable and tradable on the market(ex: extract of the latest audited report / capital distribution)' | translate }}
                     </label>
                     <div class="filedrop-wrapper">
                         <setl-file-drop filePermission="0" class="form-control" id="kycevidencefloatable"
-                                        (onDrop)="uploadFile($event, form.get(['listed', 'kycevidencefloatable']))"
-                                        [preset]="getDocumentPreset(['listed', 'kycevidencefloatable'])"
+                                        (onDrop)="uploadFile($event, form.get(['common', 'kycevidencefloatable']))"
+                                        [preset]="getDocumentPreset(['common', 'kycevidencefloatable'])"
+                                        [formControl]="form.get('common').get('kycevidencefloatable').get('hash')"
                                         [inline]="true"
                                         [isDisabled]="isFormReadonly"
                                         [allowFileTypes]="allowedFileTypes"
@@ -179,35 +147,16 @@
                 </div>
             </div>
 
-            <!-- Regulated -->
-            <div class="row upload-document" *ngIf="!isDisabled('regulated')" [class.complete]="getDocumentPreset(['regulated', 'kycproofofapprovaldoc'])">
-                <div class="form-group required-field col-sm-12" [class.has-error]="hasError(['regulated', 'kycproofofapprovaldoc', 'hash'])">
-                    <label for="kycproofofapprovaldoc" class="control-label">
-                        {{ 'Proof of approval or copy of order' | translate }}
-                    </label>
-                    <div class="filedrop-wrapper">
-                        <setl-file-drop filePermission="0" class="form-control" id="kycproofofapprovaldoc"
-                                        (onDrop)="uploadFile($event, form.get(['regulated', 'kycproofofapprovaldoc']))"
-                                        [preset]="getDocumentPreset(['regulated', 'kycproofofapprovaldoc'])"
-                                        [inline]="true"
-                                        [isDisabled]="isFormReadonly"
-                                        [allowFileTypes]="allowedFileTypes"
-                                        ngDefaultControl>
-                        </setl-file-drop>
-                    </div>
-                    <span class="field-error">{{ 'File is required' | translate }}</span>
-                </div>
-            </div>
-
-            <div class="row upload-document" *ngIf="!isDisabled('regulated')" [class.complete]="getDocumentPreset(['regulated', 'kycproofregulationdoc'])">
-                <div class="form-group required-field col-sm-12" [class.has-error]="hasError(['regulated', 'kycproofregulationdoc', 'hash'])">
+            <div class="row upload-document" *ngIf="documentsMeta['kycproofregulationdoc'].shouldShow" [class.complete]="getDocumentPreset(['common', 'kycproofregulationdoc'])">
+                <div class="form-group col-sm-12"  [class.required-field]="documentsMeta['kycproofregulationdoc'].required" [class.has-error]="hasError(['common', 'kycproofregulationdoc', 'hash'])">
                     <label for="kycproofregulationdoc" class="control-label">
                         {{ 'Proof of regulation/supervision from the regulator\'s website' | translate }}
                     </label>
                     <div class="filedrop-wrapper">
                         <setl-file-drop filePermission="0" class="form-control" id="kycproofregulationdoc"
-                                        (onDrop)="uploadFile($event, form.get(['regulated', 'kycproofregulationdoc']))"
-                                        [preset]="getDocumentPreset(['regulated', 'kycproofregulationdoc'])"
+                                        (onDrop)="uploadFile($event, form.get(['common', 'kycproofregulationdoc']))"
+                                        [preset]="getDocumentPreset(['common', 'kycproofregulationdoc'])"
+                                        [formControl]="form.get('common').get('kycproofregulationdoc').get('hash')"
                                         [inline]="true"
                                         [isDisabled]="isFormReadonly"
                                         [allowFileTypes]="allowedFileTypes"
@@ -218,16 +167,37 @@
                 </div>
             </div>
 
-            <div class="row upload-document" *ngIf="!isDisabled('regulated')" [class.complete]="getDocumentPreset(['regulated', 'kycwolfsbergdoc'])">
-                <div class="form-group required-field col-sm-12" [class.has-error]="hasError(['regulated', 'kycwolfsbergdoc', 'hash'])">
-                    <label for="kycwolfsbergdoc" class="control-label">
-                        {{ 'Wolfsberg Questionnaire or equivalent' | translate }}
+            <div class="row upload-document" *ngIf="documentsMeta['kycbeneficialownerdoc'].shouldShow" [class.complete]="getDocumentPreset(['common', 'kycbeneficialownerdoc'])">
+                <div class="form-group col-sm-12"  [class.required-field]="documentsMeta['kycbeneficialownerdoc'].required" [class.has-error]="hasError(['common', 'kycbeneficialownerdoc', 'hash'])">
+                    <label for="kycbeneficialownerdoc" class="control-label">
+                        {{ 'Ultimate Beneficial Owner Statement' | translate }}
                     </label>
                     <div class="filedrop-wrapper">
-                        <setl-file-drop filePermission="0" class="form-control" id="kycwolfsbergdoc"
-                            (onDrop)="uploadFile($event, form.get(['regulated', 'kycwolfsbergdoc']))"
+                        <setl-file-drop filePermission="0" class="form-control" id="kycbeneficialownerdoc"
+                                        (onDrop)="uploadFile($event, form.get(['common', 'kycbeneficialownerdoc']))"
+                                        [preset]="getDocumentPreset(['common', 'kycbeneficialownerdoc'])"
+                                        [formControl]="form.get('common').get('kycbeneficialownerdoc').get('hash')"
+                                        [inline]="true"
+                                        [isDisabled]="isFormReadonly"
+                                        [allowFileTypes]="allowedFileTypes"
+                                        ngDefaultControl>
+                        </setl-file-drop>
+                    </div>
+                    <span class="field-error">{{ 'File is required' | translate }}</span>
+                </div>
+            </div>
+
+            <div class="row upload-document" *ngIf="documentsMeta['kycidorpassportdoc'].shouldShow" [class.complete]="getDocumentPreset(['common', 'kycidorpassportdoc'])">
+                <div class="form-group col-sm-12"  [class.required-field]="documentsMeta['kycidorpassportdoc'].required" [class.has-error]="hasError(['common', 'kycidorpassportdoc', 'hash'])">
+                    <label for="kycidorpassportdoc" class="control-label">
+                        {{ 'IDs of persons authorised to bind the company' | translate }}
+                    </label>
+                    <div class="filedrop-wrapper">
+                        <setl-file-drop filePermission="0" class="form-control" id="kycidorpassportdoc"
+                            (onDrop)="uploadFile($event, form.get(['common', 'kycidorpassportdoc']))"
                             [isDisabled]="isFormReadonly"
-                            [preset]="getDocumentPreset(['regulated', 'kycwolfsbergdoc'])"
+                            [preset]="getDocumentPreset(['common', 'kycidorpassportdoc'])"
+                            [formControl]="form.get('common').get('kycidorpassportdoc').get('hash')"
                             [inline]="true"
                             [allowFileTypes]="allowedFileTypes"
                             ngDefaultControl>
@@ -237,16 +207,79 @@
                 </div>
             </div>
 
-            <!-- nowcp -->
-            <div class="row upload-document" *ngIf="!isDisabled('nowcp')" [class.complete]="getDocumentPreset(['nowcp', 'kycribdoc'])">
-                <div class="form-group required-field col-sm-12" [class.has-error]="hasError(['nowcp', 'kycribdoc', 'hash'])">
-                    <label for="kycribdoc" class="control-label">
-                        {{ 'RIB' | translate }}
+            <!-- TBC (kycstatuscertifieddoc) -->
+            <div class="row upload-document" *ngIf="documentsMeta['kycstatuscertifieddoc'].shouldShow" [class.complete]="getDocumentPreset(['common', 'kycstatuscertifieddoc'])">
+                <div class="form-group col-sm-12"  [class.required-field]="documentsMeta['kycstatuscertifieddoc'].required" [class.has-error]="hasError(['common', 'kycstatuscertifieddoc', 'hash'])">
+                    <label for="kycstatuscertifieddoc" class="control-label">
+                        {{ 'Articles of Association - certified true copy by the client\'s duly authorized representative' | translate }}
                     </label>
                     <div class="filedrop-wrapper">
-                        <setl-file-drop filePermission="0" class="form-control" id="kycribdoc"
-                                        (onDrop)="uploadFile($event, form.get(['nowcp', 'kycribdoc']))"
-                                        [preset]="getDocumentPreset(['nowcp', 'kycribdoc'])"
+                        <setl-file-drop filePermission="0" class="form-control" id="kycstatuscertifieddoc"
+                                        (onDrop)="uploadFile($event, form.get(['common', 'kycstatuscertifieddoc']))"
+                                        [preset]="getDocumentPreset(['common', 'kycstatuscertifieddoc'])"
+                                        [formControl]="form.get('common').get('kycstatuscertifieddoc').get('hash')"
+                                        [inline]="true"
+                                        [isDisabled]="isFormReadonly"
+                                        [allowFileTypes]="allowedFileTypes"
+                                        ngDefaultControl>
+                        </setl-file-drop>
+                    </div>
+                    <span class="field-error">{{ 'File is required' | translate }}</span>
+                </div>
+
+            </div>
+
+            <div class="row upload-document" *ngIf="documentsMeta['kyctaxcertificationdoc'].shouldShow" [class.complete]="getDocumentPreset(['common', 'kyctaxcertificationdoc'])">
+                <div class="form-group col-sm-12"  [class.required-field]="documentsMeta['kyctaxcertificationdoc'].required"
+                    [class.has-error]="hasError(['common', 'kyctaxcertificationdoc', 'hash'])">
+                    <label for="kyctaxcertificationdoc" class="control-label">
+                        {{ 'Tax self certification form (CRS)' | translate }}
+                    </label>
+                    <div class="filedrop-wrapper">
+                        <setl-file-drop filePermission="0" class="form-control" id="kyctaxcertificationdoc"
+                            (onDrop)="uploadFile($event, form.get(['common', 'kyctaxcertificationdoc']))"
+                            [isDisabled]="isFormReadonly"
+                            [preset]="getDocumentPreset(['common', 'kyctaxcertificationdoc'])"
+                            [formControl]="form.get('common').get('kyctaxcertificationdoc').get('hash')"
+                            [inline]="true"
+                            [allowFileTypes]="allowedFileTypes"
+                            ngDefaultControl>
+                        </setl-file-drop>
+                    </div>
+                    <span class="field-error">{{ 'File is required' | translate }}</span>
+                </div>
+            </div>
+
+            <div class="row upload-document" *ngIf="documentsMeta['kycw8benefatcadoc'].shouldShow" [class.complete]="getDocumentPreset(['common', 'kycw8benefatcadoc'])">
+                <div class="form-group col-sm-12"  [class.required-field]="documentsMeta['kycw8benefatcadoc'].required" [class.has-error]="hasError(['common', 'kycw8benefatcadoc', 'hash'])">
+                    <label for="kycw8benefatcadoc" class="control-label">
+                        {{ 'Form W-8BEN-E (FATCA)' | translate }}
+                    </label>
+                    <div class="filedrop-wrapper">
+                        <setl-file-drop filePermission="0" class="form-control" id="kycw8benefatcadoc"
+                                        (onDrop)="uploadFile($event, form.get(['common', 'kycw8benefatcadoc']))"
+                                        [preset]="getDocumentPreset(['common', 'kycw8benefatcadoc'])"
+                                        [formControl]="form.get('common').get('kycw8benefatcadoc').get('hash')"
+                                        [isDisabled]="isFormReadonly"
+                                        [inline]="true"
+                                        [allowFileTypes]="allowedFileTypes"
+                                        ngDefaultControl>
+                        </setl-file-drop>
+                    </div>
+                    <span class="field-error">{{ 'File is required' | translate }}</span>
+                </div>
+            </div>
+
+            <div class="row upload-document" *ngIf="documentsMeta['kyccriticalcustomersdoc'].shouldShow" [class.complete]="getDocumentPreset(['common', 'kyccriticalcustomersdoc'])">
+                <div class="form-group col-sm-12"  [class.required-field]="documentsMeta['kyccriticalcustomersdoc'].required" [class.has-error]="hasError(['common', 'kyccriticalcustomersdoc', 'hash'])">
+                    <label for="kyccriticalcustomersdoc" class="control-label">
+                        {{ 'Notification of critical customers' | translate }}
+                    </label>
+                    <div class="filedrop-wrapper">
+                        <setl-file-drop filePermission="0" class="form-control" id="kyccriticalcustomersdoc"
+                                        (onDrop)="uploadFile($event, form.get(['common', 'kyccriticalcustomersdoc']))"
+                                        [preset]="getDocumentPreset(['common', 'kyccriticalcustomersdoc'])"
+                                        [formControl]="form.get('common').get('kyccriticalcustomersdoc').get('hash')"
                                         [inline]="true"
                                         [isDisabled]="isFormReadonly"
                                         [allowFileTypes]="allowedFileTypes"
@@ -257,15 +290,16 @@
                 </div>
             </div>
 
-            <div class="row upload-document" *ngIf="!isDisabled('nowcp')" [class.complete]="getDocumentPreset(['nowcp', 'kycinfomemorandumbdfdoc'])">
-                <div class="form-group required-field col-sm-12" [class.has-error]="hasError(['nowcp', 'kycinfomemorandumbdfdoc', 'hash'])">
-                    <label for="kycinfomemorandumbdfdoc" class="control-label">
-                        {{ 'Information memorandum approved by BDF' | translate }}
+            <div class="row upload-document" *ngIf="documentsMeta['kycproofofapprovaldoc'].shouldShow" [class.complete]="getDocumentPreset(['common', 'kycproofofapprovaldoc'])">
+                <div class="form-group col-sm-12"  [class.required-field]="documentsMeta['kycproofofapprovaldoc'].required" [class.has-error]="hasError(['common', 'kycproofofapprovaldoc', 'hash'])">
+                    <label for="kycproofofapprovaldoc" class="control-label">
+                        {{ 'Proof of approval or copy of order' | translate }}
                     </label>
                     <div class="filedrop-wrapper">
-                        <setl-file-drop filePermission="0" class="form-control" id="kycinfomemorandumbdfdoc"
-                                        (onDrop)="uploadFile($event, form.get(['nowcp', 'kycinfomemorandumbdfdoc']))"
-                                        [preset]="getDocumentPreset(['nowcp', 'kycinfomemorandumbdfdoc'])"
+                        <setl-file-drop filePermission="0" class="form-control" id="kycproofofapprovaldoc"
+                                        (onDrop)="uploadFile($event, form.get(['common', 'kycproofofapprovaldoc']))"
+                                        [preset]="getDocumentPreset(['common', 'kycproofofapprovaldoc'])"
+                                        [formControl]="form.get('common').get('kycproofofapprovaldoc').get('hash')"
                                         [inline]="true"
                                         [isDisabled]="isFormReadonly"
                                         [allowFileTypes]="allowedFileTypes"
@@ -276,16 +310,156 @@
                 </div>
             </div>
 
-            <!-- nowcp -->
-            <div class="row upload-document" *ngIf="!isDisabled('nowcp')" [class.complete]="getDocumentPreset(['nowcp', 'kycorgchartdoc'])">
-                <div class="form-group required-field col-sm-12" [class.has-error]="hasError(['nowcp', 'kycorgchartdoc', 'hash'])">
-                    <label for="kycorgchartdoc" class="control-label">
-                        {{ 'Org chart with key operational teams' | translate }}
+            <div class="row upload-document" *ngIf="documentsMeta['kycdisclosureproceduredoc'].shouldShow" [class.complete]="getDocumentPreset(['common', 'kycdisclosureproceduredoc'])">
+                <div class="form-group col-sm-12"  [class.required-field]="documentsMeta['kycdisclosureproceduredoc'].required" [class.has-error]="hasError(['common', 'kycdisclosureproceduredoc', 'hash'])">
+                    <label for="kycdisclosureproceduredoc" class="control-label">
+                        {{ 'Disclosure of risk management procedure' | translate }}
                     </label>
                     <div class="filedrop-wrapper">
-                        <setl-file-drop filePermission="0" class="form-control" id="kycorgchartdoc"
-                                        (onDrop)="uploadFile($event, form.get(['nowcp', 'kycorgchartdoc']))"
-                                        [preset]="getDocumentPreset(['nowcp', 'kycorgchartdoc'])"
+                        <setl-file-drop filePermission="0" class="form-control" id="kycdisclosureproceduredoc"
+                                        (onDrop)="uploadFile($event, form.get(['common', 'kycdisclosureproceduredoc']))"
+                                        [preset]="getDocumentPreset(['common', 'kycdisclosureproceduredoc'])"
+                                        [formControl]="form.get('common').get('kycdisclosureproceduredoc').get('hash')"
+                                        [inline]="true"
+                                        [isDisabled]="isFormReadonly"
+                                        [allowFileTypes]="allowedFileTypes"
+                                        ngDefaultControl>
+                        </setl-file-drop>
+                    </div>
+                    <span class="field-error">{{ 'File is required' | translate }}</span>
+                </div>
+            </div>
+
+            <div class="row upload-document" *ngIf="documentsMeta['kyccompositioncommitteedoc'].shouldShow" [class.complete]="getDocumentPreset(['common', 'kyccompositioncommitteedoc'])">
+                <div class="form-group col-sm-12"  [class.required-field]="documentsMeta['kyccompositioncommitteedoc'].required" [class.has-error]="hasError(['common', 'kyccompositioncommitteedoc', 'hash'])">
+                    <label for="kyccompositioncommitteedoc" class="control-label">
+                        {{ 'Composition of the risk committee' | translate }}
+                    </label>
+                    <div class="filedrop-wrapper">
+                        <setl-file-drop filePermission="0" class="form-control" id="kyccompositioncommitteedoc"
+                                        (onDrop)="uploadFile($event, form.get(['common', 'kyccompositioncommitteedoc']))"
+                                        [preset]="getDocumentPreset(['common', 'kyccompositioncommitteedoc'])"
+                                        [formControl]="form.get('common').get('kyccompositioncommitteedoc').get('hash')"
+                                        [inline]="true"
+                                        [isDisabled]="isFormReadonly"
+                                        [allowFileTypes]="allowedFileTypes"
+                                        ngDefaultControl>
+                        </setl-file-drop>
+                    </div>
+                    <span class="field-error">{{ 'File is required' | translate }}</span>
+                </div>
+            </div>
+
+            <div class="row upload-document" *ngIf="documentsMeta['kycbusinessplandoc'].shouldShow" [class.complete]="getDocumentPreset(['common', 'kycbusinessplandoc'])">
+                <div class="form-group col-sm-12"  [class.required-field]="documentsMeta['kycbusinessplandoc'].required" [class.has-error]="hasError(['common', 'kycbusinessplandoc', 'hash'])">
+                    <label for="kycbusinessplandoc" class="control-label">
+                        {{ 'Copy of the business continuity plan' | translate }}
+                    </label>
+                    <div class="filedrop-wrapper">
+                        <setl-file-drop filePermission="0" class="form-control" id="kycbusinessplandoc"
+                                        (onDrop)="uploadFile($event, form.get(['common', 'kycbusinessplandoc']))"
+                                        [preset]="getDocumentPreset(['common', 'kycbusinessplandoc'])"
+                                        [formControl]="form.get('common').get('kycbusinessplandoc').get('hash')"
+                                        [inline]="true"
+                                        [isDisabled]="isFormReadonly"
+                                        [allowFileTypes]="allowedFileTypes"
+                                        ngDefaultControl>
+                        </setl-file-drop>
+                    </div>
+                    <span class="field-error">{{ 'File is required' | translate }}</span>
+                </div>
+            </div>
+
+            <div class="row upload-document" *ngIf="documentsMeta['kycwolfsbergdoc'].shouldShow" [class.complete]="getDocumentPreset(['common', 'kycwolfsbergdoc'])">
+                <div class="form-group col-sm-12"  [class.required-field]="documentsMeta['kycwolfsbergdoc'].required" [class.has-error]="hasError(['common', 'kycwolfsbergdoc', 'hash'])">
+                    <label for="kycwolfsbergdoc" class="control-label">
+                        {{ 'Wolfsberg questionnaire or equivalent' | translate }}
+                    </label>
+                    <div class="filedrop-wrapper">
+                        <setl-file-drop filePermission="0" class="form-control" id="kycwolfsbergdoc"
+                            (onDrop)="uploadFile($event, form.get(['common', 'kycwolfsbergdoc']))"
+                            [isDisabled]="isFormReadonly"
+                            [preset]="getDocumentPreset(['common', 'kycwolfsbergdoc'])"
+                            [formControl]="form.get('common').get('kycwolfsbergdoc').get('hash')"
+                            [inline]="true"
+                            [allowFileTypes]="allowedFileTypes"
+                            ngDefaultControl>
+                        </setl-file-drop>
+                    </div>
+                    <span class="field-error">{{ 'File is required' | translate }}</span>
+                </div>
+            </div>
+
+
+            <div class="row upload-document" *ngIf="documentsMeta['kycannualreportdoc'].shouldShow" [class.complete]="getDocumentPreset(['common', 'kycannualreportdoc'])">
+                <div class="form-group col-sm-12"  [class.required-field]="documentsMeta['kycannualreportdoc'].required" [class.has-error]="hasError(['common', 'kycannualreportdoc', 'hash'])">
+                    <label for="kycannualreportdoc" class="control-label">
+                        {{ 'Audited annual reports of last year' | translate }}
+                    </label>
+                    <div class="filedrop-wrapper">
+                        <setl-file-drop filePermission="0" class="form-control" id="kycannualreportdoc"
+                                        (onDrop)="uploadFile($event, form.get(['common', 'kycannualreportdoc']))"
+                                        [preset]="getDocumentPreset(['common', 'kycannualreportdoc'])"
+                                        [formControl]="form.get('common').get('kycannualreportdoc').get('hash')"
+                                        [inline]="true"
+                                        [isDisabled]="isFormReadonly"
+                                        [allowFileTypes]="allowedFileTypes"
+                                        ngDefaultControl>
+                        </setl-file-drop>
+                    </div>
+                    <span class="field-error">{{ 'File is required' | translate }}</span>
+                </div>
+            </div>
+            
+            <div class="row upload-document" *ngIf="documentsMeta['kycannual2yeardoc'].shouldShow"
+                [class.complete]="getDocumentPreset(['common', 'kycannual2yeardoc'])">
+                <div class="form-group col-sm-12" [class.required-field]="documentsMeta['kycannual2yeardoc'].required"
+                    [class.has-error]="hasError(['common', 'kycannual2yeardoc', 'hash'])">
+                    <label for="kycannual2yeardoc" class="control-label">
+                        {{ 'Audited annual reports of the last two years' | translate }}
+                    </label>
+                    <div class="filedrop-wrapper">
+                        <setl-file-drop filePermission="0" class="form-control" id="kycannual2yeardoc"
+                            (onDrop)="uploadFile($event, form.get(['common', 'kycannual2yeardoc']))"
+                            [preset]="getDocumentPreset(['common', 'kycannual2yeardoc'])"
+                            [formControl]="form.get('common').get('kycannual2yeardoc').get('hash')" [inline]="true"
+                            [isDisabled]="isFormReadonly" [allowFileTypes]="allowedFileTypes" ngDefaultControl>
+                        </setl-file-drop>
+                    </div>
+                    <span class="field-error">{{ 'File is required' | translate }}</span>
+                </div>
+            </div>
+
+            <div class="row upload-document" *ngIf="documentsMeta['kycannual3yeardoc'].shouldShow" [class.complete]="getDocumentPreset(['common', 'kycannual3yeardoc'])">
+                <div class="form-group col-sm-12"  [class.required-field]="documentsMeta['kycannual3yeardoc'].required" [class.has-error]="hasError(['common', 'kycannual3yeardoc', 'hash'])">
+                    <label for="kycannual3yeardoc" class="control-label">
+                        {{ 'Audited annual reports of the last 3 years' | translate }}
+                    </label>
+                    <div class="filedrop-wrapper">
+                        <setl-file-drop filePermission="0" class="form-control" id="kycannual3yeardoc"
+                                        (onDrop)="uploadFile($event, form.get(['common', 'kycannual3yeardoc']))"
+                                        [preset]="getDocumentPreset(['common', 'kycannual3yeardoc'])"
+                                        [formControl]="form.get('common').get('kycannual3yeardoc').get('hash')"
+                                        [inline]="true"
+                                        [isDisabled]="isFormReadonly"
+                                        [allowFileTypes]="allowedFileTypes"
+                                        ngDefaultControl>
+                        </setl-file-drop>
+                    </div>
+                    <span class="field-error">{{ 'File is required' | translate }}</span>
+                </div>
+            </div>
+
+            <div class="row upload-document" *ngIf="documentsMeta['kycannual3yeartaxdoc'].shouldShow" [class.complete]="getDocumentPreset(['common', 'kycannual3yeartaxdoc'])">
+                <div class="form-group col-sm-12"  [class.required-field]="documentsMeta['kycannual3yeartaxdoc'].required" [class.has-error]="hasError(['common', 'kycannual3yeartaxdoc', 'hash'])">
+                    <label for="kycannual3yeartaxdoc" class="control-label">
+                        {{ 'Annual accounts certified by CAC or last 3 tax returns' | translate }}
+                    </label>
+                    <div class="filedrop-wrapper">
+                        <setl-file-drop filePermission="0" class="form-control" id="kycannual3yeartaxdoc"
+                                        (onDrop)="uploadFile($event, form.get(['common', 'kycannual3yeartaxdoc']))"
+                                        [preset]="getDocumentPreset(['common', 'kycannual3yeartaxdoc'])"
+                                        [formControl]="form.get('common').get('kycannual3yeartaxdoc').get('hash')"
                                         [inline]="true"
                                         [isDisabled]="isFormReadonly"
                                         [allowFileTypes]="allowedFileTypes"

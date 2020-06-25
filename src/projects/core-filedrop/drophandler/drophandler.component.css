@@ -103,6 +103,8 @@
     position: absolute;
     right: 2px;
     top: 2px;
+    white-space: nowrap;
+    overflow: hidden;
 }
 .inline-filedrop .drop-file-nofile {
     font-style: italic;

@@ -633,7 +633,7 @@
                                         </div>
 
                                         <div class="row">
-                                            <div class="form-group col-sm-6">
+                                            <div class="form-group col-sm-6 required-field">
                                                 <label for="registerOffice">{{ 'Name of the Registered Office of the Fund' | translate }}</label>
                                                 <div>
                                                     <input type="text"
@@ -641,7 +641,9 @@
                                                             class="form-control"
                                                             formControlName="registerOffice"
                                                             [disabled]="isAdmin()">
-                                                    <span *ngIf="fundForm.controls['registerOffice'].touched && fundForm.controls['registerOffice'].hasError('swiftNameAddress')"
+                                                    <span *ngIf="fundForm.controls['registerOffice'].touched && fundForm.controls['registerOffice'].hasError('required')"
+                                                        class="field-error">{{ 'Field is required' | translate }}</span>
+                                                    <span *ngIf="fundForm.controls['registerOffice'].touched && fundForm.controls['registerOffice'].hasError('swiftNameAddress') && !fundForm.controls['registerOffice'].hasError('required')"
                                                         class="field-error">{{ 'Should be within 35 characters: number, letter or -?:()' | translate }}</span>
                                                 </div>
                                             </div>

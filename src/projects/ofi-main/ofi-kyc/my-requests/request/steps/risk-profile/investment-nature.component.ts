@@ -7,8 +7,6 @@ import { filter, map as rxMap, takeUntil, take, distinctUntilChanged } from 'rxj
 import { FormPercentDirective } from '@setl/utils/directives/form-percent/formpercent';
 import { RiskProfileService } from '../risk-profile.service';
 import { NewRequestService } from '../../new-request.service';
-import { PersistService } from '@setl/core-persist';
-import { steps } from '../../../requests.config';
 
 @Component({
     selector: 'investment-nature',
@@ -17,7 +15,7 @@ import { steps } from '../../../requests.config';
 export class InvestmentNatureComponent implements OnInit, OnDestroy {
     @ViewChild(FormPercentDirective) formPercent: FormPercentDirective;
     @Input() form;
-    @Input() completedStep: string;
+    @Input() completedStep: number;
     @Output() submitEvent: EventEmitter<any> = new EventEmitter<any>();
     @select(['ofi', 'ofiKyc', 'myKycRequested', 'kycs']) currentlyRequestedKycs$;
     @select(['ofi', 'ofiKyc', 'myKycRequested', 'kycs']) requests$;
@@ -28,7 +26,6 @@ export class InvestmentNatureComponent implements OnInit, OnDestroy {
     formWatch: Subject<boolean> = new Subject<boolean>();
 
     constructor(
-        private persistService: PersistService,
         private element: ElementRef,
         private newRequestService: NewRequestService,
         private riskProfileService: RiskProfileService,
@@ -70,8 +67,6 @@ export class InvestmentNatureComponent implements OnInit, OnDestroy {
                     this.form.get('naturesSameInvestmentCrossAm').patchValue(cross, { emitEvent: false });
                     this.formCheckSameNatureCrossAm(cross);
                 }
-
-                this.initFormPersist();
             });
     }
 
@@ -82,7 +77,8 @@ export class InvestmentNatureComponent implements OnInit, OnDestroy {
                 filter(requestedKycs => !isEmpty(requestedKycs)),
             )
             .subscribe((requestedKycs) => {
-                this.amcs = values(requestedKycs);
+                // filter out id2s AMs, because they are required to fill in investment details.
+                this.amcs = values(requestedKycs).filter(kyc => kyc.managementCompanyType != 'id2s');
                 this.updateCrossAM();
             });
     }
@@ -112,8 +108,8 @@ export class InvestmentNatureComponent implements OnInit, OnDestroy {
         this.formPercent.refreshFormPercent();
     }
 
-    generateNatures(amcs = []) {
-        const natures = this.newRequestService.createInvestmentNatures(amcs);
+    async generateNatures(amcs = []) {
+        const natures = await this.newRequestService.createInvestmentNatures(amcs);
         const naturesControl = this.form.get('natures');
         const numberOfControls = naturesControl.length;
 
@@ -130,35 +126,6 @@ export class InvestmentNatureComponent implements OnInit, OnDestroy {
         this.formPercent.refreshFormPercent();
     }
 
-    /**
-     * Init Form Persist if the step has not been completed
-     */
-    initFormPersist() {
-        if (!this.completedStep || (steps[this.completedStep] < steps.investmentDetails)) this.persistForm();
-    }
-
-    persistForm() {
-        this.persistService.watchForm(
-            'newkycrequest/riskProfile/investmentNature',
-            this.form,
-            this.newRequestService.context,
-            {
-                reset: false,
-                returnPromise: true,
-            },
-        ).then(() => {
-            this.formWatch.next(true);
-        });
-    }
-
-    clearPersistForm() {
-        this.persistService.refreshState(
-            'newkycrequest/riskProfile/investmentNature',
-            this.newRequestService.createRiskProfileFormGroup(),
-            this.newRequestService.context,
-        );
-    }
-
     isStepValid() {
         return this.form.valid;
     }
@@ -169,6 +136,7 @@ export class InvestmentNatureComponent implements OnInit, OnDestroy {
         if (!this.form.valid) {
             formHelper.dirty(this.form);
             formHelper.scrollToFirstError(this.element.nativeElement);
+            this.submitEvent.emit({ invalid: true });
             return;
         }
 
@@ -179,13 +147,12 @@ export class InvestmentNatureComponent implements OnInit, OnDestroy {
             .subscribe((requests) => {
                 this.riskProfileService.sendRequestInvestmentNature(this.form, requests)
                     .then(() => {
-                        this.clearPersistForm();
                         this.submitEvent.emit({
                             completed: true,
                         });
                     })
-                    .catch(() => {
-                        this.newRequestService.errorPop();
+                    .catch((e) => {
+                        this.newRequestService.errorPop(e);
                     })
                     ;
             });

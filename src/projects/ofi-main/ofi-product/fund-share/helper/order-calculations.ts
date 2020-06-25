@@ -31,8 +31,13 @@ export const calculateFigures = (
 
     switch (order.orderBy) {
     case OrderByType.Quantity:
+
         quantity = order.value;
         estimatedQuantity = quantity;
+
+        if (getNumberDecimalPlace(quantity / NumberMultiplier) > maxDecimalisation) {
+            throw new Error(`maximum number of decimal place is ${maxDecimalisation}`);
+        }
 
         /**
          * amount = unit * nav
@@ -204,4 +209,16 @@ export function getUnixTsInSec(): number {
 export function getAmountTwoDecimal(amount) {
     amount = Math.round((amount / NumberMultiplier) * 100) / 100;
     return (amount * NumberMultiplier);
+}
+
+/**
+ * @param {number} num
+ * @return {number}
+ */
+export function getNumberDecimalPlace(num: number) {
+    // trim any zero value at the end.
+    const floatNum = parseFloat(num.toString());
+    const floorNum = Math.floor(floatNum);
+    if (floorNum === floatNum) return 0;
+    return floatNum.toString().split('.')[1].length || 0;
 }

@@ -1,4 +1,5 @@
 <form [formGroup]="form" id="step-classification" (ngSubmit)="handleSubmit($event)">
+    <kyc-clientfile-update-alert *ngIf="(formDataFilled$ | async) && !form.valid && isFormReadonly"></kyc-clientfile-update-alert>
 
     <div class="kyc-container">
         <h2>{{ 'Classification' | translate }}</h2>
@@ -48,8 +49,31 @@
                                 </label>
                                 <label for="optFor" *ngIf="investorType !== 'nonPro'">
                                     {{'As a professional customer, you can opt for non professional status' | translate}}
+                                    <span *ngIf="!!form.get('optFor').value && (kycFormHelperService.invitedByID2S$ | async)" class="helper-text">{{'If you decide to opt-out the professional status, you could not be onboarded by ID2S' | translate}}</span>
+                                    <span *ngIf="!!form.get('optFor').value && (kycFormHelperService.invitedByNowCp$ | async)" class="helper-text">{{'If you decide to opt-out the professional status, you could not be onboarded on NowCP' | translate}}</span>
                                 </label>
                             </div>
+                        </div>
+                    </div>
+
+                    <!-- has expirence on nowcp -->
+                    <div class="row" *ngIf="investorType === 'nonPro' && !!form.get('optFor').value && (kycFormHelperService.invitedByNowCp$ | async)">
+                        <div class="form-group col-sm-4">
+                            <clr-radio-container clrInline>
+                                <label>{{ 'Do your operators have experience in trading NeuCP?' | translate }}</label>
+                                <clr-radio-wrapper>
+                                    <input type="radio" clrRadio name="operatorsHasExperienceNeuCP" [value]="0" formControlName="operatorsHasExperienceNeuCP"
+                                           [attr.disabled]="isFormReadonly === true ? '' : null"
+                                    />
+                                    <label>{{ 'No' | translate }}</label>
+                                </clr-radio-wrapper>
+                                <clr-radio-wrapper>
+                                    <input type="radio" clrRadio name="operatorsHasExperienceNeuCP" [value]="1" formControlName="operatorsHasExperienceNeuCP"
+                                           [attr.disabled]="isFormReadonly === true ? '' : null"
+                                    />
+                                    <label>{{ 'Yes' | translate }}</label>
+                                </clr-radio-wrapper>
+                            </clr-radio-container>
                         </div>
                     </div>
 
@@ -93,7 +117,7 @@
             </div>
         </div>
 
-        <div class="well" *ngIf="investorType === 'nonPro'">
+        <div class="well" *ngIf="investorType === 'nonPro' && (kycFormHelperService.isIZNES$ | async)">
             <div class="row panel-header">
                 <div class="col-sm-9">
                     <h5>{{ 'Investor Details' | translate }}</h5>

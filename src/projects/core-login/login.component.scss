@@ -3,6 +3,8 @@
         background-size: cover;
         background-repeat: no-repeat;
         background-position: left;
+        position: absolute;
+        width: 100%;
 
         .logo {
             width: 58%;
@@ -20,9 +22,15 @@
         }
 
         .login {
-            z-index: 1;
             padding: 1rem 72px !important;
             justify-content: normal;
+            overflow-y: auto;
+            overflow-x: hidden;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            display: block;
+            z-index: 2;
             .capitalise {
                 text-transform: capitalize;
             }
@@ -144,6 +152,7 @@
             z-index: 1;
             text-align: center;
             width: calc(100% - 21rem);
+            margin-left: 21rem;
             position: relative;
             .container {
                 width: 76%;

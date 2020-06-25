@@ -1,18 +1,15 @@
 import { Component, OnInit, Input, Output, OnDestroy, ViewChild, EventEmitter, ElementRef } from '@angular/core';
 import { FormArray, FormControl } from '@angular/forms';
 import { get as getValue, isEmpty, castArray } from 'lodash';
-import { Subject } from 'rxjs';
+import { Subject, BehaviorSubject } from 'rxjs';
 import { filter, map, takeUntil, take } from 'rxjs/operators';
 import { Observable } from 'rxjs/Observable';
 import { select, NgRedux } from '@angular-redux/store';
 import { FormPercentDirective } from '@setl/utils/directives/form-percent/formpercent';
 import { IdentificationService } from '../identification.service';
 import { NewRequestService } from '../../new-request.service';
-import { countries, steps } from '../../../requests.config';
+import { countries } from '../../../requests.config';
 import { formHelper } from '@setl/utils/helper';
-import { PersistRequestService } from '@setl/core-req-services';
-import { PersistService } from '@setl/core-persist';
-import { setMyKycRequestedPersist } from '@ofi/ofi-main/ofi-store/ofi-kyc';
 import { KycMyInformations } from '@ofi/ofi-main/ofi-store/ofi-kyc/my-informations';
 
 @Component({
@@ -23,7 +20,7 @@ import { KycMyInformations } from '@ofi/ofi-main/ofi-store/ofi-kyc/my-informatio
 export class BankingInformationComponent implements OnInit, OnDestroy {
     @ViewChild(FormPercentDirective) formPercent: FormPercentDirective;
     @Input() form;
-    @Input() completedStep: string;
+    @Input() completedStep: number;
     @Input() isFormReadonly;
     @Output() submitEvent: EventEmitter<any> = new EventEmitter<any>();
 
@@ -35,14 +32,14 @@ export class BankingInformationComponent implements OnInit, OnDestroy {
     countries = countries;
     investorType: number;
     isNowCP: boolean = false;
+    // data is fetched from database, and patched value to formgroup.
+    formDataFilled$ = new BehaviorSubject<boolean>(false);
 
     constructor(
         private newRequestService: NewRequestService,
         private identificationService: IdentificationService,
         private element: ElementRef,
         private ngRedux: NgRedux<any>,
-        private persistRequestService: PersistRequestService,
-        private persistService: PersistService,
     ) {
     }
 
@@ -58,7 +55,7 @@ export class BankingInformationComponent implements OnInit, OnDestroy {
             .subscribe((d) => {
                 this.investorType = d.investorType;
 
-                if (this.investorType === 70 || this.investorType === 80) {
+                if (this.investorType === 70 || this.investorType === 80 || this.investorType === 90) {
                     this.isNowCP = true;
                 }
             });
@@ -113,41 +110,10 @@ export class BankingInformationComponent implements OnInit, OnDestroy {
                             this.form.updateValueAndValidity();
                         }
                     }
+                    this.formDataFilled$.next(true);
                 });
             });
 
-            this.initFormPersist();
-        });
-    }
-
-    /**
-     * Init Form Persist if the step has not been completed
-     */
-    initFormPersist() {
-        if (!this.completedStep || (steps[this.completedStep] < steps.bankAccounts)) this.prePersistForm();
-    }
-
-    prePersistForm() {
-        this.persistRequestService
-        .loadFormState('newkycrequest/identification/bankingInformation', this.newRequestService.context)
-        .then((responseData) => {
-            const data = getValue(responseData, [1, 'Data', 0, 'data']);
-
-            if (!data) {
-                throw 'No data';
-            }
-
-            try {
-                const parsed = JSON.parse(data);
-                this.prepareArrayControls(parsed);
-                this.persistForm();
-            } catch (e) {
-                throw 'Error';
-            }
-
-        })
-        .catch((e) => {
-            this.persistForm();
         });
     }
 
@@ -163,28 +129,6 @@ export class BankingInformationComponent implements OnInit, OnDestroy {
         }
     }
 
-    persistForm() {
-        this.persistService.watchForm(
-            'newkycrequest/identification/bankingInformation',
-            this.form,
-            this.newRequestService.context,
-            {
-                reset: false,
-                returnPromise: true,
-            },
-        ).then(() => {
-            this.ngRedux.dispatch(setMyKycRequestedPersist('identification/bankingInformation'));
-        });
-    }
-
-    clearPersistForm() {
-        this.persistService.refreshState(
-            'newkycrequest/identification/bankingInformation',
-            this.newRequestService.createIdentificationFormGroup(),
-            this.newRequestService.context,
-        );
-    }
-
     isStepValid() {
         return this.form.valid;
     }
@@ -194,6 +138,7 @@ export class BankingInformationComponent implements OnInit, OnDestroy {
         if (!this.form.valid) {
             formHelper.dirty(this.form);
             formHelper.scrollToFirstError(this.element.nativeElement);
+            this.submitEvent.emit({ invalid: true });
             return;
         }
 
@@ -207,10 +152,9 @@ export class BankingInformationComponent implements OnInit, OnDestroy {
                 this.submitEvent.emit({
                     completed: true,
                 });
-                this.clearPersistForm();
             })
-            .catch(() => {
-                this.newRequestService.errorPop();
+            .catch((e) => {
+                this.newRequestService.errorPop(e);
             })
             ;
         });

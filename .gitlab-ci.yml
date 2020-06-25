@@ -1,51 +1,56 @@
 stages:
-    - lint
-    - test
+#     - lint
+#     - test
     - build
+    - to_iznes
 
-lint:
-    stage: lint
-    image: node:10-jessie
-    before_script:
-        - eval $(ssh-agent -s)
-        - echo "$SSH_KEY" | base64 -d | ssh-add - > /dev/null
-        - mkdir -p ~/.ssh
-        - chmod 700 ~/.ssh
-        - ssh-keyscan si-nexus01.dev.setl.io >> ~/.ssh/known_hosts
-        - chmod 644 ~/.ssh/known_hosts
-        - npm install -g @angular/cli@6.0.0;
-        - npm install
-    script:
-        - ng lint
+# lint:
+#     stage: lint
+#     image: node:10-jessie
+#     before_script:
+#         - eval $(ssh-agent -s)
+#         - echo "$SSH_KEY" | base64 -d | ssh-add - > /dev/null
+#         - mkdir -p ~/.ssh
+#         - chmod 700 ~/.ssh
+#         - ssh-keyscan si-nexus01.dev.setl.io >> ~/.ssh/known_hosts
+#         - chmod 644 ~/.ssh/known_hosts
+#         - yarn install -g @angular/cli@6.0.0;
+#         - yarn install
+#     script:
+#         - ng lint
 
-test:
-    stage: test
-    image: node:10-jessie
-    before_script:
-        - eval $(ssh-agent -s)
-        - echo "$SSH_KEY" | base64 -d | ssh-add - > /dev/null
-        - mkdir -p ~/.ssh
-        - chmod 700 ~/.ssh
-        - ssh-keyscan si-nexus01.dev.setl.io >> ~/.ssh/known_hosts
-        - chmod 644 ~/.ssh/known_hosts
-        # install chrome headless browser
-        - wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - > /dev/null
-        - sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list' > /dev/null
-        - apt-get update && apt-get install -y google-chrome-stable > /dev/null
-        - npm install -g @angular/cli@6.0.0;
-        - npm install
-    script:
-        - ng test --code-coverage --progress false --watch false
-    artifacts:
-        expire_in: 1 day
-        paths:
-            - coverage/
+# test:
+#     stage: test
+#     image: node:10-jessie
+#     before_script:
+#         - eval $(ssh-agent -s)
+#         - echo "$SSH_KEY" | base64 -d | ssh-add - > /dev/null
+#         - mkdir -p ~/.ssh
+#         - chmod 700 ~/.ssh
+#         - ssh-keyscan si-nexus01.dev.setl.io >> ~/.ssh/known_hosts
+#         - chmod 644 ~/.ssh/known_hosts
+#         # install chrome headless browser
+#         - wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - > /dev/null
+#         - sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list' > /dev/null
+#         - apt-get update && apt-get install -y google-chrome-stable > /dev/null
+#         - yarn install -g @angular/cli@6.0.0;
+#         - yarn install
+#     script:
+#         - ng test --code-coverage --progress false --watch false
+#     artifacts:
+#         expire_in: 1 day
+#         paths:
+#             - coverage/
 
 build:
-    image: docker:git
+    image: docker:19.03.7-git
+    tags:
+        - dind
     services:
-        - docker:dind
+        - docker:18-dind
     stage: build
+    except:
+        - tags
 
     before_script:
         - eval $(ssh-agent -s)
@@ -64,3 +69,39 @@ build:
         expire_in: 1 day
         paths:
             - images/
+
+build-tags:
+    image: node:12
+    only:
+        - tags
+    stage: build
+
+    before_script:
+        - eval $(ssh-agent -s)
+        - echo "$SSH_KEY" | base64 -d | ssh-add - > /dev/null
+        - mkdir -p ~/.ssh
+        - chmod 700 ~/.ssh
+        - ssh-keyscan si-nexus01.dev.setl.io >> ~/.ssh/known_hosts
+        - ssh-keyscan si-jenkins02.dev.setl.io >> ~/.ssh/known_hosts
+        - chmod 644 ~/.ssh/known_hosts
+        - apt update && apt install -y rsync
+        - yarn global add @angular/cli@6.0.0;
+
+    script:
+        - yarn install
+        - yarn run build-prod
+        - echo $CI_COMMIT_TAG > "$CI_PROJECT_DIR/dist/VERSION"
+        - rsync -av "$CI_PROJECT_DIR/dist/" "jenkins@si-jenkins02.dev.setl.io:/var/lib/jenkins/build/opencsd-iznes/$CI_COMMIT_TAG/"
+
+to_iznes:
+    stage: to_iznes
+    only:
+        - master
+    image: node:10-jessie
+    script:
+        - git remote add iznes "https://okettsetl:$IZNES_ACCESS_TOKEN@gitlab.com/iznes/frontend.git"
+        - git branch
+        - git checkout master
+        - git push -u iznes master --force
+        - git push --tags
+

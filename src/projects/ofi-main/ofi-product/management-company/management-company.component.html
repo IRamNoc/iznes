@@ -59,14 +59,10 @@
                 <section class="form-block">
                     <div *ngIf="!editForm;" class="row">
                         <div class="form-group col-sm-6">
-                            <label class="control-label">{{ 'Is NowCP' | translate }}</label>
-                            <label class="switch">
-                                <input type="checkbox"
-                                       class="form-control"
-                                       formControlName="isNowCp"
-                                       id="isNowCp">
-                                <span class="slider round"></span>
-                            </label>
+                            <label class="control-label">{{ 'Management company type' | translate }}</label>
+                            <ng-select [items]="managementCompanyTypes" [allowClear]="false" [containerWidth]="'95%'" placeholder="{{ 'Select Management company type' | translate }}"
+                                formControlName="managementCompanyType">
+                            </ng-select>
                         </div>
                     </div>
                     <div class="row">

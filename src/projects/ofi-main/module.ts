@@ -7,7 +7,6 @@ import { OfiMyInformationsModule } from './ofi-my-informations/module';
 import { OfiKYCModule } from './ofi-kyc/module';
 import { OfiFundInvestModule } from './ofi-fund-invest/module';
 import { OfiRequestServicesModule } from './ofi-req-services/module';
-import { OfiCorpActionsModule } from './ofi-corp-actions/ofi-corp-actions.module';
 import { OfiOrdersModule } from './ofi-orders/ofi-orders.module';
 import { OfiPostTxService } from './ofi-post-tx/service';
 import { OfiProfileModule } from './ofi-profile/module';
@@ -35,7 +34,6 @@ import { OfiMandateInvestorModule } from './ofi-mandate-investor/mandate-investo
         OfiMyInformationsModule,
         OfiKYCModule,
         OfiFundInvestModule,
-        OfiCorpActionsModule,
         OfiRequestServicesModule,
         OfiOrdersModule,
         OfiProfileModule,
@@ -55,7 +53,6 @@ import { OfiMandateInvestorModule } from './ofi-mandate-investor/mandate-investo
     ],
     exports: [
         OfiFundInvestModule,
-        OfiCorpActionsModule,
         DynamicFormsModule,
     ],
     providers: [OfiPostTxService],

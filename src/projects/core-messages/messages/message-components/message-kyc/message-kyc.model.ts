@@ -9,4 +9,6 @@ export class MessageKycConfig {
     lang: string;
     changeAccepted?: boolean;
     currentClassification?: number;
+    isClientFile?: number;
+    isNowCP?: boolean;
 }

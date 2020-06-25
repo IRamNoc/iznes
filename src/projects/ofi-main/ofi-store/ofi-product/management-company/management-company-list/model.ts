@@ -29,6 +29,8 @@ export interface ManagementCompanyDetail {
     signatureHash: string;
     logoTitle: string;
     logoHash: string;
+    isThirdPartyKyc: boolean;
+    managementCompanyType: 'nowcp' | 'common' | 'id2s';
 }
 
 export interface ManagementCompanyListState {

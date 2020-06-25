@@ -35,7 +35,7 @@
             <label class="control-label" for="parent-benef">{{'Linked Entity' | translate}}</label>
             <input type="text"
                     id="parent-benef"
-                    value="registeredCompanyName"
+                    [value]="registeredCompanyName"
                     [readonly]="true">
         </div>
 
@@ -202,12 +202,13 @@
         </div>
 
         <div class="row col-sm-12">
-            <div class="form-group required-field col-sm-6">
+            <div class="form-group col-sm-6" [class.required-field]="kbisOrIdIsRequired">
                 <label for="beneficiary-kbis-document-benef" class="control-label">{{'Kbis extract (or equivalent) less than 3 month old' | translate}}</label>
                 <div class="filedrop-wrapper">
                     <setl-file-drop filePermission="0" class="form-control" id="beneficiary-kbis-document-benef"
                                     (onDrop)="uploadFile($event)"
-                                    [preset]="form.get('common.document').value"
+                                    [preset]="getDocumentPreset(['common', 'document'])"
+                                    [formControl]="form.get('common').get('document').get('hash')"
                                     ngDefaultControl
                                     [disabled]="disabled"
                                     [inline]="true"
@@ -390,15 +391,16 @@
                 <span class="field-error" *ngIf="hasError(['naturalPerson', 'countryOfBirth'])">{{'Field is required' | translate}}</span>
             </div>
 
-            <div class="form-group required-field col-sm-6">
+            <div class="form-group col-sm-6" [class.required-field]="kbisOrIdIsRequired">
                 <label for="beneficiary-document-benef" class="control-label">{{'Identity proof document' | translate}}</label>
                 <div class="filedrop-wrapper">
                     <setl-file-drop filePermission="0" class="form-control" id="beneficiary-document-benef"
                                     (onDrop)="uploadFile($event)"
-                                    [preset]="form.get('common.document').value"
+                                    [preset]="getDocumentPreset(['common', 'document'])"
                                     ngDefaultControl
                                     [isDisabled]="disabled"
                                     [inline]="true"
+                                    [formControl]="form.get('common').get('document').get('hash')"
                                     [class.error]="form.get(['common', 'document']).touched && form.get(['common', 'document']).status === 'INVALID'"
                                     [allowFileTypes]="allowedFileTypes"
                     ></setl-file-drop>
@@ -478,7 +480,9 @@
                         <label>{{ 'Yes' | translate }}</label>
                     </clr-radio-wrapper>
                 </clr-radio-container>
+                <span class="helper-text">{{ 'EU Third Anti-Money Laundering Directive: "Natural persons who are or have been entrusted with prominent political functions and immediate family members or persons known to be close associates of such persons"' | translate}}</span>
             </div>
         </div>
+
     </ng-container>
 </div>

@@ -18,7 +18,8 @@ export class InvestmentObjectiveFormComponent implements OnInit, OnDestroy {
     @Output() refreshForm = new EventEmitter<void>();
     @Input() form;
     @Input() multiple;
-    @Input() index;
+    // Index of this investment objective form. the investment objective section can contain multiple investment objective forms, when a kyc is against multiple AMs
+    @Input('index') formIndex;
     @select(['ofi', 'ofiProduct', 'ofiManagementCompany', 'investorManagementCompanyList', 'investorManagementCompanyList']) managementCompanyList$;
     @select(['user', 'siteSettings', 'language']) requestLanguageObj;
 

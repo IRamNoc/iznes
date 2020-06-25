@@ -83,9 +83,9 @@ export class DropHandler implements AfterViewInit {
     public ngAfterViewInit(): void {
         /* Fix the text on the ui. */
         if (this.multiple) {
-            this.uploadPrompt = this.translate.translate('Drag and Drop files here, or Click to Upload');
+            this.uploadPrompt = this.translate.translate('Drag files here or Click');
         } else {
-            this.uploadPrompt = this.translate.translate('Drag and Drop a file here, or Click to Upload');
+            this.uploadPrompt = this.translate.translate('Drag a file here or Click');
         }
         this.changeDetectorRef.detectChanges();
 

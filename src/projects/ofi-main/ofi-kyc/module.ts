@@ -26,6 +26,7 @@ import { OfiSignUpComponent } from './signup/component';
 import { OfiDocumentsComponent } from './documents/component';
 import { MockKYCDocumentsService } from './documents/documents.mock.service';
 import { OfiKycHomeComponent } from './home/component';
+import { OfiKycWelcomeComponent } from './home/welcome/component';
 import { OfiMyInformationsModule } from '../ofi-my-informations/module';
 import { OfiWaitingApprovalComponent } from './waiting-approval/component';
 import { OfiAmDocumentsComponent } from './am-documents/component';
@@ -57,6 +58,7 @@ import { OfiFundDataService } from '../ofi-data-service/product/fund/ofi-fund-da
         OfiSignUpComponent,
         OfiDocumentsComponent,
         OfiKycHomeComponent,
+        OfiKycWelcomeComponent,
         OfiWaitingApprovalComponent,
         OfiAmDocumentsComponent,
         OfiKycAlreadyDoneComponent,
@@ -74,6 +76,7 @@ import { OfiFundDataService } from '../ofi-data-service/product/fund/ofi-fund-da
         OfiSignUpComponent,
         OfiDocumentsComponent,
         OfiKycHomeComponent,
+        OfiKycWelcomeComponent,
         OfiWaitingApprovalComponent,
         OfiAmDocumentsComponent,
         OfiKycAlreadyDoneComponent,

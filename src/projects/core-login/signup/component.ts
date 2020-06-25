@@ -253,13 +253,13 @@ export class SignupComponent implements OnDestroy, OnInit {
             if (this.configuration.doLoginAfterCallback) {
                 // show sign up successful screen with button
                 this.signupSuccessText = typeof successText === 'string'
-                    ? successText : 'Your account was created successfully.';
+                    ? successText : this.translate.translate('Your account was created successfully.');
                 this.signupSuccess = true;
             }
         })
         .catch((e) => {
             this.submitBtnState = ClrLoadingState.DEFAULT;
-            this.showAlert('error', typeof e === 'string' ? e : 'Sorry, something went wrong. Please try again later.');
+            this.showAlert('error', typeof e === 'string' ? e : this.translate.translate('Sorry, something went wrong. Please try again later.'));
         });
     }
 

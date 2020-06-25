@@ -1,13 +1,14 @@
-import { Component, Input, Output, EventEmitter, OnInit, OnDestroy, HostBinding } from '@angular/core';
-import { FormControl } from '@angular/forms';
-import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import {Component, Input, Output, EventEmitter, OnInit, OnDestroy, HostBinding, ChangeDetectorRef} from '@angular/core';
+import { FormControl, Validators } from '@angular/forms';
+import { Subject, Observable } from 'rxjs';
+import { takeUntil, tap, map } from 'rxjs/operators';
 import { get as getValue } from 'lodash';
 import { RequestsService } from '../../../requests.service';
 import { NewRequestService, configDate } from '../../new-request.service';
 import { countries } from '../../../requests.config';
 import { MultilingualService } from '@setl/multilingual';
 import { BeneficiaryService } from './beneficiary.service';
+import { KycFormHelperService } from '../../../kyc-form-helper.service';
 
 @Component({
     selector: '[beneficiary]',
@@ -27,6 +28,7 @@ export class BeneficiaryComponent implements OnInit, OnDestroy {
             text: this.registeredCompanyName,
         });
     }
+    @Input() globalHasPEP: boolean;
 
     get parents() {
         return this.parentsFiltered;
@@ -47,22 +49,23 @@ export class BeneficiaryComponent implements OnInit, OnDestroy {
     holdingTypeText;
     /** Allowed file types passed to FileDrop */
     public allowedFileTypes: string[] = ['application/pdf'];
+    /** Whether KBIS or ID field is required */
+    public kbisOrIdIsRequired: boolean;
 
     constructor(
         private requestsService: RequestsService,
         private newRequestService: NewRequestService,
         public translate: MultilingualService,
         private beneficiaryService: BeneficiaryService,
+        private kycHelper: KycFormHelperService,
+        private changeDetectorRef: ChangeDetectorRef,
     ) {
         this.configDate = configDate;
 
-        this.beneficiaryTypesList = this.newRequestService.beneficiaryTypesList;
-        this.translate.translate(this.beneficiaryTypesList);
-        this.relationTypesList = this.newRequestService.relationTypesList;
-        this.translate.translate(this.relationTypesList);
-        this.holdingTypesList = this.newRequestService.holdingTypesList;
-        this.translate.translate(this.holdingTypesList);
-        this.identificationNumberTypeList = this.newRequestService.identificationNumberTypeList;
+        this.beneficiaryTypesList = this.translate.translate(this.newRequestService.beneficiaryTypesList);
+        this.relationTypesList = this.translate.translate(this.newRequestService.relationTypesList);
+        this.holdingTypesList = this.translate.translate(this.newRequestService.holdingTypesList);
+        this.identificationNumberTypeList = this.translate.translate(this.newRequestService.identificationNumberTypeList);
         this.countries = this.translate.translate(countries);
     }
 
@@ -77,6 +80,9 @@ export class BeneficiaryComponent implements OnInit, OnDestroy {
         this.refresh.emit();
 
         this.setHoldingTypeText();
+
+        this.handleKbisandIDValidation();
+
     }
 
     initFormCheck() {
@@ -115,10 +121,39 @@ export class BeneficiaryComponent implements OnInit, OnDestroy {
 
                 this.setHoldingTypeText();
             });
+
+        // Set KBIS or ID to required if is Politically Exposed
+        this.form.get('naturalPerson.isPoliticallyExposed')
+            .valueChanges
+            .pipe(takeUntil(this.unsubscribe))
+            .subscribe(() => this.handleKbisandIDValidation());
+
+        // // handle beneficiary document deletion
+        this.form.get('common').get('document').get('hash').valueChanges
+            .pipe(takeUntil(this.unsubscribe))
+            .subscribe((data) => {
+                if (data == null || data.length == 0) {
+                    const formControl = this.form.get('common.document.kycDocumentID');
+
+                    formControl.setValue(null);
+                    formControl.updateValueAndValidity();
+
+                    this.refresh.emit();
+                }
+            });
     }
 
     setHoldingTypeText() {
-        this.holdingTypeText = this.translate.translate(this.form.get('common.holdingType').value[0].text);
+        const controlValue = this.form.get('common.holdingType').value;
+        if (controlValue && controlValue[0]) {
+            // get text if missing.
+            if (! controlValue[0].text) {
+                const foundText = this.holdingTypesList.find(t => t.id === controlValue[0].id);
+                controlValue[0].text = foundText.text || '';
+            }
+
+            this.holdingTypeText = this.translate.translate(controlValue[0].text);
+        }
     }
 
     formCheckNationalIdNumberType(value) {
@@ -131,9 +166,13 @@ export class BeneficiaryComponent implements OnInit, OnDestroy {
     }
 
     uploadFile($event) {
-        if ($event.files.length === 0) return;
-
         const formControl = this.form.get('common.document');
+
+        if ($event.files.length === 0) {
+            formControl.reset();
+            formControl.markAsTouched();
+            return;
+        }
 
         this.requestsService.uploadFile($event).then((file: any) => {
             const newFormGroup = {
@@ -146,9 +185,62 @@ export class BeneficiaryComponent implements OnInit, OnDestroy {
             };
 
             formControl.setValue(newFormGroup);
+            formControl.updateValueAndValidity();
 
             this.refresh.emit();
         });
+    }
+
+    /**
+     * Toggle Required Validator on KBIS document field
+     * 'If any client is regulated, listed or state-owned then the KBIS or ID in each stakeholder should be optional'
+     * 'If the field “Is the stakeholder a political exposed person?” is Yes KBIS or ID in each stakeholder should be required – overwriting the above rule'
+     *
+     * @returns {void}
+     */
+    public handleKbisandIDValidation(): void {
+        let required: boolean = true;
+        const isPoliticallyExposed = !!this.form.get('naturalPerson.isPoliticallyExposed').value;
+
+        if (this.kycHelper.isStateOwned() || this.kycHelper.isCompanyRegulated() || this.kycHelper.isCompanyListed()) {
+            required = false;
+        }
+
+        const highRisk = this.kycHelper.isHighRiskActivity() || this.kycHelper.isHighRiskCountry();
+        if (highRisk) {
+            required = true;
+            // this.form.get('common.document').markAsTouched();
+        }
+
+        const beneficiaryType = this.form.get('beneficiaryType').value;
+        const isNaturalPerson = beneficiaryType === 'naturalPerson';
+
+        if ((isPoliticallyExposed && isNaturalPerson) || this.globalHasPEP) {
+            required = true;
+            // this.form.get('common.document').markAsTouched();
+        }
+
+        this.toggleKbisAndIdRequired(required);
+    }
+
+    /**
+     * Toggle the KBIS and ID control required validator
+     *
+     * @param {boolean} required
+     * @returns {void}
+     */
+    private toggleKbisAndIdRequired(required: boolean): void {
+        this.kbisOrIdIsRequired = required;
+        const control = this.form.get('common.document.hash');
+
+        if (required) {
+            control.setValidators([Validators.required]);
+        } else {
+            control.clearValidators();
+        }
+
+        this.form.get('common.document.hash').updateValueAndValidity();
+        this.changeDetectorRef.markForCheck();
     }
 
     /**
@@ -196,5 +288,11 @@ export class BeneficiaryComponent implements OnInit, OnDestroy {
     ngOnDestroy() {
         this.unsubscribe.next();
         this.unsubscribe.complete();
+    }
+
+    getDocumentPreset(formItem: string[]) {
+        const value = this.form.get(formItem).value;
+
+        return !value.hash ? undefined : value;
     }
 }

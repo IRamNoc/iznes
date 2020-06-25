@@ -75,6 +75,18 @@
 
                     <div class="row col-sm-12">
                         <div class="form-group required-field col-sm-4">
+                            <label class="control-label" for="signingAuthority">{{ 'Signing authority' | translate }}</label>
+                            <ng-select id="signingAuthority"
+                                        [items]="signingAuthorityList"
+                                        [formControl]="form.get('signingAuthority')"
+                                        placeholder="{{ 'Select a signing authority' | translate }}">
+                            </ng-select>
+                            <span class="field-error" *ngIf="hasError('signingAuthority', ['required'])">{{ 'Field is required' | translate }}</span>
+                        </div>
+                    </div>
+
+                    <div class="row col-sm-12">
+                        <div class="form-group required-field col-sm-4">
                             <label for="positionRepresentative">
                                 {{ 'Position of the Representative of the Legal Person' | translate }}:
                             </label>
@@ -86,9 +98,9 @@
                             <span class="field-error" *ngIf="hasError('positionRepresentative', ['maxlength'])">{{ 'Value is too long' | translate }}</span>
                         </div>
 
-                        <div class="form-group required-field col-sm-4">
+                        <div *ngIf="!form.get('electronicSignatureDocument').disabled" class="form-group required-field col-sm-4">
                             <label for="electronicSignatureDocument">
-                                {{ 'As electronic signature, please upload here representative ID\'s card' | translate }}:
+                                {{ 'As electronic signature, please upload here the national identity card or valid passport or residence card of the signatory with photograph ID’s card' | translate }}:
                             </label>
                             <div class="filedrop-wrapper">
                                 <setl-file-drop filePermission="0" class="form-control" id="electronicSignatureDocument"
@@ -107,17 +119,27 @@
         </div>
     </div>
 
-<input type="submit" class="hidden" />
+    <input type="submit" class="hidden" />
 
 </form>
 
 <div class="full-screen-splash" *ngIf="showKYCComplete" [style.backgroundImage]="'url(assets/images/iznes-login-bg.jpg)'">
-    <div class="content">
-        <img [attr.src]="isNowCP ? 'assets/images/nowcp-logo.png' : 'assets/images/logo-iznes-only.png'" [attr.alt]="isNowCP ? 'NowCP' : 'IZNES'">
-        <h2>{{ 'Congratulations' | translate }}<ng-container *ngIf="firstName"> {{ firstName }}</ng-container>! 👏</h2>
-        <p class="text-center">{{ "We just need to run a few checks, then you will be granted full access to the IZNES platform. We'll let you know when this happens." | translate }}</p>
+    <div class="content" [class.fade-in]="fadeIn" *ngIf="formHelper.kycPartySelections$ | async as partySelections">
+        <img *ngIf="invitedAs === 'iznes'" src="assets/images/logo-iznes-only.png" alt="IZNES">
+        <img *ngIf="invitedAs === 'nowcp'" src="assets/images/nowcp-logo.png" alt="NowCP">
+        <img *ngIf="invitedAs === 'id2s'" src="assets/images/id2s-logo.png" alt="ID2S">
 
-        <ng-container *ngIf="isNowCP">
+        <h2>{{ 'Congratulations' | translate }}<ng-container *ngIf="firstName"> {{ firstName }}</ng-container>! 👏</h2>
+        <p class="text-center" *ngIf="invitedAs === 'nowcp'">{{ "We just need to run a few checks. We'll let you know when this happens." | translate }}</p>
+        <p class="text-center" *ngIf="invitedAs !== 'nowcp'">{{ "We just need to run a few checks, then you will be granted full access to the IZNES platform. We'll let you know when this happens." | translate }}</p>
+
+        <!-- Show Finish btn for only IZNES-->
+        <ng-container *ngIf="(invitedAs === 'iznes' || !partySelections.iznes); else iznesPromo">
+            <button class="btn btn-primary" (click)="handleConfirm(true)">{{ 'Finish' | translate }}</button>
+        </ng-container>
+
+        <!-- Show IZNES CTA if other parties selected-->
+        <ng-template #iznesPromo>
             <div class="highlight">
                 <h2>{{ 'One final thing' | translate }}...</h2>
                 <p>{{ 'If you wish you can complete your information to get the following benefits of the IZNES platform:' | translate }}</p>
@@ -133,10 +155,6 @@
                 <button class="btn btn-primary" (click)="handleConfirm(true, true)">{{ 'Go to IZNES' | translate }}</button>
                 <button class="btn" (click)="handleConfirm(true)">{{ 'No thanks' | translate }}</button>
             </div>
-        </ng-container>
-
-        <ng-container *ngIf="!isNowCP">
-            <button class="btn btn-primary" (click)="handleConfirm(true)">{{ 'Finish' | translate }}</button>
-        </ng-container>
+        </ng-template>
     </div>
 </div>
