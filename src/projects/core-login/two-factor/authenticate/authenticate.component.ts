@@ -28,6 +28,7 @@ export class AuthenticateComponent implements OnDestroy, OnInit {
     @Input() qrCode: string = '';
     @Input() showSuccessAlert: boolean = false;
     @Input() resetToken: string = '';
+    @Input() twoFactorSecret: string = '';
     @Input() displayAsModals: boolean = true;
     @Output() modalCancelled: EventEmitter<any> = new EventEmitter();
     @Output() verifiedToken: EventEmitter<any> = new EventEmitter();
@@ -210,6 +211,25 @@ export class AuthenticateComponent implements OnDestroy, OnInit {
 
             this.changeDetectorRef.markForCheck();
         }
+    }
+
+    /**
+     * Simply copy value into clipboard
+     *
+     * @return {void}
+     */
+    copyToClipboard(val: string) {
+        const selBox = document.createElement('textarea');
+        selBox.style.position = 'fixed';
+        selBox.style.left = '0';
+        selBox.style.top = '0';
+        selBox.style.opacity = '0';
+        selBox.value = val;
+        document.body.appendChild(selBox);
+        selBox.focus();
+        selBox.select();
+        document.execCommand('copy');
+        document.body.removeChild(selBox);
     }
 
     /**
