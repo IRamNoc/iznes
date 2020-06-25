@@ -10,6 +10,10 @@
                 <div class="text-block">
                     <p class="no-margin">{{ 'Scan the QR code using your Authenticator App' | translate }}</p>
                 </div>
+                <div class="text-block">
+                <p (click)="copyToClipboard(twoFactorSecret)" class="no-margin pointer"><b>{{ 'Secret Code' | translate }}</b>
+                    {{ twoFactorSecret }} <i class="fa fa-copy"></i></p>
+                </div>
                 <section class="form-block">
                     <img src="{{ qrCode }}" alt="Two-Factor Authentication Code">
                 </section>
