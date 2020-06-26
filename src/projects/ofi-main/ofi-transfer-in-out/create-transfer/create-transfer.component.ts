@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgRedux, select } from '@angular-redux/store';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { take, takeUntil, filter, map, switchMap } from 'rxjs/operators';
 import { LogService } from '@setl/utils';
 import { TransferInOutService } from '../transfer-in-out.service';
 import { OfiFundService } from '@ofi/ofi-main/ofi-req-services/ofi-product/fund/fund.service';
@@ -23,9 +24,11 @@ export class CreateTransferComponent implements OnInit {
     direction = 'in';
     managementCompanyAccessList = [];
     mananagementCompanyItems = [];
-    managementCompanySelected: any = {};
+    managementCompanySelected = {};
     shareList = [];
     filteredShareList = [];
+    shareSelected = {};
+    investorShareList = [];
     subscriptions: Array<Subscription> = [];
     accountKeeperList =  [
         { id: 1, text: 'Société Générale Securities Services France' },
@@ -52,13 +55,12 @@ export class CreateTransferComponent implements OnInit {
         'managementCompanyList',
         'managementCompanyList',
     ]) managementCompanyAccessListOb;
-    @select(['ofi', 'ofiProduct', 'ofiFund', 'fundList', 'iznFundList']) fundListObs;
-    @select(['ofi', 'ofiProduct', 'ofiFundShareList', 'requestedIznesShare']) requestedShareListObs;
-    @select(['ofi', 'ofiProduct', 'ofiFundShareList', 'iznShareList']) shareListObs;
 
     /* For IZNES Admins */
-    @select(['ofi', 'ofiProduct', 'ofiFundShare', 'requested']) requestedFundShareObs;
     @select(['ofi', 'ofiProduct', 'ofiFundShare', 'fundShare']) fundShareObs;
+    @select(['ofi', 'ofiProduct']) fundShareInvestorObs;
+    @select(['user']) userDetailOb;
+
 
     constructor(private fb: FormBuilder,
                 private cdr: ChangeDetectorRef,
@@ -86,9 +88,8 @@ export class CreateTransferComponent implements OnInit {
             }),
         );
 
-        this.subscriptions.push(this.requestedFundShareObs
-            .subscribe(() => this.ofiFundShareService.fetchIznesAdminShareList()));
         this.subscriptions.push(this.fundShareObs.subscribe(shares => this.shareList = shares));
+        this.ofiFundShareService.fetchIznesAdminShareList();
         this.ofiManagementCompanyService.getManagementCompanyList();
     }
 
@@ -120,17 +121,46 @@ export class CreateTransferComponent implements OnInit {
         return this.placeTransferFormGroup.controls[value].setValue(event.text);
     }
 
-    updateBicOnAmSelect(event) {
-        /*
-        this.managementCompanySelected = Object.keys(this.managementCompanyAccessList)
-        .find((key) => {
+    handleDropdownAmSelect(event) {
+        this.placeTransferFormGroup.controls['amShareFund'].setValue('');
+        this.placeTransferFormGroup.controls['amShareFundISIN'].setValue('');
+        this.shareSelected = {};
+
+        for (const key in this.managementCompanyAccessList) {
             if (this.managementCompanyAccessList[key].companyID === event.id) {
-                return this.managementCompanyAccessList[key];
+                this.managementCompanySelected = this.managementCompanyAccessList[key];
+            }
+        }
+
+        this.filteredShareList = Object.keys(this.shareList).map((key) => {
+            if (this.shareList[key].managementCompanyId === event.id) {
+                return {
+                    id: key,
+                    text: this.shareList[key].fundShareName,
+                };
             }
         });
-        */
-        console.log('result :', this.managementCompanySelected);
-        console.log(this.shareList);
+    }
+
+    handleDropdownShareSelect(event) {
+        this.shareSelected = this.shareList[event.id];
+
+        this.fundShareObs
+        .subscribe((fundShareDocs) => {
+            console.log(fundShareDocs);
+        });
+        
+        this.fundShareInvestorObs
+        .subscribe((fundShareDocs) => {
+            console.log(fundShareDocs);
+        });
+
+        this.userDetailOb
+        .subscribe((fundShareDocs) => {
+            console.log(fundShareDocs);
+        });
+
+        this.ofiFundShareService.fetchInvestorShareByID(this.shareSelected['fundShareID']);
     }
 
     handleSubmitButtonClick() {

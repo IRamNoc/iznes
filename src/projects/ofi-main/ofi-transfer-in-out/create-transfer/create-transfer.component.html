@@ -23,10 +23,10 @@
           <div class="row">
             <div class="col-md-6">
               <label class="clr-col-12 clr-col-md-12" for="amCompany">Société de Gestion</label>
-              <ng-select id="amCompany" [placeholder]="translate.translate('Select an investment portfolio')"
+              <ng-select id="amCompany" [placeholder]="translate.translate('Select an AM')"
                 [items]="mananagementCompanyItems" [allowClear]="false"
                 [formControl]="placeTransferFormGroup.controls['amCompany']"
-                (selected)="updateBicOnAmSelect($event)">
+                (selected)="handleDropdownAmSelect($event)">
               </ng-select>
             </div>
 
@@ -39,15 +39,19 @@
 
           <div class="row">
             <div class="col-md-6">
-              <label class="clr-col-12 clr-col-md-12" for="amShareFund">ISIN</label>
-              <input id="amShareFund" formControlName="amShareFund" class="form-control" type="text">
+              <label class="clr-col-12 clr-col-md-12" for="amShareFund">Nom de la part</label>
+              <ng-select id="amShareFund" [placeholder]="translate.translate('Select an AM Share')"
+                [items]="filteredShareList" [allowClear]="false"
+                [formControl]="placeTransferFormGroup.controls['amShareFund']"
+                (selected)="handleDropdownShareSelect($event)">
+              </ng-select>
             </div>
 
             <!-- Amount -->
             <div class="col-md-6">
-              <label class="clr-col-12 clr-col-md-12" for="amShareFundISIN"></label>
+              <label class="clr-col-12 clr-col-md-12" for="amShareFundISIN">ISIN</label>
               <input id="amShareFundISIN" formControlName="amShareFundISIN" class="form-control" type="text"
-                value="Exemple ISIN selectionné">
+                value="{{ shareSelected.isin }}">
             </div>
           </div>
 
