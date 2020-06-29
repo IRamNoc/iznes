@@ -58,14 +58,18 @@
           <div class="row">
             <div class="col-md-6">
               <label class="clr-col-12 clr-col-md-12" for="investorCompany">Investisseur</label>
-              <input id="investorCompany" formControlName="investorCompany" class="form-control" type="text">
+              <ng-select id="investorCompany" [placeholder]="translate.translate('Select an investor')"
+                [items]="investorListItems" [allowClear]="false"
+                [formControl]="placeTransferFormGroup.controls['investorCompany']"
+                (selected)="handleDropdownInvestorSelect($event)">
+              </ng-select>
             </div>
 
             <!-- Amount -->
             <div class="col-md-6">
               <label class="clr-col-12 clr-col-md-12" for="investorReference"></label>
               <input id="investorReference" formControlName="investorReference" class="form-control" type="text"
-                value="Exemple investisseur selectionné">
+                value="{{ investorSelected.companyName }}">
             </div>
           </div>
 

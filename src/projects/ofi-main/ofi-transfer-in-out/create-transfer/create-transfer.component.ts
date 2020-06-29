@@ -12,6 +12,7 @@ import { MultilingualService } from '@setl/multilingual';
 import {
     OfiManagementCompanyService,
 } from '../../ofi-req-services/ofi-product/management-company/management-company.service';
+import { keyframes } from '@angular/animations';
 
 @Component({
     selector: 'app-create-transfer',
@@ -29,6 +30,8 @@ export class CreateTransferComponent implements OnInit {
     filteredShareList = [];
     shareSelected = {};
     investorShareList = [];
+    investorListItems = [];
+    investorSelected = {};
     subscriptions: Array<Subscription> = [];
     accountKeeperList =  [
         { id: 1, text: 'Société Générale Securities Services France' },
@@ -60,7 +63,6 @@ export class CreateTransferComponent implements OnInit {
     @select(['ofi', 'ofiProduct', 'ofiFundShare', 'fundShare']) fundShareObs;
     @select(['ofi', 'ofiProduct']) fundShareInvestorObs;
     @select(['user']) userDetailOb;
-
 
     constructor(private fb: FormBuilder,
                 private cdr: ChangeDetectorRef,
@@ -145,22 +147,28 @@ export class CreateTransferComponent implements OnInit {
     handleDropdownShareSelect(event) {
         this.shareSelected = this.shareList[event.id];
 
-        this.fundShareObs
-        .subscribe((fundShareDocs) => {
-            console.log(fundShareDocs);
-        });
-        
-        this.fundShareInvestorObs
-        .subscribe((fundShareDocs) => {
-            console.log(fundShareDocs);
-        });
+        this.transferService.fetchInvestorListByShareID(
+            this.shareSelected['fundShareID'],
+            (res) => {
+                if (res[1].Status === 'OK') {
+                    const data = res[1].Data;
+                    this.investorShareList = data;
+                    this.investorListItems = Object.keys(this.investorShareList).map((key) => {
+                        return {
+                            id: key,
+                            text: `${this.investorShareList[key].firstName} ${this.investorShareList[key].lastName}`,
+                        };
+                    });
+                }
+            },
+            (error) => {
+                console.log(error);
+            });
+    }
 
-        this.userDetailOb
-        .subscribe((fundShareDocs) => {
-            console.log(fundShareDocs);
-        });
-
-        this.ofiFundShareService.fetchInvestorShareByID(this.shareSelected['fundShareID']);
+    handleDropdownInvestorSelect(event) {
+        this.investorSelected = this.investorShareList[event.id];
+        console.log(this.investorSelected);
     }
 
     handleSubmitButtonClick() {
