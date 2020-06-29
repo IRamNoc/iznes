@@ -17,8 +17,30 @@ export class TransferInOutService {
 
     constructor(private memberSocketService: MemberSocketService,
                 private ngRedux: NgRedux<any>,
-) {
-/* Stub. */
+    )
+    {}
+
+    fetchInvestorListByShareID(shareID: number, successCallback: (res) => void, errorCallback: (res) => void) {
+        const asyncTaskPipe = this.requestInvestorsListByShareID(shareID);
+
+        this.ngRedux.dispatch(SagaHelper.runAsync(
+        [],
+        [],
+        asyncTaskPipe,
+        {},
+        res => successCallback(res),
+        res => errorCallback(res),
+    ));
+    }
+
+    requestInvestorsListByShareID(shareID: number) {
+        const messageBody = {
+            RequestName: 'izngetinvestorstransferinout',
+            token: this.memberSocketService.token,
+            shareID,
+        };
+
+        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
     }
 
 }
