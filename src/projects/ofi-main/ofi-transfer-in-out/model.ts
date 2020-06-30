@@ -1,22 +1,16 @@
 import { MemberNodeMessageBody } from '@setl/utils/common';
 
 export interface IznesNewTransferRequestBody extends MemberNodeMessageBody {
-    token: string;
-    amBic: string;
-    amShareFund: string;
-    amShareFundISIN: string;
-    investorCompany: string;
-    investorReference: string;
-    investorWallet: string;
-    investorWalletReference: string;
+    fundShareID: number;
+    investorWalletID: number;
+    investorSubportfolioID: number;
+    transferType: string;
+    transferDirection: string;
+    price: number;
     quantity: number;
-    amount: number;
-    currency: string;
     theoricalDate: string;
     initialDate: string;
     externalReference: string;
-    accountKeeper: string;
+    accountKeeperID: number;
     comment: string;
-    createdBy: string;
-    dateEntered: string;
 }

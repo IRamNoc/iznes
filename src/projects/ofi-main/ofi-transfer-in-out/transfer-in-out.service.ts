@@ -44,8 +44,7 @@ export class TransferInOutService {
     }
 
     addNewTransfer(requestData: {
-        fundShareID: string;
-        investorID: number;
+        fundShareID: number;
         investorWalletID: number;
         investorSubportfolioID: number;
         transferType: string;
@@ -61,9 +60,10 @@ export class TransferInOutService {
         const messageBody: IznesNewTransferRequestBody = {
             RequestName: 'izncreatetransferinout',
             token: this.memberSocketService.token,
-            shareIsin: requestData.shareIsin,
-            investorId: requestData.investorId,
-            subportfolio: requestData.subportfolio,
+            fundShareID: requestData.fundShareID,
+            investorID: requestData.investorID,
+            investorWalletID: requestData.investorWalletID,
+            investorSubportfolioID: requestData.investorSubportfolioID,
             transferType: requestData.transferType,
             transferDirection: requestData.transferDirection,
             price: requestData.price,
@@ -71,7 +71,7 @@ export class TransferInOutService {
             theoricalDate: requestData.theoricalDate,
             initialDate: requestData.initialDate,
             externalReference: requestData.externalReference,
-            accountKeeper: requestData.accountKeeper,
+            accountKeeperID: requestData.accountKeeperID,
             comment: requestData.comment,
         };
 
