@@ -1,3 +1,5 @@
+import * as _ from 'lodash';
+import * as moment from 'moment';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgRedux, select } from '@angular-redux/store';
@@ -7,20 +9,18 @@ import { LogService } from '@setl/utils';
 import { TransferInOutService } from '../transfer-in-out.service';
 import { OfiFundService } from '@ofi/ofi-main/ofi-req-services/ofi-product/fund/fund.service';
 import { OfiFundShareService } from '@ofi/ofi-main/ofi-req-services/ofi-product/fund-share/service';
+import { OfiCurrenciesService } from '@ofi/ofi-main/ofi-req-services/ofi-currencies/service';
 import { MultilingualService } from '@setl/multilingual';
 import {
     OfiManagementCompanyService,
 } from '../../ofi-req-services/ofi-product/management-company/management-company.service';
-import * as _ from 'lodash';
-import { OfiCurrenciesService } from '@ofi/ofi-main/ofi-req-services/ofi-currencies/service';
-import * as moment from 'moment';
 
 @Component({
     selector: 'app-create-transfer',
     templateUrl: './create-transfer.component.html',
     styleUrls: ['./create-transfer.component.scss'],
 })
-export class CreateTransferComponent implements OnInit {
+export class CreateTransferComponent implements OnInit, OnDestroy {
     disableBtn = false;
     language: string;
     placeTransferFormGroup: FormGroup;
@@ -100,8 +100,6 @@ export class CreateTransferComponent implements OnInit {
         );
 
         this.subscriptions.push(this.languageObs.subscribe(language => this.language = language));
-
-        this.fundShareObs.subscribe(shares => { console.log(shares); });
         this.subscriptions.push(this.fundShareObs.subscribe(shares => this.shareList = shares));
         this.ofiFundShareService.fetchIznesAdminShareList();
         this.ofiManagementCompanyService.getManagementCompanyList();
@@ -230,7 +228,11 @@ export class CreateTransferComponent implements OnInit {
         this.investorSelected = this.investorShareList[event.id];
         this.walletListItems = Object.keys(this.investorShareList).map((key) => {
             if (this.investorShareList[key].accountID === this.investorSelected['accountID']) {
-                return { id: key, text: this.investorShareList[key].label };
+                return {
+                    id: key,
+                    text: this.investorShareList[key].accountLabel,
+                    investorSubportfolioID: this.investorShareList[key].investorSubportfolioID,
+                };
             }
         });
     }
@@ -241,10 +243,10 @@ export class CreateTransferComponent implements OnInit {
 
     handleSubmitButtonClick() {
         const request = {
-            shareIsin: this.shareSelected['isin'],
-            investorId: this.investorSelected['accountID'],
-            portfolioId: this.investorSelected['walletID'],
-            subportfolio: this.walletSelected['text'],
+            fundShareID: this.shareSelected['fundShareID'],
+            investorID: this.investorSelected['accountID'],
+            investorWalletID: this.investorSelected['walletID'],
+            investorSubportfolioID: this.walletSelected['investorSubportfolioID'],
             transferType: this.type,
             transferDirection: this.direction,
             price: this.placeTransferFormGroup.controls['unitPrice'].value,
@@ -252,7 +254,7 @@ export class CreateTransferComponent implements OnInit {
             theoricalDate: this.placeTransferFormGroup.controls['theoricalDate'].value,
             initialDate: this.placeTransferFormGroup.controls['initialDate'].value,
             externalReference: this.placeTransferFormGroup.controls['externalReference'].value,
-            accountKeeper: this.accountKeeperSelected,
+            accountKeeperID: this.accountKeeperSelected,
             comment: this.placeTransferFormGroup.controls['comment'].value,
         };
 

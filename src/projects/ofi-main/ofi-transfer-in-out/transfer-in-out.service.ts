@@ -44,10 +44,10 @@ export class TransferInOutService {
     }
 
     addNewTransfer(requestData: {
-        shareIsin: string;
-        investorId: number;
-        portfolioId: number;
-        subportfolio: string;
+        fundShareID: string;
+        investorID: number;
+        investorWalletID: number;
+        investorSubportfolioID: number;
         transferType: string;
         transferDirection: string;
         price: number;
@@ -55,7 +55,7 @@ export class TransferInOutService {
         theoricalDate: string;
         initialDate: string;
         externalReference: string;
-        accountKeeper: number;
+        accountKeeperID: number;
         comment: string;
     }): any {
         const messageBody: IznesNewTransferRequestBody = {
