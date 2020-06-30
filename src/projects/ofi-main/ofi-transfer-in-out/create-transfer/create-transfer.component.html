@@ -180,7 +180,7 @@
               <ng-select id="accountKeeper" [placeholder]="translate.translate('Select an account keeper')"
                 [items]="accountKeeperList" [allowClear]="true"
                 [formControl]="placeTransferFormGroup.controls['accountKeeper']"
-                (selected)="handleDropdownItemSelect($event, 'accountKeeper')">
+                (selected)="handleDropdownAccountKeeperSelect($event)">
               </ng-select>
             </div>
 

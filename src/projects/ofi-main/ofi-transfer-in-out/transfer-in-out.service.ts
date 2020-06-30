@@ -43,4 +43,39 @@ export class TransferInOutService {
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
     }
 
+    addNewTransfer(requestData: {
+        shareIsin: string;
+        investorId: number;
+        portfolioId: number;
+        subportfolio: string;
+        transferType: string;
+        transferDirection: string;
+        price: number;
+        quantity: number;
+        theoricalDate: string;
+        initialDate: string;
+        externalReference: string;
+        accountKeeper: number;
+        comment: string;
+    }): any {
+        const messageBody: IznesNewTransferRequestBody = {
+            RequestName: 'izncreatetransferinout',
+            token: this.memberSocketService.token,
+            shareIsin: requestData.shareIsin,
+            investorId: requestData.investorId,
+            subportfolio: requestData.subportfolio,
+            transferType: requestData.transferType,
+            transferDirection: requestData.transferDirection,
+            price: requestData.price,
+            quantity: requestData.quantity,
+            theoricalDate: requestData.theoricalDate,
+            initialDate: requestData.initialDate,
+            externalReference: requestData.externalReference,
+            accountKeeper: requestData.accountKeeper,
+            comment: requestData.comment,
+        };
+
+        return createMemberNodeRequest(this.memberSocketService, messageBody);
+    }
+
 }

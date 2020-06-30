@@ -39,6 +39,7 @@ export class CreateTransferComponent implements OnInit {
     walletSelected = {};
     subscriptions: Array<Subscription> = [];
     currencyList: any[];
+    accountKeeperSelected: number;
     accountKeeperList =  [
         { id: 1, text: 'Société Générale Securities Services France' },
         { id: 2, text: 'Société Générale Securities Services Luxembourg' },
@@ -171,8 +172,8 @@ export class CreateTransferComponent implements OnInit {
         });
     }
 
-    handleDropdownItemSelect(event, value) {
-        return this.placeTransferFormGroup.controls[value].setValue(event.text);
+    handleDropdownAccountKeeperSelect(event) {
+        this.accountKeeperSelected = event.id;
     }
 
     handleDropdownAmSelect(event) {
@@ -239,7 +240,28 @@ export class CreateTransferComponent implements OnInit {
     }
 
     handleSubmitButtonClick() {
-        console.log("Save that")
+        const request = {
+            shareIsin: this.shareSelected['isin'],
+            investorId: this.investorSelected['accountID'],
+            portfolioId: this.investorSelected['walletID'],
+            subportfolio: this.walletSelected['text'],
+            transferType: this.type,
+            transferDirection: this.direction,
+            price: this.placeTransferFormGroup.controls['unitPrice'].value,
+            quantity: this.placeTransferFormGroup.controls['quantity'].value,
+            theoricalDate: this.placeTransferFormGroup.controls['theoricalDate'].value,
+            initialDate: this.placeTransferFormGroup.controls['initialDate'].value,
+            externalReference: this.placeTransferFormGroup.controls['externalReference'].value,
+            accountKeeper: this.accountKeeperSelected,
+            comment: this.placeTransferFormGroup.controls['comment'].value,
+        };
+
+        this.transferService.addNewTransfer(request).then((data) => {
+            console.log(data);
+        })
+        .catch((data) => {
+            console.log(data);
+        });
     }
 
     handleCancelButtonClick() {
