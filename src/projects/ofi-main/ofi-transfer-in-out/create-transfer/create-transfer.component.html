@@ -18,7 +18,7 @@
   <!-- Panel body -->
   <div class="row panel-body">
     <div class="col-md-12">
-      <form [formGroup]="placeTransferFormGroup" (click)="handleSubmitButtonClick()" clrForm>
+      <form [formGroup]="placeTransferFormGroup" (ngSubmit)="handleSubmitButtonClick()">
         <section class="form-group">
           <div class="row">
             <div class="col-md-6">
@@ -76,14 +76,18 @@
           <div class="row">
             <div class="col-md-6">
               <label class="clr-col-12 clr-col-md-12" for="investorWallet">Portfeuille</label>
-              <input id="investorWallet" formControlName="investorWallet" class="form-control" type="number">
+              <ng-select id="investorWallet" [placeholder]="translate.translate('Select a wallet')"
+                [items]="walletListItems" [allowClear]="false"
+                [formControl]="placeTransferFormGroup.controls['investorWallet']"
+                (selected)="handleDropdownInvestorWalletSelect($event)">
+              </ng-select>
             </div>
 
             <!-- Amount -->
             <div class="col-md-6">
-              <label class="clr-col-12 clr-col-md-12" for="investorWalletReference"></label>
+              <label class="clr-col-12 clr-col-md-12" for="investorWalletReference">Réference</label>
               <input id="investorWalletReference" formControlName="investorWalletReference" class="form-control"
-                type="text" value="Exemple portefeuille sélectionné">
+                type="text" value="{{ walletSelected.text }}">
             </div>
           </div>
 
@@ -145,14 +149,22 @@
 
           <div class="row">
             <div class="col-md-4">
-              <label class="clr-col-12 clr-col-md-12" for="theoricalDate">Date et heure théorique d'entrée au registre
+              <label class="clr-col-12 clr-col-md-12" for="theoricalDate">Date théorique d'entrée au registre
                 d'IZNES</label>
-              <input id="theoricalDate" formControlName="theoricalDate" class="form-control" type="datetime">
+              <div class="input-group date-pick-wrapper">
+                <span class="fa fa-calendar" aria-hidden="true"></span>
+                <input id="theoricalDate" placeholder="Choose a date" formControlName="theoricalDate"
+                  [dpDayPicker]="datePickerConfig" mode="day" theme="dp-material">
+              </div>
             </div>
 
             <div class="col-md-4">
-              <label class="clr-col-12 clr-col-md-12" for="initialDate">Date et heure initiale de l'opération</label>
-              <input id="initialDate" formControlName="initialDate" class="form-control" type="datetime">
+              <label class="clr-col-12 clr-col-md-12" for="initialDate">Date initiale de l'opération</label>
+              <div class="input-group date-pick-wrapper">
+                <span class="fa fa-calendar" aria-hidden="true"></span>
+                <input id="initialDate" placeholder="Choose a date" formControlName="initialDate"
+                  [dpDayPicker]="datePickerConfig" mode="day" theme="dp-material">
+              </div>
             </div>
 
           </div>
@@ -165,7 +177,7 @@
 
             <div class="col-md-4">
               <label class="clr-col-12 clr-col-md-12" for="accountKeeper">Teneur de compte historique</label>
-              <ng-select id="accountKeeper" [placeholder]="translate.translate('Select an investment portfolio')"
+              <ng-select id="accountKeeper" [placeholder]="translate.translate('Select an account keeper')"
                 [items]="accountKeeperList" [allowClear]="true"
                 [formControl]="placeTransferFormGroup.controls['accountKeeper']"
                 (selected)="handleDropdownItemSelect($event, 'accountKeeper')">
@@ -187,17 +199,21 @@
 
             <div class="col-md-4">
               <label class="clr-col-12 clr-col-md-12" for="dateEntered">Date et heure de saisie du transfert</label>
-              <input id="dateEntered" formControlName="dateEntered" class="form-control" type="datetime">
+              <div class="input-group date-pick-wrapper">
+                <span class="fa fa-calendar" aria-hidden="true"></span>
+                <input id="dateEntered" placeholder="Choose a date" formControlName="dateEntered"
+                  [dpDayPicker]="datePickerConfig" mode="day" theme="dp-material">
+              </div>
             </div>
           </div>
         </section>
-      </form>
 
       <div class="form-group col-sm-12">
         <button id="cancelButton" type="button" class="btn btn-light"
           (click)="handleCancelButtonClick()">{{ 'Cancel' | translate }}</button>
-        <button id="saveButton" type="submit" class="btn btn-primary">{{ 'Save' | translate }}</button>
+        <button id="saveButton" type="submit" [disabled]="!disableBtn" class="btn btn-primary">{{ 'Save' | translate }}</button>
       </div>
+    </form>
     </div>
   </div>
 </div>
