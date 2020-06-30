@@ -6,6 +6,7 @@ import { NgRedux, select } from '@angular-redux/store';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { LogService } from '@setl/utils';
+import { ToasterService, Toast } from 'angular2-toaster';
 import { TransferInOutService } from '../transfer-in-out.service';
 import { OfiFundService } from '@ofi/ofi-main/ofi-req-services/ofi-product/fund/fund.service';
 import { OfiFundShareService } from '@ofi/ofi-main/ofi-req-services/ofi-product/fund-share/service';
@@ -21,6 +22,14 @@ import {
     styleUrls: ['./create-transfer.component.scss'],
 })
 export class CreateTransferComponent implements OnInit, OnDestroy {
+    toastTimer;
+    timerToast: Toast;
+    toasterConfig: any = {
+        type: 'warning',
+        title: '',
+        timeout: 0,
+        tapToDismiss: false,
+    };
     disableBtn = false;
     language: string;
     placeTransferFormGroup: FormGroup;
@@ -77,6 +86,8 @@ export class CreateTransferComponent implements OnInit, OnDestroy {
                 private ofiFundShareService: OfiFundShareService,
                 public translate: MultilingualService,
                 private ofiCurrenciesService: OfiCurrenciesService,
+                private logService: LogService,
+                private toaster: ToasterService,
                 private route: ActivatedRoute) {
         this.ofiCurrenciesService.getCurrencyList();
         this.initDatePickerConfig();
@@ -244,22 +255,26 @@ export class CreateTransferComponent implements OnInit, OnDestroy {
     handleSubmitButtonClick() {
         const request = {
             fundShareID: this.shareSelected['fundShareID'],
-            investorID: this.investorSelected['accountID'],
             investorWalletID: this.investorSelected['walletID'],
             investorSubportfolioID: this.walletSelected['investorSubportfolioID'],
             transferType: this.type,
             transferDirection: this.direction,
             price: this.placeTransferFormGroup.controls['unitPrice'].value,
             quantity: this.placeTransferFormGroup.controls['quantity'].value,
-            theoricalDate: this.placeTransferFormGroup.controls['theoricalDate'].value,
-            initialDate: this.placeTransferFormGroup.controls['initialDate'].value,
+            theoricalDate: moment(this.placeTransferFormGroup.controls['theoricalDate'].value)
+                .format('YYYY-MM-DD HH:mm:ss'),
+            initialDate: moment(this.placeTransferFormGroup.controls['initialDate'].value)
+                .format('YYYY-MM-DD HH:mm:ss'),
             externalReference: this.placeTransferFormGroup.controls['externalReference'].value,
             accountKeeperID: this.accountKeeperSelected,
             comment: this.placeTransferFormGroup.controls['comment'].value,
         };
 
         this.transferService.addNewTransfer(request).then((data) => {
-            console.log(data);
+            // log to remote server about order is placed
+            this.logService.log('info', 'a transfer i/o has been initialized');
+            this.toaster.pop('success', 'Your transfer I/O has been succesfully initiated.');
+            this.router.navigateByUrl('/transfer-in-out');
         })
         .catch((data) => {
             console.log(data);
@@ -267,7 +282,7 @@ export class CreateTransferComponent implements OnInit, OnDestroy {
     }
 
     handleCancelButtonClick() {
-        this.router.navigate([]);
+        this.router.navigateByUrl('/transfer-in-out');
     }
 
     ngOnDestroy(): void {
