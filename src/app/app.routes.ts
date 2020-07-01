@@ -742,14 +742,15 @@ export const ROUTES: Routes = [
             {
                 path: 'transfer-in-out',
                 canActivate: [LoginGuardService],
-                children: [
+                children:
+                [
+                    {
+                        path: '',
+                        component: ManageTransfersComponent,
+                    },
                     {
                         path: 'create',
                         component: CreateTransferComponent,
-                    },
-                    {
-                        path: 'manage',
-                        component: ManageTransfersComponent,
                     },
                 ],
             },
