@@ -34,7 +34,7 @@ export class ManageTransfersComponent implements OnInit, OnDestroy {
 
     @Input() isImported: boolean;
     @Input() linkRoute: string;
-    @ViewChild('ordersDataGrid') transferDatagrid: any;
+    @ViewChild('transferDataGrid') transferDatagrid: any;
 
     /* Datagrid server driven */
     total: number;
