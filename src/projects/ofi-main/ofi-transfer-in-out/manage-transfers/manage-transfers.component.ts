@@ -30,6 +30,7 @@ export class ManageTransfersComponent implements OnInit, OnDestroy {
     transferListItems: [];
     currencyList: any[];
     subscriptions: Array<Subscription> = [];
+    public showColumnSpacer: boolean = true;
 
     @Input() isImported: boolean;
     @Input() linkRoute: string;
@@ -65,6 +66,7 @@ export class ManageTransfersComponent implements OnInit, OnDestroy {
             (res) => {
                 this.transferListItems = this.transferObjectToList(res[1].Data);
                 this.loading = false;
+                this.resizeDatagridRemoveSpacers();
                 console.log(this.transferListItems);
             },
             (error) => {
@@ -123,6 +125,15 @@ export class ManageTransfersComponent implements OnInit, OnDestroy {
     }
 
     /**
+     * Returns a single line of text to space the datagrid column correctly
+     * Strips all non-alphanumeric characters and replaces them with '_'
+     * @param text
+     */
+    public getColumnSpaceText(text: string) {
+        return typeof text === 'string' ? text.replace(/[\W_]+/g, '_') : text;
+    }
+
+    /**
      * Get the list of currencies from redux
      *
      * @param {Object[]} data
@@ -131,6 +142,23 @@ export class ManageTransfersComponent implements OnInit, OnDestroy {
     getCurrencyList(data) {
         if (data) {
             this.currencyList = data.toJS();
+        }
+    }
+
+    /**
+     * Resizes the datagrid and removes the spacer elements
+     * The column space elements are a bit of a hack to get the Datagrid to correctly set the cell size
+     * hopefully this will be fixed in a Clarity update soon...
+     */
+    public resizeDatagridRemoveSpacers() {
+        if (this.transferDatagrid) {
+            setTimeout(
+                () => {
+                    this.transferDatagrid.resize();
+                    this.showColumnSpacer = false;
+                },
+                1000,
+            );
         }
     }
 

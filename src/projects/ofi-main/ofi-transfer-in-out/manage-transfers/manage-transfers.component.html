@@ -108,159 +108,62 @@
               </ng-container>
           </clr-dg-column>  
           
-          <!--
-          <clr-dg-row *ngFor="let order of ordersList; let i = index" clrDgRowClickable>
-              <clr-dg-cell (click)="buildLink(order, $event)">
-                  {{ order.orderRef }}
-                  <div *ngIf="showColumnSpacer" class="column-spacer">{{getColumnSpaceText(order.orderRef)}}</div>
+          
+          <clr-dg-row *ngFor="let transfer of transferListItems; let i = index" clrDgRowClickable>
+              <clr-dg-cell (click)="buildLink(transfer, $event)">
+                  {{ transfer.referenceID }}
+                  <div *ngIf="showColumnSpacer" class="column-spacer">{{getColumnSpaceText(transfer.referenceID)}}</div>
               </clr-dg-cell>
-              <clr-dg-cell (click)="buildLink(order, $event)">
-                  <span>{{ order.orderTypeStr }}</span>
-                  <div *ngIf="showColumnSpacer" class="column-spacer">{{getColumnSpaceText(order.orderTypeStr)}}</div>
-              </clr-dg-cell>
-              <clr-dg-cell (click)="buildLink(order, $event)">
-                  {{order.investorCompanyName}}
-                  <div *ngIf="showColumnSpacer" class="column-spacer">{{getColumnSpaceText(order.investorCompanyName)}}</div>
-              </clr-dg-cell>
-              <clr-dg-cell (click)="buildLink(order, $event)">
-                  {{order.portfolio}}
-                  <div *ngIf="showColumnSpacer" class="column-spacer">{{getColumnSpaceText(order.portfolio)}}</div>
-              </clr-dg-cell>
-              <clr-dg-cell *ngIf="isIznesAdmin" (click)="buildLink(order, $event)">
-                  {{order.label}}
-                  <div *ngIf="showColumnSpacer" class="column-spacer">{{getColumnSpaceText(order.label)}}</div>
-              </clr-dg-cell>
-              <clr-dg-cell *ngIf="isInvestorUser">
-                  <button
-                      class="btn btn-link btn-sm"
-                      [routerLink]="['/' + getLinkRoute() + '/product-characteristic', order.isin]">{{order.isin}}
-                  </button>
-              
-                  <div *ngIf="showColumnSpacer" class="column-spacer">{{getColumnSpaceText(order.isin)}}</div>
-              </clr-dg-cell>
-              <clr-dg-cell *ngIf="!isInvestorUser" (click)="buildLink(order, $event)">
-                  {{order.isin}}
-                  <div *ngIf="showColumnSpacer" class="column-spacer">{{getColumnSpaceText(order.isin)}}</div>
-              </clr-dg-cell>
-              <clr-dg-cell *ngIf="isInvestorUser">
-                  <button
-                      class="btn btn-link btn-sm"
-                      [routerLink]="['/' + getLinkRoute() + '/product-characteristic', order.isin]">
-                      {{order.fundShareName}}
-                  </button>
-              </clr-dg-cell>
-              <clr-dg-cell *ngIf="!isInvestorUser" (click)="buildLink(order, $event)">
-                  {{order.fundShareName}}
-                  <div *ngIf="showColumnSpacer" class="column-spacer">{{getColumnSpaceText(order.fundShareName)}}</div>
-              </clr-dg-cell>
-              <clr-dg-cell (click)="buildLink(order, $event)">
-                  {{order.amCompanyName}}
-                  <div *ngIf="showColumnSpacer" class="column-spacer">{{getColumnSpaceText(order.amCompanyName)}}</div>
-              </clr-dg-cell>
-              <clr-dg-cell (click)="buildLink(order, $event)">
-                  {{ showCurrency(order) }}
-                  <div *ngIf="showColumnSpacer" class="column-spacer">{{getColumnSpaceText(showCurrency(order))}}</div>
-              </clr-dg-cell>
-              <clr-dg-cell class="right" (click)="buildLink(order, $event)">
-                    {{ order.quantity | moneyValue: 5 }}
-                  <div *ngIf="showColumnSpacer" class="column-spacer">{{getColumnSpaceText(order.quantity)}}</div>
-              </clr-dg-cell>
-              <clr-dg-cell (click)="buildLink(order, $event)">
-                  <span *ngIf="order.byAmountOrQuantity === 1">
-                  {{ 'Quantity' | translate }}
-                  </span>
-                  <span *ngIf="order.byAmountOrQuantity === 2">
-                      {{ 'Amount' | translate }}
-                  </span>
-              </clr-dg-cell>
-              <clr-dg-cell class="right" (click)="buildLink(order, $event)">
-                  {{ order.price | moneyValue: 4 }}
-                  <div *ngIf="showColumnSpacer" class="column-spacer">{{getColumnSpaceText(order.price)}}</div>
-              </clr-dg-cell>
-              <clr-dg-cell class="right" (click)="buildLink(order, $event)">
-                  {{ order.amountWithCost | moneyValue: 2 }}
-                  <div *ngIf="showColumnSpacer" class="column-spacer">{{getColumnSpaceText(order.amountWithCost)}}</div>
-              </clr-dg-cell>
-              <clr-dg-cell class="right" (click)="buildLink(order, $event)">
-                  {{ order.fee | moneyValue: 2 }}
-                  <div *ngIf="showColumnSpacer" class="column-spacer">{{getColumnSpaceText(order.fee)}}</div>
-              </clr-dg-cell>
-              <clr-dg-cell (click)="buildLink(order, $event)">
-                  <div style="min-width: 145px">{{ getDateTime(order.orderDate) }}</div>
-              </clr-dg-cell>
-              <clr-dg-cell (click)="buildLink(order, $event)">
-                  <div style="min-width: 145px">{{ getDateTime(order.cutoffDate) }}</div>
-              </clr-dg-cell>
-              <clr-dg-cell (click)="buildLink(order, $event)">
-                  {{ getOnlyDate(order.valuationDate) }}
-                  <div *ngIf="showColumnSpacer" class="column-spacer">{{getColumnSpaceText(getOnlyDate(order.valuationDate))}}</div>
-              </clr-dg-cell>
-              <clr-dg-cell (click)="buildLink(order, $event)">
-                  {{ getOnlyDate(order.settlementDate) }}
-                  <div *ngIf="showColumnSpacer" class="column-spacer">{{getColumnSpaceText(getOnlyDate(order.settlementDate))}}</div>
-              </clr-dg-cell>
-              <clr-dg-cell (click)="buildLink(order, $event)">
-              </clr-dg-cell>
-              <clr-dg-cell *ngIf="isAssetManager" class="right" [ngSwitch]="order.paymentMsgStatus">
-              </clr-dg-cell>
-              <clr-dg-cell *ngIf="!isIznesAdmin" [ngSwitch]="order.orderStatus" class="right">
-              </clr-dg-cell>
-              <clr-dg-row-detail *clrIfExpanded>
-                  <div class="additionalInfos">
-                      <div class="row">
-                          <div class="form-group col-sm-3">
-                              <table>
-                                  <tbody>
-                                  <tr>
-                                      <td>
-                                          <b>{{ 'Asset Management Company' | translate }}</b>
-                                      </td>
-                                      <td>{{order.amCompanyName}}</td>
-                                  </tr>
-                                  </tbody>
-                              </table>
-                          </div>
-                          <div class="form-group col-sm-3">
-                              <table>
-                                  <tbody>
-                                  <tr>
-                                      <td>
-                                          <b>{{ 'Latest NAV' | translate }}</b>
-                                      </td>
-                                      <td [class]="getPriceStatusCss(order)">{{order.price | moneyValue: 2}}</td>
-                                  </tr>
-                                  </tbody>
-                              </table>
-                          </div>
-                          <div class="form-group col-sm-3">
-                              <table>
-                                  <tbody>
-                                  <tr>
-                                      <td>
-                                          <b>{{ 'Fees Amount' | translate }}</b>
-                                      </td>
-                                      <td>{{ order.fee | moneyValue: 2 }}</td>
-                                  </tr>
-                                  </tbody>
-                              </table>
-                          </div>
-                          <div class="form-group col-sm-3">
-                              <table>
-                                  <tbody>
-                                  <tr>
-                                      <td>
-                                          <b>{{' NAV Date' | translate }}</b>
-                                      </td>
-                                      <td>{{getOnlyDate(order.valuationDate)}}</td>
-                                  </tr>
-                                  </tbody>
-                              </table>
-                          </div>
-                      </div>
-                  </div>
-              </clr-dg-row-detail>
+              <clr-dg-cell (click)="buildLink(transfer, $event)">
+                {{ transfer.externalReference }}
+            </clr-dg-cell>
+            <clr-dg-cell (click)="buildLink(transfer, $event)">
+                {{ transfer.accountKeeper }}
+            </clr-dg-cell>
+            <clr-dg-cell (click)="buildLink(transfer, $event)">
+                {{ transfer.transferDirection }}
+            </clr-dg-cell>
+            <clr-dg-cell (click)="buildLink(transfer, $event)">
+                {{ transfer.assetManagementCompany }}
+            </clr-dg-cell>
+            <clr-dg-cell (click)="buildLink(transfer, $event)">
+                {{ transfer.investorCompany }}
+            </clr-dg-cell>
+            <clr-dg-cell (click)="buildLink(transfer, $event)">
+                {{ transfer.investorWallet }}
+            </clr-dg-cell>
+            <clr-dg-cell (click)="buildLink(transfer, $event)">
+                {{ transfer.shareISIN }}
+            </clr-dg-cell>
+            <clr-dg-cell (click)="buildLink(transfer, $event)">
+                {{ transfer.shareName }}
+            </clr-dg-cell>
+            <clr-dg-cell (click)="buildLink(transfer, $event)">
+                {{ transfer.currency }}
+            </clr-dg-cell>
+            <clr-dg-cell (click)="buildLink(transfer, $event)">
+                {{ transfer.quantity }}
+            </clr-dg-cell>
+            <clr-dg-cell (click)="buildLink(transfer, $event)">
+                {{ transfer.unitPrice }}
+            </clr-dg-cell>
+            <clr-dg-cell (click)="buildLink(transfer, $event)">
+                {{ transfer.amount }}
+            </clr-dg-cell>
+            <clr-dg-cell (click)="buildLink(transfer, $event)">
+                {{ transfer.theoricalDate }}
+            </clr-dg-cell>
+            <clr-dg-cell (click)="buildLink(transfer, $event)">
+                {{ transfer.transferStatus }}
+            </clr-dg-cell>
+            <clr-dg-cell (click)="buildLink(transfer, $event)">
+                {{ transfer.dateEntered }}
+                <div *ngIf="showColumnSpacer" class="column-spacer">{{getColumnSpaceText(transfer.dateEntered)}}</div>
+            </clr-dg-cell>
+            <clr-dg-cell (click)="buildLink(transfer, $event)">
+                action
+            </clr-dg-cell>
           </clr-dg-row>
-        -->
       
           <clr-dg-footer class="full-options">
               <!-- Optional customization of hide/show columns toggle -->
