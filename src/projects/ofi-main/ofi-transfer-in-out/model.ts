@@ -1,4 +1,5 @@
 import { MemberNodeMessageBody } from '@setl/utils/common';
+import { MemberNodeMessageBody } from '../ofi-req-services/ofi-reports/model';
 
 export interface IznesNewTransferRequestBody extends MemberNodeMessageBody {
     fundShareID: number;
@@ -13,4 +14,9 @@ export interface IznesNewTransferRequestBody extends MemberNodeMessageBody {
     externalReference: string;
     accountKeeperID: number;
     comment: string;
+}
+
+export interface IznesGetTransferRequestBody extends MemberNodeMessageBody {
+    pageSize: number;
+    rowOffSet: number;
 }
