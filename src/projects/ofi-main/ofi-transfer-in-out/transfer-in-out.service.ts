@@ -6,7 +6,8 @@ import { NgRedux } from '@angular-redux/store';
 import { MemberSocketService } from '@setl/websocket-service';
 import { createMemberNodeRequest, createMemberNodeSagaRequest } from '@setl/utils/common';
 import {
-  IznesNewTransferRequestBody,
+    IznesNewTransferRequestBody,
+    IznesGetTransferRequestBody,
 } from './model';
 import { SagaHelper } from '@setl/utils';
 
@@ -17,20 +18,19 @@ export class TransferInOutService {
 
     constructor(private memberSocketService: MemberSocketService,
                 private ngRedux: NgRedux<any>,
-    )
-    {}
+    ) { }
 
     fetchInvestorListByShareID(shareID: number, successCallback: (res) => void, errorCallback: (res) => void) {
         const asyncTaskPipe = this.requestInvestorsListByShareID(shareID);
 
         this.ngRedux.dispatch(SagaHelper.runAsync(
-        [],
-        [],
-        asyncTaskPipe,
-        {},
-        res => successCallback(res),
-        res => errorCallback(res),
-    ));
+            [],
+            [],
+            asyncTaskPipe,
+            {},
+            res => successCallback(res),
+            res => errorCallback(res),
+        ));
     }
 
     requestInvestorsListByShareID(shareID: number) {
@@ -61,7 +61,6 @@ export class TransferInOutService {
             RequestName: 'izncreatetransferinout',
             token: this.memberSocketService.token,
             fundShareID: requestData.fundShareID,
-            investorID: requestData.investorID,
             investorWalletID: requestData.investorWalletID,
             investorSubportfolioID: requestData.investorSubportfolioID,
             transferType: requestData.transferType,
@@ -76,6 +75,33 @@ export class TransferInOutService {
         };
 
         return createMemberNodeRequest(this.memberSocketService, messageBody);
+    }
+
+    fetchIznesTransferList(successCallback: (res) => void, errorCallback: (res) => void) {
+        const asyncTaskPipe = this.requestIznesTransferList({
+            pageSize: 10,
+            rowOffSet: 0,
+        });
+
+        this.ngRedux.dispatch(SagaHelper.runAsync(
+            [],
+            [],
+            asyncTaskPipe,
+            {},
+            res => successCallback(res),
+            res => errorCallback(res),
+        ));
+    }
+
+    requestIznesTransferList(data: any) {
+        const messageBody: IznesGetTransferRequestBody = {
+            RequestName: 'izngettransferinout',
+            token: this.memberSocketService.token,
+            pageSize: data.pageSize,
+            rowOffset: (data.rowOffSet * data.pageSize),
+        };
+
+        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
     }
 
 }
