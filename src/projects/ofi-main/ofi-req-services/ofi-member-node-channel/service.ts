@@ -10,6 +10,7 @@ import {
     ofiClearRequestedIssuedAssets,
     setamkyclist,
     ofiManageOrderActions,
+    ofiManageTransferActions,
     FundAccessMyActions,
 } from '../../ofi-store';
 import { clearRequestedIznesShares } from '../../ofi-store/ofi-product/fund-share-list/actions';
@@ -121,6 +122,11 @@ export class OfiMemberNodeChannelService {
                 this.ngRedux.dispatch(ofiClearHolderDetailRequested());
                 this.ngRedux.dispatch(clearRequestedPrecentraFundsList());
                 this.ngRedux.dispatch(clearRequestedPrecentraSharesList());
+                break;
+
+            case 'iznesupdatetransfer':
+                this.logService.log(' | go the broadcast order', data);
+                this.ngRedux.dispatch(ofiManageTransferActions.ofiUpdateTransfer(data.Data));
                 break;
 
             case 'updatekyc':
