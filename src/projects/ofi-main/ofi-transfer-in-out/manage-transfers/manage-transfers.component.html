@@ -20,7 +20,7 @@
                 class="btn btn-primary">{{ 'Créer un nouveau transfert' | translate }}</button>
         </clr-dg-action-bar>
 
-        <clr-datagrid (clrDgRefresh)="refresh($event)" [clrDgLoading]="loading" clrDgSortIcon #transferDataGrid>
+        <clr-datagrid (clrDgRefresh)="refresh($event)" [clrDgLoading]="loading" clrDgSortIcon #transfersDataGrid>
             <clr-dg-column [clrDgField]="'referenceID'" clrDgSortIcon clrDgSortNoSearch id="reference">
                 <ng-container *clrDgHideableColumn="{hidden: false}">Référence IZNES
                     <span class="column-label"></span>
@@ -123,7 +123,10 @@
                     {{ transfer.accountKeeper }}
                 </clr-dg-cell>
                 <clr-dg-cell (click)="buildLink(transfer, $event)">
-                    {{ transfer.transferDirection }}
+                    <b>
+                        <span class="label label-light-blue" *ngIf="transfer.transferDirection === 'in'">&nbsp;{{ transfer.transferDirection }}&nbsp;</span>
+                        <span class="label label-blue" *ngIf="transfer.transferDirection === 'out'">{{ transfer.transferDirection }}</span>
+                    </b>
                 </clr-dg-cell>
                 <clr-dg-cell (click)="buildLink(transfer, $event)">
                     {{ transfer.assetManagementCompany }}
@@ -156,13 +159,28 @@
                     {{ transfer.theoricalDate }}
                 </clr-dg-cell>
                 <clr-dg-cell (click)="buildLink(transfer, $event)">
-                    {{ transfer.transferStatus }}
+                    <span *ngIf="transfer.transferStatus === 'pending'" class="label label-warning">{{ 'Pending' | translate }}
+                    </span>
+
+                    <span *ngIf="transfer.transferStatus === 'validated'" class="label label-info">{{ 'Validated' | translate }}
+                    </span>
+
+                    <span *ngIf="transfer.transferStatus === 'confirmed'" class="label label-success">{{ 'Confirmed' | translate }}
+                    </span>
+
+                    <span *ngIf="transfer.transferStatus === 'cancelled'" class="label label-error">{{ 'Cancelled' | translate }}
+                    </span>
                 </clr-dg-cell>
                 <clr-dg-cell (click)="buildLink(transfer, $event)">
                     {{ transfer.dateEntered }}
                 </clr-dg-cell>
-                <clr-dg-cell (click)="buildLink(transfer, $event)">
-                    action
+                <clr-dg-cell class="right">
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-sm btn-danger" *ngIf="transfer.transferStatus === 'pending'" (click)="cancelTransfer(i)">{{ 'Cancel' | translate }}</button>
+                        <button type="button" class="btn btn-sm btn-danger" *ngIf="transfer.transferStatus !== 'pending'" disabled>{{ 'Cancel' | translate }}</button>
+                        <button type="button" class="btn btn-sm btn-primary" *ngIf="transfer.transferStatus === 'pending'" (click)="settleOrder(i)">{{ 'Modify' | translate }}</button>
+                        <button type="button" class="btn btn-sm btn-primary" *ngIf="transfer.transferStatus !== 'pending'" disabled>{{ 'Modify' | translate }}</button>
+                    </div>
                 </clr-dg-cell>
             </clr-dg-row>
 
@@ -184,8 +202,35 @@
                 </clr-dg-column-toggle>
 
                 <!--{{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}-->
-                <!-- <clr-dg-pagination #pagination [clrDgPageSize]="itemPerPage" [clrDgLastPage]="lastPage"></clr-dg-pagination> -->
+                <clr-dg-pagination #pagination [clrDgPageSize]="itemPerPage" [clrDgLastPage]="lastPage"></clr-dg-pagination>
             </clr-dg-footer>
         </clr-datagrid>
     </div>
 </div>
+
+<clr-modal [(clrModalOpen)]="isConfirmModalDisplayed" [clrModalClosable]="false">
+    <h3 class="modal-title">{{ confirmModal.title }}</h3>
+
+    <div class="modal-body">
+        <div class="jaspero__dialog-icon">
+            <div class="f-modal-alert">
+                <div class="f-modal-icon f-modal-info-error scaleWarning">
+                    <span class="f-modal-body pulseWarningInsRed"></span>
+                    <span class="f-modal-dot pulseWarningInsRed"></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="jaspero__dialog-content" [innerHtml]="confirmModal.body"></div>
+    </div>
+
+    <div class="modal-footer">
+        <button id='cancelModalBackButton' type="button" class="btn btn-outline" (click)="resetConfirmModalValue()">
+            {{ 'Back' | translate }}
+        </button>
+
+        <button id='cancelModalConfirmButton' type="button" class="btn btn-danger cancel-modal-confirm-btn" (click)="handleModalConfirmButtonClick(confirmModal.targetedTransfer)">
+            {{ 'Confirm' | translate }}
+        </button>
+    </div>
+</clr-modal>

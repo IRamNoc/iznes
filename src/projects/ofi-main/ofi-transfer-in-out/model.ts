@@ -19,3 +19,11 @@ export interface IznesGetTransferRequestBody extends MemberNodeMessageBody {
     pageSize: number;
     rowOffset: number;
 }
+
+export interface IznesCancelTransferRequestBody extends MemberNodeMessageBody {
+    referenceID: number;
+}
+
+export interface CancelTransferRequestData {
+    referenceID: number;
+}

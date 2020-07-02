@@ -12,7 +12,7 @@ import {
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgRedux, select } from '@angular-redux/store';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Subscription } from 'rxjs';
+import { Observable, combineLatest as observableCombineLatest, Subscription, zip } from 'rxjs';
 import { LogService } from '@setl/utils';
 import { MultilingualService } from '@setl/multilingual';
 import { DatagridParams } from './datagrid-params';
@@ -39,16 +39,21 @@ export class ManageTransfersComponent implements OnInit, OnDestroy {
 
     /* Datagrid server driven */
     total: number;
+    lastPage: number;
     readonly itemPerPage = 10;
     private datagridParams: DatagridParams;
     loading = true;
+    isConfirmModalDisplayed = false;
+    confirmModal = {};
 
     // Locale
     language = 'en';
 
     @select(['ofi', 'ofiCurrencies', 'currencies']) currenciesObs;
     @select(['ofi', 'ofiTransfers', 'manageTransfers', 'transferList']) transferObs;
-    @select(['ofi', 'ofiTransfers', 'manageTransfers']) transferUpdateObs;
+    @select(['ofi', 'ofiTransfers', 'manageTransfers', 'totalResults']) readonly totalResults$: Observable<number>;
+
+    @select(['ofi', 'ofiTransfers']) tempObs;
 
     constructor(private fb: FormBuilder,
                 private cdr: ChangeDetectorRef,
@@ -58,25 +63,33 @@ export class ManageTransfersComponent implements OnInit, OnDestroy {
                 private transferService: TransferInOutService,
                 public translate: MultilingualService,
                 private ofiCurrenciesService: OfiCurrenciesService,
-                private route: ActivatedRoute) {
+                private route: ActivatedRoute,
+                ) {
         this.ofiCurrenciesService.getCurrencyList();
         this.subscriptions.push(this.currenciesObs.subscribe(c => this.getCurrencyList(c)));
     }
+
+    appSubscribe<T>(
+        obs: Observable<T>,
+        next?: (value: T) => void,
+        error?: (error: any) => void,
+        complete?: () => void,
+    )
+    { }
 
     ngOnInit() {
         this.datagridParams = new DatagridParams(this.itemPerPage);
 
         this.transferService.defaultRequestManageTransfersList();
         this.subscriptions.push(
-            this.transferObs.subscribe(transfers => {
-                console.log(transfers);
-                this.transferListItems = this.transferObjectToList(transfers)
-            }));
-
-            this.subscriptions.push(
-                this.transferUpdateObs.subscribe(transfers => {
-                    console.log(transfers);
-                }));
+            this.transferObs.subscribe(transfers => this.transferListItems = this.transferObjectToList(transfers)));
+        this.subscriptions.push(this.tempObs.subscribe(transfers => console.log(transfers)));
+        this.appSubscribe(this.totalResults$, (total) => {
+            console.log(total);
+            this.total = total;
+            this.lastPage = Math.ceil(this.total / this.itemPerPage);
+            this.detectChanges(true);
+        });
     }
 
     refresh(state: ClrDatagridStateInterface) {
@@ -85,7 +98,7 @@ export class ManageTransfersComponent implements OnInit, OnDestroy {
             return;
         }
 
-        //this.manageOrdersService.setOrderListPage(state.page.from / state.page.size + 1);
+        this.transferService.setOrderListPage(state.page.from / state.page.size + 1);
         this.datagridParams.applyState(state);
     }
 
@@ -131,6 +144,35 @@ export class ManageTransfersComponent implements OnInit, OnDestroy {
         });
     }
 
+    cancelTransfer(index) {
+        const referenceId = this.transferListItems[index].referenceID;
+
+        this.isConfirmModalDisplayed = true;
+        this.confirmModal = {
+            targetedTransfer: this.transferListItems[index],
+            title: `Cancel transfer #${referenceId}`,
+            body: 'Are you sure you want to cancel this transfer ?',
+        };
+    }
+
+    resetConfirmModalValue() {
+        this.isConfirmModalDisplayed = false;
+        this.confirmModal = {};
+    }
+
+    handleModalConfirmButtonClick(targetedTransfer) {
+        this.transferService.defaultRequestCancelTransfer(
+            targetedTransfer.referenceID,
+            (data) => {
+                this.logService.log('cancel order success', data); // success
+                this.resetConfirmModalValue();
+            },
+            (data) => {
+                this.logService.log('Error: ', data);
+                this.resetConfirmModalValue();
+            });
+    }
+
     /**
      * Returns a single line of text to space the datagrid column correctly
      * Strips all non-alphanumeric characters and replaces them with '_'
@@ -166,6 +208,13 @@ export class ManageTransfersComponent implements OnInit, OnDestroy {
                 },
                 1000,
             );
+        }
+    }
+
+    detectChanges(detect = false) {
+        this.cdr.markForCheck();
+        if (detect) {
+            this.cdr.detectChanges();
         }
     }
 

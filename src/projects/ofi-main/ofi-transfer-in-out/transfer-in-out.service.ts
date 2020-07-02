@@ -8,11 +8,14 @@ import { createMemberNodeRequest, createMemberNodeSagaRequest } from '@setl/util
 import {
     IznesNewTransferRequestBody,
     IznesGetTransferRequestBody,
+    IznesCancelTransferRequestBody,
+    CancelTransferRequestData,
 } from './model';
 
 /* Import actions. */
 import {
     OFI_SET_MANAGE_TRANSFER_LIST,
+    ofiManageTransferActions
     ofiSetRequestedManageTransfer,
     ofiClearRequestedManageTransfer,
 } from '../ofi-store/';
@@ -27,6 +30,18 @@ export class TransferInOutService {
     constructor(private memberSocketService: MemberSocketService,
                 private ngRedux: NgRedux<any>,
     ) { }
+
+    setOrderListPage(page: number) {
+        this.ngRedux.dispatch(ofiManageTransferActions.setCurrentPage(page));
+    }
+
+    setTotalResults(results: number) {
+        this.ngRedux.dispatch(ofiManageTransferActions.setTotalResults(results));
+    }
+
+    incrementTotalResults() {
+        this.ngRedux.dispatch(ofiManageTransferActions.incrementTotalResults());
+    }
 
     static setRequested(boolValue: boolean, ngRedux: NgRedux<any>) {
         // false = doRequest | true = already requested
@@ -145,6 +160,29 @@ export class TransferInOutService {
             token: this.memberSocketService.token,
             pageSize: data.pageSize,
             rowOffset: (data.rowOffSet * data.pageSize),
+        };
+
+        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+    }
+
+    defaultRequestCancelTransfer(referenceID: number, successCallback: (res) => void, errorCallback: (res) => void) {
+        const asyncTaskPipe = this.requestCancelTransfer({ referenceID });
+
+        this.ngRedux.dispatch(SagaHelper.runAsync(
+            [],
+            [],
+            asyncTaskPipe,
+            {},
+            res => successCallback(res),
+            res => errorCallback(res),
+        ));
+    }
+
+    requestCancelTransfer(data: CancelTransferRequestData) {
+        const messageBody: IznesCancelTransferRequestBody = {
+            RequestName: 'izncanceltransferinout',
+            token: this.memberSocketService.token,
+            referenceID: data.referenceID,
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);

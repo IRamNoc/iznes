@@ -5,18 +5,23 @@ import { Subject } from 'rxjs';
 
 abstract class DatagridParamsData {
     referenceID: number;
-    fundName: string;
+    externalReference: string;
+    accountKeeper: string;
+    transferDirection: string;
+    assetManagementCompany: string;
+    investorCompany: string;
+    investorWallet: string;
+    shareISIN: string;
     shareName: string;
-    isin: string;
-    status: number;
-    orderType: number;
+    currency: string;
+    quantity: number;
+    unitPrice: number;
+    amount: number;
+    theoricalDate: string;
+    transferStatus: string;
+    dateEntered: string;
     pageSize: number;
     rowOffSet: number;
-    fromDate: string;
-    toDate: string;
-    assetManagementCompany: string;
-    investorCompanyName: string;
-    portfolioLabel: string;
 }
 
 export class DatagridParams {
@@ -28,19 +33,24 @@ export class DatagridParams {
 
     constructor(itemsPerPage: number) {
         this.defaults = {
-            referenceID: null,
-            fundName: null,
-            shareName: null,
-            isin: null,
-            status: null,
-            orderType: null,
             pageSize: itemsPerPage,
             rowOffSet: 0,
-            fromDate: null,
-            toDate: null,
+            referenceID: null,
+            externalReference: null,
+            accountKeeper: null,
+            transferDirection: null,
             assetManagementCompany: null,
-            investorCompanyName: null,
-            portfolioLabel: null,
+            investorCompany: null,
+            investorWallet: null,
+            shareISIN: null,
+            shareName: null,
+            currency: null,
+            quantity: null,
+            unitPrice: null,
+            amount: null,
+            theoricalDate: null,
+            transferStatus: null,
+            dateEntered: null,
         };
         this.data = this.defaults;
     }
@@ -48,27 +58,22 @@ export class DatagridParams {
     applyState(state: ClrDatagridStateInterface) {
         const tmpData = { ...this.data };
         const fieldMap = {
-            orderRef: 'orderId',
-            investor: 'investorWalletID',
-            portfolioLabel: 'label',
-            orderType: 'orderType',
-            isin: 'isin',
-            fundName: 'fundName',
-            shareName: 'shareName',
-            shareCurrency: 'currency',
-            quantity: 'quantity',
-            grossAmount: 'amountWithCost',
-            orderDate: 'orderDate',
-            cutOffDate: 'cutoffDate',
-            settlementDate: 'settlementDate',
-            orderStatus: 'orderStatus',
-            investorCompanyName: 'investorCompanyName',
-            portfolio: 'portfolio',
+            referenceID: 'referenceID',
+            externalReference: 'externalReference',
+            accountKeeper: 'accountKeeper',
+            transferDirection: 'transferDirection',
             assetManagementCompany: 'assetManagementCompany',
-            tradedBy: 'tradedBy',
-            latestNAV: 'latestNAV',
-            feesAmount: 'feesAmount',
-            navDate: 'navDate',
+            investorCompany: 'investorCompany',
+            investorWallet: 'investorWallet',
+            shareISIN: 'shareISIN',
+            shareName: 'shareName',
+            currency: 'currency',
+            quantity: 'quantity',
+            unitPrice: 'unitPrice',
+            amount: 'amount',
+            theoricalDate: 'theoricalDate',
+            transferStatus: 'transferStatus',
+            dateEntered: 'dateEntered',
         };
 
         this.data.rowOffSet = get(state, 'page.from', 0) / this.data.pageSize;
