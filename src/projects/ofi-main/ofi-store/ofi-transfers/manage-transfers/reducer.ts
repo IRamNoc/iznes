@@ -15,13 +15,13 @@ const initialState: ManageTransfers = {
     listTransfer: [],
     requested: false,
     openedTabs: [],
-    filters: {},
     currentPage: 1,
     totalResults: 0,
 };
 
 const patchTransfer = (state, referenceId, patch) => {
     const existingTransfer = get(state.transferList, referenceId, null);
+
     if (!existingTransfer) {
         return state;
     }
@@ -82,29 +82,23 @@ export const OfiManageTransferListReducer = function (
         case ofiManageTransfersActions.SET_ALL_TABS:
             return handleSetAllTabs(action, state);
 
-        case ofiManageTransfersActions.OFI_SET_TRANSFERS_FILTERS:
-            const filters = get(action, 'filters', []);    // use [] not {} for list and Data not Data[0]
-            return { ...state, filters };
-
-        case ofiManageTransfersActions.OFI_CLEAR_TRANSFERS_FILTERS:
-            return { ...state, ...{ filters: {} } };
 
         case ofiManageTransfersActions.OFI_UPDATE_TRANSFER:
             switch (action.payload.event) {
                 case 'create':
                     return handleNewTransfer(state, action);
                 case 'cutoff':
-                    return patchTransfer(state, action.payload.transfer.referenceId, { transferStatus: 2 });
+                    return patchTransfer(state, action.payload.transfer.referenceID, { transferStatus: '' });
                 case 'cancel':
-                    return patchTransfer(state, action.payload.transfer.referenceId, { transferStatus: 0 });
+                    return patchTransfer(state, action.payload.transfer.referenceID, { transferStatus: 'cancelled' });
                 case 'commit':
-                    return patchTransfer(state, action.payload.transfer.referenceId, { transferStatus: 3 });
+                    return patchTransfer(state, action.payload.transfer.referenceID, { transferStatus: 3 });
                 case 'complete':
-                    return patchTransfer(state, action.payload.transfer.referenceId, { transferStatus: 4 });
+                    return patchTransfer(state, action.payload.transfer.referenceID, { transferStatus: 4 });
                 case 'readyforpayment':
                     return patchTransfers(state, action.payload.transfers, { paymentMsgStatus: 'ready' });
                 case 'settled':
-                    return patchTransfer(state, action.payload.transfer.referenceId, { transferStatus: -1 });
+                    return patchTransfer(state, action.payload.transfer.referenceID, { transferStatus: -1 });
                 default:
                     return state;
             }
@@ -146,6 +140,7 @@ function formatManageTransferDataResponse(rawData: any[]): ManageTransferDetails
                 price: item.get('price'),
                 quantity: item.get('quantity'),
                 referenceID: item.get('referenceID'),
+                totalResult: item.get('totalResult'),
                 theoricalDate: item.get('theoricalDate'),
                 transferDirection: item.get('transferDirection'),
                 transferStatus: item.get('transferStatus'),
@@ -213,8 +208,7 @@ function handleSetAllTabs(action: Action, state: ManageTransfers): ManageTransfe
 
 function handleNewTransfer(state: ManageTransfers, action: PayloadAction): ManageTransfers {
 
-    if (state.currentPage !== 1 || Object.keys(state.filters).length > 0) {
-        // Only add orders to the first page and when no filters are set!
+    if (state.currentPage !== 1) {
         return state;
     }
 
