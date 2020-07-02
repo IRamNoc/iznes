@@ -1,3 +1,4 @@
+import * as _ from 'lodash';
 /* Core/Angular imports. */
 import {
     AfterViewInit,
@@ -27,7 +28,7 @@ import { ClrDatagridStateInterface } from '@clr/angular';
 })
 export class ManageTransfersComponent implements OnInit, OnDestroy {
     searchForm: FormGroup;
-    transferListItems: [];
+    transferListItems: any[];
     currencyList: any[];
     subscriptions: Array<Subscription> = [];
     public showColumnSpacer: boolean = true;
@@ -46,6 +47,8 @@ export class ManageTransfersComponent implements OnInit, OnDestroy {
     language = 'en';
 
     @select(['ofi', 'ofiCurrencies', 'currencies']) currenciesObs;
+    @select(['ofi', 'ofiTransfers', 'manageTransfers', 'transferList']) transferObs;
+    @select(['ofi', 'ofiTransfers', 'manageTransfers']) transferUpdateObs;
 
     constructor(private fb: FormBuilder,
                 private cdr: ChangeDetectorRef,
@@ -62,16 +65,18 @@ export class ManageTransfersComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         this.datagridParams = new DatagridParams(this.itemPerPage);
-        this.transferService.fetchIznesTransferList(
-            (res) => {
-                this.transferListItems = this.transferObjectToList(res[1].Data);
-                this.loading = false;
-                this.resizeDatagridRemoveSpacers();
-                console.log(this.transferListItems);
-            },
-            (error) => {
-                console.log(error);
-            });
+
+        this.transferService.defaultRequestManageTransfersList();
+        this.subscriptions.push(
+            this.transferObs.subscribe(transfers => {
+                console.log(transfers);
+                this.transferListItems = this.transferObjectToList(transfers)
+            }));
+
+            this.subscriptions.push(
+                this.transferUpdateObs.subscribe(transfers => {
+                    console.log(transfers);
+                }));
     }
 
     refresh(state: ClrDatagridStateInterface) {
@@ -85,23 +90,25 @@ export class ManageTransfersComponent implements OnInit, OnDestroy {
     }
 
     transferObjectToList(listTransfer) {
-        return listTransfer.map((orderId) => {
-            const referenceID = orderId.referenceID;
-            const externalReference = orderId.externalReference;
-            const accountKeeper = orderId.accountKeeperID;
-            const transferDirection = orderId.transferDirection;
-            const assetManagementCompany = orderId.assetManagementCompanyName;
-            const investorCompany = orderId.investorCompanyName;
-            const investorWallet = orderId.accountLabel;
-            const shareISIN = orderId.fundShareISIN;
-            const shareName = orderId.fundShareName;
-            const currency = this.currencyList[orderId.currency]['text'] || 'EUR';
-            const quantity = orderId.quantity;
-            const unitPrice = orderId.price;
+        this.loading = false;
+
+        return _.toArray(listTransfer).map((transfer) => {
+            const referenceID = transfer.referenceID;
+            const externalReference = transfer.externalReference;
+            const accountKeeper = transfer.accountKeeperID;
+            const transferDirection = transfer.transferDirection;
+            const assetManagementCompany = transfer.assetManagementCompanyName;
+            const investorCompany = transfer.investorCompanyName;
+            const investorWallet = transfer.accountLabel;
+            const shareISIN = transfer.fundShareISIN;
+            const shareName = transfer.fundShareName;
+            const currency = this.currencyList[transfer.currency]['text'] || 'EUR';
+            const quantity = transfer.quantity;
+            const unitPrice = transfer.price;
             const amount = quantity * unitPrice;
-            const theoricalDate = orderId.theoricalDate;
-            const transferStatus = orderId.transferStatus;
-            const dateEntered = orderId.dateEntered;
+            const theoricalDate = transfer.theoricalDate;
+            const transferStatus = transfer.transferStatus;
+            const dateEntered = transfer.dateEntered;
 
             return {
                 referenceID,

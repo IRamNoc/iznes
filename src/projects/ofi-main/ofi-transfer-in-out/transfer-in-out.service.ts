@@ -9,6 +9,14 @@ import {
     IznesNewTransferRequestBody,
     IznesGetTransferRequestBody,
 } from './model';
+
+/* Import actions. */
+import {
+    OFI_SET_MANAGE_TRANSFER_LIST,
+    ofiSetRequestedManageTransfer,
+    ofiClearRequestedManageTransfer,
+} from '../ofi-store/';
+
 import { SagaHelper } from '@setl/utils';
 
 @Injectable({
@@ -19,6 +27,15 @@ export class TransferInOutService {
     constructor(private memberSocketService: MemberSocketService,
                 private ngRedux: NgRedux<any>,
     ) { }
+
+    static setRequested(boolValue: boolean, ngRedux: NgRedux<any>) {
+        // false = doRequest | true = already requested
+        if (!boolValue) {
+            ngRedux.dispatch(ofiClearRequestedManageTransfer());
+        } else {
+            ngRedux.dispatch(ofiSetRequestedManageTransfer());
+        }
+    }
 
     fetchInvestorListByShareID(shareID: number, successCallback: (res) => void, errorCallback: (res) => void) {
         const asyncTaskPipe = this.requestInvestorsListByShareID(shareID);
@@ -80,7 +97,7 @@ export class TransferInOutService {
     fetchIznesTransferList(successCallback: (res) => void, errorCallback: (res) => void) {
         const asyncTaskPipe = this.requestIznesTransferList({
             pageSize: 10,
-            rowOffSet: 0,
+            rowOffset: 0,
         });
 
         this.ngRedux.dispatch(SagaHelper.runAsync(
@@ -94,6 +111,35 @@ export class TransferInOutService {
     }
 
     requestIznesTransferList(data: any) {
+        const messageBody: IznesGetTransferRequestBody = {
+            RequestName: 'izngettransferinout',
+            token: this.memberSocketService.token,
+            pageSize: data.pageSize,
+            rowOffset: (data.rowOffset * data.pageSize),
+        };
+
+        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+    }
+
+    defaultRequestManageTransfersList() {
+    // Set the state flag to true. so we do not request it again.
+        this.ngRedux.dispatch(ofiSetRequestedManageTransfer());
+
+    // Request the list.
+        const asyncTaskPipe = this.requestManageTransfersList({
+            pageSize: 10,
+            rowOffSet: 0,
+        });
+
+        this.ngRedux.dispatch(SagaHelper.runAsync(
+        [OFI_SET_MANAGE_TRANSFER_LIST],
+        [],
+        asyncTaskPipe,
+        {},
+    ));
+    }
+
+    requestManageTransfersList(data: any): any {
         const messageBody: IznesGetTransferRequestBody = {
             RequestName: 'izngettransferinout',
             token: this.memberSocketService.token,
