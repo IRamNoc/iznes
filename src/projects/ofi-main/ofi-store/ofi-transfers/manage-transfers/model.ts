@@ -31,6 +31,7 @@ export interface ManageTransferDetails {
     quantity: any;
     referenceID: any;
     theoricalDate: any;
+    totalResult: any;
     transferDirection: any;
     transferStatus: any;
     userEntered: any;
@@ -41,7 +42,6 @@ export interface ManageTransfers {
     listTransfer: number[];
     requested: boolean;
     openedTabs: TransferTab[];
-    filters: any;
     currentPage: number;
     totalResults: number;
 }
