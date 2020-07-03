@@ -4,8 +4,8 @@ import * as OktaAuth from '@okta/okta-auth-js';
 @Injectable()
 export class OktaAuthService {
     URL_BASE = location.origin;
-    CLIENT_ID: string;
-    ISSUER: string;
+    CLIENT_ID: string = '';
+    ISSUER: string = '';
     LOGIN_REDIRECT_URI = `${this.URL_BASE}/engie-callback`;
     LOGOUT_REDIRECT_URI = this.URL_BASE;
     oktaAuth: any;
