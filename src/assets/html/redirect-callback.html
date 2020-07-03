@@ -1,29 +1,44 @@
 <!-- callback.html -->
-<script src="./js/okta-auth-js.min.js"></script>
+<script src="../js/okta-auth-js.min.js"></script>
 <script>
   // OIDC variables
   const baseURL = location.origin;
-  let issuer = 'https://engieapppreview.oktapreview.com/.well-known/openid-configuration';
-  let clientId = '0oah49n1tfxhVKmvh0x6';
-  let  redirectUri = `${baseURL}/engie-callback`;
-  let redirectAfterSuccess = baseURL;
-  // build an auth client
-  let client = new OktaAuth({
-    url: issuer.split('/oauth2/')[0],
-    clientId: clientId,
-    issuer: issuer,
-    redirectUri: redirectUri
-  });
-  sessionStorage.setItem('okta-app-url', baseURL);
-  // parse tokens from the url
-  client.token.parseFromUrl().then(async (res) => {
-    client.tokenManager.add('idToken', res.tokens.idToken);
-    client.tokenManager.add('accessToken', res.tokens.accessToken);
+  const redirectUri = `${baseURL}/engie-callback`;
+  const redirectAfterSuccess = baseURL;
+  let issuer, clientId = '';
 
-    // redirect when finished
-    window.location = redirectAfterSuccess;
-  })
-    .catch(function (err) {
-      console.log(err)
+  if (baseURL.includes('api.iznes.io') === true) {
+    issuer = 'https://engieapppreview.oktapreview.com/.well-known/openid-configuration';
+    clientId = '0oah49n1tfxhVKmvh0x6';
+  } else if (baseURL.includes('app.iznes.io') === true) {
+    issuer = 'https://engie.okta-emea.com/.well-known/openid-configuration';
+    clientId = '0oa470nf1sD04JCqg0i7';
+  } else if (baseURL.includes('localhost') === true) {
+    console.log('Development mode')
+  } else {
+    console.log('No good configuration provided, redirecting into IZNES platform.');
+    window.location = baseURL + '/#/login';
+  }
+
+  // build an auth client
+  if (issuer && clientId) {
+    const client = new OktaAuth({
+      url: issuer.split('/oauth2/')[0],
+      clientId: clientId,
+      issuer: issuer,
+      redirectUri: redirectUri
     });
+    sessionStorage.setItem('okta-app-url', baseURL);
+    // parse tokens from the url
+    client.token.parseFromUrl().then(async (res) => {
+      client.tokenManager.add('idToken', res.tokens.idToken);
+      client.tokenManager.add('accessToken', res.tokens.accessToken);
+
+      // redirect when finished
+      window.location = redirectAfterSuccess;
+    })
+      .catch(function (err) {
+        console.log(err)
+      });
+  }
 </script>
