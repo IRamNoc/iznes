@@ -306,8 +306,8 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit, Log
         this.logService.log(this.router);
 
         // Starting Okta Auth Service verification - Check if token exist
-        const haveOktaToken = this.oktaAuthService.haveToken();
-        if (haveOktaToken) {
+        console.log(this.oktaAuthService.haveToken());
+        if (this.oktaAuthService.haveToken()) {
             this.loginUsingSSO();
         }
     }
