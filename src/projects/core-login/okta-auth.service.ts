@@ -33,28 +33,28 @@ export class OktaAuthService {
     };
     
     // Check if user have okta Token in the token Manager
-    haveToken() {
+    async haveToken() {
         if (!this.oktaAuth) return;
-        const authenticated = this.oktaAuth.tokenManager.get("accessToken");
+        const authenticated = await this.oktaAuth.tokenManager.get("accessToken");
         if (authenticated === undefined)
             return false;
         return true;
     };
 
     // If accessToken is not stored or if token is expired, initiate new login on Okta or return idToken
-    checkTokenValid() {
+    async checkTokenValid() {
         if (!this.oktaAuth) return;
-        const authenticated = this.oktaAuth.tokenManager.get("accessToken");
+        const authenticated = await this.oktaAuth.tokenManager.get("accessToken");
         if (authenticated === undefined || this.checkExpired())
             return this.initiateLogin();
         return this.oktaAuth.tokenManager.get('idToken')
     };
 
     // Get Okta user informations by getting accessToken and idToken
-    getUserInfo() {
+    async getUserInfo() {
         if (!this.oktaAuth) return;
-        const accessToken =  this.oktaAuth.tokenManager.get("accessToken");
-        const idToken =  this.oktaAuth.tokenManager.get("idToken");
+        const accessToken =  await this.oktaAuth.tokenManager.get("accessToken");
+        const idToken =  await this.oktaAuth.tokenManager.get("idToken");
         return (this.oktaAuth.token.getUserInfo(accessToken, idToken));
     };
 
@@ -70,9 +70,9 @@ export class OktaAuthService {
     };
 
     // Check if current Okta token is expired or always valid
-    checkExpired() {
+    async checkExpired() {
         if (!this.oktaAuth) return;
-        const authenticated = this.oktaAuth.tokenManager.get("accessToken")
+        const authenticated = await this.oktaAuth.tokenManager.get("accessToken")
         const expirationDate = new Date((authenticated.expiresAt) * 1000).toISOString();
         let date = new Date().toISOString();
         if (date > expirationDate)

@@ -306,8 +306,7 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit, Log
         this.logService.log(this.router);
 
         // Starting Okta Auth Service verification - Check if token exist
-        console.log(this.oktaAuthService.haveToken());
-        if (this.oktaAuthService.haveToken()) {
+        if (await this.oktaAuthService.haveToken()) {
             this.loginUsingSSO();
         }
     }
@@ -321,8 +320,8 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit, Log
         this.usernameEl.nativeElement.focus();
     }
 
-    loginUsingSSO() {
-        const oktaInfos = this.oktaAuthService.getUserInfo()
+    async loginUsingSSO() {
+        const oktaInfos = await this.oktaAuthService.getUserInfo()
         this.submitBtnState = ClrLoadingState.LOADING;
 
         // Dispatch a login request action.
