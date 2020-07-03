@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, OnDestroy, Output, EventEmitter, ChangeDetectorRef, AfterViewInit } from '@angular/core';
-import { combineLatest, Subject } from 'rxjs';
-import { takeUntil, filter as rxFilter, tap, map, distinctUntilChanged, take } from 'rxjs/operators';
+import { combineLatest, Subject, BehaviorSubject } from 'rxjs';
+import { takeUntil, filter as rxFilter, tap, map, distinctUntilChanged, take, first } from 'rxjs/operators';
 import { FormGroup, FormControl } from '@angular/forms';
 import { select, NgRedux } from '@angular-redux/store';
 import { ActivatedRoute } from '@angular/router';
@@ -56,6 +56,12 @@ export class NewKycSelectAmcComponent implements OnInit, OnDestroy {
     // am search form input timeout.
     timeout: any;
 
+    // observable subject to mark worked triggeried by query params is finished.
+    finishHandlingQueryParams$ = new BehaviorSubject(false);
+
+    // managementCompany full list
+    fullManagementCompanyList = [];
+
     // Whether the form is duplicating another kyc. if it is define, this would be the kycID to duplicate from.
     // The property would decide which request to make, when user click "Next" button.
     @Input() duplicate: number;
@@ -74,7 +80,7 @@ export class NewKycSelectAmcComponent implements OnInit, OnDestroy {
     // Whether the kyc is 'light kyc'.
     @Output() registered = new EventEmitter<boolean>();
     // Let parent componet know the am selection screen is submitted and completed.
-    @Output() submitEvent: EventEmitter<{completed: boolean; updateView?: boolean}> = new EventEmitter();
+    @Output() submitEvent: EventEmitter<{completed?: boolean; updateView?: boolean, invalid?: boolean}> = new EventEmitter();
     // Emit event when kyc party selection changed.
     @Output() kycPartySelectionsChangedEvent: EventEmitter<boolean> = new EventEmitter();
 
@@ -91,7 +97,7 @@ export class NewKycSelectAmcComponent implements OnInit, OnDestroy {
      * @return {any[]}: list of selected management companies, for the current kyc form.
      */
     get selectedManagementCompanies(): any[] {
-        let selected = filter(this.managementCompanies, company => this.selectedAMCIDs.has(company.id)).map(company => ({
+        let selected = filter(this.fullManagementCompanyList, company => this.selectedAMCIDs.has(company.id)).map(company => ({
             id: company.id,
             registered: company.registered,
             invitationToken: this.getInvitationToken(company.id),
@@ -125,14 +131,18 @@ export class NewKycSelectAmcComponent implements OnInit, OnDestroy {
 
             combineLatest(
                 this.managementCompanyList$,
-                this.myKycList$)
-            .pipe(
-                distinctUntilChanged(),
+                this.finishHandlingQueryParams$.asObservable(),
             )
-            .subscribe(([managementCompanyList, myKycList]) => {
+            .pipe(
+                rxFilter(([managementCompanyList, finished])=> {
+                    return (!!managementCompanyList && !!finished);
+                }),
+                first(),
+            )
+            .subscribe(([managementCompanyList]) => {
                 if (this.selectedManagementCompanies.length && !this.onboardingSubmitted) {
-                    this.handleSubmit();
                     this.onboardingSubmitted = true;
+                    this.handleSubmit();
                 }
             });
         }
@@ -168,10 +178,11 @@ export class NewKycSelectAmcComponent implements OnInit, OnDestroy {
         .subscribe(([managementCompanies, kycList, requestedKycs, investorType]) => {
             const managementCompanyList = managementCompanies.toJS();
 
-            this.managementCompanies = this.requestsService
-            .extractManagementCompanyData(managementCompanyList, kycList, requestedKycs)
+            this.fullManagementCompanyList = this.requestsService
+            .extractManagementCompanyData(managementCompanyList, kycList, requestedKycs);
+
             // filter out third party management company. if company is third party company and kyc user is iznes investor type.
-            .filter(c => this.relevantAMC(c, investorType));
+            this.managementCompanies = this.fullManagementCompanyList.filter(c => this.relevantAMC(c, investorType));
             if (!this.filteredManagementCompanies) this.filteredManagementCompanies = this.managementCompanies;
         });
 
@@ -255,7 +266,7 @@ export class NewKycSelectAmcComponent implements OnInit, OnDestroy {
      */
     selectManagementCompany(amcID: number): void {
         // find management company detail for the amcID
-        const managementCompany = find(this.managementCompanies, ['id', amcID]);
+        const managementCompany = find(this.fullManagementCompanyList, ['id', amcID]);
 
         if (managementCompany) {
             this.toggleManagementCompany(managementCompany);
@@ -283,22 +294,26 @@ export class NewKycSelectAmcComponent implements OnInit, OnDestroy {
     getQueryParams() {
         combineLatest(
             this.route.queryParams,
-            this.managementCompanyList$.pipe(
-                rxFilter(mcs => Boolean(mcs)),
-            ),
+            this.managementCompanyList$,
+        ).pipe(
+            rxFilter(([mcs, _]) => !!mcs),
+            first(),
         ).subscribe(([queryParams, _]) => {
             // fetch invitationToken and amcId from query param
             // select management company programatically
             if (queryParams.invitationToken) {
-                const amcId = Number(queryParams.amcID);
+                const invitedAmcId = Number(queryParams.invitedAmcId);
+                const selectedAmcIds: number[] = queryParams.selectedAmcIds;
 
                 this.preSelectedAm = {
-                    amcId,
+                    amcId: invitedAmcId,
                     invitationToken: queryParams.invitationToken,
                 };
 
-                this.selectManagementCompany(amcId);
+                selectedAmcIds.forEach((amcId) => this.selectManagementCompany(Number(amcId)));
             }
+
+            this.finishHandlingQueryParams$.next(true);
         });
     }
 
@@ -356,6 +371,7 @@ export class NewKycSelectAmcComponent implements OnInit, OnDestroy {
         // if this.selectedManagementCompanies is not exist. stop here, and mark form dirty, so form can show error?
         if (!this.selectedManagementCompanies.length) {
             formHelper.dirty(this.form);
+            this.submitEvent.emit({ invalid: true });
             return;
         }
 
@@ -369,7 +385,7 @@ export class NewKycSelectAmcComponent implements OnInit, OnDestroy {
         }
 
         // if any one the newly created kyc is iznes. update KycPartySelections to container iznes investor.
-        this.updateKycPartySelections(ids);
+        await this.updateKycPartySelections(ids);
 
         // Store the newly created kyc detail to redux
         this.newRequestService.storeCurrentKycs(ids);

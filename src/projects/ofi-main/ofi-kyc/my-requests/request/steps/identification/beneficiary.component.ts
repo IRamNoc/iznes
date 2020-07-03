@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, OnInit, OnDestroy, HostBinding } from '@angular/core';
+import {Component, Input, Output, EventEmitter, OnInit, OnDestroy, HostBinding, ChangeDetectorRef} from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { Subject, Observable } from 'rxjs';
 import { takeUntil, tap, map } from 'rxjs/operators';
@@ -28,6 +28,7 @@ export class BeneficiaryComponent implements OnInit, OnDestroy {
             text: this.registeredCompanyName,
         });
     }
+    @Input() globalHasPEP: boolean;
 
     get parents() {
         return this.parentsFiltered;
@@ -57,16 +58,14 @@ export class BeneficiaryComponent implements OnInit, OnDestroy {
         public translate: MultilingualService,
         private beneficiaryService: BeneficiaryService,
         private kycHelper: KycFormHelperService,
+        private changeDetectorRef: ChangeDetectorRef,
     ) {
         this.configDate = configDate;
 
-        this.beneficiaryTypesList = this.newRequestService.beneficiaryTypesList;
-        this.translate.translate(this.beneficiaryTypesList);
-        this.relationTypesList = this.newRequestService.relationTypesList;
-        this.translate.translate(this.relationTypesList);
-        this.holdingTypesList = this.newRequestService.holdingTypesList;
-        this.translate.translate(this.holdingTypesList);
-        this.identificationNumberTypeList = this.newRequestService.identificationNumberTypeList;
+        this.beneficiaryTypesList = this.translate.translate(this.newRequestService.beneficiaryTypesList);
+        this.relationTypesList = this.translate.translate(this.newRequestService.relationTypesList);
+        this.holdingTypesList = this.translate.translate(this.newRequestService.holdingTypesList);
+        this.identificationNumberTypeList = this.translate.translate(this.newRequestService.identificationNumberTypeList);
         this.countries = this.translate.translate(countries);
     }
 
@@ -83,6 +82,7 @@ export class BeneficiaryComponent implements OnInit, OnDestroy {
         this.setHoldingTypeText();
 
         this.handleKbisandIDValidation();
+
     }
 
     initFormCheck() {
@@ -127,6 +127,20 @@ export class BeneficiaryComponent implements OnInit, OnDestroy {
             .valueChanges
             .pipe(takeUntil(this.unsubscribe))
             .subscribe(() => this.handleKbisandIDValidation());
+
+        // // handle beneficiary document deletion
+        this.form.get('common').get('document').get('hash').valueChanges
+            .pipe(takeUntil(this.unsubscribe))
+            .subscribe((data) => {
+                if (data == null || data.length == 0) {
+                    const formControl = this.form.get('common.document.kycDocumentID');
+
+                    formControl.setValue(null);
+                    formControl.updateValueAndValidity();
+
+                    this.refresh.emit();
+                }
+            });
     }
 
     setHoldingTypeText() {
@@ -192,10 +206,20 @@ export class BeneficiaryComponent implements OnInit, OnDestroy {
             required = false;
         }
 
-        if (isPoliticallyExposed) {
+        const highRisk = this.kycHelper.isHighRiskActivity() || this.kycHelper.isHighRiskCountry();
+        if (highRisk) {
             required = true;
-            this.form.get('common.document').markAsTouched();
+            // this.form.get('common.document').markAsTouched();
         }
+
+        const beneficiaryType = this.form.get('beneficiaryType').value;
+        const isNaturalPerson = beneficiaryType === 'naturalPerson';
+
+        if ((isPoliticallyExposed && isNaturalPerson) || this.globalHasPEP) {
+            required = true;
+            // this.form.get('common.document').markAsTouched();
+        }
+
         this.toggleKbisAndIdRequired(required);
     }
 
@@ -216,6 +240,7 @@ export class BeneficiaryComponent implements OnInit, OnDestroy {
         }
 
         this.form.get('common.document.hash').updateValueAndValidity();
+        this.changeDetectorRef.markForCheck();
     }
 
     /**
@@ -263,5 +288,11 @@ export class BeneficiaryComponent implements OnInit, OnDestroy {
     ngOnDestroy() {
         this.unsubscribe.next();
         this.unsubscribe.complete();
+    }
+
+    getDocumentPreset(formItem: string[]) {
+        const value = this.form.get(formItem).value;
+
+        return !value.hash ? undefined : value;
     }
 }

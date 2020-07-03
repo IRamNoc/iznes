@@ -207,7 +207,8 @@
                 <div class="filedrop-wrapper">
                     <setl-file-drop filePermission="0" class="form-control" id="beneficiary-kbis-document-benef"
                                     (onDrop)="uploadFile($event)"
-                                    [preset]="form.get('common.document').value"
+                                    [preset]="getDocumentPreset(['common', 'document'])"
+                                    [formControl]="form.get('common').get('document').get('hash')"
                                     ngDefaultControl
                                     [disabled]="disabled"
                                     [inline]="true"
@@ -395,10 +396,11 @@
                 <div class="filedrop-wrapper">
                     <setl-file-drop filePermission="0" class="form-control" id="beneficiary-document-benef"
                                     (onDrop)="uploadFile($event)"
-                                    [preset]="form.get('common.document').value"
+                                    [preset]="getDocumentPreset(['common', 'document'])"
                                     ngDefaultControl
                                     [isDisabled]="disabled"
                                     [inline]="true"
+                                    [formControl]="form.get('common').get('document').get('hash')"
                                     [class.error]="form.get(['common', 'document']).touched && form.get(['common', 'document']).status === 'INVALID'"
                                     [allowFileTypes]="allowedFileTypes"
                     ></setl-file-drop>
@@ -478,8 +480,9 @@
                         <label>{{ 'Yes' | translate }}</label>
                     </clr-radio-wrapper>
                 </clr-radio-container>
-                <span class="helper-text">EU Third Anti-Money Laundering Directive: "Natural persons who are or have been entrusted with prominent political functions and immediate family members or persons known to be close associates of such persons"</span>
+                <span class="helper-text">{{ 'EU Third Anti-Money Laundering Directive: "Natural persons who are or have been entrusted with prominent political functions and immediate family members or persons known to be close associates of such persons"' | translate}}</span>
             </div>
         </div>
+
     </ng-container>
 </div>

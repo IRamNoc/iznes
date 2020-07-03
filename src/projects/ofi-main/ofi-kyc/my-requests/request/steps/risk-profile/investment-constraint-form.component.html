@@ -91,38 +91,4 @@
         </div>
     </div>
 
-    <!-- nowCP -->
-    <div *ngIf="isNowCP()" class="row form-group col-sm-12">
-        <div class="col-sm-12">
-            <clr-radio-container clrInline>
-                <label class="required-field">{{ 'Has your company ever issued Neu CP?' | translate }}</label>
-                <clr-radio-wrapper>
-                    <input type="radio" clrRadio id="hasEverIssuedNeuCp-opt-no" [value]="0" formControlName="hasEverIssuedNeuCp" [attr.disabled]="disabled === true ? '' : null" />
-                    <label>{{ 'No' | translate }}</label>
-                </clr-radio-wrapper>
-                <clr-radio-wrapper>
-                    <input type="radio" clrRadio id="hasEverIssuedNeuCp-opt-yes" [value]="1"
-                        formControlName="hasEverIssuedNeuCp" [attr.disabled]="disabled === true ? '' : null" />
-                    <label>{{ 'Yes' | translate }}</label>
-                </clr-radio-wrapper>
-            </clr-radio-container>
-        </div>
-    </div>
-
-    <div *ngIf="isNowCP()" class="row form-group col-sm-12">
-        <div class="col-sm-12">
-              <clr-radio-container clrInline>
-                <label class="required-field">{{ 'Has your company already invested in Neu CP?' | translate }}</label>
-                <clr-radio-wrapper>
-                    <input type="radio" clrRadio id="hasAlreadyInvestedNeuCp-opt-no" [value]="0" formControlName="hasAlreadyInvestedNeuCp" [attr.disabled]="disabled === true ? '' : null" />
-                    <label>{{ 'No' | translate }}</label>
-                </clr-radio-wrapper>
-                <clr-radio-wrapper>
-                    <input type="radio" clrRadio id="hasAlreadyInvestedNeuCp-opt-yes" [value]="1" formControlName="hasAlreadyInvestedNeuCp"
-                        [attr.disabled]="disabled === true ? '' : null" />
-                    <label>{{ 'Yes' | translate }}</label>
-                </clr-radio-wrapper>
-            </clr-radio-container>
-        </div>
-    </div>
 </div>

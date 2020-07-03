@@ -8,7 +8,7 @@ import { select, NgRedux } from '@angular-redux/store';
 import { get as getValue, map, isEmpty, castArray, remove, partial, cloneDeep, filter, set as setValue } from 'lodash';
 import { Subject, BehaviorSubject, Observable, ReplaySubject } from 'rxjs';
 import { takeUntil, filter as rxFilter, map as rxMap } from 'rxjs/operators';
-
+import { ToasterService } from 'angular2-toaster';
 import { MultilingualService } from '@setl/multilingual';
 import { formStepsLight, formStepsFull, formStepsOnboarding } from '../requests.config';
 import { NewRequestService } from './new-request.service';
@@ -30,6 +30,7 @@ import {
 } from '../kyc-form-helper';
 import { BeneficiaryService } from './steps/identification/beneficiary.service';
 import { DocumentsService } from './steps/documents.service';
+import {clearFormArray} from "../../../../utils/helper/forms";
 
 /**
  * KYC main form wrapper component
@@ -107,6 +108,9 @@ export class NewKycRequestComponent implements OnInit {
     /* A subject that is used to pass document permissions to the document component. */
     public documentsPermissionsSubject = new ReplaySubject<DocumentPermissions>(1);
 
+    /** The step the user has requested to navigate to */
+    private requestedDestination: number;
+
     constructor(
         private formBuilder: FormBuilder,
         private route: ActivatedRoute,
@@ -121,6 +125,7 @@ export class NewKycRequestComponent implements OnInit {
         private identificationService: IdentificationService,
         private beneficiaryService: BeneficiaryService,
         private documentsService: DocumentsService,
+        private toasterService: ToasterService,
     ) {
         // collapse the menu by default
         this.ngRedux.dispatch(setMenuCollapsed(true));
@@ -147,40 +152,64 @@ export class NewKycRequestComponent implements OnInit {
 
             // Rules based on other parts of the form.
             rules: {
+                /* Company is listed */
                 rule1: (
-                    // Company is listed
-                    isCompanyListed(this.forms)
+                    isCompanyListed(this.forms) &&
+                    ! hasStakeholderPEP(this.forms)
                 ),
+                /* Company is regulated company */
                 rule2: (
-                    // Company is regulated company or state- owned / public entities 
-                    isCompanyRegulated(this.forms) || isStateOwned(this.forms)
+                    isCompanyRegulated(this.forms) &&
+                    ! hasStakeholderPEP(this.forms)
                 ),
+                /* Company is state-owned/public entities */
                 rule3: (
-                    // Company is unregulated, unlisted, not state-owned and does not represent a high risk (risky activity or country):
+                    isStateOwned(this.forms) &&
+                    ! hasStakeholderPEP(this.forms)
+                ),
+                /* Company is unregulated, unlisted, not state-owned and does not represent a high risk (risky activity or country): */
+                rule4: (
                     ! (
                         isCompanyListed(this.forms) ||
                         isCompanyRegulated(this.forms) ||
                         isStateOwned(this.forms) ||
                         isHighRiskActivity(this.forms) ||
                         isHighRiskCountry(this.forms)
-                    )
+                    ) &&
+                    ! hasStakeholderPEP(this.forms)
                 ),
-                rule4: (
-                    // Company is unregulated, unlisted, not state-owned with a high activity risk 
+                /* Company is unregulated, unlisted, not state-owned with a high activity risk  */
+                rule5: (
                     ! (
                         isCompanyListed(this.forms) ||
                         isCompanyRegulated(this.forms) ||
                         isStateOwned(this.forms)
                     ) && isHighRiskActivity(this.forms)
                 ),
-                rule5: (
-                    // Company is unregulated, unlisted, not state-owned with a high country risk 
+                /* Company is unregulated, unlisted, not state-owned with a high country risk or a pep  */
+                rule6: (
                     ! (
                         isCompanyListed(this.forms) ||
                         isCompanyRegulated(this.forms) ||
                         isStateOwned(this.forms)
-                    ) && isHighRiskCountry(this.forms)
-                ) || (
+                    ) && (
+                        isHighRiskCountry(this.forms) ||
+                        hasStakeholderPEP(this.forms)
+                    )
+                ),
+                /* Company is listed with a PEP */
+                rule7: (
+                    isCompanyListed(this.forms) &&
+                    hasStakeholderPEP(this.forms)
+                ),
+                /* Company is regulated company with a PEP */
+                rule8: (
+                    isCompanyRegulated(this.forms) &&
+                    hasStakeholderPEP(this.forms)
+                ),
+                /* Company is state-owned/public entities with a PEP */
+                rule9: (
+                    isStateOwned(this.forms) &&
                     hasStakeholderPEP(this.forms)
                 ),
             },
@@ -193,11 +222,15 @@ export class NewKycRequestComponent implements OnInit {
 
         console.log('[3] nexting document permissions.');
         console.log(' | companies: ', JSON.stringify(permissionsObject.companies));
-        console.log(' | Company is listed? ', permissionsObject.rules['rule1'])
-        console.log(' | Company is regulated company or state - owned / public entities? ', permissionsObject.rules['rule2'])
-        console.log(' | Company is unregulated, unlisted, not state - owned and does not represent a high risk(risky activity or country)? ', permissionsObject.rules['rule3'])
-        console.log(' | Company is unregulated, unlisted, not state - owned with a high activity risk? ', permissionsObject.rules['rule4'])
-        console.log(' | Company is unregulated, unlisted, not state - owned with a high country risk ? ', permissionsObject.rules['rule5'])
+        console.log(' [rule1] Company is listed? ', permissionsObject.rules['rule1'])
+        console.log(' [rule2] Company is regulated company? ', permissionsObject.rules['rule2'])
+        console.log(' [rule3] Company is state-owned/public entities? ', permissionsObject.rules['rule3'])
+        console.log(' [rule4] Company is unregulated, unlisted, not state-owned and does not represent a high risk(risky activity or country)? ', permissionsObject.rules['rule4'])
+        console.log(' [rule5] Company is unregulated, unlisted, not state-owned with a high activity risk? ', permissionsObject.rules['rule5'])
+        console.log(' [rule6] Company is unregulated, unlisted, not state-owned with a high country risk or pep? ', permissionsObject.rules['rule6'])
+        console.log(' [rule7] Company is listed with a PEP ? ', permissionsObject.rules['rule7'])
+        console.log(' [rule8] Company is regulated company with a PEP ? ', permissionsObject.rules['rule8'])
+        console.log(' [rule9] Company is state-owned/public entities with a PEP ? ', permissionsObject.rules['rule9'])
         console.log(' | Overrides: ', JSON.stringify(permissionsObject['overrides']));
 
         this.documentsPermissionsSubject.next(permissionsObject);
@@ -282,7 +315,7 @@ export class NewKycRequestComponent implements OnInit {
                 /* Emit on changes to party selections. */
                 this.emitDocumentPermissions();
             });
-        
+
         /* Emit on changes to forms. */
         this.forms.get('identification').get('companyInformation')
             .valueChanges.subscribe(() => this.kycPartySelections && this.emitDocumentPermissions());
@@ -381,7 +414,7 @@ export class NewKycRequestComponent implements OnInit {
     initFormSteps(completedStep): void {
 
         if (this.fullForm) {
-            this.stepsConfig = formStepsFull;
+            this.stepsConfig = cloneDeep(formStepsFull);
             // remove 'banking Infromation' section if formGroup does not exist
 
             if (this.isBankingInformationSectionDisabled()) {
@@ -438,6 +471,20 @@ export class NewKycRequestComponent implements OnInit {
         if (type === 'close') {
             this.router.navigateByUrl('/onboarding-requests/list');
         }
+
+        // User has requested to jump to specific step
+        if (type === 'jump') {
+            // Save the step they want to navigate to
+            this.requestedDestination = event.requestedStep;
+
+            // Attempt to submit the existing step
+            const noHandler = this.submitCurrentStepComponent(true);
+
+            // Navigate to step if there is no submit handler
+            if (noHandler) {
+                this.handleStepDestination();
+            }
+        }
     }
 
     /**
@@ -445,9 +492,15 @@ export class NewKycRequestComponent implements OnInit {
      * @param {{completed: boolean; updateView: boolean}} event
      * @return void
      */
-    handleSubmit(event: {completed: boolean; updateView: boolean}): void {
+    handleSubmit(event: {completed?: boolean; updateView?: boolean, invalid?: boolean}): void {
+        if (event.invalid) {
+            this.toasterService.pop('error', this.translate.translate('Invalid form. Please check your information and try again.'));
+            this.requestedDestination = undefined;
+            return;
+        }
+        
         if (event.completed) {
-            this.formSteps.next();
+            this.handleStepDestination();
         }
 
         if (event.updateView) {
@@ -456,9 +509,22 @@ export class NewKycRequestComponent implements OnInit {
     }
 
     /**
+     * Navigates a user to their requested step if one exists, or takes them to the next step if not
+     */
+    handleStepDestination() {
+        if (this.requestedDestination !== undefined) {
+            this.formSteps.goToStep(this.requestedDestination);
+            this.requestedDestination = undefined;
+            return;
+        }
+
+        this.formSteps.next();
+    }
+
+    /**
      * Fetch the active kyc substep component. and call handleSubmit method for the component.
      */
-    submitCurrentStepComponent() {
+    submitCurrentStepComponent(sideNavClick: boolean = false) {
         const position = this.formSteps.position;
 
         const component = this.formSteps.steps[position];
@@ -468,6 +534,11 @@ export class NewKycRequestComponent implements OnInit {
         }
         if (!component.form) {
             component.handleSubmit();
+            return;
+        }
+        // Call the submit method directly if user clicked on side nav and not a button (the button triggers the navtive submit on the form)
+        if (sideNavClick) {
+            component.handleSubmit(new Event('click')); // dispatch a dummy click event to work with existing logid in submit handlers
         }
     }
 
@@ -501,7 +572,8 @@ export class NewKycRequestComponent implements OnInit {
                             this.identificationService.getCurrentFormGeneralData(request.kycID)
                             .then((formData) => {
                                 if (formData) {
-                                    this.forms.get('identification').get('generalInformation').patchValue(formData);
+                                    this.forms.get('identification').get('generalInformation').get('entity').patchValue(formData);
+                                    this.forms.get('identification').get('generalInformation').get('location').patchValue(formData);
                                 }
                                 resolve2();
                             })
@@ -517,9 +589,7 @@ export class NewKycRequestComponent implements OnInit {
                                 if (!isEmpty(formData)) {
                                     const beneficiaries: any = this.forms.get('identification').get('beneficiaries').get('beneficiaries');
 
-                                    while (beneficiaries.length) {
-                                        beneficiaries.removeAt(0);
-                                    }
+                                    clearFormArray(beneficiaries);
 
                                     // build the stakeholder formArray
                                     const beneficiaryPromises = formData.map((controlValue) => {
@@ -580,7 +650,7 @@ export class NewKycRequestComponent implements OnInit {
                             });
                         })
                     ];
-                    
+
                     Promise.all(promises).then(() => {
                         console.log('[1] got forms for business rules: ', this.forms);
                         resolve0();

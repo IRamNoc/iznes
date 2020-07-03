@@ -5,15 +5,27 @@ import { Observable } from 'rxjs/Observable';
 import { tap, takeUntil, map, filter, take } from 'rxjs/operators';
 import { OfiKycService } from '../../ofi-req-services/ofi-kyc/service';
 import { MyUserService } from '../../../core-req-services';
-import { isIZNES, isID2SIPA, getPartyCompanies, PartyCompaniesInterface, isCompanyListed, isCompanyRegulated, isStateOwned, getPartyNameFromInvestorType } from './kyc-form-helper';
+import {
+    isIZNES,
+    isID2SIPA,
+    getPartyCompanies,
+    PartyCompaniesInterface,
+    isCompanyListed,
+    isCompanyRegulated,
+    isStateOwned,
+    getPartyNameFromInvestorType,
+    isHighRiskActivity, isHighRiskCountry
+} from './kyc-form-helper';
 import { InvestorType } from '../../shared/investor-types';
 import { FormGroup } from '@angular/forms';
+import {combineLatest} from "rxjs";
 
 @Injectable({
     providedIn: 'root',
 })
 export class KycFormHelperService {
     @select(['ofi', 'ofiKyc', 'myInformations']) kycMyInformations$: Observable<KycMyInformations>;
+    @select(['ofi', 'ofiKyc', 'myKycRequested', 'kycs']) requests$;
     private kycForm: FormGroup;
 
     constructor(
@@ -126,6 +138,25 @@ export class KycFormHelperService {
     }
 
     /**
+     * whether user selected only ID2S. as observable
+     */
+    public get onlyID2SInForm$(): Observable<boolean> {
+        return combineLatest(
+            this.kycPartySelections$,
+            this.requests$
+        ).pipe(
+            takeUntil(this.myUserService.logout$),
+            filter(([a, b]) => (!! a && !! b)),
+            map(([partySelections, kycsInForm] ) => {
+                const selectedCompanies = getPartyCompanies(partySelections);
+                const hasIznesAm = !!kycsInForm.find(kyc => !(kyc.isThirdPartyKyc));
+                return selectedCompanies.id2s && !hasIznesAm && !selectedCompanies.nowcp;
+            }),
+            take(1),
+        );
+    }
+
+    /**
      * whether user selected only NowCP. as observable
      */
     public get onlyNowCP$(): Observable<boolean> {
@@ -158,13 +189,18 @@ export class KycFormHelperService {
     /**
      * whether user selected ID2S or NowCP, and not iznes is not selected. as observable
      */
-    public get onlyID2SOrNowCP$(): Observable<boolean> {
-        return this.kycPartySelections$.pipe(
+    public get onlyID2SOrNowCPInForms$(): Observable<boolean> {
+
+        return combineLatest(
+            this.kycPartySelections$,
+            this.requests$
+            ).pipe(
             takeUntil(this.myUserService.logout$),
-            filter(d => !! d),
-            map((d) => {
-                const selectedCompanies = getPartyCompanies(d);
-                return !selectedCompanies.iznes && (selectedCompanies.nowcp || selectedCompanies.id2s);
+            filter(([a, b]) => (!! a && !! b)),
+            map(([partySelections, kycsInForm] ) => {
+                const selectedCompanies = getPartyCompanies(partySelections);
+                const hasIznesAm = !!kycsInForm.find(kyc => !(kyc.isThirdPartyKyc));
+                return !hasIznesAm && (selectedCompanies.nowcp || selectedCompanies.id2s);
             }),
             take(1),
         );
@@ -211,5 +247,19 @@ export class KycFormHelperService {
     public isStateOwned(): boolean {
         if (!this.kycForm) return false;
         return isStateOwned(this.kycForm);
+    }
+
+    public isHighRiskActivity(): boolean {
+        if (!this.kycForm) return false;
+        return isHighRiskActivity(this.kycForm);
+    }
+
+    public isHighRiskCountry(): boolean {
+        if (!this.kycForm) return false;
+        return isHighRiskCountry(this.kycForm);
+    }
+
+    public kycFormValueChange$(): Observable<any> {
+       return this.kycForm.valueChanges;
     }
 }

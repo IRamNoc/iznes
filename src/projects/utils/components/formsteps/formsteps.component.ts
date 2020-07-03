@@ -1,19 +1,33 @@
-import { Component, Input, Output, EventEmitter, ViewChild, ContentChildren, AfterContentInit, OnDestroy, ElementRef, ChangeDetectorRef, ViewChildren } from '@angular/core';
+import {
+    Component,
+    Input,
+    Output,
+    EventEmitter,
+    ViewChild,
+    ContentChildren,
+    AfterContentInit,
+    OnDestroy,
+    ElementRef,
+    ChangeDetectorRef,
+    OnChanges, SimpleChanges, QueryList
+} from '@angular/core';
 import { FormstepComponent } from './formstep.component';
 import { get as getValue, debounce } from 'lodash';
 import { Observable } from 'rxjs/Observable';
-import { filter, take } from 'rxjs/operators';
+import {filter, take, takeUntil} from 'rxjs/operators';
+import {Subject} from "rxjs";
 
 @Component({
     selector: 'form-steps',
     templateUrl: './formsteps.component.html',
 })
-export class FormstepsComponent implements AfterContentInit, OnDestroy {
+export class FormstepsComponent implements AfterContentInit, OnDestroy, OnChanges {
 
     @ViewChild('submit', { read: ElementRef }) button;
     @ContentChildren(FormstepComponent) stepComponents;
 
     @Input() set stepsConfig(stepsConfig) {
+        this.progress = [];
         stepsConfig.forEach((step, index) => {
             this.progress.push({
                 title: step.title,
@@ -40,6 +54,7 @@ export class FormstepsComponent implements AfterContentInit, OnDestroy {
 
     @Output() action: EventEmitter<any> = new EventEmitter<any>();
 
+    private unsubscribe: Subject<any> = new Subject();
     _position;
     _stepsConfig;
     _onboardingMode;
@@ -87,7 +102,6 @@ export class FormstepsComponent implements AfterContentInit, OnDestroy {
 
     ngAfterContentInit() {
         this.stepsComponentsArray = this.stepComponents.toArray();
-        this.position = 0;
         this.progress[0].active = true;
         this.mainContentEl = document.querySelector('main.content-area');
         this.mainContentEl.addEventListener('scroll', this.debouncedFixStepsProgress);
@@ -98,6 +112,22 @@ export class FormstepsComponent implements AfterContentInit, OnDestroy {
             this.goToStep(step);
             this.next();
         });
+
+        // update stepsComponentsArray when stepComponents was update.
+        // Make sure the view is updated when stepConfigs was updated.
+        this.stepComponents.changes.pipe(
+            takeUntil(this.unsubscribe),
+        ).subscribe((ch) => {
+            this.stepsComponentsArray = this.stepComponents.toArray();
+        });
+    }
+
+    ngOnChanges(changes: SimpleChanges) {
+        // Make sure the view is updated when stepConfigs was updated.
+        if ('stepsConfig' in changes) {
+           this.stepsConfig = changes['stepsConfig'].currentValue;
+            if (this.changeDetectorRef) this.changeDetectorRef.detectChanges();
+        }
     }
 
     /**
@@ -208,6 +238,17 @@ export class FormstepsComponent implements AfterContentInit, OnDestroy {
         }
     }
 
+    /**
+     * Dispatch an action to request to jump to the passed in step
+     *
+     * @param step
+     */
+    requestJumpToStep(step) {
+        if (typeof step !== 'undefined') {
+            this.action.emit({ type: 'jump', requestedStep: step });
+        }
+    }
+
     move() {
         document.querySelector('main.content-area').scrollTop = 0;
     }
@@ -288,6 +329,8 @@ export class FormstepsComponent implements AfterContentInit, OnDestroy {
     }
 
     ngOnDestroy() {
+        this.unsubscribe.next();
+        this.unsubscribe.complete();
         this.mainContentEl.removeEventListener('scroll', this.debouncedFixStepsProgress);
         this.changeDetectorRef.detach();
     }

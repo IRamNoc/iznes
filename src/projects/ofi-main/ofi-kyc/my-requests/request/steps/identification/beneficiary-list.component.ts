@@ -1,5 +1,5 @@
-import { Component, Input, OnInit, Output, EventEmitter, OnDestroy, ViewChild, ElementRef, ChangeDetectorRef } from '@angular/core';
-import {FormArray, FormBuilder, FormGroup} from '@angular/forms';
+import { Component, Input, OnInit, Output, EventEmitter, OnDestroy, ViewChild, ElementRef, ChangeDetectorRef, ViewRef } from '@angular/core';
+import {FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
 import { select, NgRedux } from '@angular-redux/store';
 import { Subject } from 'rxjs';
 import { filter as rxFilter, map, takeUntil, take } from 'rxjs/operators';
@@ -19,6 +19,8 @@ import { setMyKycStakeholderRelations } from '@ofi/ofi-main/ofi-store/ofi-kyc/ky
 import { formHelper } from '@setl/utils/helper';
 import { MyKycStakeholderRelations } from '@ofi/ofi-main/ofi-store/ofi-kyc';
 import { KycMyInformations } from '@ofi/ofi-main/ofi-store/ofi-kyc/my-informations';
+import {KycFormHelperService} from "../../../kyc-form-helper.service";
+import {clearFormArray} from "../../../../../../utils/helper/forms";
 
 /**
  * Stakeholders main view component of kyc form.
@@ -68,6 +70,8 @@ export class BeneficiaryListComponent implements OnInit, OnDestroy {
     investorType: number;
     // is the user is type of nowCP.
     isNowCP: boolean = false;
+
+    globalHasPEP = false;
 
     /**
      * Get temporary stakeholderID, that store in the frontend.
@@ -149,6 +153,7 @@ export class BeneficiaryListComponent implements OnInit, OnDestroy {
         private element: ElementRef,
         private formBuilder: FormBuilder,
         private changeDetectorRef: ChangeDetectorRef,
+        private kycFormHelperService: KycFormHelperService,
     ) {
     }
 
@@ -188,7 +193,7 @@ export class BeneficiaryListComponent implements OnInit, OnDestroy {
 
                             // only build the stakeholders formcontrol once.
                             if (index === 0) {
-                                const beneficiaries = this.formBuilder.array([]);
+                                clearFormArray(this.form);
 
                                 // build the stakeholder formArray
                                 const promises = formData.map((controlValue) => {
@@ -213,25 +218,26 @@ export class BeneficiaryListComponent implements OnInit, OnDestroy {
                                                 });
                                             }
                                             control.patchValue(newControlValue);
-                                            beneficiaries.push(control);
+                                            this.form.push(control);
                                         });
                                     }
 
                                     // set the stakeholder formgroup value
                                     control.patchValue(newControlValue);
 
-                                    beneficiaries.push(control);
+                                    this.form.push(control);
                                 });
 
                                 Promise.all(promises).then(() => {
                                     // update the beneficiaries formArray
-                                    this.form = beneficiaries;
 
                                     // Update some formcontrol within stakeholder, that depending on the data fetch from membernode.
                                     this.beneficiaryService.fillInStakeholderSelects(this.form.get('beneficiaries'));
                                     this.beneficiaryService.updateStakeholdersValidity(this.form.get('beneficiaries') as FormArray);
                                     if (this.formPercent) this.formPercent.refreshFormPercent();
                                     this.sortStakeholders();
+                                    // update other stakeholder validators and validity.
+                                    this.updateBeneficiariesValidity();
                                     this.changeDetectorRef.detectChanges();
                                 });
                             }
@@ -750,8 +756,12 @@ export class BeneficiaryListComponent implements OnInit, OnDestroy {
             formHelper.dirty(this.form);
             formHelper.scrollToFirstError(this.element.nativeElement);
             this.form.markAsTouched();
+            this.submitEvent.emit({ invalid: true });
             return;
         }
+
+        // update other stakeholder validators and validity.
+        this.updateBeneficiariesValidity();
 
         this.requests$
         .pipe(take(1))
@@ -776,6 +786,49 @@ export class BeneficiaryListComponent implements OnInit, OnDestroy {
 
     stopTabbing(e) {
         if (e.keyCode === 9) e.preventDefault();
+    }
+
+    /**
+     * Update beneficiary list validity.
+     * 'If any client is regulated, listed or state-owned then the KBIS or ID in each stakeholder should be optional'
+     * 'If the field “Is the stakeholder a political exposed person?” is Yes KBIS or ID in each stakeholder should be required – overwriting the above rule'
+     */
+    updateBeneficiariesValidity() {
+       const beneficiariesValue: any[] = this.form.value;
+       let kbisAndIDRequired = true;
+
+        if (this.kycFormHelperService.isStateOwned() || this.kycFormHelperService.isCompanyRegulated() || this.kycFormHelperService.isCompanyListed()) {
+            kbisAndIDRequired = false;
+        }
+
+        const highRisk = this.kycFormHelperService.isHighRiskActivity() || this.kycFormHelperService.isHighRiskCountry();
+        if (highRisk) {
+            kbisAndIDRequired = true;
+        }
+
+       for (const beneficiaryValue of beneficiariesValue) {
+           this.globalHasPEP = false;
+           const beneficiaryType = beneficiaryValue.beneficiaryType;
+           const isNaturalPerson = beneficiaryType === 'naturalPerson';
+           const isPoliticallyExposed = getValue(beneficiaryValue, ['naturalPerson', 'isPoliticallyExposed'], 0) === 1;
+
+           if (isPoliticallyExposed && isNaturalPerson) {
+              kbisAndIDRequired = true;
+              this.globalHasPEP = true;
+              break;
+           }
+       }
+
+       for (const beneficiaryFormGroup of (this.form as FormArray).controls) {
+           if (kbisAndIDRequired) {
+               beneficiaryFormGroup.get(['common', 'document', 'hash']).setValidators([Validators.required]);
+           } else {
+               beneficiaryFormGroup.get(['common', 'document', 'hash']).clearValidators();
+           }
+           beneficiaryFormGroup.get(['common', 'document', 'hash']).updateValueAndValidity();
+           if (! (this.changeDetectorRef as ViewRef).destroyed) this.changeDetectorRef.markForCheck();
+       }
+
     }
 
     ngOnDestroy() {

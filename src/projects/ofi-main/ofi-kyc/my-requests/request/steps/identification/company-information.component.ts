@@ -484,12 +484,10 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
             // Leave disabled if user is ONLY ID2S
             if (!this.isOnlyID2S()) {
                 multilateralTradingFacilitiesControl.enable();
-                otherMultilateralTradingFacilitiesControl.enable();
             }
         } else {
             listingMarketsControl.disable();
             multilateralTradingFacilitiesControl.disable();
-            otherMultilateralTradingFacilitiesControl.disable();
             listedShareISINControl.disable();
             bloombergCodesControl.disable();
             floatableSharesControl.disable();
@@ -725,6 +723,7 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
         if (!this.form.valid) {
             formHelper.dirty(this.form);
             formHelper.scrollToFirstError(this.element.nativeElement);
+            this.submitEvent.emit({ invalid: true });
             return;
         }
 

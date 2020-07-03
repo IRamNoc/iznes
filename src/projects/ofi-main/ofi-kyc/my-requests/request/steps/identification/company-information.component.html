@@ -73,7 +73,7 @@
 
                 <div class="row col-sm-12">
                     <div class="form-group required-field col-sm-4">
-                        <label class="control-label" for="geographicalAreaOfActivity">{{ 'Geographical area of the activity' | translate }}</label>
+                        <label class="control-label" for="geographicalAreaOfActivity">{{ 'Primary Geographical Area of the Activity' | translate }}</label>
                         <ng-select class="large-select multiline"
                                     id="geographicalAreaOfActivity"
                                     [items]="geographicalAreaList"
@@ -253,8 +253,8 @@
                 </div>
 
                 <div class="row col-sm-12" *ngIf="!isDisabled('multilateralTradingFacilities')">
-                    <div class="form-group required-field col-sm-4">
-                        <label class="control-label" for="multilateralTradingFacilities">{{ 'Multilateral Trading Facility' | translate }}</label>
+                    <div class="form-group col-sm-4">
+                        <label class="control-label" for="multilateralTradingFacilities">{{ 'Multilateral Trading Facilities' | translate }}</label>
                         <ng-select class="large-select"
                                     [multiple]="true"
                                     [items]="multilateralTradingFacilitiesList"
@@ -272,7 +272,7 @@
                                 id="otherMultilateralTradingFacilities"
                                 formControlName="otherMultilateralTradingFacilities"
                                 [readonly]="isFormReadonly"
-                                placeholder="{{ 'Fill in the listing market(s)' | translate }}">
+                                placeholder="{{ 'Fill in multilateral trading facilities (MTF)' | translate }}">
                         <span class="field-error" *ngIf="hasError('otherMultilateralTradingFacilities', ['required'])">{{ 'Field is required' | translate }}</span>
                         <span class="field-error" *ngIf="otherMultilateralTradingFacilitiesError">{{ 'Trading Facility must not already exist in the Multilateral Trading Facilities list' | translate }}</span>
                     </div>
@@ -280,12 +280,12 @@
 
                 <div class="row col-sm-12">
                     <div class="form-group col-sm-4" [class.required-field]="!isOnlyID2S()" *ngIf="!isDisabled('bloombergCode')">
-                        <label class="control-label" for="bloombergCode">{{ 'Bloomberg Code' | translate }}</label>
+                        <label class="control-label" for="bloombergCode">{{ 'Bloomberg Code of the company' | translate }}</label>
                         <input type="text"
                                 id="bloombergCode"
                                 formControlName="bloombergCode"
                                 [readonly]="isFormReadonly"
-                                placeholder="{{ 'Fill in a Bloomberg\'s code' | translate }}">
+                                placeholder="{{ 'Fill in a Bloomberg Code of the company' | translate }}">
                         <span class="field-error" *ngIf="hasError('bloombergCode', ['required'])">{{ 'Field is required' | translate }}</span>
                         <span class="field-error" *ngIf="hasError('bloombergCode', ['maxlength'])">{{ 'Field is too long' | translate }}</span>
                     </div>

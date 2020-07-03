@@ -51,7 +51,6 @@ export class InvestmentConstraintFormComponent implements OnInit, OnDestroy {
 
                     return !this.multiple || (dataAMCId === currentAMCId);
                 }),
-                take(1),
             )
             .subscribe((data: any) => {
                 this.form.patchValue(data);
@@ -82,10 +81,6 @@ export class InvestmentConstraintFormComponent implements OnInit, OnDestroy {
         ).subscribe((t) => {
             if (!t) return;
             this.kycInvestorType = t;
-            if (! this.isNowCP()) {
-                this.form.get('hasEverIssuedNeuCp').disable();
-                this.form.get('hasAlreadyInvestedNeuCp').disable();
-            }
         });
     }
 

@@ -335,7 +335,6 @@ export class NewRequestService {
             ],
             multilateralTradingFacilities: [
                 { value: '', disabled: true },
-                Validators.required,
             ],
             otherMultilateralTradingFacilities: [
                 { value: '', disabled: true },
@@ -501,14 +500,14 @@ export class NewRequestService {
         });
 
         // Disable constraints section for type ID2S or NowCP kyc
-        const onlyID2SType = await this.kycFormHelperService.onlyID2S$.toPromise();
+        const onlyID2SType = await this.kycFormHelperService.onlyID2SInForm$.toPromise();
 
         if (onlyID2SType) {
             investmentNature.get('natures').disable();
         }
 
         // Disable constraints section for type ID2S or NowCP kyc
-        const id2sOrNowCpTypeKyc = await this.kycFormHelperService.onlyID2SOrNowCP$.toPromise();
+        const id2sOrNowCpTypeKyc = await this.kycFormHelperService.onlyID2SOrNowCPInForms$.toPromise();
 
         if (id2sOrNowCpTypeKyc) {
             investmentObjective.get('objectives').disable();
@@ -571,7 +570,7 @@ export class NewRequestService {
         return this.formBuilder.group(group);
     }
 
-    createInvestmentNature(id): FormGroup {
+    async createInvestmentNature(id): Promise<FormGroup> {
         const fb = this.formBuilder;
 
         let fbGroup = fb.group({
@@ -606,7 +605,7 @@ export class NewRequestService {
         });
 
         // Remove investment vechicles if we're with nowcp.
-        if ((this.kycPartySelections.nowCPIssuer || this.kycPartySelections.nowCPInvestor) && !this.kycPartySelections.iznes) {
+        if (await this.kycFormHelperService.onlyID2SOrNowCPInForms$.toPromise()) {
             fbGroup.get('investmentvehiclesAlreadyUsed').disable();
             fbGroup.get('investmentvehiclesAlreadyUsedSpecification').disable();
         }
@@ -703,7 +702,7 @@ export class NewRequestService {
         });
 
         // Disable constraints section for type ID2S or NowCP kyc
-        const id2sOrNowCpTypeKyc = await this.kycFormHelperService.onlyID2SOrNowCP$.toPromise();
+        const id2sOrNowCpTypeKyc = await this.kycFormHelperService.onlyID2SOrNowCPInForms$.toPromise();
 
         if (id2sOrNowCpTypeKyc) {
             form.disable();
@@ -738,12 +737,10 @@ export class NewRequestService {
                 disabled: true,
             }],
             otherPersonsAuthorised: ['', Validators.maxLength(255)],
-            hasEverIssuedNeuCp: [0, Validators.required],
-            hasAlreadyInvestedNeuCp: [0, Validators.required],
         });
 
         // Disable constraints section for type ID2S or NowCP kyc
-        const id2sOrNowCpTypeKyc = await this.kycFormHelperService.onlyID2SOrNowCP$.toPromise();
+        const id2sOrNowCpTypeKyc = await this.kycFormHelperService.onlyID2SOrNowCPInForms$.toPromise();
 
         if (id2sOrNowCpTypeKyc) {
             form.disable();
@@ -895,19 +892,24 @@ export class NewRequestService {
         const ids = [];
 
         for (const choice of choices) {
-            await this.createDraft(choice, connectedWallet).then((response) => {
+            const response = await this.createDraft(choice, connectedWallet);
+
+            try {
                 const kycID = getValue(response, [1, 'Data', 0, 'kycID']);
                 const amcID = choice.id;
                 const isThirdPartyKyc = getValue(response, [1, 'Data', 0, 'isThirdPartyKyc']);
+                const managementCompanyType = getValue(response, [1, 'Data', 0, 'managementCompanyType']);
 
                 ids.push({
                     kycID,
                     amcID,
                     isThirdPartyKyc,
+                    managementCompanyType,
                 });
-            }).catch((err) => {
-                console.error(err);
-            });
+            } catch (e) {
+                console.error(e);
+            }
+
         }
 
         return ids;

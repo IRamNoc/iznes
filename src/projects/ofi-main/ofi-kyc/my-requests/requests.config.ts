@@ -456,8 +456,6 @@ export const booleanControls = [
     'isLegalRepresentative',
     'isPoliticallyExposed',
     // 'investmentDecisionsAdHocCommittee', /* investmentDecisionsAdHocCommittee is VARCHAR in tblIznKycRiskObjective */
-    'hasAlreadyInvestedNeuCp',
-    'hasEverIssuedNeuCp',
 ];
 
 export const currencyControls = [
@@ -3043,7 +3041,7 @@ export const capitalNatureList = [
 export const documentTypesList = [
     {
         id: 'kycstatuscertifieddoc',
-        text: 'Articles of Association',
+        text: 'Articles of Association - certified true copy by the client\'s duly authorized representative',
     },
     {
         id: 'kyckbisdoc',
@@ -3063,7 +3061,7 @@ export const documentTypesList = [
     },
     {
         id: 'kycw8benefatcadoc',
-        text: 'Form W-8BEN-F (FACTA)',
+        text: 'Form W-8BEN-E (FATCA)',
     },
     {
         id: 'kycisincodedoc',
@@ -3091,7 +3089,7 @@ export const documentTypesList = [
     },
     {
         id: 'kycorgchartdoc',
-        text: 'Org chart with key operational teams',
+        text: 'Org chart with key operational teams (with the name of the entity provided and dated) or other document presenting the organisation of the company',
     },
     {
         id: 'kyclistsigningauthoritiesdoc',
@@ -3209,8 +3207,8 @@ export const signingAuthorityDefaultList = [
 export const signingAuthorityNowCPList = [
     ...signingAuthorityDefaultList,
     {
-        id: 'personInChargeOfTheIssuanceProgram ',
-        text: 'Person in charge of the issuance program ',
+        id: 'personInChargeOfTheIssuanceProgram',
+        text: 'Person in charge of the issuance program',
     },
 ];
 
@@ -3251,7 +3249,7 @@ export const controlToName = {
     corporatePurpose: 'Corporate Purpose',
     activities: 'Management in behalf of',
     investorOnBehalfThirdParties: 'Third parties type',
-    geographicalAreaOfActivity: 'Geographical area of the activity',
+    geographicalAreaOfActivity: 'Primary Geographical Area of the Activity',
     geographicalAreaOfActivitySpecification: 'Geographical area of the activity specification',
     totalFinancialAssetsAlreadyInvested: 'Total Financial assets already invested',
     capitalNature: 'Nature and origin of the capital invested by the Legal Entity',
@@ -3265,7 +3263,7 @@ export const controlToName = {
     otherListingMarkets: 'Listing market(s) specification',
     multilateralTradingFacilities: 'Multilateral Trading Facilities',
     otherMultilateralTradingFacilities: 'Other Multilateral Trading Facilities',
-    bloombergCode: 'Bloomberg Code',
+    bloombergCode: 'Bloomberg Code of the company',
     isinCode: 'ISIN code of the listed share',
     floatableShares: 'Percentage of floatable and tradable company\'s shares',
     companyStateOwned: 'Is the company state-owned?',
@@ -3373,8 +3371,6 @@ export const controlToName = {
     investmentDecisionsAdHocCommitteeSpecification: 'Ad hoc committee specification',
     otherPersonsAuthorised: 'Other persons authorised to take investment decisions and give instructions',
     constraintsSameInvestmentCrossAm: 'I would like to have the same investment objectives for all management companies',
-    hasEverIssuedNeuCp: 'Has your company ever issued Neu CPs?',
-    hasAlreadyInvestedNeuCp: 'Has your company already invested in Neu CPs?',
 
     // Validation
     undersigned: 'Identity',

@@ -26,3 +26,9 @@ export function markAsDirty(control: AbstractControl) {
     control.markAsDirty();
     control.markAsTouched();
 }
+
+export function clearFormArray(formArray: FormArray) {
+    while (formArray.length !== 0) {
+        formArray.removeAt(0)
+    }
+}

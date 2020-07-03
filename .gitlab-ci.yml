@@ -2,6 +2,7 @@ stages:
 #     - lint
 #     - test
     - build
+    - to_iznes
 
 # lint:
 #     stage: lint
@@ -42,7 +43,7 @@ stages:
 #             - coverage/
 
 build:
-    image: docker:git
+    image: docker:19.03.7-git
     tags:
         - dind
     services:
@@ -91,3 +92,16 @@ build-tags:
         - yarn run build-prod
         - echo $CI_COMMIT_TAG > "$CI_PROJECT_DIR/dist/VERSION"
         - rsync -av "$CI_PROJECT_DIR/dist/" "jenkins@si-jenkins02.dev.setl.io:/var/lib/jenkins/build/opencsd-iznes/$CI_COMMIT_TAG/"
+
+to_iznes:
+    stage: to_iznes
+    only:
+        - master
+    image: node:10-jessie
+    script:
+        - git remote add iznes "https://okettsetl:$IZNES_ACCESS_TOKEN@gitlab.com/iznes/frontend.git"
+        - git branch
+        - git checkout master
+        - git push -u iznes master --force
+        - git push --tags
+

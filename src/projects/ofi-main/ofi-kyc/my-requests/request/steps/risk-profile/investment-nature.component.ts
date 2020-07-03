@@ -77,7 +77,8 @@ export class InvestmentNatureComponent implements OnInit, OnDestroy {
                 filter(requestedKycs => !isEmpty(requestedKycs)),
             )
             .subscribe((requestedKycs) => {
-                this.amcs = values(requestedKycs);
+                // filter out id2s AMs, because they are required to fill in investment details.
+                this.amcs = values(requestedKycs).filter(kyc => kyc.managementCompanyType != 'id2s');
                 this.updateCrossAM();
             });
     }
@@ -135,6 +136,7 @@ export class InvestmentNatureComponent implements OnInit, OnDestroy {
         if (!this.form.valid) {
             formHelper.dirty(this.form);
             formHelper.scrollToFirstError(this.element.nativeElement);
+            this.submitEvent.emit({ invalid: true });
             return;
         }
 
