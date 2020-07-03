@@ -8,8 +8,8 @@ import { OktaAuthService } from '../okta-auth.service';
 
 export class LoginSSOEngieComponent implements OnInit {
     constructor(private oktaAuth: OktaAuthService) { }
-
-    async ngOnInit() {
+    
+    ngOnInit() {
         this.oktaAuth.initiateLogin()
     }
 }

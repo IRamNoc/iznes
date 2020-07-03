@@ -13,6 +13,9 @@
   } else if (baseURL.includes('app.iznes.io') === true) {
     issuer = 'https://engie.okta-emea.com/.well-known/openid-configuration';
     clientId = '0oa470nf1sD04JCqg0i7';
+  } else if (baseURL.includes('testing.iznes.io') === true) {
+    issuer = 'https://dev-698165.okta.com/oauth2/default';
+    clientId = '0oaakvvb46DXdpxBB4x6';
   } else if (baseURL.includes('localhost') === true) {
     console.log('Development mode')
   } else {
