@@ -134,6 +134,7 @@ export function memberSocketServiceFactory() {
     providers: [
         { provide: ErrorHandler, useClass: GlobalErrorHandler },
         { provide: LocationStrategy, useClass: HashLocationStrategy },
+        
         {
             provide: MemberSocketService,
             useFactory: memberSocketServiceFactory,
@@ -143,6 +144,7 @@ export function memberSocketServiceFactory() {
             provide: APP_CONFIG,
             useValue: environment,
         },
+
         NodeAlertsService,
         CommonRequestService,
         WalletNodeSocketService,

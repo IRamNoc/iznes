@@ -6,8 +6,8 @@ import * as OktaAuth from '@okta/okta-auth-js';
 })
 export class OktaAuthService {
     URL_BASE = location.origin;
-    CLIENT_ID = '0oah49n1tfxhVKmvh0x6';
-    ISSUER = 'https://engieapppreview.oktapreview.com/.well-known/openid-configuration';
+    CLIENT_ID: string;
+    ISSUER: string;
     LOGIN_REDIRECT_URI = `${this.URL_BASE}/engie-callback`;
     LOGOUT_REDIRECT_URI = this.URL_BASE;
     oktaAuth = new OktaAuth({
@@ -18,6 +18,14 @@ export class OktaAuthService {
     });
 
     constructor() {
+        if (this.URL_BASE.includes('api.iznes.io')) {
+            this.CLIENT_ID = '0oah49n1tfxhVKmvh0x6';
+            this.ISSUER = 'https://engieapppreview.oktapreview.com/.well-known/openid-configuration';
+        } else if (this.URL_BASE.includes('app.iznes.io')) {
+            this.CLIENT_ID = '0oa470nf1sD04JCqg0i7';
+            this.ISSUER = 'https://engie.okta-emea.com/.well-known/openid-configuration';
+        }
+        console.log(this.CLIENT_ID)
     }
     
 
