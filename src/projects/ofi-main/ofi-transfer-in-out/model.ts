@@ -27,3 +27,25 @@ export interface IznesCancelTransferRequestBody extends MemberNodeMessageBody {
 export interface CancelTransferRequestData {
     referenceID: number;
 }
+
+export interface IznesUpdateTransferRequestData {
+    referenceID: number;
+    price: number;
+    quantity: number;
+    theoricalDate: string;
+    initialDate: string;
+    externalReference: string;
+    comment: string;
+    transferStatus: string;
+}
+
+export interface IznesUpdateTransferRequestBody extends MemberNodeMessageBody {
+    referenceID: number;
+    price: number;
+    quantity: number;
+    theoricalDate: string;
+    initialDate: string;
+    externalReference: string;
+    comment: string;
+    transferStatus: string;
+}

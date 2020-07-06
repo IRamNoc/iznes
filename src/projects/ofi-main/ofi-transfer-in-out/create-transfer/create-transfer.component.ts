@@ -1,6 +1,6 @@
 import * as _ from 'lodash';
 import * as moment from 'moment';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, Inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgRedux, select } from '@angular-redux/store';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -49,17 +49,7 @@ export class CreateTransferComponent implements OnInit, OnDestroy {
     subscriptions: Array<Subscription> = [];
     currencyList: any[];
     accountKeeperSelected: number;
-    accountKeeperList =  [
-        { id: 1, text: 'Société Générale Securities Services France' },
-        { id: 2, text: 'Société Générale Securities Services Luxembourg' },
-        { id: 3, text: 'BNP Paribas Securities France' },
-        { id: 4, text: 'BNP Paribas Securities Luxembourg' },
-        { id: 5, text: 'CACEIS Fund Administration' },
-        { id: 6, text: 'CACEIS Bank, Luxembourg' },
-        { id: 7, text: 'JPMORGAN Bank Luxembourg' },
-        { id: 8, text: 'State Street Bank Luxembourg' },
-        { id: 9, text: 'State Street Global Services France' },
-    ];
+    accountKeeperList: any;
 
     /** Date */
     datePickerConfig: object;
@@ -88,7 +78,9 @@ export class CreateTransferComponent implements OnInit, OnDestroy {
                 private ofiCurrenciesService: OfiCurrenciesService,
                 private logService: LogService,
                 private toaster: ToasterService,
-                private route: ActivatedRoute) {
+                private route: ActivatedRoute,
+                @Inject('product-config') productConfig) {
+        this.accountKeeperList = productConfig.fundItems.fundAdministratorItems;
         this.ofiCurrenciesService.getCurrencyList();
         this.initDatePickerConfig();
     }

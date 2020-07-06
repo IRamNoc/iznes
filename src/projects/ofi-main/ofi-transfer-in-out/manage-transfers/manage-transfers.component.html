@@ -113,73 +113,84 @@
 
 
             <clr-dg-row *ngFor="let transfer of transferListItems; let i = index" clrDgRowClickable>
-                <clr-dg-cell (click)="buildLink(transfer, $event)">
+                <clr-dg-cell (click)="openTransferDetails(i)">
                     {{ transfer.referenceID }}
                 </clr-dg-cell>
-                <clr-dg-cell (click)="buildLink(transfer, $event)">
+                <clr-dg-cell (click)="openTransferDetails(i)">
                     {{ transfer.externalReference }}
                 </clr-dg-cell>
-                <clr-dg-cell (click)="buildLink(transfer, $event)">
+                <clr-dg-cell (click)="openTransferDetails(i)">
                     {{ transfer.accountKeeper }}
                 </clr-dg-cell>
-                <clr-dg-cell (click)="buildLink(transfer, $event)">
+                <clr-dg-cell (click)="openTransferDetails(i)">
                     <b>
-                        <span class="label label-light-blue" *ngIf="transfer.transferDirection === 'in'">&nbsp;{{ transfer.transferDirection }}&nbsp;</span>
-                        <span class="label label-blue" *ngIf="transfer.transferDirection === 'out'">{{ transfer.transferDirection }}</span>
+                        <span class="label label-light-blue"
+                            *ngIf="transfer.transferDirection === 'in'">&nbsp;{{ transfer.transferDirection }}&nbsp;</span>
+                        <span class="label label-blue"
+                            *ngIf="transfer.transferDirection === 'out'">{{ transfer.transferDirection }}</span>
                     </b>
                 </clr-dg-cell>
-                <clr-dg-cell (click)="buildLink(transfer, $event)">
+                <clr-dg-cell (click)="openTransferDetails(i)">
                     {{ transfer.assetManagementCompany }}
                 </clr-dg-cell>
-                <clr-dg-cell (click)="buildLink(transfer, $event)">
+                <clr-dg-cell (click)="openTransferDetails(i)">
                     {{ transfer.investorCompany }}
                 </clr-dg-cell>
-                <clr-dg-cell (click)="buildLink(transfer, $event)">
+                <clr-dg-cell (click)="openTransferDetails(i)">
                     {{ transfer.investorWallet }}
                 </clr-dg-cell>
-                <clr-dg-cell (click)="buildLink(transfer, $event)">
+                <clr-dg-cell (click)="openTransferDetails(i)">
                     {{ transfer.shareISIN }}
                 </clr-dg-cell>
-                <clr-dg-cell (click)="buildLink(transfer, $event)">
+                <clr-dg-cell (click)="openTransferDetails(i)">
                     {{ transfer.shareName }}
                 </clr-dg-cell>
-                <clr-dg-cell (click)="buildLink(transfer, $event)">
+                <clr-dg-cell (click)="openTransferDetails(i)">
                     {{ transfer.currency }}
                 </clr-dg-cell>
-                <clr-dg-cell (click)="buildLink(transfer, $event)">
+                <clr-dg-cell (click)="openTransferDetails(i)">
                     {{ transfer.quantity }}
                 </clr-dg-cell>
-                <clr-dg-cell (click)="buildLink(transfer, $event)">
+                <clr-dg-cell (click)="openTransferDetails(i)">
                     {{ transfer.unitPrice }}
                 </clr-dg-cell>
-                <clr-dg-cell (click)="buildLink(transfer, $event)">
+                <clr-dg-cell (click)="openTransferDetails(i)">
                     {{ transfer.amount }}
                 </clr-dg-cell>
-                <clr-dg-cell (click)="buildLink(transfer, $event)">
+                <clr-dg-cell (click)="openTransferDetails(i)">
                     {{ transfer.theoricalDate }}
                 </clr-dg-cell>
-                <clr-dg-cell (click)="buildLink(transfer, $event)">
-                    <span *ngIf="transfer.transferStatus === 'pending'" class="label label-warning">{{ 'Pending' | translate }}
+                <clr-dg-cell (click)="openTransferDetails(i)">
+                    <span *ngIf="transfer.transferStatus === 'pending'"
+                        class="label label-warning">{{ 'Pending' | translate }}
                     </span>
 
-                    <span *ngIf="transfer.transferStatus === 'validated'" class="label label-info">{{ 'Validated' | translate }}
+                    <span *ngIf="transfer.transferStatus === 'validated'"
+                        class="label label-info">{{ 'Validated' | translate }}
                     </span>
 
-                    <span *ngIf="transfer.transferStatus === 'confirmed'" class="label label-success">{{ 'Confirmed' | translate }}
+                    <span *ngIf="transfer.transferStatus === 'confirmed'"
+                        class="label label-success">{{ 'Confirmed' | translate }}
                     </span>
 
-                    <span *ngIf="transfer.transferStatus === 'cancelled'" class="label label-error">{{ 'Cancelled' | translate }}
+                    <span *ngIf="transfer.transferStatus === 'completed'"
+                        class="label">{{ 'Completed' | translate }}
+                    </span>
+
+                    <span *ngIf="transfer.transferStatus === 'cancelled'"
+                        class="label label-danger">{{ 'Cancelled' | translate }}
                     </span>
                 </clr-dg-cell>
-                <clr-dg-cell (click)="buildLink(transfer, $event)">
+                <clr-dg-cell (click)="openTransferDetails(i)">
                     {{ transfer.dateEntered }}
                 </clr-dg-cell>
                 <clr-dg-cell class="right">
                     <div class="btn-group">
-                        <button type="button" class="btn btn-sm btn-danger" *ngIf="transfer.transferStatus === 'pending'" (click)="cancelTransfer(i)">{{ 'Cancel' | translate }}</button>
-                        <button type="button" class="btn btn-sm btn-danger" *ngIf="transfer.transferStatus !== 'pending'" disabled>{{ 'Cancel' | translate }}</button>
-                        <button type="button" class="btn btn-sm btn-primary" *ngIf="transfer.transferStatus === 'pending'" (click)="settleOrder(i)">{{ 'Modify' | translate }}</button>
-                        <button type="button" class="btn btn-sm btn-primary" *ngIf="transfer.transferStatus !== 'pending'" disabled>{{ 'Modify' | translate }}</button>
+                        <button type="button" class="btn btn-sm btn-danger"
+                            *ngIf="transfer.transferStatus === 'pending'"
+                            (click)="cancelTransfer(i)">{{ 'Cancel' | translate }}</button>
+                        <button type="button" class="btn btn-sm btn-danger"
+                            *ngIf="transfer.transferStatus !== 'pending'" disabled>{{ 'Cancel' | translate }}</button>
                     </div>
                 </clr-dg-cell>
             </clr-dg-row>
@@ -202,7 +213,8 @@
                 </clr-dg-column-toggle>
 
                 <!--{{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}-->
-                <clr-dg-pagination #pagination [clrDgPageSize]="itemPerPage" [clrDgLastPage]="lastPage"></clr-dg-pagination>
+                <clr-dg-pagination #pagination [clrDgPageSize]="itemPerPage" [clrDgLastPage]="lastPage">
+                </clr-dg-pagination>
             </clr-dg-footer>
         </clr-datagrid>
     </div>
@@ -229,8 +241,173 @@
             {{ 'Back' | translate }}
         </button>
 
-        <button id='cancelModalConfirmButton' type="button" class="btn btn-danger cancel-modal-confirm-btn" (click)="handleModalConfirmButtonClick(confirmModal.targetedTransfer)">
+        <button id='cancelModalConfirmButton' type="button" class="btn btn-danger cancel-modal-confirm-btn"
+            (click)="handleModalConfirmButtonClick(confirmModal.targetedTransfer)">
             {{ 'Confirm' | translate }}
         </button>
+    </div>
+</clr-modal>
+
+<clr-modal [(clrModalOpen)]="isDetailModalDisplayed" [clrModalClosable]="false" [clrModalSize]="'lg'">
+    <h3 class="modal-title">Modifier le transfert #{{detailModal.referenceID}}</h3>
+
+    <div class="modal-body">
+        <form [formGroup]="updateTransferFormGroup">
+            <section class="form-group">
+                <h3>Informations générales</h3>
+                <div class="col-md-12">
+                    <label class="clr-col-12 clr-col-md-12" for="amCompany">Société de Gestion</label>
+                    <input id="investorWalletReference" class="form-control" type="text"
+                        value="{{ detailModal.assetManagementCompany }}" disabled>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="clr-col-12 clr-col-md-12" for="amShareFund">Nom de la part</label>
+                        <input id="investorWalletReference" class="form-control" type="text"
+                            value="{{ detailModal.shareName }}" disabled>
+                    </div>
+
+                    <!-- Amount -->
+                    <div class="col-md-6">
+                        <label class="clr-col-12 clr-col-md-12" for="amShareFundISIN">ISIN</label>
+                        <input id="amShareFundISIN" class="form-control" type="text" value="{{ detailModal.shareISIN}}"
+                            disabled>
+                    </div>
+                </div>
+
+                <div class="col-md-12">
+                    <label class="clr-col-12 clr-col-md-12" for="investorCompany">Investisseur</label>
+                    <input id="investorWalletReference" class="form-control" type="text"
+                        value="{{ detailModal.investorCompany }}" disabled>
+                </div>
+
+                <div class="col-md-12">
+                    <label class="clr-col-12 clr-col-md-12" for="investorWallet">Portfeuille</label>
+                    <input id="investorWalletReference" class="form-control" type="text"
+                        value="{{ detailModal.investorWallet }}" disabled>
+                </div>
+
+                <h3 class="mt-1">Informations du transfert</h3>
+                <div class="row">
+                <div class="col-md-6">
+                    <label class="clr-col-12 col-col-md-12">Statut</label>
+                    <ng-select id="transferStatus" [placeholder]="translate.translate('Update status')"
+                        [items]="transferStatusListItems" [allowClear]="false"
+                        formControlName="transferStatus"
+                        [isDisabled]="!updatePermission"
+                        (selected)="handleDropdownTransferStatusSelect($event)">
+                    </ng-select>
+                </div>
+                <div class="col-md-6">
+                    <label class="clr-col-12 clr-col-md-12" for="transferDirection">Sens</label>
+                    <input id="transferDirection" class="form-control" type="text"
+                        value="{{ detailModal.transferDirection }}" disabled>
+                </div>
+            </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="clr-col-12 clr-col-md-12" for="quantity">Quantité</label>
+                        <input id="quantity" formControlName="quantity" class="form-control" type="number">
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="clr-col-12 clr-col-md-12" for="unitPrice">Prix unitaire</label>
+                        <input id="unitPrice" formControlName="unitPrice" class="form-control" type="number">
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="clr-col-12 clr-col-md-12" for="amount">Montant</label>
+                        <input id="amount" value="{{detailModal.amount}}" class="form-control" type="number" disabled>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="clr-col-12 clr-col-md-12" for="currency">Devise</label>
+                        <input id="currency" class="form-control" type="text" value="{{ detailModal.currency }}"
+                            disabled>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="clr-col-12 clr-col-md-12" for="theoricalDate">Date théorique d'entrée au registre
+                            d'IZNES</label>
+                        <div class="input-group date-pick-wrapper">
+                            <span class="fa fa-calendar" aria-hidden="true"></span>
+                            <input id="theoricalDate" placeholder="Choose a date" formControlName="theoricalDate"
+                                [dpDayPicker]="datePickerConfig" formmode="day" theme="dp-material">
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="clr-col-12 clr-col-md-12" for="initialDate">Date initiale de l'opération</label>
+                        <div class="input-group date-pick-wrapper">
+                            <span class="fa fa-calendar" aria-hidden="true"></span>
+                            <input id="initialDate" placeholder="Choose a date" formControlName="initialDate"
+                                [dpDayPicker]="datePickerConfig" mode="day" theme="dp-material">
+                        </div>
+                    </div>
+
+                </div>
+                <h3 class="mt-1">Informations additionnelles</h3>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="clr-col-12 clr-col-md-12" for="externalReference">Référence externe</label>
+                        <input id="externalReference" formControlName="externalReference" class="form-control"
+                            type="text">
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="clr-col-12 clr-col-md-12" for="accountKeeper">Teneur de compte historique</label>
+                        <input id="investorWalletReference" class="form-control" type="text"
+                            value="{{ detailModal.accountKeeper }}" disabled>
+                    </div>
+
+                </div>
+
+                <div class="col-md-12">
+                    <label class="clr-col-12 clr-col-md-12" for="comment">Commentaire</label>
+                    <textarea class="form-control" formControlName="comment" autocomplete="off"></textarea>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="clr-col-12 clr-col-md-12" for="createdBy">Transfert saisi par</label>
+                        <input id="createdBy" class="form-control" type="text" value="IZNES" disabled>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="clr-col-12 clr-col-md-12" for="dateEntered">Date et heure de saisie du
+                            transfert</label>
+                        <div class="input-group date-pick-wrapper">
+                            <span class="fa fa-calendar" aria-hidden="true"></span>
+                            <input id="investorWalletReference" class="form-control" type="text" value="{{detailModal.dateEntered}}" disabled>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </form>
+    </div>
+
+    <div class="modal-footer">
+        <div class="col-md-12">
+            <button id='cancelModalBackButton' type="button" class="btn btn-outline" (click)="resetDetailModalValue()">
+                {{ 'Back' | translate }}
+            </button>
+
+            <button *ngIf="updatePermission" id='UpdateModalButton' type="button" [disabled]="!canUpdateBtn"
+                class="btn btn-primary cancel-modal-confirm-btn"
+                (click)="handleModalUpdateButtonClick(detailModal.referenceID)">
+                {{ 'Update' | translate }}
+            </button>
+        </div>
+        <div class="col-md-12">
+            <span class="label label-danger mt-1 mb-1" *ngIf="detailModal.transferStatus === 'validated' && updatePermission">Attention,
+                vous venez de passer le statut en
+                "validated", vous ne pourrez plus modifier celui-ci
+                par la suite.</span>
+        </div>
     </div>
 </clr-modal>

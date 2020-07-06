@@ -10,12 +10,14 @@ import {
     IznesGetTransferRequestBody,
     IznesCancelTransferRequestBody,
     CancelTransferRequestData,
+    IznesUpdateTransferRequestData,
+    IznesUpdateTransferRequestBody,
 } from './model';
 
 /* Import actions. */
 import {
     OFI_SET_MANAGE_TRANSFER_LIST,
-    ofiManageTransferActions
+    ofiManageTransferActions,
     ofiSetRequestedManageTransfer,
     ofiClearRequestedManageTransfer,
 } from '../ofi-store/';
@@ -183,6 +185,32 @@ export class TransferInOutService {
             RequestName: 'izncanceltransferinout',
             token: this.memberSocketService.token,
             referenceID: data.referenceID,
+        };
+
+        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+    }
+
+    defaultRequestUpdateTransfer(
+        data: IznesUpdateTransferRequestData,
+        successCallback: (res) => void,
+        errorCallback: (res) => void) {
+        const asyncTaskPipe = this.requestUpdateTransfer(data);
+
+        this.ngRedux.dispatch(SagaHelper.runAsync(
+            [],
+            [],
+            asyncTaskPipe,
+            {},
+            res => successCallback(res),
+            res => errorCallback(res),
+        ));
+    }
+
+    requestUpdateTransfer(data: IznesUpdateTransferRequestData) {
+        const messageBody: IznesUpdateTransferRequestBody = {
+            RequestName: 'iznupdatetransferinout',
+            token: this.memberSocketService.token,
+            ...data,
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
