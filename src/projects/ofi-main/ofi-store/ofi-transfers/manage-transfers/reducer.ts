@@ -26,7 +26,7 @@ const patchTransfer = (state, referenceId, patch) => {
         return state;
     }
 
-    if (Object.keys(patch).length == 1 && Object.keys(patch)[0] == 'transferStatus') {
+    if (Object.keys(patch).length === 1 && Object.keys(patch)[0] === 'transferStatus') {
         if (patch['transferStatus'] > 0 && patch['transferStatus'] < existingTransfer['transferStatus']) {
             return state;
         }
@@ -82,7 +82,6 @@ export const OfiManageTransferListReducer = function (
         case ofiManageTransfersActions.SET_ALL_TABS:
             return handleSetAllTabs(action, state);
 
-
         case ofiManageTransfersActions.OFI_UPDATE_TRANSFER:
             switch (action.payload.event) {
                 case 'create':
@@ -91,14 +90,18 @@ export const OfiManageTransferListReducer = function (
                     return patchTransfer(state, action.payload.transfer.referenceID, { transferStatus: '' });
                 case 'cancel':
                     return patchTransfer(state, action.payload.transfer.referenceID, { transferStatus: 'cancelled' });
-                case 'commit':
-                    return patchTransfer(state, action.payload.transfer.referenceID, { transferStatus: 3 });
+                case 'update':
+                    return patchTransfer(state, action.payload.transfer.referenceID, {
+                        comment: action.payload.transfer.comment,
+                        externalReference: action.payload.transfer.externalReference,
+                        initialDate: action.payload.transfer.initialDate,
+                        price: action.payload.transfer.price,
+                        quantity: action.payload.transfer.quantity,
+                        theoricalDate: action.payload.transfer.theoricalDate,
+                        transferStatus: action.payload.transfer.transferStatus,
+                    });
                 case 'complete':
-                    return patchTransfer(state, action.payload.transfer.referenceID, { transferStatus: 4 });
-                case 'readyforpayment':
-                    return patchTransfers(state, action.payload.transfers, { paymentMsgStatus: 'ready' });
-                case 'settled':
-                    return patchTransfer(state, action.payload.transfer.referenceID, { transferStatus: -1 });
+                    return patchTransfer(state, action.payload.transfer.referenceID, { transferStatus: 'completed' });
                 default:
                     return state;
             }
