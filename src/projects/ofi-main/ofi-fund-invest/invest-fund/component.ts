@@ -459,7 +459,7 @@ export class InvestFundComponent implements OnInit, OnDestroy {
 
         const toNumber = this.moneyValuePipe.parse(this.quantity.value, 4);
         const redeeming = this.numberConverterService.toBlockchain(toNumber);
-        const balance = this.subPortfolioBalance;
+        const balance = this.subPortfolioTotalBalance;
         return Boolean(redeeming > balance);
     }
 
@@ -782,7 +782,7 @@ export class InvestFundComponent implements OnInit, OnDestroy {
             return false;
         }
 
-        const quantity = this.numberConverterService.toFrontEnd(this.subPortfolioBalance);
+        const quantity = this.numberConverterService.toFrontEnd(this.subPortfolioTotalBalance);
 
         this.quantityInput.nativeElement.focus();
         this.form.get('quantity').setValue(quantity);
