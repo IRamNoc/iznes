@@ -502,7 +502,6 @@ export class OfiInvestorFundListComponent implements OnInit, AfterViewInit, OnDe
 
     disableRedeem(assetName): string {
         const hasShare = this.hasShareBalanceInAnyAddress(assetName);
-        console.log('Disabled :', hasShare);
         return hasShare ? null : '';
     }
 
