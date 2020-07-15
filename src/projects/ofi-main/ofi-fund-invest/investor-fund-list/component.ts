@@ -496,11 +496,13 @@ export class OfiInvestorFundListComponent implements OnInit, AfterViewInit, OnDe
         if (typeof this.walletBalances[assetName] === 'undefined') {
             return false;
         }
-        return this.walletBalances[assetName].free > 0;
+
+        return this.walletBalances[assetName].total > 0;
     }
 
     disableRedeem(assetName): string {
         const hasShare = this.hasShareBalanceInAnyAddress(assetName);
+        console.log('Disabled :', hasShare);
         return hasShare ? null : '';
     }
 
@@ -574,7 +576,7 @@ function formatWalletBalances(walletAddressesBalances: WalletAddresseBalance[]):
            };
         }
 
-        accu[curr.assetName].total += curr.investorTotalHolding;
+        accu[curr.assetName].total += curr.investorTotalHolding - curr.investorRedemptionEncumber;
         accu[curr.assetName].free += curr.investorHoling;
         accu[curr.assetName].breakdown.push(curr);
 
