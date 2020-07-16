@@ -15,7 +15,7 @@
     </div>
 
     <div class="border-table panel-body">
-        <clr-dg-action-bar>
+        <clr-dg-action-bar *ngIf="hasPermissionInsert">
             <button id="saveButton" type="button" routerLink="/transfer-in-out/create"
                 class="btn btn-primary">{{ 'Créer un nouveau transfert' | translate }}</button>
         </clr-dg-action-bar>
@@ -187,10 +187,15 @@
                 <clr-dg-cell class="right">
                     <div class="btn-group">
                         <button type="button" class="btn btn-sm btn-danger"
-                            *ngIf="transfer.transferStatus === 'pending'"
+                            *ngIf="transfer.transferStatus === 'pending' && hasPermissionCancel"
                             (click)="cancelTransfer(i)">{{ 'Cancel' | translate }}</button>
                         <button type="button" class="btn btn-sm btn-danger"
-                            *ngIf="transfer.transferStatus !== 'pending'" disabled>{{ 'Cancel' | translate }}</button>
+                            *ngIf="transfer.transferStatus !== 'pending' && hasPermissionCancel" disabled>{{ 'Cancel' | translate }}</button>
+                        <button type="button" class="btn btn-sm btn-primary" [clrLoading]="confirmBtnState"
+                            *ngIf="transfer.transferStatus === 'validated' && isAmUser"
+                            (click)="confirmTransfer(i)">{{ 'Confirm' | translate }}</button>
+                        <button type="button" class="btn btn-sm btn-primary"
+                            *ngIf="transfer.transferStatus !== 'validated' && isAmUser" disabled>{{ 'Confirm' | translate }}</button>
                     </div>
                 </clr-dg-cell>
             </clr-dg-row>

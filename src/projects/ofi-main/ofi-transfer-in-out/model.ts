@@ -28,6 +28,14 @@ export interface CancelTransferRequestData {
     referenceID: number;
 }
 
+export interface IznesConfirmTransferRequestData {
+    referenceID: number;
+}
+
+export interface IznesConfirmTransferRequestBody {
+    referenceID: number;
+}
+
 export interface IznesUpdateTransferRequestData {
     referenceID: number;
     price: number;

@@ -25,6 +25,8 @@ import { ToasterService, Toast } from 'angular2-toaster';
 /* Clarity */
 import { ClrDatagridStateInterface } from '@clr/angular';
 
+import { getMyDetail } from '@setl/core-store';
+
 @Component({
     selector: 'app-manage-transfers',
     templateUrl: './manage-transfers.component.html',
@@ -64,9 +66,12 @@ export class ManageTransfersComponent implements OnInit, OnDestroy {
     language = 'en';
     updateTransferFormGroup: FormGroup;
     canUpdateBtn: boolean = false;
+    isAmUser: boolean = false;
     hasPermissionUpdate: boolean = false;
     hasPermissionCancel: boolean = false;
+    hasPermissionInsert: boolean = false;
     updatePermission: boolean = false;
+    confirmBtnState: boolean = false;
 
     transferStatusListItems: object = ['pending', 'validated'];
 
@@ -77,6 +82,7 @@ export class ManageTransfersComponent implements OnInit, OnDestroy {
     @select(['ofi', 'ofiCurrencies', 'currencies']) currenciesObs;
     @select(['ofi', 'ofiTransfers', 'manageTransfers', 'transferList']) transferObs;
     @select(['ofi', 'ofiTransfers', 'manageTransfers', 'totalResults']) readonly totalResults$: Observable<number>;
+    @select(['user', 'myDetail']) myDetailsOb;
 
     constructor(private fb: FormBuilder,
                 private cdr: ChangeDetectorRef,
@@ -106,11 +112,15 @@ export class ManageTransfersComponent implements OnInit, OnDestroy {
     { }
 
     ngOnInit() {
+        const currentState = this.redux.getState();
+        this.isAmUser = getMyDetail(currentState).userTypeStr === 'am' ? true : false;
         this.initForm();
         this.datagridParams = new DatagridParams(this.itemPerPage);
 
         this.permissionsService.hasPermission('manageTransferI/O', 'canUpdate').then(
             hasPermission => this.hasPermissionUpdate = hasPermission);
+        this.permissionsService.hasPermission('manageTransferI/O', 'canInsert').then(
+            hasPermission => this.hasPermissionInsert = hasPermission);
         this.permissionsService.hasPermission('manageTransferI/O', 'canDelete').then(
             hasPermission => this.hasPermissionCancel = hasPermission);
         this.transferService.defaultRequestManageTransfersList();
@@ -310,6 +320,26 @@ export class ManageTransfersComponent implements OnInit, OnDestroy {
                 this.logService.log('Error: ', data);
                 this.toaster.pop('error', 'Your transfer I/O has not been updated.');
                 this.resetDetailModalValue();
+            });
+    }
+
+    confirmTransfer(index) {
+        this.confirmBtnState = true;
+        const request = {
+            referenceID: this.transferListItems[index].referenceID,
+        };
+
+        this.transferService.defaultRequestConfirmTransfer(
+            request,
+            (data) => {
+                this.logService.log('confirm transfer success', data);
+                this.toaster.pop('success', 'Your transfer I/O has been succesfully confirmed.');
+                this.confirmBtnState = false;
+            },
+            (data) => {
+                this.logService.log('Error: ', data);
+                this.toaster.pop('error', 'Your transfer I/O has not been confirmed.');
+                this.confirmBtnState = false;
             });
     }
 
