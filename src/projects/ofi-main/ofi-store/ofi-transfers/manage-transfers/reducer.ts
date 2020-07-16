@@ -86,8 +86,6 @@ export const OfiManageTransferListReducer = function (
             switch (action.payload.event) {
                 case 'create':
                     return handleNewTransfer(state, action);
-                case 'cutoff':
-                    return patchTransfer(state, action.payload.transfer.referenceID, { transferStatus: '' });
                 case 'cancel':
                     return patchTransfer(state, action.payload.transfer.referenceID, { transferStatus: 'cancelled' });
                 case 'update':
@@ -100,6 +98,8 @@ export const OfiManageTransferListReducer = function (
                         theoricalDate: action.payload.transfer.theoricalDate,
                         transferStatus: action.payload.transfer.transferStatus,
                     });
+                case 'confirmed':
+                    return patchTransfer(state, action.payload.transfer.referenceID, { transferStatus: 'confirmed' });
                 case 'complete':
                     return patchTransfer(state, action.payload.transfer.referenceID, { transferStatus: 'completed' });
                 default:
