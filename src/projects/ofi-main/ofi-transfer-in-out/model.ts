@@ -28,11 +28,11 @@ export interface CancelTransferRequestData {
     referenceID: number;
 }
 
-export interface IznesConfirmTransferRequestData {
+export interface ConfirmTransferRequestData {
     referenceID: number;
 }
 
-export interface IznesConfirmTransferRequestBody {
+export interface IznesConfirmTransferRequestBody extends MemberNodeMessageBody {
     referenceID: number;
 }
 

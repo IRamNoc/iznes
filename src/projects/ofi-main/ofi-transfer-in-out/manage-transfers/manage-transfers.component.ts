@@ -325,12 +325,9 @@ export class ManageTransfersComponent implements OnInit, OnDestroy {
 
     confirmTransfer(index) {
         this.confirmBtnState = true;
-        const request = {
-            referenceID: this.transferListItems[index].referenceID,
-        };
 
         this.transferService.defaultRequestConfirmTransfer(
-            request,
+            this.transferListItems[index].referenceID,
             (data) => {
                 this.logService.log('confirm transfer success', data);
                 this.toaster.pop('success', 'Your transfer I/O has been succesfully confirmed.');

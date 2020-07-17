@@ -12,7 +12,7 @@ import {
     CancelTransferRequestData,
     IznesUpdateTransferRequestData,
     IznesUpdateTransferRequestBody,
-    IznesConfirmTransferRequestData,
+    ConfirmTransferRequestData,
     IznesConfirmTransferRequestBody,
 } from './model';
 
@@ -218,11 +218,32 @@ export class TransferInOutService {
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
     }
 
-    defaultRequestConfirmTransfer(
-        data: IznesConfirmTransferRequestData,
-        successCallback: (res) => void,
-        errorCallback: (res) => void) {
-        const asyncTaskPipe = this.requestConfirmTransfer(data);
+    defaultRequestConfirmTransfer(referenceID: number, successCallback: (res) => void, errorCallback: (res) => void) {
+        const asyncTaskPipe = this.requestConfirmTransfer({ referenceID });
+
+        this.ngRedux.dispatch(SagaHelper.runAsync(
+            [],
+            [],
+            asyncTaskPipe,
+            {},
+            res => successCallback(res),
+            res => errorCallback(res),
+        ));
+    }
+
+    requestConfirmTransfer(data: ConfirmTransferRequestData) {
+        const messageBody: IznesConfirmTransferRequestBody = {
+            RequestName: 'iznconfirmtransferinout',
+            token: this.memberSocketService.token,
+            referenceID: data.referenceID,
+        };
+
+        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+    }
+    /*
+
+    defaultRequestConfirmTransfer(referenceID: number, successCallback: (res) => void, errorCallback: (res) => void) {
+        const asyncTaskPipe = this.requestConfirmTransfer({ referenceID });
 
         this.ngRedux.dispatch(SagaHelper.runAsync(
                 [],
@@ -238,9 +259,10 @@ export class TransferInOutService {
         const messageBody: IznesConfirmTransferRequestBody = {
             RequestName: 'iznconfirmtransferinout',
             token: this.memberSocketService.token,
-            ...data,
+            referenceID: data.referenceID,
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
     }
+    */
 }
