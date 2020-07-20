@@ -14,6 +14,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/forms';
 import { NgRedux, select } from '@angular-redux/store';
 import { LoginGuardService } from './login-guard.service';
+// Okta Auth Service
+import { OktaAuthService } from './okta-auth.service';
 import * as _ from 'lodash';
 // Internals
 import { APP_CONFIG, AppConfig, SagaHelper, LogService, ConfirmationService } from '@setl/utils';
@@ -164,6 +166,7 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit, Log
                 private changeDetectorRef: ChangeDetectorRef,
                 private confirmationService: ConfirmationService,
                 private loginService: LoginService,
+                private oktaAuthService: OktaAuthService,
                 @Inject(APP_CONFIG) appConfig: AppConfig) {
 
         this.appConfig = appConfig;
@@ -251,9 +254,8 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit, Log
         }
     }
 
-    ngOnInit() {
+    async ngOnInit() {
         this.isLogin = false;
-
         this.getQueryParams();
 
         const params$ = this.activatedRoute.params;
@@ -302,6 +304,11 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit, Log
         window.onbeforeunload = null;
 
         this.logService.log(this.router);
+
+        // Starting Okta Auth Service verification - Check if token exist
+        if (await this.oktaAuthService.haveToken()) {
+            this.loginUsingSSO();
+        }
     }
 
     ngAfterViewInit() {
@@ -309,7 +316,45 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit, Log
             this.passwordEl.nativeElement.focus();
             return;
         }
+
         this.usernameEl.nativeElement.focus();
+    }
+
+    async loginUsingSSO() {
+        const oktaInfos = await this.oktaAuthService.getUserInfo()
+        this.submitBtnState = ClrLoadingState.LOADING;
+
+        // Dispatch a login request action.
+        const loginRequestAction = loginRequestAC();
+        this.ngRedux.dispatch(loginRequestAction);
+
+        const asyncTaskPipe = this.myUserService.loginSSORequest({
+            emailAddress: oktaInfos.email,
+            accessToken: oktaInfos.sub,
+        })
+        
+        // Send a saga action.
+        // Actions to dispatch, when request success:  LOGIN_SUCCESS.
+        // Actions to dispatch, when request fail:  RESET_LOGIN_DETAIL.
+        // saga pipe function descriptor.
+        
+        this.ngRedux.dispatch(SagaHelper.runAsync(
+            [SET_FORCE_TWO_FACTOR, SET_LOGIN_DETAIL, SET_AUTH_LOGIN_DETAIL, SET_PRODUCTION],
+            [RESET_LOGIN_DETAIL, RESET_AUTH_LOGIN_DETAIL],
+            asyncTaskPipe,
+            {},
+            (data) => {
+                this.loginService.postLoginRequests();
+            },
+            // Fail to login
+            (data) => {
+                this.submitBtnState = ClrLoadingState.DEFAULT;
+                this.showTwoFactorModal = false;
+                this.handleLoginFailMessage(data);
+            },
+        ));
+
+        return false;
     }
 
     login(value) {
@@ -334,6 +379,7 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit, Log
         // Actions to dispatch, when request success:  LOGIN_SUCCESS.
         // Actions to dispatch, when request fail:  RESET_LOGIN_DETAIL.
         // saga pipe function descriptor.
+        
         this.ngRedux.dispatch(SagaHelper.runAsync(
             [SET_FORCE_TWO_FACTOR, SET_LOGIN_DETAIL, SET_AUTH_LOGIN_DETAIL, SET_PRODUCTION],
             [RESET_LOGIN_DETAIL, RESET_AUTH_LOGIN_DETAIL],

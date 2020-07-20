@@ -6,6 +6,7 @@ import { SagaHelper, Common } from '@setl/utils';
 import { createMemberNodeRequest, createMemberNodeSagaRequest } from '@setl/utils/common';
 import {
     LoginRequestMessageBody,
+    LoginSSORequestMessageBody,
     UserDetailsRequestMessageBody,
     SaveUserDetailsRequestBody,
     SetTwoFactorAuthenticationBody,
@@ -41,6 +42,11 @@ import {Router} from "@angular/router";
 interface LoginRequestData {
     username: string;
     password: string;
+}
+
+interface LoginSSORequestData {
+    emailAddress: string;
+    accessToken: string;
 }
 
 interface UserDetailsData {
@@ -216,6 +222,17 @@ export class MyUserService implements OnDestroy {
             RequestName: 'Login',
             UserName: loginData.username,
             Password: loginData.password,
+            CFCountry: '.',
+        };
+
+        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+    }
+
+    loginSSORequest(loginSSOData: LoginSSORequestData): any {
+        const messageBody: LoginSSORequestMessageBody = {
+            RequestName: 'LoginSSO',
+            emailAddress: loginSSOData.emailAddress,
+            accessToken: loginSSOData.accessToken,
             CFCountry: '.',
         };
 
@@ -455,6 +472,10 @@ export class MyUserService implements OnDestroy {
     }
 
     async logout(): Promise<any> {
+        // Okta remove storage after logout
+        localStorage.clear();
+        sessionStorage.clear();
+
         this.walletSocket.clearConnection();
         this.logout$.next(true);
 
