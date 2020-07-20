@@ -134,7 +134,7 @@ export function memberSocketServiceFactory() {
     providers: [
         { provide: ErrorHandler, useClass: GlobalErrorHandler },
         { provide: LocationStrategy, useClass: HashLocationStrategy },
-
+        
         {
             provide: MemberSocketService,
             useFactory: memberSocketServiceFactory,
