@@ -7,8 +7,6 @@ import { filter, take, takeUntil, distinctUntilChanged } from 'rxjs/operators';
 import { FormPercentDirective } from '@setl/utils/directives/form-percent/formpercent';
 import { RiskProfileService } from '../risk-profile.service';
 import { NewRequestService } from '../../new-request.service';
-import { PersistService } from '@setl/core-persist';
-import { steps } from '../../../requests.config';
 
 @Component({
     selector: 'investment-objective',
@@ -18,7 +16,7 @@ export class InvestmentObjectiveComponent implements OnInit, OnDestroy {
     @ViewChild(FormPercentDirective) formPercent: FormPercentDirective;
     @Input() form;
     @Input() formConstraint;
-    @Input() completedStep: string;
+    @Input() completedStep: number;
     @Output() submitEvent: EventEmitter<any> = new EventEmitter<any>();
     @select(['ofi', 'ofiKyc', 'myKycRequested', 'kycs']) currentlyRequestedKycs$;
     @select(['ofi', 'ofiKyc', 'myKycRequested', 'kycs']) requests$;
@@ -29,7 +27,6 @@ export class InvestmentObjectiveComponent implements OnInit, OnDestroy {
     formWatch: Subject<boolean> = new Subject<boolean>();
 
     constructor(
-        private persistService: PersistService,
         private element: ElementRef,
         private newRequestService: NewRequestService,
         private riskProfileService: RiskProfileService,
@@ -68,7 +65,6 @@ export class InvestmentObjectiveComponent implements OnInit, OnDestroy {
                     this.formCheckSameInvestmentCrossAm(cross);
                 }
 
-                this.initFormPersist();
             });
     }
 
@@ -108,8 +104,8 @@ export class InvestmentObjectiveComponent implements OnInit, OnDestroy {
         this.formPercent.refreshFormPercent();
     }
 
-    generateObjectives(amcs = []) {
-        const objectives = this.newRequestService.createInvestmentObjectives(amcs);
+    async generateObjectives(amcs = []) {
+        const objectives = await this.newRequestService.createInvestmentObjectives(amcs);
         const objectivesControl = this.form.get('objectives');
         const numberOfControls = objectivesControl.length;
 
@@ -126,35 +122,6 @@ export class InvestmentObjectiveComponent implements OnInit, OnDestroy {
         this.formPercent.refreshFormPercent();
     }
 
-    /**
-     * Init Form Persist if the step has not been completed
-     */
-    initFormPersist() {
-        if (!this.completedStep || (steps[this.completedStep] < steps.investmentObjectives)) this.persistForm();
-    }
-
-    persistForm() {
-        this.persistService.watchForm(
-            'newkycrequest/riskProfile/investmentObjective',
-            this.form,
-            this.newRequestService.context,
-            {
-                reset: false,
-                returnPromise: true,
-            },
-        ).then(() => {
-            this.formWatch.next(true);
-        });
-    }
-
-    clearPersistForm() {
-        this.persistService.refreshState(
-            'newkycrequest/riskProfile/investmentObjective',
-            this.newRequestService.createRiskProfileFormGroup(),
-            this.newRequestService.context,
-        );
-    }
-
     isStepValid() {
         return this.form.valid;
     }
@@ -165,6 +132,7 @@ export class InvestmentObjectiveComponent implements OnInit, OnDestroy {
         if (!this.form.valid) {
             formHelper.dirty(this.form);
             formHelper.scrollToFirstError(this.element.nativeElement);
+            this.submitEvent.emit({ invalid: true });
             return;
         }
 
@@ -175,13 +143,12 @@ export class InvestmentObjectiveComponent implements OnInit, OnDestroy {
             .subscribe((requests) => {
                 this.riskProfileService.sendRequestInvestmentObjective(this.form, this.formConstraint, requests, 'investmentObjectives')
                     .then(() => {
-                        this.clearPersistForm();
                         this.submitEvent.emit({
                             completed: true,
                         });
                     })
-                    .catch(() => {
-                        this.newRequestService.errorPop();
+                    .catch((e) => {
+                        this.newRequestService.errorPop(e);
                     })
                     ;
             });

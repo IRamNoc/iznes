@@ -1,4 +1,5 @@
 <form [formGroup]="form" id="step-general-information" (ngSubmit)="handleSubmit($event)">
+    <kyc-clientfile-update-alert *ngIf="(formDataFilled$ | async) && !form.valid && isFormReadonly"></kyc-clientfile-update-alert>
 
     <div class="kyc-container">
         <h2>{{ 'General Information' | translate }}</h2>
@@ -104,7 +105,7 @@
                 </div>
                 <div class="row col-sm-12">
                     <div class="form-group col-sm-4">
-                        <label class="control-label" for="financialRating">{{'Financial Rating' | translate}}</label>
+                        <label class="control-label" for="financialRating">{{'Financial Rating (Equivalent S&P)' | translate}}</label>
                         <ng-select id="financialRating"
                                     [items]="financialRatingList"
                                     formControlName="financialRating"

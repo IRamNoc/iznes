@@ -6,6 +6,12 @@ export interface LoginRequestMessageBody extends MemberNodeMessageBody {
     CFCountry: string;
 }
 
+export interface LoginSSORequestMessageBody extends MemberNodeMessageBody {
+    emailAddress: string;
+    accessToken: string;
+    CFCountry: string;
+}
+
 export interface UserDetailsRequestMessageBody extends MemberNodeMessageBody {
     token: string;
 }
@@ -65,6 +71,10 @@ export interface SaveNewPasswordRequestBody extends MemberNodeMessageBody {
 
 export interface LoginRequestMessage extends MemberNodeRequest {
     MessageBody: LoginRequestMessageBody;
+}
+
+export interface LoginSSORequestMessage extends MemberNodeRequest {
+    MessageBody: LoginSSORequestMessageBody;
 }
 
 export interface RefreshTokenRequestBody extends MemberNodeMessageBody {

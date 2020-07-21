@@ -1,5 +1,5 @@
 /* Core/Angular imports. */
-import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, Inject, ViewChild, ElementRef } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, Inject, ElementRef } from '@angular/core';
 /* Redux */
 import { NgRedux, select } from '@angular-redux/store';
 import { Subject } from 'rxjs/Subject';
@@ -19,11 +19,15 @@ import { MyUserService } from '@setl/core-req-services';
 import { SagaHelper } from '@setl/utils/index';
 import { Endpoints } from '../config';
 import { InvestorType } from '../../shared/investor-types';
+import { FormGroup, FormControl, ValidatorFn } from '@angular/forms';
+import {KycPartySelections} from '../../ofi-store/ofi-kyc/my-informations/model';
+import {getPartyCompanies, PartyCompaniesInterface} from '../my-requests/kyc-form-helper';
+import {OfiManagementCompanyService} from '../../ofi-req-services/ofi-product/management-company/management-company.service';
+import {first} from 'rxjs/operators';
 
 @Component({
     styleUrls: ['./component.scss'],
     templateUrl: './component.html',
-    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OfiKycHomeComponent implements AfterViewInit, OnDestroy {
     appConfig: AppConfig;
@@ -31,37 +35,22 @@ export class OfiKycHomeComponent implements AfterViewInit, OnDestroy {
     hasFilledAdditionnalInfos = false;
     userType: number;
     investorType: number;
-    showSplash: boolean = true;
-    isNowCP: boolean = false;
 
     /* Public properties. */
     public showModal = false;
-    public userInfo: KycMyInformations = {
-        email: '',
-        firstName: '',
-        lastName: '',
-        invitedBy: {
-            email: '',
-            firstName: '',
-            lastName: '',
-            companyName: '',
-            phoneCode: '',
-            phoneNumber: '',
-        },
-        companyName: '',
-        amCompanyName: '',
-        phoneCode: '',
-        phoneNumber: '',
-        amManagementCompanyID: 0,
-        invitationToken: '',
-        investorType: 0,
-    };
+    public userInfo: KycMyInformations;
+    public kycPartySelectionsForm: FormGroup;
+    public showWelcomeModal: boolean = true;
+    public kycPartySelections: KycPartySelections;
+
 
     unSubscribe: Subject<any> = new Subject();
 
     /* Observables. */
     @select(['ofi', 'ofiKyc', 'myInformations']) kycMyInformations: Observable<KycMyInformations>;
     @select(['user', 'myDetail', 'userType']) userType$: Observable<number>;
+    // obervable for full list of management companies.
+    @select(['ofi', 'ofiProduct', 'ofiManagementCompany', 'investorManagementCompanyList', 'investorManagementCompanyList']) managementCompanyList$;
 
     /* Constructor. */
     constructor(
@@ -74,6 +63,7 @@ export class OfiKycHomeComponent implements AfterViewInit, OnDestroy {
         private confirmationService: ConfirmationService,
         private myUserService: MyUserService,
         public translate: MultilingualService,
+        private ofiManagementCompanyService: OfiManagementCompanyService,
         @Inject('endpoints') endpoints,
         @Inject(APP_CONFIG) appConfig: AppConfig,
     ) {
@@ -94,7 +84,6 @@ export class OfiKycHomeComponent implements AfterViewInit, OnDestroy {
                 /* Assign list to a property. */
                 this.userInfo = d;
                 this.investorType = d.investorType;
-                this.renderSplash();
                 this.changeDetectorRef.markForCheck();
             });
 
@@ -107,6 +96,7 @@ export class OfiKycHomeComponent implements AfterViewInit, OnDestroy {
     }
 
     ngOnInit() {
+        this.getAssetManagementCompanies();
     }
 
     openMyInformationsModal(userInformations: KycMyInformations) {
@@ -165,7 +155,7 @@ export class OfiKycHomeComponent implements AfterViewInit, OnDestroy {
         this.ngRedux.dispatch(clearAppliedHighlight());
         // this.showModal = false;
 
-        this.route.queryParams.subscribe((queryParams) => {
+        this.route.queryParams.subscribe(async (queryParams) => {
             if (this.isPortfolioManagerType()) {
                 this.portfolioManagerAction();
             } else {
@@ -173,7 +163,8 @@ export class OfiKycHomeComponent implements AfterViewInit, OnDestroy {
                     this.router.navigate(['onboarding-requests', 'new'], {
                         queryParams: {
                             invitationToken: queryParams.invitationToken,
-                            amcID: queryParams.amcID,
+                            selectedAmcIds: await this.getAmcIdsToCreateKycs.bind(this)(Number(queryParams.amcID)),
+                            invitedAmcId: queryParams.amcID,
                             onboardingMode: 'true',
                         },
                     });
@@ -182,6 +173,34 @@ export class OfiKycHomeComponent implements AfterViewInit, OnDestroy {
                 }
             }
         });
+    }
+
+    /**
+     * Get all the AmcIDs to create kycs with
+     * Work out the additional AMCs selected that would need to create kycs with.
+     * The additional AMCs are work out from the kyc parties selections
+     * @param {number} invitedAmcId
+     * @return {Promise<number[]>}
+     */
+    async getAmcIdsToCreateKycs(invitedAmcId: number): Promise<number[]> {
+        const companySelections:PartyCompaniesInterface  = getPartyCompanies(this.kycPartySelections);
+        const companiesList = (await this.managementCompanyList$.pipe(first()).toPromise()).toJS();
+        const amcIds = [invitedAmcId];
+        // only pick the first one. if there are more then one. they would get ignored.
+        const id2sAmc = companiesList.find(c => c.managementCompanyType === 'id2s');
+        const nowCpAmc = companiesList.find(c => c.managementCompanyType === 'nowcp');
+
+        // try to get id2s companyID
+        if (id2sAmc && companySelections.id2s && invitedAmcId !== id2sAmc.companyID) {
+            amcIds.push(id2sAmc.companyID);
+        }
+
+        // try to get nowCP companyID
+        if (nowCpAmc && companySelections.nowcp && invitedAmcId !== nowCpAmc.companyID) {
+            amcIds.push(nowCpAmc.companyID);
+        }
+
+        return amcIds;
     }
 
     /**
@@ -208,15 +227,24 @@ export class OfiKycHomeComponent implements AfterViewInit, OnDestroy {
         this.router.navigate(['home']);
     }
 
+    /**
+     * Whether to show kyc onboarding flow
+     * portfolio manager does not need kyc onboarding
+     * @return {boolean}
+     */
+    showOnboardingFlow():boolean {
+        return !this.isPortfolioManagerType();
+    }
+
+    /**
+     * fetch management companies list from membernode
+     */
+    getAssetManagementCompanies() {
+        this.ofiManagementCompanyService.fetchInvestorManagementCompanyList(true);
+    }
+
     ngOnDestroy(): void {
         this.unSubscribe.next();
         this.unSubscribe.complete();
-    }
-
-    renderSplash() {
-        // Now CP investor type, 70 = issuer, 80 == investor
-        if (this.investorType === 70 || this.investorType === 80) {
-            this.isNowCP = true;
-        }
     }
 }

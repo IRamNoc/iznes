@@ -6,6 +6,7 @@ import {
     toNormalScale,
     convertToBlockChainNumber,
     getAmountTwoDecimal,
+    getNumberDecimalPlace,
 } from '../order-calculations';
 
 describe('calFee', () => {
@@ -147,5 +148,24 @@ describe('calculateFigures', () => {
 
             expect(figures.knownNav).toBe(true);
         });
+    });
+});
+
+describe('getNumberDecimalPlace', () => {
+    it('should passed', () => {
+        const testCases = [
+            { input: 1.2, expected: 1 },
+            { input: 1.234, expected: 3 },
+            { input: 1.0, expected: 0 },
+            { input: 1, expected: 0 },
+            { input: 0.2, expected: 1 },
+            { input: 0.24, expected: 2 },
+            { input: 0, expected: 0 },
+            { input: 0.0, expected: 0 },
+        ];
+
+        for (const testCase of testCases) {
+            expect(getNumberDecimalPlace(testCase.input)).toEqual(testCase.expected);
+        }
     });
 });

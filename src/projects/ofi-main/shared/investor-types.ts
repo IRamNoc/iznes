@@ -7,6 +7,9 @@ export enum InvestorType {
     RetailMandate = 60,
     NowCPKycIssuer = 70,
     NowCPKycInvestor = 80,
+    NowCPKycBothInvestorAndIssuer = 90,
+    ID2SKycIPA = 100,
+    ID2SKycCustodian = 110,
 }
 
 export type InvestorTypeList = { id: InvestorType, text: string }[];
@@ -18,6 +21,9 @@ export const investorTypeList: InvestorTypeList = [
     { id: InvestorType.InstitutionalMandate, text: 'Institutional Investor' },
     { id: InvestorType.DiscretionaryManager, text: 'Discretionary Manager' },
     { id: InvestorType.RetailMandate, text: 'Retail Investor' },
+    { id: InvestorType.NowCPKycBothInvestorAndIssuer, text: 'Both Investor and Issuer' },
+    { id: InvestorType.ID2SKycIPA, text: 'IPA' },
+    { id: InvestorType.ID2SKycCustodian, text: 'Custodian' },
 ];
 
 export function buildInvestorTypeList(...types: InvestorType[]): InvestorTypeList {

@@ -16,7 +16,8 @@ export class InvestmentConstraintFormComponent implements OnInit, OnDestroy {
     @Output() refreshForm = new EventEmitter<void>();
     @Input() form;
     @Input() multiple;
-    @Input() index;
+    // Index of this investment nature form. the risk nature('investment detail') section can contain multiple investment nature forms, when a kyc is against multiple AMs
+    @Input('index') formIndex;
     @select(['ofi', 'ofiProduct', 'ofiManagementCompany', 'investorManagementCompanyList', 'investorManagementCompanyList']) managementCompanyList$;
     @select(['ofi', 'ofiKyc', 'myInformations', 'investorType']) kycInvestorType$;
 
@@ -50,7 +51,6 @@ export class InvestmentConstraintFormComponent implements OnInit, OnDestroy {
 
                     return !this.multiple || (dataAMCId === currentAMCId);
                 }),
-                take(1),
             )
             .subscribe((data: any) => {
                 this.form.patchValue(data);
@@ -78,7 +78,10 @@ export class InvestmentConstraintFormComponent implements OnInit, OnDestroy {
 
         this.kycInvestorType$.pipe(
             takeUntil(this.unsubscribe),
-        ).subscribe(t => this.kycInvestorType = t);
+        ).subscribe((t) => {
+            if (!t) return;
+            this.kycInvestorType = t;
+        });
     }
 
     initFormCheck() {

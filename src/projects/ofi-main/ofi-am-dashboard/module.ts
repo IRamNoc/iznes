@@ -15,23 +15,14 @@ import { SelectModule, DpDatePickerModule, SetlDirectivesModule, SetlPipesModule
 import { MultilingualModule } from '@setl/multilingual';
 
 /* Components. */
-import { FundHoldingsComponent } from './fund-holdings/component';
-import { MyDashboardComponent } from './my-dashboard/component';
 import { ShareHoldersComponent } from './share-holders/component';
-
-/* Graphs. */
-import { ChartsModule } from 'ng2-charts';
 
 /* Am Dashboard service. */
 @NgModule({
     declarations: [
-        FundHoldingsComponent,
-        MyDashboardComponent,
         ShareHoldersComponent,
     ],
     exports: [
-        FundHoldingsComponent,
-        MyDashboardComponent,
         ShareHoldersComponent,
     ],
     imports: [
@@ -45,7 +36,6 @@ import { ChartsModule } from 'ng2-charts';
         DpDatePickerModule,
         SetlDirectivesModule,
         MultilingualModule,
-        ChartsModule,
         RouterModule,
     ],
     providers: [],

@@ -125,7 +125,7 @@ describe('OfiManagementCompanyComponent', () => {
         signatureHash: 'signatureHash',
         logoTitle: 'logoTitle',
         logoHash: 'logoHash',
-        isNowCp: false,
+        managementCompanyType: 'common',
     };
 
     beforeAll(done => (async () => {

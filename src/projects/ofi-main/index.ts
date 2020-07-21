@@ -79,13 +79,6 @@ export {
 } from './ofi-store';
 
 /**
- * Corporate Actions
- */
-export { OfiCorpActionsModule } from './ofi-corp-actions/ofi-corp-actions.module';
-export { OfiCorpActionService } from './ofi-req-services/ofi-corp-actions/service';
-export { CouponPaymentComponent } from './ofi-corp-actions/coupon-payment/coupon-payment.component';
-
-/**
  * Orders
  */
 export { OfiOrdersModule } from './ofi-orders/ofi-orders.module';
@@ -98,16 +91,12 @@ export { PlaceOrdersComponent } from './ofi-orders/place-orders/place-orders.com
  */
 export { OfiAmDashboardModule } from './ofi-am-dashboard/module';
 export { OfiAmDashboardService } from './ofi-req-services/ofi-am-dashboard/service';
-export { FundHoldingsComponent } from './ofi-am-dashboard/fund-holdings/component';
-export { MyDashboardComponent } from './ofi-am-dashboard/my-dashboard/component';
 export { ShareHoldersComponent } from './ofi-am-dashboard/share-holders/component';
 
 /**
  * Report module
  */
 export {
-    OfiPnlReportComponent,
-    OfiTaxReportComponent,
     OfiReportModule,
     OfiManageCsvComponent,
     CentralisationReportComponent,

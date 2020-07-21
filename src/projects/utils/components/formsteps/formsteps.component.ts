@@ -9,20 +9,25 @@ import {
     OnDestroy,
     ElementRef,
     ChangeDetectorRef,
+    OnChanges, SimpleChanges, QueryList
 } from '@angular/core';
 import { FormstepComponent } from './formstep.component';
 import { get as getValue, debounce } from 'lodash';
+import { Observable } from 'rxjs/Observable';
+import {filter, take, takeUntil} from 'rxjs/operators';
+import {Subject} from "rxjs";
 
 @Component({
     selector: 'form-steps',
     templateUrl: './formsteps.component.html',
 })
-export class FormstepsComponent implements AfterContentInit, OnDestroy {
+export class FormstepsComponent implements AfterContentInit, OnDestroy, OnChanges {
 
     @ViewChild('submit', { read: ElementRef }) button;
     @ContentChildren(FormstepComponent) stepComponents;
 
     @Input() set stepsConfig(stepsConfig) {
+        this.progress = [];
         stepsConfig.forEach((step, index) => {
             this.progress.push({
                 title: step.title,
@@ -49,7 +54,7 @@ export class FormstepsComponent implements AfterContentInit, OnDestroy {
 
     @Output() action: EventEmitter<any> = new EventEmitter<any>();
 
-    margin;
+    private unsubscribe: Subject<any> = new Subject();
     _position;
     _stepsConfig;
     _onboardingMode;
@@ -58,7 +63,10 @@ export class FormstepsComponent implements AfterContentInit, OnDestroy {
     stepsMap: {} = {};
     mainContentEl: HTMLElement;
     fixStepsProgress: boolean = false;
-    debounceScroll = debounce(this.handleScroll.bind(this), 20);
+
+    debounceScroll = debounce(this.handleScroll.bind(this), 10);
+    debouncedFixStepsProgress = debounce(this.handleFixStepsProgress.bind(this), 10);
+    public stepsComponentsArray: any[] = [];
 
     get steps() {
         return this.stepComponents.reduce((acc, cur) => acc.concat([cur.step]), []);
@@ -74,6 +82,7 @@ export class FormstepsComponent implements AfterContentInit, OnDestroy {
         this.setSubmitted(this.position);
         this.move();
         this.updateSubmitID();
+        this.changeDetectorRef.detectChanges();
     }
 
     get disabled(): boolean {
@@ -83,17 +92,42 @@ export class FormstepsComponent implements AfterContentInit, OnDestroy {
         this._disabled = state;
     }
 
+    @Input()
+    currentCompletedStep$: Observable<number>;
+
     constructor(
         private element: ElementRef,
         private changeDetectorRef: ChangeDetectorRef,
-    ) {
-    }
+    ) {}
 
     ngAfterContentInit() {
-        this.position = 0;
+        this.stepsComponentsArray = this.stepComponents.toArray();
         this.progress[0].active = true;
         this.mainContentEl = document.querySelector('main.content-area');
-        this.mainContentEl.addEventListener('scroll', debounce(this.handleFixStepsProgress.bind(this), 20));
+        this.mainContentEl.addEventListener('scroll', this.debouncedFixStepsProgress);
+        this.currentCompletedStep$.pipe(
+            filter(a => a !== null && typeof a !== 'undefined'),
+            take(1),
+        ).subscribe((step) => {
+            this.goToStep(step);
+            this.next();
+        });
+
+        // update stepsComponentsArray when stepComponents was update.
+        // Make sure the view is updated when stepConfigs was updated.
+        this.stepComponents.changes.pipe(
+            takeUntil(this.unsubscribe),
+        ).subscribe((ch) => {
+            this.stepsComponentsArray = this.stepComponents.toArray();
+        });
+    }
+
+    ngOnChanges(changes: SimpleChanges) {
+        // Make sure the view is updated when stepConfigs was updated.
+        if ('stepsConfig' in changes) {
+           this.stepsConfig = changes['stepsConfig'].currentValue;
+            if (this.changeDetectorRef) this.changeDetectorRef.detectChanges();
+        }
     }
 
     /**
@@ -199,16 +233,31 @@ export class FormstepsComponent implements AfterContentInit, OnDestroy {
     }
 
     goToStep(step) {
-        this.position = step;
+        if (typeof step !== 'undefined') {
+            this.position = step;
+        }
+    }
+
+    /**
+     * Dispatch an action to request to jump to the passed in step
+     *
+     * @param step
+     */
+    requestJumpToStep(step) {
+        if (typeof step !== 'undefined') {
+            this.action.emit({ type: 'jump', requestedStep: step });
+        }
     }
 
     move() {
-        // Not using translate because we can't have modals (using fixed) as child of translate
-        this.margin = `-${this.position * 100}%`;
         document.querySelector('main.content-area').scrollTop = 0;
     }
 
     setSubmitted(position) {
+        if (position === -1) {
+            position = 0
+        }
+
         let currentStep: any = {};
         this.progress.forEach((step, index) => {
             if (position === index) currentStep = { step, index };
@@ -227,7 +276,9 @@ export class FormstepsComponent implements AfterContentInit, OnDestroy {
         // Show sub-steps
         if (step.parentStep) {
             this.progress[this.stepsMap[step.parentStep]].children
-            .forEach(child => this.progress[this.stepsMap[child]].hide = false);
+            .forEach(child => {
+                this.progress[this.stepsMap[child]].hide = false;
+            });
 
             // Set parent step to active
             this.progress[this.stepsMap[step.parentStep]].active = true;
@@ -243,10 +294,11 @@ export class FormstepsComponent implements AfterContentInit, OnDestroy {
     }
 
     setActive(position) {
-        this.stepComponents.toArray().forEach((component, idx) => {
-            component.active = position === idx;
-            position === idx ? component.stopLastInputTabbing() : component.removeKeydownListeners();
-        });
+        if (!!this.stepComponents) {
+            this.stepComponents.toArray().forEach((component, idx) => {
+                component.active = position === idx;
+            });
+        }
     }
 
     isEnd() {
@@ -277,7 +329,9 @@ export class FormstepsComponent implements AfterContentInit, OnDestroy {
     }
 
     ngOnDestroy() {
-        this.mainContentEl.removeEventListener('scroll', e => this.handleFixStepsProgress(e));
+        this.unsubscribe.next();
+        this.unsubscribe.complete();
+        this.mainContentEl.removeEventListener('scroll', this.debouncedFixStepsProgress);
         this.changeDetectorRef.detach();
     }
 }

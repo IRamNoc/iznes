@@ -1,3 +1,4 @@
+import { KycPartySelections } from './../../../ofi-store/ofi-kyc/my-informations/model';
 import { Injectable } from '@angular/core';
 import { select, NgRedux } from '@angular-redux/store';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
@@ -20,8 +21,9 @@ import {
 } from 'lodash';
 import { CustomValidators } from '@setl/utils/helper';
 import { OfiKycService } from '@ofi/ofi-main/ofi-req-services/ofi-kyc/service';
-import { setMyKycRequestedKycs } from '@ofi/ofi-main/ofi-store/ofi-kyc';
+import { setMyKycRequestedKycs, MyKycRequestedIds } from '@ofi/ofi-main/ofi-store/ofi-kyc';
 import { RequestsService } from '../requests.service';
+import { KycFormHelperService } from '../kyc-form-helper.service';
 
 import {
     booleanControls,
@@ -31,6 +33,7 @@ import {
     otherSectorActivityList,
     regulatorSupervisoryAuthoritiesList,
     regulatoryStatusList,
+    regulatoryStatusListID2S,
     regulatoryStatusInsurerTypeList,
     publicEstablishmentList,
     companyActivitiesList,
@@ -55,6 +58,9 @@ import {
     identificationNumberList,
     listingMarketsList,
     multilateralTradingFacilitiesList,
+    typeOfRevenuesList,
+    signingAuthorityDefaultList,
+    signingAuthorityNowCPList,
 } from '../requests.config';
 
 @Injectable()
@@ -67,6 +73,7 @@ export class NewRequestService {
     otherSectorActivityList;
     regulatorSupervisoryAuthoritiesList;
     regulatoryStatusList;
+    regulatoryStatusListID2S;
     regulatoryStatusInsurerTypeList;
     publicEstablishmentList;
     geographicalAreaList;
@@ -91,12 +98,17 @@ export class NewRequestService {
     identificationNumberTypeList;
     listingMarketsList;
     multilateralTradingFacilitiesList;
+    typeOfRevenuesList;
+    signingAuthorityDefaultList;
+    signingAuthorityNowCPList;
     saveContext = '';
 
     /* Private Properties. */
     private subscriptions: any[] = [];
 
     @select(['user', 'siteSettings', 'production']) productionOb;
+    /* The companies that this user was invited by. */
+    public kycPartySelections: KycPartySelections;
 
     constructor(
         private multilingualService: MultilingualService,
@@ -105,7 +117,14 @@ export class NewRequestService {
         private ngRedux: NgRedux<any>,
         private ofiKycService: OfiKycService,
         private toasterService: ToasterService,
+        private kycFormHelperService: KycFormHelperService,
     ) {
+        // Subscribe for party details.
+        this.kycFormHelperService.kycPartySelections$
+            .subscribe((kycPartyCompanies: KycPartySelections) => {
+                this.kycPartySelections = kycPartyCompanies;
+            });
+
         this.subscriptions.push(this.productionOb.subscribe((production) => {
             this.isProduction = production;
         }));
@@ -116,6 +135,7 @@ export class NewRequestService {
         this.otherSectorActivityList = otherSectorActivityList;
         this.regulatorSupervisoryAuthoritiesList = regulatorSupervisoryAuthoritiesList;
         this.regulatoryStatusList = regulatoryStatusList;
+        this.regulatoryStatusListID2S = regulatoryStatusListID2S;
         this.regulatoryStatusInsurerTypeList = regulatoryStatusInsurerTypeList;
         this.publicEstablishmentList = publicEstablishmentList;
         this.geographicalAreaList = geographicalAreaList;
@@ -140,6 +160,9 @@ export class NewRequestService {
         this.identificationNumberTypeList = identificationNumberList;
         this.listingMarketsList = listingMarketsList;
         this.multilateralTradingFacilitiesList = multilateralTradingFacilitiesList;
+        this.typeOfRevenuesList = typeOfRevenuesList;
+        this.signingAuthorityDefaultList = signingAuthorityDefaultList;
+        this.signingAuthorityNowCPList = signingAuthorityNowCPList;
     }
 
     set context(value) {
@@ -150,7 +173,12 @@ export class NewRequestService {
         return this.saveContext;
     }
 
-    getContext(amcs) {
+    /**
+     * Get the current kyc context as string in this format: kycID1-KycID2, such as '3-23'
+     * @param {{kycID: number; amcID: number; context: string; completedStep: string}[]} amcs
+     * @return {string}
+     */
+    getContext(amcs: {kycID: number; amcID: number; context: string; completedStep: string}[]) {
         amcs = map(amcs, 'kycID').sort();
 
         const context = amcs.reduce(
@@ -175,15 +203,15 @@ export class NewRequestService {
         });
     }
 
-    createRequestForm(): FormGroup {
+    async createRequestForm(): Promise<FormGroup> {
         const fb = this.formBuilder;
 
         const selection = this.formBuilder.group({
             managementCompanies: [[], Validators.required],
         });
 
-        const identification = this.createIdentificationFormGroup();
-        const riskProfile = this.createRiskProfileFormGroup();
+        const identification = await this.createIdentificationFormGroup();
+        const riskProfile = await this.createRiskProfileFormGroup();
         const documents = this.createDocumentsFormGroup();
         const validation = this.createValidationFormGroup();
 
@@ -203,6 +231,7 @@ export class NewRequestService {
             kycID: '',
             undersigned: ['', this.getLengthValidator()],
             actingOnBehalfOf: ['', this.getLengthValidator()],
+            signingAuthority: ['', Validators.required],
             doneAt: ['', this.getLengthValidator()],
             doneDate: ['', Validators.required],
             positionRepresentative: ['', this.getLengthValidator()],
@@ -210,7 +239,7 @@ export class NewRequestService {
         });
     }
 
-    createIdentificationFormGroup() {
+    async createIdentificationFormGroup(): Promise<FormGroup> {
         const fb = this.formBuilder;
 
         const entity = fb.group({
@@ -306,7 +335,6 @@ export class NewRequestService {
             ],
             multilateralTradingFacilities: [
                 { value: '', disabled: true },
-                Validators.required,
             ],
             otherMultilateralTradingFacilities: [
                 { value: '', disabled: true },
@@ -328,11 +356,16 @@ export class NewRequestService {
                     Validators.max(100),
                 ],
             ],
+            companyStateOwned: 0,
+            percentCapitalHeldByState: [
+                { value: '', disabled: true },
+                [
+                    Validators.required,
+                    Validators.min(0),
+                    Validators.max(100),
+                ],
+            ],
             balanceSheetTotal: ['', Validators.required],
-            netRevenuesNetIncome: ['', [
-                Validators.required,
-                Validators.min(0),
-            ]],
             shareholderEquity: ['', [
                 Validators.required,
                 Validators.min(0),
@@ -357,6 +390,8 @@ export class NewRequestService {
                 Validators.required,
             ],
             totalFinancialAssetsAlreadyInvested: ['', Validators.required],
+            typeOfRevenues: ['', Validators.required],
+            typeOfRevenuesValue: ['', [Validators.required, Validators.min(0)]],
         });
 
         const beneficiaries = fb.group({
@@ -371,8 +406,9 @@ export class NewRequestService {
         const classificationInformation = fb.group({
             kycID: '',
             investorStatus: 0,
-            optFor: 0,
+            optFor: null,
             optForValues: fb.array([]),
+            operatorsHasExperienceNeuCP: 0,
             excludeProducts: ['', Validators.maxLength(255)],
 
             nonPro: fb.group({
@@ -405,13 +441,22 @@ export class NewRequestService {
             }),
         });
 
-        return fb.group({
+        const formBuilderObject = {
             generalInformation,
             companyInformation,
             beneficiaries,
             bankingInformation,
             classificationInformation,
-        });
+        };
+
+        // the kyc is only for id2s party
+        const onlyID2STypeKyc = await this.kycFormHelperService.onlyID2S$.toPromise();
+
+        if (onlyID2STypeKyc) {
+            formBuilderObject.bankingInformation.disable();
+        }
+
+        return fb.group(formBuilderObject);
     }
 
     createOptFor(id) {
@@ -435,7 +480,7 @@ export class NewRequestService {
         return optfors;
     }
 
-    createRiskProfileFormGroup() {
+    async createRiskProfileFormGroup(): Promise<FormGroup> {
         const fb = this.formBuilder;
 
         const investmentNature = fb.group({
@@ -453,6 +498,21 @@ export class NewRequestService {
             constraintsSameInvestmentCrossAm: 0,
             constraints: fb.array([]),
         });
+
+        // Disable constraints section for type ID2S or NowCP kyc
+        const onlyID2SType = await this.kycFormHelperService.onlyID2SInForm$.toPromise();
+
+        if (onlyID2SType) {
+            investmentNature.get('natures').disable();
+        }
+
+        // Disable constraints section for type ID2S or NowCP kyc
+        const id2sOrNowCpTypeKyc = await this.kycFormHelperService.onlyID2SOrNowCPInForms$.toPromise();
+
+        if (id2sOrNowCpTypeKyc) {
+            investmentObjective.get('objectives').disable();
+            investmentConstraint.get('constraints').disable();
+        }
 
         return fb.group({
             investmentNature,
@@ -472,20 +532,22 @@ export class NewRequestService {
                 kycidorpassportdoc: this.createDocumentFormGroup('kycidorpassportdoc', !this.isProduction),
                 kyctaxcertificationdoc: this.createDocumentFormGroup('kyctaxcertificationdoc', !this.isProduction),
                 kycw8benefatcadoc: this.createDocumentFormGroup('kycw8benefatcadoc', !this.isProduction),
-            }),
-            listed: fb.group({
+                kyclistsigningauthoritiesdoc: this.createDocumentFormGroup('kyclistsigningauthoritiesdoc', !this.isProduction),
+                kycbeneficialownerdoc: this.createDocumentFormGroup('kycbeneficialownerdoc', !this.isProduction),
+                kycdisclosureproceduredoc: this.createDocumentFormGroup('kycdisclosureproceduredoc', !this.isProduction),
+                kyccompositioncommitteedoc: this.createDocumentFormGroup('kyccompositioncommitteedoc', !this.isProduction),
+                kycannual2yeardoc: this.createDocumentFormGroup('kycannual2yeardoc', !this.isProduction),
+                kycannual3yeardoc: this.createDocumentFormGroup('kycannual3yeardoc', !this.isProduction),
+                kycannual3yeartaxdoc: this.createDocumentFormGroup('kycannual3yeartaxdoc', !this.isProduction),
                 kycisincodedoc: this.createDocumentFormGroup('kycisincodedoc', !this.isProduction),
                 kycevidencefloatable: this.createDocumentFormGroup('kycevidencefloatable', !this.isProduction),
-            }),
-            regulated: fb.group({
                 kycproofofapprovaldoc: this.createDocumentFormGroup('kycproofofapprovaldoc', !this.isProduction),
                 kycproofregulationdoc: this.createDocumentFormGroup('kycproofregulationdoc', !this.isProduction),
                 kycwolfsbergdoc: this.createDocumentFormGroup('kycwolfsbergdoc', !this.isProduction),
-            }),
-            nowcp: fb.group({
                 kycribdoc: this.createDocumentFormGroup('kycribdoc', !this.isProduction),
-                kycinfomemorandumbdfdoc: this.createDocumentFormGroup('kycinfomemorandumbdfdoc', !this.isProduction),
                 kycorgchartdoc: this.createDocumentFormGroup('kycorgchartdoc', !this.isProduction),
+                kyccriticalcustomersdoc: this.createDocumentFormGroup('kyccriticalcustomersdoc', !this.isProduction),
+                kycbusinessplandoc: this.createDocumentFormGroup('kycbusinessplandoc', !this.isProduction),
             }),
         });
     }
@@ -508,10 +570,10 @@ export class NewRequestService {
         return this.formBuilder.group(group);
     }
 
-    createInvestmentNature(id): FormGroup {
+    async createInvestmentNature(id): Promise<FormGroup> {
         const fb = this.formBuilder;
 
-        return fb.group({
+        let fbGroup = fb.group({
             assetManagementCompanyID: id ? id : null,
             financialAssetManagementMethod: fb.group(
                 {
@@ -541,22 +603,32 @@ export class NewRequestService {
                 }, Validators.required,
             ],
         });
+
+        // Remove investment vechicles if we're with nowcp.
+        if (await this.kycFormHelperService.onlyID2SOrNowCPInForms$.toPromise()) {
+            fbGroup.get('investmentvehiclesAlreadyUsed').disable();
+            fbGroup.get('investmentvehiclesAlreadyUsedSpecification').disable();
+        }
+
+        return fbGroup;
     }
 
-    createInvestmentNatures(amcs) {
+    async createInvestmentNatures(amcs) {
         const natures = [];
         const length = amcs.length || 1;
 
         for (let i = 0; i < length; i += 1) {
             const id = amcs[i];
-            natures.push(this.createInvestmentNature(id));
+            natures.push(
+                await this.createInvestmentNature(id),
+            );
         }
 
         return natures;
     }
 
-    createInvestmentObjective(id): FormGroup {
-        return this.formBuilder.group({
+    async createInvestmentObjective(id) {
+        const form = this.formBuilder.group({
             assetManagementCompanyID: id ? id : null,
             performanceProfile: this.formBuilder.group(this.transformToForm(this.performanceProfileList), {
                 validator: (formGroup) => {
@@ -628,22 +700,33 @@ export class NewRequestService {
                 },
             ),
         });
+
+        // Disable constraints section for type ID2S or NowCP kyc
+        const id2sOrNowCpTypeKyc = await this.kycFormHelperService.onlyID2SOrNowCPInForms$.toPromise();
+
+        if (id2sOrNowCpTypeKyc) {
+            form.disable();
+        }
+
+        return form;
     }
 
-    createInvestmentObjectives(amcs) {
+    async createInvestmentObjectives(amcs) {
         const objectives = [];
         const length = amcs.length || 1;
 
         for (let i = 0; i < length; i += 1) {
             const id = amcs[i];
-            objectives.push(this.createInvestmentObjective(id));
+            objectives.push(
+                await this.createInvestmentObjective(id)
+            );
         }
 
         return objectives;
     }
 
-    createConstraint(id) {
-        return this.formBuilder.group({
+    async createConstraint(id) {
+        const form = this.formBuilder.group({
             assetManagementCompanyID: id ? id : null,
             statutoryConstraints: ['', Validators.maxLength(255)],
             taxConstraints: ['', Validators.maxLength(255)],
@@ -654,19 +737,27 @@ export class NewRequestService {
                 disabled: true,
             }],
             otherPersonsAuthorised: ['', Validators.maxLength(255)],
-            hasEverIssuedNeuCp: [0, Validators.required],
-            hasAlreadyInvestedNeuCp: [0, Validators.required],
-            hasExperienceTradingNeuCp: [0, Validators.required],
         });
+
+        // Disable constraints section for type ID2S or NowCP kyc
+        const id2sOrNowCpTypeKyc = await this.kycFormHelperService.onlyID2SOrNowCPInForms$.toPromise();
+
+        if (id2sOrNowCpTypeKyc) {
+            form.disable();
+        }
+
+        return form;
     }
 
-    createConstraints(amcs) {
+    async createConstraints(amcs) {
         const constraints = [];
         const length = amcs.length || 1;
 
         for (let i = 0; i < length; i += 1) {
             const id = amcs[i];
-            constraints.push(this.createConstraint(id));
+            constraints.push(
+                await this.createConstraint(id),
+            );
         }
 
         return constraints;
@@ -792,7 +883,7 @@ export class NewRequestService {
         return result;
     }
 
-    storeCurrentKycs(ids) {
+    storeCurrentKycs(ids: MyKycRequestedIds) {
         const requestedKycs = setMyKycRequestedKycs(ids);
         this.ngRedux.dispatch(requestedKycs);
     }
@@ -801,17 +892,24 @@ export class NewRequestService {
         const ids = [];
 
         for (const choice of choices) {
-            await this.createDraft(choice, connectedWallet).then((response) => {
+            const response = await this.createDraft(choice, connectedWallet);
+
+            try {
                 const kycID = getValue(response, [1, 'Data', 0, 'kycID']);
                 const amcID = choice.id;
+                const isThirdPartyKyc = getValue(response, [1, 'Data', 0, 'isThirdPartyKyc']);
+                const managementCompanyType = getValue(response, [1, 'Data', 0, 'managementCompanyType']);
 
                 ids.push({
                     kycID,
                     amcID,
+                    isThirdPartyKyc,
+                    managementCompanyType,
                 });
-            }).catch((err) => {
-                console.error(err);
-            });
+            } catch (e) {
+                console.error(e);
+            }
+
         }
 
         return ids;
@@ -828,9 +926,15 @@ export class NewRequestService {
         });
     }
 
-    errorPop() {
-        const translation = this.multilingualService.translate('The server returned an error. Please try again later.');
-        this.toasterService.pop('error', translation);
+    errorPop(e) {
+        const serverErrorMsg = getValue(e, '[1].Data.message', undefined);
+        let errMsg;
+        if (serverErrorMsg) {
+            errMsg = this.multilingualService.translate(serverErrorMsg);
+        } else {
+            errMsg = this.multilingualService.translate('The server returned an error. Please try again later.');
+        }
+        this.toasterService.pop('error', errMsg);
     }
 
     /**

@@ -28,6 +28,7 @@
         <app-authenticate
             *ngIf="showTwoFactorModal && getPlatformName() !== 'OpenCSD Rooster'"
             [qrCode]="qrCode"
+            [twoFactorSecret]="twoFactorSecret"
             [displayAsModals]="false"
             (modalCancelled)="showTwoFactorModal=!$event; submitBtnState=loadingState.DEFAULT; showAlert('clear')"
             [resetToken]="resetTwoFactorToken"

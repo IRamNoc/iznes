@@ -1,11 +1,12 @@
 <div class="steps-container" [class.fixed]="fixStepsProgress" (wheel)="debounceScroll($event)">
-    <div *ngIf="_onboardingMode" class="kyc-step complete"><span></span> {{ 'User Profile' | translate }}</div>
-    <form-steps-progress [config]="progress" (jumpToStep)="goToStep($event)"></form-steps-progress>
+    <form-steps-progress [config]="progress" (jumpToStep)="requestJumpToStep($event)">
+        <div *ngIf="_onboardingMode" class="kyc-step complete no-link"><span></span> {{ 'User Profile' | translate }}</div>
+    </form-steps-progress>
 </div>
 
 <div class="form-container">
-    <div class="steps-slider" [ngStyle]="{'marginLeft': margin}">
-        <ng-content></ng-content>
+    <div class="steps-slider">
+        <ng-container *ngTemplateOutlet="stepsComponentsArray[position]?.template"></ng-container>
     </div>
 
     <div class="button-container">

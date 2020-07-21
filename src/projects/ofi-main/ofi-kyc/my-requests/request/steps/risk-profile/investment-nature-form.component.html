@@ -20,8 +20,8 @@
         <div class="row col-sm-12 form-group">
             <div class="col-sm-12">
                 <span class="checkbox-inline">
-                    <input type="checkbox" id="internalManagement-{{index}}" formControlName="internalManagement">
-                    <label for="internalManagement-{{index}}">
+                    <input type="checkbox" id="internalManagement-{{formIndex}}" formControlName="internalManagement">
+                    <label for="internalManagement-{{formIndex}}">
                         {{ 'Internal Management' | translate }}
                     </label>
                 </span>
@@ -31,9 +31,9 @@
         <div class="row col-sm-12 form-group">
             <div class="col-sm-12">
                 <span class="checkbox-inline">
-                    <input type="checkbox" id="withAdviceOfAuthorisedThirdPartyInstitution-{{index}}"
+                    <input type="checkbox" id="withAdviceOfAuthorisedThirdPartyInstitution-{{formIndex}}"
                         formControlName="withAdviceOfAuthorisedThirdPartyInstitution">
-                    <label for="withAdviceOfAuthorisedThirdPartyInstitution-{{index}}">
+                    <label for="withAdviceOfAuthorisedThirdPartyInstitution-{{formIndex}}">
                         {{ 'With the advice of an authorised third party institution' | translate }}
                     </label>
                 </span>
@@ -43,8 +43,8 @@
         <div class="row col-sm-12 form-group">
             <div class="col-sm-12">
                 <span class="checkbox-inline">
-                    <input type="checkbox" id="mandateEntrustedToManagers-{{index}}" formControlName="mandateEntrustedToManagers">
-                    <label for="mandateEntrustedToManagers-{{index}}">
+                    <input type="checkbox" id="mandateEntrustedToManagers-{{formIndex}}" formControlName="mandateEntrustedToManagers">
+                    <label for="mandateEntrustedToManagers-{{formIndex}}">
                         {{ 'By mandate(s) entrusted to a manager(s)' | translate }}
                     </label>
                 </span>
@@ -70,9 +70,9 @@
 
         <ng-container *ngFor="let frequency of frequencyList; let i = index">
             <div class="row col-sm-12 form-group required">
-                <ng-container *ngTemplateOutlet="checkboxGridFrequency; context: {'item': frequencyList[i * 2], 'index': i }">
+                <ng-container *ngTemplateOutlet="checkboxGridFrequency; context: {'item': frequencyList[i * 2] }">
                 </ng-container>
-                <ng-container *ngTemplateOutlet="checkboxGridFrequency; context: {'item': frequencyList[(i * 2) + 1], 'index': i }">
+                <ng-container *ngTemplateOutlet="checkboxGridFrequency; context: {'item': frequencyList[(i * 2) + 1] }">
                 </ng-container>
             </div>
         </ng-container>
@@ -85,14 +85,14 @@
         </div>
 
         <!-- Template is placed here because formControlName must be nested within formGroupName which in turn must be nested within formGroup -->
-        <ng-template #checkboxGridFrequency let-item="item" let-index="index">
+        <ng-template #checkboxGridFrequency let-item="item">
             <div class="col-sm-3" *ngIf="item">
                 <div class="checkbox-inline">
                     <input type="checkbox"
-                            id="{{ item.id }}-{{ index }}"
+                            id="{{ item.id }}-{{ formIndex }}"
                             formControlName="{{ item.id }}"
                             (click)="form.get(['frequencyFinancialTransactions', item.id]).markAsTouched()">
-                    <label for="{{ item.id }}-{{ index }}">
+                    <label for="{{ item.id }}-{{ formIndex }}">
                         {{ item.text | translate }}
                     </label>
                 </div>
@@ -100,18 +100,18 @@
         </ng-template>
     </div>
 
-    <div class="checkbox-group mt-2" formGroupName="investmentvehiclesAlreadyUsed">
+    <div *ngIf="! form.get('investmentvehiclesAlreadyUsed').disabled" class="checkbox-group mt-2" formGroupName="investmentvehiclesAlreadyUsed">
         <div class="row col-sm-12">
             <div class="form-group required-field col-sm-12">
-                <label class="required-field">{{ 'Investment vehicles already used' | translate }}</label>
+                <label class="required-field">{{ 'Which investment vehicles do you currently use' | translate }}</label>
             </div>
         </div>
 
         <ng-container *ngFor="let item of investmentVehicleList; let i = index">
             <div class="row col-sm-12 form-group required">
-                <ng-container *ngTemplateOutlet="checkboxGridVehicle; context: {'item': investmentVehicleList[i * 2], 'index': i }">
+                <ng-container *ngTemplateOutlet="checkboxGridVehicle; context: {'item': investmentVehicleList[i * 2]}">
                 </ng-container>
-                <ng-container *ngTemplateOutlet="checkboxGridVehicle; context: {'item': investmentVehicleList[(i * 2) + 1], 'index': i }">
+                <ng-container *ngTemplateOutlet="checkboxGridVehicle; context: {'item': investmentVehicleList[(i * 2) + 1]}">
                 </ng-container>
             </div>
         </ng-container>
@@ -124,14 +124,14 @@
         </div>
 
         <!-- Template is placed here because formControlName must be nested within formGroupName which in turn must be nested within formGroup -->
-        <ng-template #checkboxGridVehicle let-item="item" let-index="index">
+        <ng-template #checkboxGridVehicle let-item="item">
             <div class="col-sm-3" *ngIf="item">
                 <div class="checkbox-inline">
                     <input type="checkbox"
-                            id="{{ item.id }}-{{ index }}"
+                            id="{{ item.id }}-{{ formIndex }}"
                             formControlName="{{ item.id }}"
                             (click)="form.get(['investmentvehiclesAlreadyUsed', item.id]).markAsTouched()">
-                    <label for="{{ item.id }}-{{ index }}">
+                    <label for="{{ item.id }}-{{ formIndex }}">
                         {{ item.text | translate }}
                     </label>
                 </div>
@@ -139,7 +139,7 @@
         </ng-template>
     </div>
 
-    <div class="checkbox-group">
+    <div *ngIf="! form.get('investmentvehiclesAlreadyUsedSpecification').disabled" class="checkbox-group">
         <div class="row col-sm-12">
             <div class="row col-sm-4 form-group required-field" *ngIf="!isDisabled('investmentvehiclesAlreadyUsedSpecification')">
                 <label for="investmentvehiclesAlreadyUsedSpecification">{{ 'Please specify' | translate }}</label>

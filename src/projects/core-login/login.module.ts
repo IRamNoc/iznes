@@ -8,6 +8,9 @@ import { RouterModule } from '@angular/router';
 import { SetlLoginComponent } from './login.component';
 import { SetlLogoutComponent } from './logout.component';
 
+/* SSO Login Engie view. */
+import { LoginSSOEngieComponent } from './login-ssoengie/login-ssoengie.component';
+
 /* Signup */
 import { SignupComponent } from './signup/component';
 
@@ -20,6 +23,7 @@ import { SetlDirectivesModule, SetlPipesModule, SetlComponentsModule } from '@se
 import { EnrollComponent } from './two-factor/enroll/enroll.component';
 import { AuthenticateComponent } from './two-factor/authenticate/authenticate.component';
 import { LoginService } from './login.service';
+import { OktaAuthService } from './okta-auth.service';
 
 @NgModule({
     declarations: [
@@ -28,6 +32,7 @@ import { LoginService } from './login.service';
         SignupComponent,
         EnrollComponent,
         AuthenticateComponent,
+        LoginSSOEngieComponent,
     ],
     imports: [
         ToasterModule,
@@ -45,10 +50,12 @@ import { LoginService } from './login.service';
         SignupComponent,
         EnrollComponent,
         AuthenticateComponent,
+        LoginSSOEngieComponent,
     ],
     providers: [
         ToasterService,
         LoginService,
+        OktaAuthService,
     ],
 })
 

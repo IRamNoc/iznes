@@ -279,7 +279,10 @@ export class FundComponent implements OnInit, OnDestroy {
             isFundStructure: { value: '', disabled: true },
             fundName: ['', Validators.compose([Validators.required])],
             legalEntityIdentifier: [null, this.validators.lei],
-            registerOffice: [null, CustomValidators.swiftNameAddressValidator],
+            registerOffice: [null, [
+                Validators.required,
+                CustomValidators.swiftNameAddressValidator,
+            ]],
             registerOfficeAddress: [null, CustomValidators.swiftNameAddressValidator],
             registerOfficeAddressLine2: [null, CustomValidators.swiftNameAddressValidator],
             registerOfficeAddressZipCode: [null, CustomValidators.swiftNameAddressValidator],

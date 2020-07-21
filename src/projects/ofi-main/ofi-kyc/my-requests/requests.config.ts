@@ -11,77 +11,93 @@ export const formStepsFull = [
     {
         title: 'Selection',
         id: 'step-selection',
+        dbId: 'amcSelection',
     },
     {
         title: 'Introduction',
+        dbId: 'introduction',
     },
     {
         title: 'Identification',
         id: 'step-identification',
         children: ['General Information', 'Company Information', 'Stakeholders', 'Bank Accounts', 'Classification'],
+        dbId: 'identification',
     },
     {
         title: 'General Information',
         id: 'step-general-information',
         parentStep: 'Identification',
+        dbId: 'generalInformation',
     },
     {
         title: 'Company Information',
         id: 'step-company-information',
         parentStep: 'Identification',
+        dbId: 'companyInformation',
     },
     {
         title: 'Stakeholders',
         id: 'step-stakeholder-information',
         parentStep: 'Identification',
+        dbId: 'stakeholders',
     },
     {
         title: 'Bank Accounts',
         id: 'step-bank-accounts',
         parentStep: 'Identification',
+        dbId: 'bankAccounts',
     },
     {
         title: 'Classification',
         id: 'step-classification',
         parentStep: 'Identification',
+        dbId: 'classification',
     },
     {
         title: 'Risk Profile',
         id: 'step-risk-profile',
         children: ['Investment Details', 'Investment Objectives', 'Investment Constraints'],
+        dbId: 'riskProfile',
     },
     {
         title: 'Investment Details',
         id: 'step-investment-details',
         parentStep: 'Risk Profile',
+        dbId: 'investmentDetails',
     },
     {
         title: 'Investment Objectives',
         id: 'step-investment-objectives',
         parentStep: 'Risk Profile',
+        dbId: 'investmentObjectives',
     },
     {
         title: 'Investment Constraints',
         id: 'step-investment-constraints',
         parentStep: 'Risk Profile',
+        dbId: 'investmentConstraints',
     },
     {
         title: 'Documents',
         id: 'step-documents',
+        dbId: 'documents',
     },
     {
         title: 'Validation',
         id: 'step-validation',
+        dbId: 'validation',
     },
 ];
 export const formStepsLight = [
     {
         title: 'Selection',
         id: 'step-selection',
+        dbId: 'amcSelection',
     },
     {
         title: 'Validation',
         id: 'step-validation',
+        dbId: 'validation',
     },
 ];
 
@@ -435,20 +451,18 @@ export const booleanControls = [
     'optFor',
     'optForPro',
     'optForNonPro',
+    'operatorsHasExperienceNeuCP',
     'exerciseControl',
     'isLegalRepresentative',
     'isPoliticallyExposed',
     // 'investmentDecisionsAdHocCommittee', /* investmentDecisionsAdHocCommittee is VARCHAR in tblIznKycRiskObjective */
-    'hasAlreadyInvestedNeuCp',
-    'hasExperienceTradingNeuCp',
-    'hasEverIssuedNeuCp',
 ];
 
 export const currencyControls = [
     'balanceSheetTotal',
-    'netRevenuesNetIncome',
     'shareCapital',
     'shareholderEquity',
+    'typeOfRevenuesValue',
 ];
 
 export const percentageControls = [
@@ -459,6 +473,7 @@ export const percentageControls = [
     'holdingPercentage',
     'floatableShares',
     'votingPercentage',
+    'percentCapitalHeldByState',
 ];
 
 export const fileControls = [
@@ -511,6 +526,7 @@ export const selectControls = [
     'country',
     'financialRating',
     'regulator',
+    'signingAuthority',
 ];
 
 export const controlOrder = [
@@ -561,16 +577,18 @@ export const controlOrder = [
     'bloombergCode',
     'isinCode',
     'floatableShares',
+    'companyStateOwned',
     'activities',
     'investorOnBehalfThirdParties',
     'balanceSheetTotal',
-    'netRevenuesNetIncome',
     'shareholderEquity',
     'capitalNature',
     'otherCapitalNature',
     'geographicalOrigin1',
     'geographicalOrigin2',
     'totalFinancialAssetsAlreadyInvested',
+    'typeOfRevenues',
+    'typeOfRevenuesValue',
 
     // Classification
     'investorStatus',
@@ -596,23 +614,6 @@ export const controlOrder = [
     'prospectusKIIDUnderstanding',
     'knowledgeSkillsPlaceUCIOrders',
 ];
-
-export const steps = {
-    amcSelection: 0,
-    introduction: 1,
-    identification: 2,
-    generalInformation: 3,
-    companyInformation: 4,
-    stakeholders: 5,
-    bankAccounts: 6,
-    classification: 7,
-    riskProfile: 8,
-    investmentDetails: 9,
-    investmentObjectives: 10,
-    investmentConstraints: 11,
-    documents: 12,
-    validation: 13,
-};
 
 export const countries = fundItems.domicileItems;
 
@@ -873,6 +874,14 @@ export const sectorActivityList = [
         text: 'Catering',
     },
     {
+        id: 'Realestate',
+        text: 'Real Estate',
+    },
+    {
+        id: 'Miningactivities',
+        text: 'Mining activities',
+    },
+    {
         id: 'Other',
         text: 'Other',
     },
@@ -1010,6 +1019,14 @@ export const otherSectorActivityList = [
     {
         id: 'Catering',
         text: 'Catering',
+    },
+    {
+        id: 'Realestate',
+        text: 'Real Estate',
+    },
+    {
+        id: 'Miningactivities',
+        text: 'Mining activities',
     },
     {
         id: 'Other',
@@ -1484,738 +1501,805 @@ export const multilateralTradingFacilitiesList = [
     {
         id: 'mtf001',
         text: 'MTS France SAS',
-    },
-    {
-        id: 'mtf002',
-        text: 'Alternext Paris',
-    },
-    {
+     },
+     {
         id: 'mtf003',
         text: 'MERKUR MARKET',
-    },
-    {
+     },
+     {
         id: 'mtf004',
         text: 'OSLO CONNECT',
-    },
-    {
+     },
+     {
         id: 'mtf005',
         text: 'Marché Libre Paris',
-    },
-    {
+     },
+     {
         id: 'mtf006',
         text: 'Mercado Alternativo de Renta Fija (MARF)',
-    },
-    {
+     },
+     {
         id: 'mtf007',
         text: 'Sistema Electrónico de Negociación de Activos Financieros (SENAF)',
-    },
-    {
+     },
+     {
         id: 'mtf008',
         text: 'Mercado Alternativo Bursátil (MAB SMN)',
-    },
-    {
+     },
+     {
         id: 'mtf009',
         text: 'Mercado de Valores Latinoamericanos (Latibex SMN)',
-    },
-    {
+     },
+     {
         id: 'mtf010',
         text: 'First North Denmark - Nordic@MID',
-    },
-    {
+     },
+     {
         id: 'mtf011',
         text: 'First North Denamrk - Auction at Demand',
-    },
-    {
-        id: 'mtf012',
-        text: 'EUROTLX SIM S.P.A. - EuroTLX',
-    },
-    {
+     },
+     {
         id: 'mtf013',
         text: 'Hi-MTF SIM S.P.A. - HI-MTF',
-    },
-    {
+     },
+     {
         id: 'mtf014',
         text: 'Borsa Italiana S.P.A. - ExtraMOT',
-    },
-    {
+     },
+     {
         id: 'mtf015',
         text: 'Borsa Italiana S.P.A. - Mercato Borsa Italiana Equity MTF',
-    },
-    {
-        id: 'mtf016',
-        text: 'E-MID SIM S.p.A. - E- MIDER',
-    },
-    {
+     },
+     {
         id: 'mtf017',
         text: 'HI-MTF SIM S.P.A. -  HI-MTF RFQ',
-    },
-    {
+     },
+     {
         id: 'mtf018',
         text: 'E-MID SIM S.p.A. - E-MID REPO',
-    },
-    {
+     },
+     {
         id: 'mtf019',
         text: 'Borsa Italiana S.P.A. -SeDeX',
-    },
-    {
-        id: 'mtf020',
-        text: 'MTS S.P.A. - Bond ITALY Vision Europe',
-    },
-    {
+     },
+     {
         id: 'mtf021',
         text: 'HI-MTF SIM S.P.A. - ITALY HI-MTF Order Driven',
-    },
-    {
+     },
+     {
         id: 'mtf022',
-        text: 'Borsa Italiana S.P.A. - AIM Italia/Mercato',
-    },
-    {
+        text: 'Borsa Italiana S.P.A. - AIM Italia/MercatO',
+     },
+     {
         id: 'mtf023',
         text: 'Euro MTF',
-    },
-    {
+     },
+     {
         id: 'mtf024',
         text: 'First North Finland',
-    },
-    {
+     },
+     {
         id: 'mtf025',
         text: 'BOERSE MUENCHEN - GETTEX - FREIVERKEHR',
-    },
-    {
+     },
+     {
         id: 'mtf026',
         text: 'BOERSE MUENCHEN (FREIVERKEHR)',
-    },
-    {
+     },
+     {
         id: 'mtf027',
         text: 'HANSEATISCHE WERTPAPIERBOERSE HAMBURG (FREIVERKEHR)',
-    },
-    {
+     },
+     {
         id: 'mtf028',
         text: 'BADEN- WUERTTEMBERGISCHE WERTPAPIERBOERSE (FREIVERKEHR - TECHNICAL PLATFORM 2)',
-    },
-    {
+     },
+     {
         id: 'mtf029',
         text: 'DUESSELDORFER BOERSE (FREIVERKEHR)',
-    },
-    {
+     },
+     {
         id: 'mtf030',
         text: 'NIEDERSAECHSICHE BOERSE ZU HANNOVER (FREIVERKEHR)',
-    },
-    {
+     },
+     {
         id: 'mtf031',
         text: 'BADEN- WUERTTEMBERGISCHE WERTPAPIERBOERSE (FREIVERKEHR)',
-    },
-    {
+     },
+     {
         id: 'mtf032',
         text: 'TRADEGATE EXCHANGE (FREIVERKEHR)',
-    },
-    {
+     },
+     {
         id: 'mtf033',
         text: 'Boerse Hamburg Lang and Schwarz Exchange (Freiverkehr)',
-    },
-    {
+     },
+     {
         id: 'mtf034',
         text: 'DUESSELDORFER BOERSE QUOTRIX (FREIVERKEHR)',
-    },
-    {
+     },
+     {
         id: 'mtf035',
         text: 'BOERSE BERLIN (FREIVERKEHR)',
-    },
-    {
+     },
+     {
         id: 'mtf036',
         text: 'BOERSE BERLIN EQUIDUCT TRADING (FREIVERKEHR)',
-    },
-    {
+     },
+     {
         id: 'mtf037',
         text: 'FRANKFURTER WERTPAPIERBOERSE (FREIVERKEHR)',
-    },
-    {
+     },
+     {
         id: 'mtf038',
         text: 'FRANKFURTER WERTPAPIERBOERSE XETRA (FREIVERKEHR)',
-    },
-    {
+     },
+     {
         id: 'mtf039',
         text: 'MTS Finland',
-    },
-    {
+     },
+     {
         id: 'mtf040',
         text: 'Trading Facility',
-    },
-    {
+     },
+     {
         id: 'mtf041',
         text: 'Ventes Publiques (Expert Market)',
-    },
-    {
+     },
+     {
         id: 'mtf042',
         text: 'Euronext Growth Brussels (Alternext)',
-    },
-    {
+     },
+     {
         id: 'mtf043',
         text: 'MTS Belgium',
-    },
-    {
+     },
+     {
         id: 'mtf044',
         text: 'MTS Denmark',
-    },
-    {
+     },
+     {
         id: 'mtf045',
         text: 'Euronext Access Brussels',
-    },
-    {
+     },
+     {
         id: 'mtf046',
         text: 'Nasdaq Iceland hf.',
-    },
-    {
+     },
+     {
         id: 'mtf047',
         text: 'NASDAQ OMX Tallinn Aktsiaselts',
-    },
-    {
+     },
+     {
         id: 'mtf048',
         text: 'MTF - CYPRUS EXCHANGE',
-    },
-    {
+     },
+     {
         id: 'mtf049',
         text: 'Nasdaq Iceland hf.',
-    },
-    {
+     },
+     {
         id: 'mtf050',
         text: 'Captin B.V.',
-    },
-    {
+     },
+     {
         id: 'mtf051',
         text: 'Prospects',
-    },
-    {
+     },
+     {
         id: 'mtf052',
         text: 'Nasdaq Riga AS (First North Latvia)',
-    },
-    {
+     },
+     {
         id: 'mtf053',
         text: 'Wiener Börse AG',
-    },
-    {
+     },
+     {
         id: 'mtf054',
         text: '360 Treasury Systems AG',
-    },
-    {
-        id: 'mtf055',
-        text: 'ALTERNEXT LISBON (EURONEXT GROWTH LISBON)',
-    },
-    {
+     },
+     {
         id: 'mtf056',
         text: 'EURONEXT ACCESS  LISBON',
-    },
-    {
+     },
+     {
         id: 'mtf057',
         text: 'Nasdaq First North Sweden - Norway',
-    },
-    {
+     },
+     {
         id: 'mtf058',
         text: 'Nasdaq First North Sweden',
-    },
-    {
+     },
+     {
         id: 'mtf059',
         text: 'Nordic Growth Market NGM AB',
-    },
-    {
+     },
+     {
         id: 'mtf060',
         text: 'Nasdaq First North Sweden - Nordic@Mid',
-    },
-    {
+     },
+     {
         id: 'mtf061',
         text: 'SI ENTER',
-    },
-    {
+     },
+     {
         id: 'mtf062',
         text: 'Cboe Europe Equities MTF – BXE Periodic Auction Book Segment',
-    },
-    {
+     },
+     {
         id: 'mtf063',
         text: 'Property Partner Exchange',
-    },
-    {
+     },
+     {
         id: 'mtf064',
         text: 'Cboe Europe Equities MTF – BXE Reference Price Book Segmen',
-    },
-    {
+     },
+     {
         id: 'mtf065',
         text: 'Cboe Europe Equities MTF – Cboe Large in Scale Service',
-    },
-    {
+     },
+     {
         id: 'mtf066',
         text: 'Euronext Block',
-    },
-    {
+     },
+     {
         id: 'mtf067',
         text: 'ICAP WCLK MTF',
-    },
-    {
+     },
+     {
         id: 'mtf068',
         text: 'NEX Exchange Growth Market (non-equity)',
-    },
-    {
+     },
+     {
         id: 'mtf069',
         text: 'NEX Exchange Trading (non-equity)',
-    },
-    {
+     },
+     {
         id: 'mtf070',
         text: 'Integral MTF',
-    },
-    {
+     },
+     {
         id: 'mtf071',
         text: 'EM Bonds MTF',
-    },
-    {
+     },
+     {
         id: 'mtf072',
         text: 'London Stock Exchange AIM MTF',
-    },
-    {
-        id: 'mtf073',
-        text: 'SIGMA X MTF',
-    },
-    {
+     },
+     {
         id: 'mtf074',
         text: 'Dowgate MTF',
-    },
-    {
+     },
+     {
         id: 'mtf075',
         text: 'Bursa de Valori Bucuresti SA',
-    },
-    {
+     },
+     {
         id: 'mtf076',
         text: 'Giełda Papierów Wartościowych  Warszawie S.A.',
-    },
-    {
+     },
+     {
         id: 'mtf077',
         text: 'BondSpot S.A.',
-    },
-    {
+     },
+     {
         id: 'mtf078',
         text: 'NPEX B.V.',
-    },
-    {
+     },
+     {
         id: 'mtf079',
         text: 'The Irish Stock Exchange plc Atlantic Securities Market',
-    },
-    {
+     },
+     {
         id: 'mtf080',
         text: 'The Irish Stock Exchange plc Global Exchange Market',
-    },
-    {
+     },
+     {
         id: 'mtf081',
         text: 'BETA MARKET',
-    },
-    {
+     },
+     {
         id: 'mtf082',
         text: 'Xtend',
-    },
-    {
+     },
+     {
         id: 'mtf083',
         text: 'RM-SYSTÉM, česká burza cenných papírů a.s.',
-    },
-    {
+     },
+     {
         id: 'mtf084',
         text: 'Burza cenných papírů Praha, a.s.',
-    },
-    {
+     },
+     {
         id: 'mtf085',
         text: 'Nasdaq First North Sweden - Norway Nordic@Mid',
-    },
-    {
+     },
+     {
         id: 'mtf086',
         text: 'Nasdaq First North Sweden - Norway Auction on Demand',
-    },
-    {
+     },
+     {
         id: 'mtf087',
         text: 'Eurex Repo GmbH',
-    },
-    {
+     },
+     {
         id: 'mtf088',
         text: 'BlockMatch Request for Quote Functionality',
-    },
-    {
+     },
+     {
         id: 'mtf089',
         text: 'LMAX FX',
-    },
-    {
+     },
+     {
         id: 'mtf090',
         text: 'Turquoise Block AuctionsTM',
-    },
-    {
+     },
+     {
         id: 'mtf091',
         text: 'First North Finland - Nordic@Mid',
-    },
-    {
+     },
+     {
         id: 'mtf092',
         text: 'First North Finland - Auction on Demand',
-    },
-    {
+     },
+     {
         id: 'mtf093',
         text: 'Hellenic Exchanges - Athens Stock Exchange SA',
-    },
-    {
-        id: 'mtf094',
-        text: 'The Irish Stock Exchange plc Enterprise Security Market',
-    },
-    {
-        id: 'mtf095',
-        text: 'Investment Technology Group Limited - POSIT MTF - Periodic Auction Segment',
-    },
-    {
-        id: 'mtf096',
-        text: 'Investment Technology Group Limited – POSIT MTF - dark',
-    },
-    {
+     },
+     {
         id: 'mtf097',
         text: 'ICAP Global Derivatives Limited',
-    },
-    {
+     },
+     {
         id: 'mtf098',
         text: 'BlockMatch Negotiated Trade Functionality',
-    },
-    {
+     },
+     {
         id: 'mtf099',
         text: 'BlockMatch Dark Central Limit Order Book',
-    },
-    {
+     },
+     {
         id: 'mtf100',
         text: 'ICAP MTF - CASH EQUITY',
-    },
-    {
+     },
+     {
         id: 'mtf101',
         text: 'ICAP MTF - EQUITY DERIVATIVES',
-    },
-    {
+     },
+     {
         id: 'mtf102',
         text: 'ICAP MTF -  CORPORATE BONDS AND SECURITIES DEBT',
-    },
-    {
+     },
+     {
         id: 'mtf103',
         text: 'ICAP MTF - MONEY MARKET INSTRUMENTS',
-    },
-    {
+     },
+     {
         id: 'mtf104',
         text: 'ICAP MTF - GOVERNMENT BONDS EXCLUDING GILTS',
-    },
-    {
+     },
+     {
         id: 'mtf105',
         text: 'ICAP MTF - INTEREST RATE DERIVATIVES',
-    },
-    {
+     },
+     {
         id: 'mtf106',
         text: 'ICAP MTF - FX DERIVATIVES',
-    },
-    {
+     },
+     {
         id: 'mtf107',
         text: 'ICAP MTF - GILTS',
-    },
-    {
+     },
+     {
         id: 'mtf108',
         text: 'ICAP MTF - ETFS',
-    },
-    {
+     },
+     {
         id: 'mtf109',
         text: 'SIGMA X MTF - SIGMA X Auction Book',
-    },
-    {
-        id: 'mtf110',
-        text: 'EBS MTF - EBS Market',
-    },
-    {
+     },
+     {
         id: 'mtf111',
         text: 'I-SWAP - TRADE REGISTRATION',
-    },
-    {
+     },
+     {
         id: 'mtf112',
         text: 'I-SWAP ORDER BOOK',
-    },
-    {
+     },
+     {
         id: 'mtf113',
         text: 'TULLETT PREBON EUROPE - MTF - FX DERIVATIVES',
-    },
-    {
+     },
+     {
         id: 'mtf114',
         text: 'ICAP GLOBAL DERIVATIVES LIMITED - ELECTRONIC',
-    },
-    {
+     },
+     {
         id: 'mtf115',
         text: 'ICAP GLOBAL DERIVATIVES LIMITED - VOICE',
-    },
-    {
-        id: 'mtf116',
-        text: 'MTS Cash Domestic Market - SLOVAKIA',
-    },
-    {
+     },
+     {
         id: 'mtf117',
         text: 'TULLETT PREBON EUROPE - MTF - CORPORATE BONDS AND SECURITISED DEBT',
-    },
-    {
+     },
+     {
         id: 'mtf118',
         text: 'TULLETT PREBON EUROPE - MTF - GOVERNMENT BONDS EXCLUDING UK GILTS',
-    },
-    {
+     },
+     {
         id: 'mtf119',
         text: 'TULLETT PREBON EUROPE - MTF - MONEY MARKETS',
-    },
-    {
+     },
+     {
         id: 'mtf120',
         text: 'TULLETT PREBON EUROPE - MTF - REPOS',
-    },
-    {
-        id: 'mtf121',
-        text: 'Turquoise CFD',
-    },
-    {
+     },
+     {
         id: 'mtf122',
         text: 'TULLETT PREBON SECURITIES - MTF - REPOS',
-    },
-    {
+     },
+     {
         id: 'mtf123',
         text: 'Spotlight Stock Market',
-    },
-    {
+     },
+     {
         id: 'mtf124',
         text: 'Nasdaq First North Sweden - Auction on Demand',
-    },
-    {
+     },
+     {
         id: 'mtf125',
         text: 'ATFUND MTF',
-    },
-    {
+     },
+     {
         id: 'mtf126',
         text: 'UBS MTF Periodic Auction',
-    },
-    {
+     },
+     {
         id: 'mtf127',
         text: 'UBS MTF',
-    },
-    {
+     },
+     {
         id: 'mtf128',
         text: 'Cboe Europe Equities MTF – BXE Integrated Book Segment',
-    },
-    {
+     },
+     {
         id: 'mtf129',
         text: 'Creditex Brokerage LLP - MTF',
-    },
-    {
+     },
+     {
         id: 'mtf130',
         text: 'Cboe Europe Equities MTF – CXE Integrated Book Segment',
-    },
-    {
-        id: 'mtf131',
-        text: 'MTS Cash Domestic Market-SLOVENIA',
-    },
-    {
+     },
+     {
         id: 'mtf132',
         text: 'TULLETT PREBON EUROPE - MTF - INTEREST RATE DERIVATIVES',
-    },
-    {
+     },
+     {
         id: 'mtf133',
         text: 'I-SWAP TARGETED STREAMING/RFQ',
-    },
-    {
-        id: 'mtf134',
-        text: 'MTS Cash Domestic Market-GERMANY',
-    },
-    {
+     },
+     {
         id: 'mtf135',
         text: 'Liquidnet Europe Fixed Income',
-    },
-    {
+     },
+     {
         id: 'mtf136',
         text: 'Liquidnet Europe Equities',
-    },
-    {
-        id: 'mtf137',
-        text: 'MTS Cash Domestic Market - NETHERLANDS',
-    },
-    {
-        id: 'mtf138',
-        text: 'MTS Cash Domestic Market-HUNGARY',
-    },
-    {
+     },
+     {
         id: 'mtf139',
         text: 'MarketAxess Europe MTF',
-    },
-    {
+     },
+     {
         id: 'mtf140',
         text: 'LMAX',
-    },
-    {
-        id: 'mtf141',
-        text: 'MTS Cash Domestic Market-CZECH REPUBLIC',
-    },
-    {
+     },
+     {
         id: 'mtf142',
         text: 'MTS Cash Domestic Market-UNITED KINGDOM',
-    },
-    {
-        id: 'mtf143',
-        text: 'MTS Cash Domestic Market-AUSTRIA',
-    },
-    {
-        id: 'mtf144',
-        text: 'MTS Cash Domestic Market-Portugal',
-    },
-    {
-        id: 'mtf145',
-        text: 'MTS Cash Domestic Market-Ireland',
-    },
-    {
-        id: 'mtf146',
-        text: 'MTS Cash Domestic Market-Greece',
-    },
-    {
-        id: 'mtf147',
-        text: 'MTS Cash Domestic Market-Israel',
-    },
-    {
-        id: 'mtf148',
-        text: 'MTS Cash Domestic Market-Spain',
-    },
-    {
+     },
+     {
         id: 'mtf149',
         text: 'EBM',
-    },
-    {
+     },
+     {
         id: 'mtf150',
         text: 'Turquoise Plato',
-    },
-    {
+     },
+     {
         id: 'mtf151',
         text: 'Turquoise Lit',
-    },
-    {
+     },
+     {
         id: 'mtf152',
         text: 'Tradeweb Europe Limited MTF',
-    },
-    {
+     },
+     {
         id: 'mtf153',
         text: 'Elixium',
-    },
-    {
+     },
+     {
         id: 'mtf154',
         text: 'Tullett Prebon Europe MTF',
-    },
-    {
+     },
+     {
         id: 'mtf155',
         text: 'Trad-X',
-    },
-    {
+     },
+     {
         id: 'mtf156',
         text: 'NEX SEF MTF - RESET',
-    },
-    {
+     },
+     {
         id: 'mtf157',
         text: 'NEX SEF MTF - EBS',
-    },
-    {
+     },
+     {
         id: 'mtf158',
         text: 'BONDVISION UK',
-    },
-    {
+     },
+     {
         id: 'mtf159',
         text: 'London Stock Exchange Non-AIM MTF',
-    },
-    {
+     },
+     {
         id: 'mtf160',
         text: 'Turquoise Lit Auctions',
-    },
-    {
+     },
+     {
         id: 'mtf161',
         text: 'Reuters Transaction Services Limited – Forwards Matching',
-    },
-    {
+     },
+     {
         id: 'mtf162',
         text: 'Reuters Transaction Services Limited – Fxall RFQ',
-    },
-    {
+     },
+     {
         id: 'mtf163',
         text: 'Turquoise SwapMatch',
-    },
-    {
+     },
+     {
         id: 'mtf164',
         text: 'Bloomberg Multilateral Trading Facility',
-    },
-    {
+     },
+     {
         id: 'mtf165',
         text: 'Cboe Europe Equities MTF – CXE Reference Price Book Segment',
-    },
-    {
+     },
+     {
         id: 'mtf166',
         text: 'Cboe Europe Equities MTF – CXE Off-Book Segment',
-    },
-    {
+     },
+     {
         id: 'mtf167',
         text: 'Cboe Europe Equities MTF – BXE Off-Book Segment',
-    },
-    {
+     },
+     {
         id: 'mtf168',
         text: 'NEX Exchange Growth Market (equity)',
-    },
-    {
+     },
+     {
         id: 'mtf169',
         text: 'Aquis MTF',
-    },
-    {
+     },
+     {
         id: 'mtf170',
         text: 'NEX Exchange Trading (equity)',
-    },
-    {
-        id: 'mtf171',
-        text: 'Euronext Synapse',
-    },
-    {
+     },
+     {
         id: 'mtf172',
         text: 'GFI SECURITIES - MTF',
-    },
-    {
+     },
+     {
         id: 'mtf173',
         text: 'GFI BROKERS - MTF',
-    },
-    {
+     },
+     {
         id: 'mtf174',
         text: 'EquiLend',
-    },
-    {
-        id: 'mtf175',
-        text: 'EBS MTF – EBS Institutional',
-    },
-    {
-        id: 'mtf176',
-        text: 'EBS MTF – NEX Treasury',
-    },
-    {
-        id: 'mtf177',
-        text: 'EBS MTF – EBS Direct',
-    },
-    {
-        id: 'mtf178',
-        text: 'EBS MTF - RESET',
-    },
-    {
+     },
+     {
         id: 'mtf179',
         text: 'BrokerTec EU MTF',
-    },
-    {
+     },
+     {
         id: 'mtf180',
         text: 'Capman AD',
-    },
-    {
+     },
+     {
         id: 'mtf181',
         text: 'BULGARIAN STOCK EXCHANGE',
-    },
-    {
+     },
+     {
         id: 'mtf182',
         text: '42 Financial Services',
-    },
-    {
+     },
+     {
         id: 'mtf183',
         text: 'Zagrebačka burza d.d.',
-    },
-    {
+     },
+     {
+        id: 'mtf184',
+        text: 'AQUIS EXCHANGE EUROPE',
+     },
+     {
+        id: 'mtf185',
+        text: 'Bloomberg Trading Facility B.V.',
+     },
+     {
+        id: 'mtf186',
+        text: 'BNY Mellon Markets Europe Limited',
+     },
+     {
+        id: 'mtf187',
+        text: 'CBOE Europe B.V.',
+     },
+     {
+        id: 'mtf188',
+        text: 'CME Amsterdam B.V.',
+     },
+     {
+        id: 'mtf189',
+        text: 'Currenex MTF - RFQ',
+     },
+     {
+        id: 'mtf190',
+        text: 'Equilend Limited',
+     },
+     {
+        id: 'mtf191',
+        text: 'Euronext Blocki',
+     },
+     {
+        id: 'mtf192',
+        text: 'Euronext Growth',
+     },
+     {
+        id: 'mtf193',
+        text: 'Euronext Growth Dublin',
+     },
+     {
+        id: 'mtf194',
+        text: 'EURONEXT GROWTH PARIS',
+     },
+     {
+        id: 'mtf195',
+        text: 'Financial & Risk Transaction Services Ireland Limited - Forwards Matching',
+     },
+     {
+        id: 'mtf196',
+        text: 'Financial & Risk Transaction Services Ireland Limited - FXall RFQ',
+     },
+     {
+        id: 'mtf197',
+        text: 'First North Denmark',
+     },
+     {
+        id: 'mtf198',
+        text: 'Frankfurter Wertpapierboerse (Scale)',
+     },
+     {
+        id: 'mtf199',
+        text: 'FRANKFURTER WERTPAPIERBOERSE XETRA (FREIVERKEHR ? OFF-BOOK)',
+     },
+     {
+        id: 'mtf200',
+        text: 'FRANKFURTER WERTPAPIERBOERSE XETRA (SCALE ? OFF-BOOK)',
+     },
+     {
+        id: 'mtf201',
+        text: 'FX Connect MTF - Allocations',
+     },
+     {
+        id: 'mtf202',
+        text: 'FX Connect MTF - RFQ',
+     },
+     {
+        id: 'mtf203',
+        text: 'iSwap Euro B.V.',
+     },
+     {
+        id: 'mtf204',
+        text: 'Liquidnet EU Equities MTF',
+     },
+     {
+        id: 'mtf205',
+        text: 'Liquidnet EU Fixed Income MTF',
+     },
+     {
+        id: 'mtf206',
+        text: 'MarketAxess NL B.V.',
+     },
+     {
+        id: 'mtf207',
+        text: 'MORGAN STANLEY FRANCE',
+     },
+     {
+        id: 'mtf208',
+        text: 'MTS S.P.A. - Bond Vision Europe',
+     },
+     {
+        id: 'mtf209',
+        text: 'MTS S.p.A. - MTS Cash Domestic MTF',
+     },
+     {
+        id: 'mtf210',
+        text: 'NASDAQ COPENHAGEN A/S First North Denmark SME Growth Market',
+     },
+     {
+        id: 'mtf211',
+        text: 'Nasdaq First North Growth Market',
+     },
+     {
+        id: 'mtf212',
+        text: 'Nasdaq First North Sweden - SME Growth Market',
+     },
+     {
+        id: 'mtf213',
+        text: 'NOWCP',
+     },
+     {
+        id: 'mtf214',
+        text: 'Spectrum MTF Operator GmbH',
+     },
+     {
+        id: 'mtf215',
+        text: 'The Goldman Sachs Group, inc',
+     },
+     {
+        id: 'mtf216',
+        text: 'TP ICAP (Europe)',
+     },
+     {
+        id: 'mtf217',
+        text: 'Tradeweb EU B.V.',
+     },
+     {
+        id: 'mtf218',
+        text: 'Tullett Prebon Securities MTF',
+     },
+     {
+        id: 'mtf219',
+        text: 'Turquoise Global Holdings Europe B.V.',
+     },
+     {
+        id: 'mtf220',
+        text: 'Verto MTF',
+     },
+     {
+        id: 'mtf221',
+        text: 'Virtu ITG Europe Limited - POSIT MTF - Periodic Auction Segment',
+     },
+     {
+        id: 'mtf222',
+        text: 'Virtu ITG Europe Limited ? POSIT MTF - dark',
+     },
+     {
+        id: 'mtf223',
+        text: 'Virtual Auction Global Markets Limited MTF',
+     },
+     {
+        id: 'mtf224',
+        text: 'XBond',
+     },
+     {
         id: 'mtfXXX',
         text: 'Other',
+     },
+];
+
+export const typeOfRevenuesList = [
+    {
+        id: 'NetIncome',
+        text: 'Net Income',
+    },
+    {
+        id: 'NetRevenue',
+        text: 'Net Revenue',
+    },
+    {
+        id: 'NetBankingIncome',
+        text: 'Net Banking Income (only applicable for Credit Institution)',
     },
 ];
 
@@ -2259,6 +2343,18 @@ export const regulatoryStatusList = [
     {
         id: 'other',
         text: 'Other',
+    },
+];
+
+export const regulatoryStatusListID2S = [
+    ...regulatoryStatusList,
+    {
+        id: 'custodian',
+        text: 'Custodian',
+    },
+    {
+        id: 'issuingAndPayingAgent',
+        text: 'Issuing and Paying Agent',
     },
 ];
 
@@ -2944,28 +3040,20 @@ export const capitalNatureList = [
 
 export const documentTypesList = [
     {
-        id: 'kycribdoc',
-        text: 'RIB',
-    },
-    {
         id: 'kycstatuscertifieddoc',
-        text: 'Statuses "certified" by the duly authorized representative of the client',
+        text: 'Articles of Association - certified true copy by the client\'s duly authorized representative',
     },
     {
         id: 'kyckbisdoc',
-        text: 'Kbis extract (or equivalent) less than 3 months old',
+        text: 'KBIS extract (or equivalent) less than 3 months old',
     },
     {
         id: 'kycannualreportdoc',
-        text: 'Latest audited annual report',
+        text: 'Audited annual reports of last year ',
     },
     {
         id: 'kycidorpassportdoc',
-        text: 'National identity card or valid passport or residence card of the signatory with photograph',
-    },
-    {
-        id: 'kycwolfsbergdoc',
-        text: 'Wolfsberg Questionnaire or equivalent',
+        text: 'IDs of persons authorised to bind the company',
     },
     {
         id: 'kyctaxcertificationdoc',
@@ -2973,11 +3061,11 @@ export const documentTypesList = [
     },
     {
         id: 'kycw8benefatcadoc',
-        text: 'Form W-8BEN-E (FACTA)',
+        text: 'Form W-8BEN-E (FATCA)',
     },
     {
         id: 'kycisincodedoc',
-        text: 'ISIN code of the listed share',
+        text: 'ISIN Code of the listed share',
     },
     {
         id: 'kycevidencefloatable',
@@ -2985,21 +3073,60 @@ export const documentTypesList = [
     },
     {
         id: 'kycproofofapprovaldoc',
-        text: 'proof of approval or copy of order',
+        text: 'Proof of approval or copy of order',
     },
     {
         id: 'kycproofregulationdoc',
-        text: 'proof of regulation/supervision from the regulator’s website',
+        text: 'Proof of regulation/supervision from the regulator\'s website',
     },
     {
-        id: 'kycinfomemorandumbdfdoc',
-        text: 'Information memorandum approved by BDF',
+        id: 'kycwolfsbergdoc',
+        text: 'Wolfsberg questionnaire or equivalent',
+    },
+    {
+        id: 'kycribdoc',
+        text: 'RIB',
     },
     {
         id: 'kycorgchartdoc',
-        text: 'Org chart with key operational teams',
+        text: 'Org chart with key operational teams (with the name of the entity provided and dated) or other document presenting the organisation of the company',
     },
-
+    {
+        id: 'kyclistsigningauthoritiesdoc',
+        text: 'List of Signing Authorities if the signatory is not on the KBIS',
+    },
+    {
+        id: 'kycbeneficialownerdoc',
+        text: 'Ultimate Beneficial Owner Statement',
+    },
+    {
+        id: 'kycdisclosureproceduredoc',
+        text: 'Disclosure of risk management procedure',
+    },
+    {
+        id: 'kyccompositioncommitteedoc',
+        text: 'Composition of the risk committee',
+    },
+    {
+        id: 'kycannual2yeardoc',
+        text: 'Audited annual reports of the last two years',
+    },
+    {
+        id: 'kycannual3yeardoc',
+        text: 'Audited annual reports of the last 3 years',
+    },
+    {
+        id: 'kycannual3yeartaxdoc',
+        text: 'Annual accounts certified by CAC or last 3 tax returns',
+    },
+    {
+        id: 'kyccriticalcustomersdoc',
+        text: 'Notification of critical customers',
+    },
+    {
+        id: 'kycbusinessplandoc',
+        text: 'Copy of the business continuity plan',
+    },
 ];
 
 export const beneficiaryTypesList = [
@@ -3066,6 +3193,25 @@ export const identificationNumberList = [
     },
 ];
 
+export const signingAuthorityDefaultList = [
+    {
+        id: 'kbisAuthorizedSignatories',
+        text: 'KBIS authorized signatories',
+    },
+    {
+        id: 'authorizedDelegates',
+        text: 'Authorized delegates',
+    },
+];
+
+export const signingAuthorityNowCPList = [
+    ...signingAuthorityDefaultList,
+    {
+        id: 'personInChargeOfTheIssuanceProgram',
+        text: 'Person in charge of the issuance program',
+    },
+];
+
 export const controlToName = {
     // General
     registeredCompanyName: 'Registered Company Name or Legal Name',
@@ -3103,12 +3249,12 @@ export const controlToName = {
     corporatePurpose: 'Corporate Purpose',
     activities: 'Management in behalf of',
     investorOnBehalfThirdParties: 'Third parties type',
-    geographicalAreaOfActivity: 'Geographical area of the activity',
+    geographicalAreaOfActivity: 'Primary Geographical Area of the Activity',
     geographicalAreaOfActivitySpecification: 'Geographical area of the activity specification',
     totalFinancialAssetsAlreadyInvested: 'Total Financial assets already invested',
     capitalNature: 'Nature and origin of the capital invested by the Legal Entity',
     otherCapitalNature: 'Nature and origin of the capital invested by the Legal Entity',
-    activityRegulated: 'Is the activity regulated?',
+    activityRegulated: 'Is the activity regulated? (only applicable for financial / banking or insurance company)',
     regulator: 'Regulator or a Supervisory Authority',
     otherRegulator: 'Other Regulator or a Supervisory Authority',
     approvalNumber: 'Approval Number',
@@ -3117,11 +3263,12 @@ export const controlToName = {
     otherListingMarkets: 'Listing market(s) specification',
     multilateralTradingFacilities: 'Multilateral Trading Facilities',
     otherMultilateralTradingFacilities: 'Other Multilateral Trading Facilities',
-    bloombergCode: 'Bloomberg Code',
+    bloombergCode: 'Bloomberg Code of the company',
     isinCode: 'ISIN code of the listed share',
     floatableShares: 'Percentage of floatable and tradable company\'s shares',
+    companyStateOwned: 'Is the company state-owned?',
+    percentCapitalHeldByState: 'Percentage of the capital held by the state',
     balanceSheetTotal: 'Balance Sheet Total (€)',
-    netRevenuesNetIncome: 'Net Revenues or Net Income (€)',
     shareholderEquity: "Shareholder's Equity (€)",
     equityAndReserves: 'Equity & Reserves',
     generalAssets: 'General Assets (Insurance Contracts)',
@@ -3131,6 +3278,8 @@ export const controlToName = {
     others: 'Others',
     geographicalOrigin1: 'Geographical origin (specify by area or country)',
     geographicalOrigin2: 'Geographical origin precision',
+    typeOfRevenues: 'Type of Revenues',
+    typeOfRevenuesValue: 'Value of Revenues',
 
     // Beneficiaries
     beneficiaryType: 'Beneficiary Type',
@@ -3165,6 +3314,7 @@ export const controlToName = {
     // Classification
     optForPro: 'Asked for professional status',
     optForNonPro: 'Opted for non professional classification',
+    operatorsHasExperienceNeuCP: 'Do your operators have experience in trading NeuCP',
     classificationChangeAccepted: 'Classification change accepted',
     investorStatus: 'Initial investor status',
     excludeProducts: 'Excluded category of products/services',
@@ -3194,7 +3344,7 @@ export const controlToName = {
     withAdviceOfAuthorisedThirdPartyInstitution: 'With the advice of an authorised third party institution',
     mandateEntrustedToManagers: 'By mandate(s) entrusted to a manager(s)',
     frequencyFinancialTransactions: 'Frequency of financial transactions',
-    investmentvehiclesAlreadyUsed: 'Investment vehicles already used',
+    investmentvehiclesAlreadyUsed: 'Which investment vehicles do you currently use',
     investmentvehiclesAlreadyUsedSpecification: 'Investment vehicles already used specification',
     naturesSameInvestmentCrossAm: 'I would like to have the same investment nature for all management companies',
 
@@ -3221,9 +3371,6 @@ export const controlToName = {
     investmentDecisionsAdHocCommitteeSpecification: 'Ad hoc committee specification',
     otherPersonsAuthorised: 'Other persons authorised to take investment decisions and give instructions',
     constraintsSameInvestmentCrossAm: 'I would like to have the same investment objectives for all management companies',
-    hasEverIssuedNeuCp: 'Has your company ever issued Neu CPs?',
-    hasAlreadyInvestedNeuCp: 'Has your company already invested in Neu CPs?',
-    hasExperienceTradingNeuCp: 'Do your operators have experience in trading on the Neu CPs?',
 
     // Validation
     undersigned: 'Identity',
@@ -3232,6 +3379,7 @@ export const controlToName = {
     doneDate: 'Date',
     positionRepresentative: 'Position of the representative of the Legal Person',
     electronicSignatureDocumentID: 'National Identification Card',
+    signingAuthority: 'Signing authority',
 };
 
 export const controlToList = {
@@ -3264,6 +3412,8 @@ export const controlToList = {
     relationType: 'relationTypesList',
     holdingType: 'holdingTypesList',
     nationalIdNumberType: 'identificationNumberList',
+    typeOfRevenues: 'typeOfRevenuesList',
+
 
     // Banking
     custodianHolderAccount: 'custodianHolderAccountList',
@@ -3291,6 +3441,9 @@ export const controlToList = {
     nationality: 'countries',
     countryTaxResidence: 'countries',
     country: 'countries',
+
+    // Validation
+    signingAuthority: 'signingAuthorityNowCPList',
 };
 
 // Conditionally remove fields from kyc datagrids
@@ -3305,6 +3458,6 @@ export const omitConditionalFields = {
     },
     companyListed: {
         condition: [1],
-        fields: ['balanceSheetTotal', 'netRevenuesNetIncome', 'shareholderEquity'],
+        fields: ['balanceSheetTotal', 'shareholderEquity'],
     },
 };

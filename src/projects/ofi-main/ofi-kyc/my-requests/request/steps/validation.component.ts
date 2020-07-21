@@ -1,24 +1,24 @@
-import { Component, Input, OnInit, OnDestroy, Output, EventEmitter } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy, Output, EventEmitter, ChangeDetectorRef } from '@angular/core';
 import { NgRedux, select } from '@angular-redux/store';
 import { Router } from '@angular/router';
 import { Subject, combineLatest } from 'rxjs';
 import { filter as rxFilter, map, take, takeUntil } from 'rxjs/operators';
+import { Observable } from 'rxjs/Observable';
 import { isEmpty, find, get as getValue, castArray } from 'lodash';
 import * as moment from 'moment';
-import { AlertsService } from '@setl/jaspero-ng2-alerts';
-import { PersistService } from '@setl/core-persist';
-import { formHelper } from '@setl/utils/helper';
 
-import { RequestsService } from '../../requests.service';
-import { NewRequestService, configDate } from '../new-request.service';
 import { ValidationService } from './validation.service';
 import { DocumentsService } from './documents.service';
-import { steps } from '../../requests.config';
-import { ClearMyKycListRequested } from '@ofi/ofi-main/ofi-store/ofi-kyc';
-import { MultilingualService } from '@setl/multilingual';
-import { KycMyInformations } from '@ofi/ofi-main/ofi-store/ofi-kyc/my-informations';
-import { Observable } from 'rxjs/Observable';
-import { OfiKycService } from '@ofi/ofi-main/ofi-req-services/ofi-kyc/service';
+import { NewRequestService, configDate } from '../new-request.service';
+import { RequestsService } from '../../requests.service';
+import { getPartyNameFromInvestorType, PartyCompaniesInterface } from '../../kyc-form-helper';
+import { KycFormHelperService } from '../../kyc-form-helper.service';
+import { OfiKycService } from '../../../../../ofi-main/ofi-req-services/ofi-kyc/service';
+import { ClearMyKycListRequested } from '../../../../../ofi-main/ofi-store/ofi-kyc';
+import { KycMyInformations } from '../../../../../ofi-main/ofi-store/ofi-kyc/my-informations';
+import { MultilingualService } from '../../../../../multilingual';
+import { AlertsService } from '../../../../../jaspero-ng2-alerts';
+import { formHelper } from '../../../../../utils/helper';
 
 @Component({
     selector: 'kyc-step-validation',
@@ -41,9 +41,12 @@ export class NewKycValidationComponent implements OnInit, OnDestroy {
     connectedWallet;
     open = true;
     showKYCComplete: boolean = false;
-    isNowCP: boolean = false;
+    public invitedAs: 'iznes'|'id2s'|'nowcp';
+    public partyCompanies: PartyCompaniesInterface;
     firstName: string;
     investorInformationRequested: boolean = false;
+    fadeIn: boolean = false;
+    signingAuthorityList: any[];
 
     constructor(
         private requestsService: RequestsService,
@@ -51,37 +54,23 @@ export class NewKycValidationComponent implements OnInit, OnDestroy {
         private validationService: ValidationService,
         private alerts: AlertsService,
         private router: Router,
-        private persistService: PersistService,
         private documentsService: DocumentsService,
         private ngRedux: NgRedux<any>,
         public translate: MultilingualService,
         public ofiKycService: OfiKycService,
-    ) {
-    }
+        private changeDetector: ChangeDetectorRef,
+        public formHelper: KycFormHelperService,
+    ) {}
 
     ngOnInit() {
         this.initData();
         this.getCurrentFormData();
         this.initSubscriptions();
-
+        this.handlePartyFields();
         this.configDate = configDate;
-        this.form.get('doneDate').patchValue(moment().format(this.configDate.format));
     }
 
     initSubscriptions() {
-        this.requests$
-        .pipe(
-            takeUntil(this.unsubscribe),
-            map(kycs => kycs[0]),
-            rxFilter((kyc: any) => {
-                return kyc && kyc.amcID;
-            }),
-            )
-            .subscribe((kyc) => {
-                if (this.shouldPersist(kyc)) {
-                    this.persistForm();
-                }
-            });
 
         /* Subscribe for this user's connected info. */
         this.kycMyInformations.takeUntil(this.unsubscribe)
@@ -90,35 +79,9 @@ export class NewKycValidationComponent implements OnInit, OnDestroy {
                 this.investorInformationRequested = true;
                 return this.ofiKycService.fetchInvestor();
             }
-            this.isNowCP = d.investorType === 70 || d.investorType === 80;
+            this.invitedAs = getPartyNameFromInvestorType(d.investorType);
             this.firstName = d.firstName;
         });
-    }
-
-    shouldPersist(kyc) {
-        if (kyc.context === 'done') {
-            return false;
-        }
-        return !kyc.completedStep || (steps[kyc.completedStep] < steps.validation);
-    }
-
-    persistForm() {
-        this.persistService.watchForm(
-            'newkycrequest/validation',
-            this.form,
-            this.newRequestService.context,
-            {
-                reset: false,
-            },
-        );
-    }
-
-    clearPersistForm() {
-        this.persistService.refreshState(
-            'newkycrequest/validation',
-            this.newRequestService.createValidationFormGroup(),
-            this.newRequestService.context,
-        );
     }
 
     initData() {
@@ -146,6 +109,18 @@ export class NewKycValidationComponent implements OnInit, OnDestroy {
             });
     }
 
+    async handlePartyFields() {
+        this.partyCompanies = await this.formHelper.kycPartyCompanies$.pipe(take(1)).toPromise();
+
+        // Set signing authority list (set to NowCP list if they are one of the party selections)
+        this.signingAuthorityList = this.translate.translate(this.partyCompanies.nowcp
+            ? this.newRequestService.signingAuthorityNowCPList
+            : this.newRequestService.signingAuthorityDefaultList);
+
+        // Disable electronicSignatureDocument for NowCP ONLY
+        if (this.partyCompanies.nowcp && !(this.partyCompanies.iznes || this.partyCompanies.id2s)) this.form.get('electronicSignatureDocument').disable();
+    }
+
     getCompanyNames(requests, managementCompanyList) {
         this.amcs = [];
         requests.forEach((request) => {
@@ -163,6 +138,7 @@ export class NewKycValidationComponent implements OnInit, OnDestroy {
 
     handleConfirm(closed = false, startAgain = false) {
         this.showKYCComplete = !closed;
+        if (this.showKYCComplete) this.fadeInContent();
 
         if (closed) {
             this.router.navigate(['onboarding-requests', 'list'])
@@ -179,6 +155,7 @@ export class NewKycValidationComponent implements OnInit, OnDestroy {
 
         if (!this.form.valid) {
             formHelper.dirty(this.form);
+            this.submitEvent.emit({ invalid: true });
             return;
         }
 
@@ -194,11 +171,8 @@ export class NewKycValidationComponent implements OnInit, OnDestroy {
                 }
 
                 this.handleConfirm(this.hasClientFile);
-                this.submitEvent.emit({
-                    completed: true,
-                });
             } catch(e) {
-                this.newRequestService.errorPop();
+                this.newRequestService.errorPop(e);
             }
         });
     }
@@ -232,21 +206,27 @@ export class NewKycValidationComponent implements OnInit, OnDestroy {
             .subscribe((requests) => {
                 requests.forEach((request) => {
                     this.validationService.getCurrentFormValidationData(request.kycID).then((formData) => {
-                        if(formData){
-                        this.form.patchValue(formData);
+                        const todaysDate = moment().format(this.configDate.format);
 
-                            if(formData.electronicSignatureDocumentID){
-                                this.documentsService.getDocument(formData.electronicSignatureDocumentID).then((document) => {
-                                    const control = this.form.get('electronicSignatureDocument');
+                        if (formData) {
+                            formData.doneDate = todaysDate;
+                            this.form.patchValue(formData);
 
-                                    if(document){
-                                    control.patchValue(document);
-                                }
-                            });
+                                if (formData.electronicSignatureDocumentID){
+                                    this.documentsService.getDocument(formData.electronicSignatureDocumentID).then((document) => {
+                                        const control = this.form.get('electronicSignatureDocument');
+
+                                        if(document){
+                                        control.patchValue(document);
+                                    }
+                                });
+                            }
+                            return;
                         }
-                    }
+
+                        this.form.get('doneDate').patchValue(todaysDate);
+                    });
                 });
-            });
             });
     }
 
@@ -255,6 +235,18 @@ export class NewKycValidationComponent implements OnInit, OnDestroy {
      */
     isStepValid() {
         return this.form.valid;
+    }
+
+    /**
+     * Fades in once the max-height of the content has been set
+     *
+     * @returns {void}
+     */
+    private fadeInContent(): void {
+        setTimeout(() => {
+            this.fadeIn = true;
+            this.changeDetector.detectChanges();
+        }, 200);
     }
 
     ngOnDestroy() {

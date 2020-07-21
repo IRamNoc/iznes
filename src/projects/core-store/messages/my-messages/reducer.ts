@@ -230,8 +230,9 @@ function formatMessagesDataResponse(rawMessagesData: Array<any>): Array<MessageD
     return messageDetailList.toJS();
 }
 
-function updateDecryptedMessage(rawMessagesData: Array<any>, mailId, newContent) {
+function updateDecryptedMessage(rawMessagesData: Array<any>, mailId, newContentIn) {
     let messageDetailList;
+    let newContent = newContentIn;
 
     messageDetailList = rawMessagesData.map(
         (thisMessageDetail) => {
@@ -239,6 +240,13 @@ function updateDecryptedMessage(rawMessagesData: Array<any>, mailId, newContent)
             const thisMailId = thisMessageDetail.mailId;
 
             if (thisMailId === mailId) {
+                // To stop character encoding issues, mailbody payloads are now also Base64 encoded
+                try {
+                    newContent = commonHelper.b64DecodeUnicode(newContent);
+                } catch (e) {
+                    // legacy messages won't be Base64 encoded so allow if decode fails
+                }
+
                 let decryptedObject = JSON.parse(newContent);
                 let content = commonHelper.b64DecodeUnicode(decryptedObject.general);
                 let action = decryptedObject.action;
@@ -250,7 +258,9 @@ function updateDecryptedMessage(rawMessagesData: Array<any>, mailId, newContent)
                     action = decryptedObject.action;
                 }
 
-                if (action == 'null') action = { type: null };
+                if (action == 'null') {
+                    action = { type: null };
+                }
 
                 return Object.assign({}, thisMessageDetail, {
                     content, action, isDecrypted

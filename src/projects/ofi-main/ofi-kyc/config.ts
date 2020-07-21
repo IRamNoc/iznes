@@ -38,5 +38,9 @@ export const kycEnums = {
             label: 'Pending Client File',
             type: 'warning',
         },
+        [4]: {
+            label: 'Completed KYC File',
+            type: 'warning',
+        },
     },
 };

@@ -42,7 +42,6 @@ import { OfiManagementCompanyComponent } from './management-company/management-c
 import { ManagagementCompanyService } from './management-company/management-company.service';
 
 /* Graphs. */
-import { ChartsModule } from 'ng2-charts';
 import { OfiKYCModule } from '@ofi/ofi-main/ofi-kyc/module';
 
 /* Files */
@@ -102,7 +101,6 @@ import { WalletSwitchService } from './fund-share/service/wallet-switch.service'
         SetlDirectivesModule,
         SetlPipesModule,
         MultilingualModule,
-        ChartsModule,
         OfiKYCModule,
         DynamicFormsModule,
         SetlComponentsModule,

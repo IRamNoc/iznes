@@ -48,7 +48,7 @@
         &.complete:not(.sub-step) {
             border-left: solid 4px #60b515;
         }
-        &.complete:hover, &.allow-click:hover {
+        &.complete:not(.no-link):hover, &.allow-click:hover {
             cursor: pointer;
             color: #0079b8;
         }
@@ -588,14 +588,16 @@ form-steps {
 
 .fr-Latn {
     .pgContainer::before {
-        content: 'Emplacement';
+        content: 'État d’avancement ';
     }
     .kyc-container .form-group .filedrop-wrapper setl-file-drop .inline-filedrop .drop-file-area::after {
-        content: 'FEUILLETER';
+        content: 'Joindre';
     }
 }
 
 .full-screen-splash {
+    display: flex;
+    justify-content: center;
     background-size: cover;
     background-repeat: no-repeat;
     background-position: left;
@@ -604,7 +606,7 @@ form-steps {
     left: 0;
     width: 100%;
     height: 100%;
-    z-index: 2;
+    z-index: 9999;
     &::before {
         content: '';
         position: fixed;
@@ -615,16 +617,20 @@ form-steps {
         background: rgba(2, 17, 70, 0.5);
     }
     .content {
-        width: 564px;
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        -webkit-transform: translateY(-50%) translateX(-50%);
-        transform: translateY(-50%) translateX(-50%);
+        max-width: 1000px;
+        width: 92%;
+        align-self: center;
         background: #ffffff;
         border-radius: 5px;
         padding: 24px;
         text-align: center;
+        overflow-y: auto;
+        transition: opacity 0.3s linear;
+        opacity: 0;
+        z-index: 3;
+        &.fade-in {
+            opacity: 1;
+        }
         .highlight {
             background: #e1f1f6;
             border: solid 1px #89cbdf;
@@ -685,6 +691,21 @@ form-steps {
             width: 100%;
             margin: 28px 0 0 0;
             max-width: 100%;
+        }
+        label {
+            color: #565656;
+            padding-left: 30px;
+        }
+        input[type=checkbox][disabled] + label {
+            cursor: not-allowed;
+            &::before {
+                background-color: #ccc;
+                border: none;
+            }
+            &::after {
+                border-left: .08333338rem solid #000;
+                border-bottom: .08333338rem solid #000;
+            }
         }
     }
 }

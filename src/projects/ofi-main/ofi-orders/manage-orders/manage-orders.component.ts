@@ -565,6 +565,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
             const markedForPayment = new FormControl(this.orderCheckedForPayment.includes(orderId));
             const orderRef = this.getOrderRef(orderId);
             const orderTypeStr = this.getOrderTypeString(order);
+            const initialized = order.initialized;
 
             return {
                 ...list[orderId],
@@ -580,6 +581,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
                 markedForPayment,
                 readyForPayment,
                 orderUnpaid: this.orderUnpaid(list[orderId]),
+                initialized
             };
         });
     }

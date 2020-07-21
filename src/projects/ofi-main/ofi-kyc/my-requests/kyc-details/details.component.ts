@@ -3,11 +3,14 @@ import { ActivatedRoute } from '@angular/router';
 import { select } from '@angular-redux/store';
 import { Subject } from 'rxjs';
 import { takeUntil, filter as rxFilter, map } from 'rxjs/operators';
-import { isEmpty, find, isNil, get as getValue, findIndex } from 'lodash';
+import { isEmpty, find, isNil, get as getValue, findIndex, cloneDeep } from 'lodash';
+import { PermissionsService } from '@setl/utils';
 
 import { MultilingualService } from '@setl/multilingual';
 import { minimalInvestorStatusTextList } from '@ofi/ofi-main/ofi-kyc/my-requests/requests.config';
 import { KycDetailsService } from './details.service';
+import { KycFormHelperService } from '../kyc-form-helper.service';
+import { PartyCompaniesInterface } from '../kyc-form-helper';
 
 @Component({
     selector: 'kyc-details',
@@ -36,17 +39,41 @@ export class KycDetailsComponent implements OnInit, OnDestroy {
     modals = {};
     alreadyCompleted = null;
 
+    isNowCpAm = false;
+    isID2SAm = false;
+
+    /* The companies that this user was invited by. */
+    public kycPartyCompanies: PartyCompaniesInterface;
+
     constructor(
         private route: ActivatedRoute,
         private kycDetailsService: KycDetailsService,
         public translate: MultilingualService,
         private changeDetectorRef: ChangeDetectorRef,
+        private kycFormHelperService: KycFormHelperService,
+        private permissionsService: PermissionsService,
     ) {
+        // Subscribe for party details.
+        this.kycFormHelperService.kycPartyCompanies$
+            .subscribe((data: PartyCompaniesInterface) => {
+                this.kycPartyCompanies = data;
+            });
     }
 
-    ngOnInit() {
+    async ngOnInit() {
         this.constructPanels();
         this.getBeneficiaries();
+
+        await this.permissionsService.hasPermission('nowCpAM', 'canRead').then(
+            (hasPermission) => {
+                this.isNowCpAm = hasPermission;
+            },
+        );
+        await this.permissionsService.hasPermission('id2sAM', 'canRead').then(
+            (hasPermission) => {
+                this.isID2SAm = hasPermission;
+            },
+        );
     }
 
     getData(kycID) {
@@ -145,6 +172,7 @@ export class KycDetailsComponent implements OnInit, OnDestroy {
             id: 'banking',
             title: this.translate.translate('Banking Information'),
             data: '',
+            hidden: false,
         };
 
         this.kycBanking$
@@ -166,6 +194,19 @@ export class KycDetailsComponent implements OnInit, OnDestroy {
             this.changeDetectorRef.markForCheck();
         });
 
+        /* Hide this section is investor party selection is only ID2S. */
+        if (
+            this.kycPartyCompanies &&
+            this.kycPartyCompanies.id2s
+            && !this.kycPartyCompanies.nowcp && !this.kycPartyCompanies.iznes) {
+            banking.hidden = true;
+        }
+
+        /* Hide this section if amc is id2s or nowcp */
+        if (this.isID2SAm) {
+            banking.hidden = true;
+        }
+
         return banking;
     }
 
@@ -175,9 +216,17 @@ export class KycDetailsComponent implements OnInit, OnDestroy {
             data: '',
         };
 
+        /*
+         * Hide field 'operatorsHasExperienceNeuCP' when kyc user is not NowCP
+         * or 'operatorsHasExperienceNeuCP' when isNowCpAm is false
+         */
+        const hideOperatorsHasExperienceNeuCP = (this.kycPartyCompanies && !this.kycPartyCompanies.nowcp) && !this.isNowCpAm;
+
         this.kycClassification$
         .pipe(
             rxFilter(value => !isEmpty(value)),
+            map(data => cloneDeep(data)),
+            map(data => conditionallyDeleteField(data, 'operatorsHasExperienceNeuCP', hideOperatorsHasExperienceNeuCP)),
             map(data => this.kycDetailsService.toArray(data)),
             map(data => this.kycDetailsService.order(data)),
             takeUntil(this.unsubscribe),
@@ -221,7 +270,8 @@ export class KycDetailsComponent implements OnInit, OnDestroy {
     }
 
     getRiskProfile() {
-        return {
+        /* Define the risk profile panels. */
+        const riskProfilePanels = {
             id: 'request-details-identification',
             title: this.translate.translate('Risk Profile'),
             open: true,
@@ -230,13 +280,30 @@ export class KycDetailsComponent implements OnInit, OnDestroy {
                 this.getRiskObjective(),
                 this.getRiskConstraint(),
             ],
+            hidden: false,
         };
+
+        /* Hide this section is investor party selection is ID2S, and not iznes. */
+        if (
+            this.kycPartyCompanies &&
+            (this.kycPartyCompanies.id2s)
+            && this.kycPartyCompanies && !this.kycPartyCompanies.nowcp) {
+            riskProfilePanels.hidden = true;
+        }
+        /* Hide this section if amc is id2s */
+        if (this.isID2SAm) {
+            riskProfilePanels.hidden = true;
+        }
+
+        /* Return risk panel. */
+        return riskProfilePanels;
     }
 
     getRiskNature() {
         const riskNature = {
             title: this.translate.translate('Investments\' Nature'),
             data: '',
+            hidden: false,
         };
 
         this.kycRiskNature$
@@ -256,6 +323,7 @@ export class KycDetailsComponent implements OnInit, OnDestroy {
         const riskObjectives = {
             title: this.translate.translate('Investments\' Objectives'),
             data: '',
+            hidden: false,
         };
 
         const ids = [
@@ -282,6 +350,18 @@ export class KycDetailsComponent implements OnInit, OnDestroy {
             });
         });
 
+        /* Hide this section is investor party selection is ID2S or nowCP, and not iznes. */
+        if (
+            this.kycPartyCompanies &&
+            (this.kycPartyCompanies.id2s || this.kycPartyCompanies.nowcp)
+            && !this.kycPartyCompanies.iznes) {
+            riskObjectives.hidden = true;
+        }
+        /* Hide this section if amc is id2s or nowcp */
+        if (this.isNowCpAm || this.isID2SAm) {
+            riskObjectives.hidden = true;
+        }
+
         return riskObjectives;
     }
 
@@ -289,6 +369,7 @@ export class KycDetailsComponent implements OnInit, OnDestroy {
         const riskContraints = {
             title: this.translate.translate('Investments\' Constraints'),
             data: '',
+            hidden: false,
         };
 
         const ids = [
@@ -297,9 +378,6 @@ export class KycDetailsComponent implements OnInit, OnDestroy {
             'otherConstraints',
             'investmentDecisionsAdHocCommittee',
             'otherPersonsAuthorised',
-            'hasEverIssuedNeuCp',
-            'hasAlreadyInvestedNeuCp',
-            'hasExperienceTradingNeuCp',
         ];
 
         this.kycRiskObjective$
@@ -313,6 +391,19 @@ export class KycDetailsComponent implements OnInit, OnDestroy {
                 return ids.indexOf(row.originalId) > -1;
             });
         });
+
+        /* Hide this section is investor party selection is ID2S or nowCP, and not iznes. */
+        if (
+            this.kycPartyCompanies &&
+            (this.kycPartyCompanies.id2s || this.kycPartyCompanies.nowcp)
+            && !this.kycPartyCompanies.iznes) {
+            riskContraints.hidden = true;
+        }
+        /* Hide this section if amc is id2s or nowcp */
+        if (this.isNowCpAm || this.isID2SAm) {
+            riskContraints.hidden = true;
+        }
+
 
         return riskContraints;
     }
@@ -361,4 +452,18 @@ export class KycDetailsComponent implements OnInit, OnDestroy {
         this.unsubscribe.next();
         this.unsubscribe.complete();
     }
+}
+
+/**
+ * Conditionally delete field within kyc data.
+ * @param {any} kycData
+ * @param {string} fieldId
+ * @param {boolean} hide
+ * @return {any}
+ */
+function conditionallyDeleteField(kycData: any, fieldId: string, hide: boolean): any {
+    if (hide) {
+        delete kycData[fieldId];
+    }
+    return kycData;
 }

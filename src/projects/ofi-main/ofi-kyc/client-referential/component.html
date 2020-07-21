@@ -35,7 +35,7 @@
 
                     <div class="col-sm-6" align="right">
                         <button id="create-mandate-inv-btn"
-                                *ngIf="!isNowCpAm"
+                                *ngIf="isCommonAM"
                                 class="btn"
                                 style="margin-left: 10px;"
                                 [disabled]="!hasPermissionInvestorInvitation"
@@ -49,7 +49,7 @@
                 </div>
                 <div class="row">
                     <div class="col-sm-6">
-                        <form *ngIf="!isNowCpAm" [formGroup]="investorTypeForm">
+                        <form *ngIf="isCommonAM" [formGroup]="investorTypeForm">
                             <div class="form-group col-sm-6">
                                 <label for="investor-type-select" class="control-label">
                                     {{ 'Investor Type' | translate }}
@@ -66,7 +66,7 @@
                     </div>
                     <div class="col-sm-6" align="right">
                         <p>&nbsp;</p>
-                        <button *ngIf="!isNowCpAm" class="btn btn-primary" (click)="changePage('audit')">
+                        <button *ngIf="isCommonAM" class="btn btn-primary" (click)="changePage('audit')">
                             {{ 'View Audit Trail' | translate }}
                         </button>
 
@@ -76,7 +76,7 @@
                                 <clr-icon shape="caret down"></clr-icon>
                             </button>
                             <clr-dropdown-menu clrPosition="bottom-right" *clrIfOpen>
-                                <button *ngIf="!isNowCpAm" type="button" clrDropdownItem (click)="downloadAllHoldingsCSVFile()">
+                                <button *ngIf="isCommonAM" type="button" clrDropdownItem (click)="downloadAllHoldingsCSVFile()">
                                     {{ 'Export Clients Holdings' | translate }}
                                 </button>
                                 <button type="button" clrDropdownItem (click)="downloadReferentialCSVFile()">
@@ -95,7 +95,7 @@
                             <clr-dg-column [clrDgField]="'investorType'">{{ 'Investor Type' | translate }}</clr-dg-column>
                             <clr-dg-column [clrDgField]="'investorName'">{{ 'Investor Name' | translate }}</clr-dg-column>
                             <clr-dg-column [clrDgField]="'email'">{{ 'Email' | translate }}</clr-dg-column>
-                            <clr-dg-column [clrDgField]="'investmentMethod'">{{ 'Investment Method' | translate }}</clr-dg-column>
+                            <clr-dg-column *ngIf="isCommonAM" [clrDgField]="'investmentMethod'">{{ 'Investment Method' | translate }}</clr-dg-column>
 
                             <clr-dg-row *clrDgItems="let item of clientReferential" style="cursor: pointer;" (click)="viewClient(item.kycID);">
                                 <clr-dg-cell>{{item.clientReference}}</clr-dg-cell>
@@ -103,7 +103,7 @@
                                 <clr-dg-cell>{{item.investorType}}</clr-dg-cell>
                                 <clr-dg-cell>{{item.investorName}}</clr-dg-cell>
                                 <clr-dg-cell>{{item.email}}</clr-dg-cell>
-                                <clr-dg-cell>{{item.investmentMethod}}</clr-dg-cell>
+                                <clr-dg-cell *ngIf="isCommonAM">{{item.investmentMethod}}</clr-dg-cell>
                             </clr-dg-row>
 
                             <clr-dg-footer>{{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
@@ -276,7 +276,7 @@
                 </div>
             </clr-tab-content>
         </clr-tab>
-        <clr-tab *ngIf="!isNowCpAm">
+        <clr-tab *ngIf="isCommonAM">
             <button clrTabLink (click)="loadTab(2);">{{ 'Shares Authorisation' | translate }}</button>
             <clr-tab-content *clrIfActive="currentTab === 2">
                 <div class="row">
@@ -308,7 +308,7 @@
 
             </clr-tab-content>
         </clr-tab>
-        <clr-tab *ngIf="!isNowCpAm">
+        <clr-tab *ngIf="isCommonAM">
             <button clrTabLink (click)="loadTab(3);">{{ 'Holdings' | translate }}</button>
             <clr-tab-content>
                 <div class="row">

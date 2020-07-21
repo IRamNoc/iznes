@@ -11,7 +11,7 @@
 
 <div class="panel-body" [class.hidden]="!open" [ngClass]="{'objective pl-1': multiple}" [formGroup]="form">
 
-    <div class="checkbox-group" formGroupName="performanceProfile">
+    <div *ngIf="form" class="checkbox-group" formGroupName="performanceProfile">
         <div class="row col-sm-12">
             <div class="form-group required-field col-sm-12">
                 <label class="required-field">{{ 'What performance do you require?' | translate }}</label>
@@ -20,9 +20,9 @@
 
         <ng-container *ngFor="let profile of performanceProfileList; let i = index">
             <div class="row col-sm-12 form-group required">
-                <ng-container *ngTemplateOutlet="checkboxGridPerformance; context: {'item': performanceProfileList[i * 2], 'index': i }">
+                <ng-container *ngTemplateOutlet="checkboxGridPerformance; context: {'item': performanceProfileList[i * 2]}">
                 </ng-container>
-                <ng-container *ngTemplateOutlet="checkboxGridPerformance; context: {'item': performanceProfileList[(i * 2) + 1], 'index': i }">
+                <ng-container *ngTemplateOutlet="checkboxGridPerformance; context: {'item': performanceProfileList[(i * 2) + 1]}">
                 </ng-container>
             </div>
         </ng-container>
@@ -35,14 +35,14 @@
         </div>
 
         <!-- Template is placed here because formControlName must be nested within formGroupName which in turn must be nested within formGroup -->
-        <ng-template #checkboxGridPerformance let-item="item" let-index="index">
+        <ng-template #checkboxGridPerformance let-item="item">
             <div class="col-sm-3" *ngIf="item">
                 <div class="checkbox-inline">
                     <input type="checkbox"
-                            id="{{ item.id }}-{{ index }}"
+                            id="{{ item.id }}-{{ formIndex }}"
                             formControlName="{{ item.id }}"
                             (click)="form.get(['performanceProfile', item.id]).markAsTouched()">
-                    <label for="{{ item.id }}-{{ index }}">
+                    <label for="{{ item.id }}-{{ formIndex }}">
                         {{ item.text | translate }}
                     </label>
                 </div>
@@ -73,9 +73,9 @@
             <div class="col-sm-12">
                 <div class="checkbox-inline">
                     <input type="checkbox"
-                            id="{{clientNeed.id}}-{{index}}"
+                            id="{{clientNeed.id}}-{{formIndex}}"
                             [formControl]="form.get(['clientNeeds', clientNeed.id])">
-                    <label for="{{clientNeed.id}}-{{index}}">
+                    <label for="{{clientNeed.id}}-{{formIndex}}">
                         {{ clientNeed.text | translate }}
                     </label>
                 </div>
@@ -114,10 +114,10 @@
         <ng-container *ngFor="let horizon of investmentHorizonList; let i = index">
             <div class="row col-sm-12 form-group required">
                 <ng-container
-                    *ngTemplateOutlet="checkboxGridHorizon; context: {'item': investmentHorizonList[i * 2], 'index': i }">
+                    *ngTemplateOutlet="checkboxGridHorizon; context: {'item': investmentHorizonList[i * 2]}">
                 </ng-container>
                 <ng-container
-                    *ngTemplateOutlet="checkboxGridHorizon; context: {'item': investmentHorizonList[(i * 2) + 1], 'index': i }">
+                    *ngTemplateOutlet="checkboxGridHorizon; context: {'item': investmentHorizonList[(i * 2) + 1]}">
                 </ng-container>
             </div>
         </ng-container>
@@ -130,12 +130,12 @@
         </div>
 
         <!-- Template is placed here because formControlName must be nested within formGroupName which in turn must be nested within formGroup -->
-        <ng-template #checkboxGridHorizon let-item="item" let-index="index">
+        <ng-template #checkboxGridHorizon let-item="item">
             <div class="col-sm-3" *ngIf="item">
                 <div class="checkbox-inline">
-                    <input type="checkbox" id="{{ item.id }}-{{ index }}" formControlName="{{ item.id }}"
+                    <input type="checkbox" id="{{ item.id }}-{{ formIndex }}" formControlName="{{ item.id }}"
                         (click)="form.get(['investmentHorizonWanted', item.id]).markAsTouched()">
-                    <label for="{{ item.id }}-{{ index }}">
+                    <label for="{{ item.id }}-{{ formIndex }}">
                         {{ item.text | translate }}
                     </label>
                 </div>
@@ -150,7 +150,7 @@
                 <div class="input-group date-pick-wrapper">
                     <span class="fa fa-calendar" aria-hidden="true"></span>
                     <input autocomplete="off" [dpDayPicker]="configDate"
-                        id="investmentHorizonWantedSpecificPeriod-{{index}}"
+                        id="investmentHorizonWantedSpecificPeriod-{{formIndex}}"
                         formControlName="investmentHorizonWantedSpecificPeriod" placeholder="{{configDate.format}}"
                         mode="day" theme="dp-material" type="text">
                     <span class="force-display-error field-error"
@@ -162,9 +162,9 @@
 
     <div class="row col-sm-12">
         <div class="form-group required-field col-sm-6">
-            <label for="riskProfile-{{index}}">{{ 'Risk Profile (Ability to incur losses)' | translate }}</label>
+            <label for="riskProfile-{{formIndex}}">{{ 'Risk Profile (Ability to incur losses)' | translate }}</label>
             <ng-select class="large-select"
-                        id="riskProfile-{{index}}"
+                        id="riskProfile-{{formIndex}}"
                         [items]="riskProfileList"
                         formControlName="riskProfile"
                         placeholder="{{'Select a profile' | translate}}"></ng-select>
@@ -172,9 +172,9 @@
         </div>
         <div class="col-sm-12"></div>
         <div *ngIf="!isDisabled('riskProfileCapital')" class="form-group required-field col-sm-6">
-            <label for="capitalLoss-{{index}}">{{ 'Capital Loss Limited To' | translate }}</label>
+            <label for="capitalLoss-{{formIndex}}">{{ 'Capital Loss Limited To' | translate }}</label>
             <input type="text"
-                    id="capitalLoss-{{index}}"
+                    id="capitalLoss-{{formIndex}}"
                     placeholder="{{'Capital loss' | translate}}"
                     formControlName="riskProfileCapital">
             <span class="field-error" *ngIf="hasError('riskProfileCapital')">{{ 'Field is required' | translate }}</span>

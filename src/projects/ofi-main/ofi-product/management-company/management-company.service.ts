@@ -158,7 +158,7 @@ export class ManagagementCompanyService {
             logo: [
                 '',
             ],
-            isNowCp: [false]
+            managementCompanyType: [[{id: 'common', 'text': 'Common'}]]
         });
     }
 

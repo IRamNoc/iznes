@@ -71,18 +71,8 @@ export class OfiSignUpComponent implements OnInit, OnDestroy {
             }).then(() => {
                 this.consumeToken();
 
-                // this.confirmationService.create(
-                //     'Success',
-                //     `<p><b>${this.translate.translate('Your account was created')}</b></p><p>${this.translate.translate('A confirmation email was sent to you')}.</p>`,
-                //     {
-                //         confirmText: this.translate.translate('Continue to @platform@', { 'platform': this.appConfig.platform }),
-                //         declineText: '',
-                //         btnClass: 'success',
-                //         focusButton: 'confirm',
-                //     },
-                // ).subscribe(() => {
-                    // Resolve so user gets logged in and has a token
-                resolve('Your account was created successfully. A confirmation email was sent to you.');
+                // Resolve so user gets logged in and has a token
+                resolve(this.translate.translate('Your account was created successfully. A confirmation email was sent to you.'));
 
                 this.authenticationOb.pipe(takeUntil(this.unsubscribe)).subscribe(
                     (authentication) => {
