@@ -8,10 +8,10 @@
   let issuer, clientId = '';
 
   if (baseURL.includes('api.iznes.io') === true) {
-    issuer = 'https://engieapppreview.oktapreview.com/.well-known/openid-configuration';
+    issuer = ' https://engieapppreview.oktapreview.com/oauth2/default';
     clientId = '0oah49n1tfxhVKmvh0x6';
   } else if (baseURL.includes('app.iznes.io') === true) {
-    issuer = 'https://engie.okta-emea.com/.well-known/openid-configuration';
+    issuer = 'https://engie.okta-emea.com/oauth2/default';
     clientId = '0oa470nf1sD04JCqg0i7';
   } else if (baseURL.includes('testing.iznes.io') === true) {
     issuer = 'https://dev-698165.okta.com/oauth2/default';
@@ -41,7 +41,7 @@
       window.location = redirectAfterSuccess;
     })
       .catch(function (err) {
-        console.log(err)
+        console.error(err)
       });
   }
 </script>
