@@ -199,12 +199,7 @@ export class BeneficiaryComponent implements OnInit, OnDestroy {
      * @returns {void}
      */
     public handleKbisandIDValidation(): void {
-        let required: boolean = true;
-        const isPoliticallyExposed = !!this.form.get('naturalPerson.isPoliticallyExposed').value;
-
-        if (this.kycHelper.isStateOwned() || this.kycHelper.isCompanyRegulated() || this.kycHelper.isCompanyListed()) {
-            required = false;
-        }
+        let required: boolean = false;
 
         const highRisk = this.kycHelper.isHighRiskActivity() || this.kycHelper.isHighRiskCountry();
         if (highRisk) {
@@ -214,10 +209,14 @@ export class BeneficiaryComponent implements OnInit, OnDestroy {
 
         const beneficiaryType = this.form.get('beneficiaryType').value;
         const isNaturalPerson = beneficiaryType === 'naturalPerson';
-
+        const isPoliticallyExposed = !!this.form.get('naturalPerson.isPoliticallyExposed').value;
         if ((isPoliticallyExposed && isNaturalPerson) || this.globalHasPEP) {
             required = true;
             // this.form.get('common.document').markAsTouched();
+        }
+
+        if (this.kycHelper.isStateOwnedAnyPercentCapital() || this.kycHelper.isCompanyRegulated() || this.kycHelper.isCompanyListed()) {
+            required = false;
         }
 
         this.toggleKbisAndIdRequired(required);
