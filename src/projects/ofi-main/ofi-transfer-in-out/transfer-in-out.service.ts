@@ -14,6 +14,8 @@ import {
     IznesUpdateTransferRequestBody,
     ConfirmTransferRequestData,
     IznesConfirmTransferRequestBody,
+    ValidateTransferRequestData,
+    IznesValidateTransferRequestBody,
 } from './model';
 
 /* Import actions. */
@@ -234,6 +236,29 @@ export class TransferInOutService {
     requestConfirmTransfer(data: ConfirmTransferRequestData) {
         const messageBody: IznesConfirmTransferRequestBody = {
             RequestName: 'iznconfirmtransferinout',
+            token: this.memberSocketService.token,
+            referenceID: data.referenceID,
+        };
+
+        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+    }
+
+    defaultRequestValidateTransfer(referenceID: number, successCallback: (res) => void, errorCallback: (res) => void) {
+        const asyncTaskPipe = this.requestValidateTransfer({ referenceID });
+
+        this.ngRedux.dispatch(SagaHelper.runAsync(
+            [],
+            [],
+            asyncTaskPipe,
+            {},
+            res => successCallback(res),
+            res => errorCallback(res),
+        ));
+    }
+
+    requestValidateTransfer(data: ValidateTransferRequestData) {
+        const messageBody: IznesValidateTransferRequestBody = {
+            RequestName: 'iznvalidatetransferinout',
             token: this.memberSocketService.token,
             referenceID: data.referenceID,
         };

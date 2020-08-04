@@ -192,10 +192,15 @@
                         <button type="button" class="btn btn-sm btn-danger"
                             *ngIf="transfer.transferStatus !== 'pending' && hasPermissionCancel" disabled>{{ 'Cancel' | translate }}</button>
                         <button type="button" class="btn btn-sm btn-primary" [clrLoading]="confirmBtnState"
-                            *ngIf="transfer.transferStatus === 'validated' && isAmUser"
+                            *ngIf="transfer.transferStatus === 'validated' && userType === 'am'"
                             (click)="confirmTransfer(i)">{{ 'Confirm' | translate }}</button>
                         <button type="button" class="btn btn-sm btn-primary"
-                            *ngIf="transfer.transferStatus !== 'validated' && isAmUser" disabled>{{ 'Confirm' | translate }}</button>
+                            *ngIf="transfer.transferStatus !== 'validated' && userType === 'am'" disabled>{{ 'Confirm' | translate }}</button>
+                        <button type="button" class="btn btn-sm btn-primary" [clrLoading]="validateBtnState"
+                            *ngIf="transfer.transferStatus === 'pending' && userType === 'investor'"
+                            (click)="validateTransfer(i)">{{ 'Validate' | translate }}</button>
+                        <button type="button" class="btn btn-sm btn-primary"
+                            *ngIf="transfer.transferStatus !== 'pending' && userType === 'investor'" disabled>{{ 'Validate' | translate }}</button>
                     </div>
                 </clr-dg-cell>
             </clr-dg-row>

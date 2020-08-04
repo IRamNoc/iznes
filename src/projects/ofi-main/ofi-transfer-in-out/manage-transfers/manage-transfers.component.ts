@@ -66,12 +66,13 @@ export class ManageTransfersComponent implements OnInit, OnDestroy {
     language = 'en';
     updateTransferFormGroup: FormGroup;
     canUpdateBtn: boolean = false;
-    isAmUser: boolean = false;
+    userType: null;
     hasPermissionUpdate: boolean = false;
     hasPermissionCancel: boolean = false;
     hasPermissionInsert: boolean = false;
     updatePermission: boolean = false;
     confirmBtnState: boolean = false;
+    validateBtnState: boolean = false;
 
     transferStatusListItems: object = ['pending', 'validated'];
 
@@ -113,7 +114,7 @@ export class ManageTransfersComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         const currentState = this.redux.getState();
-        this.isAmUser = getMyDetail(currentState).userTypeStr === 'am' ? true : false;
+        this.userType = getMyDetail(currentState).userTypeStr);
         this.initForm();
         this.datagridParams = new DatagridParams(this.itemPerPage);
 
@@ -270,7 +271,7 @@ export class ManageTransfersComponent implements OnInit, OnDestroy {
     openTransferDetails(index) {
         this.detailModal = { ... this.transferListItems[index] };
         this.detailModal['dateEntered'] = moment(this.detailModal['dateEntered'].dateEntered).format('YYYY-MM-DD');
-        if (this.detailModal['transferStatus'] !== 'pending' || !this.hasPermissionUpdate) {
+        if (!this.hasPermissionUpdate || this.detailModal['transferStatus'] !== 'pending') {
             this.updatePermission = false;
         } else {
             this.updatePermission = true;
@@ -294,7 +295,7 @@ export class ManageTransfersComponent implements OnInit, OnDestroy {
         this.updateTransferFormGroup.controls['comment'].setValue('');
         this.updateTransferFormGroup.controls['transferStatus'].setValue('');
     }
-
+    
     handleModalUpdateButtonClick(referenceId) {
         const request = {
             referenceID: referenceId,
@@ -337,6 +338,23 @@ export class ManageTransfersComponent implements OnInit, OnDestroy {
                 this.logService.log('Error: ', data);
                 this.toaster.pop('error', 'Your transfer I/O has not been confirmed.');
                 this.confirmBtnState = false;
+            });
+    }
+
+    validateTransfer(index) {
+        this.validateBtnState = true;
+
+        this.transferService.defaultRequestValidateTransfer(
+            this.transferListItems[index].referenceID,
+            (data) => {
+                this.logService.log('validate transfer success', data);
+                this.toaster.pop('success', 'Your transfer I/O has been succesfully validated.');
+                this.validateBtnState = false;
+            },
+            (data) => {
+                this.logService.log('Error: ', data);
+                this.toaster.pop('error', 'Your transfer I/O has not been validated.');
+                this.validateBtnState = false;
             });
     }
 

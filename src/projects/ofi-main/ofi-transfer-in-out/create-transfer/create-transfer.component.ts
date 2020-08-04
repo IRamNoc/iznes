@@ -12,6 +12,7 @@ import { OfiFundService } from '@ofi/ofi-main/ofi-req-services/ofi-product/fund/
 import { OfiFundShareService } from '@ofi/ofi-main/ofi-req-services/ofi-product/fund-share/service';
 import { OfiCurrenciesService } from '@ofi/ofi-main/ofi-req-services/ofi-currencies/service';
 import { MultilingualService } from '@setl/multilingual';
+import { MessagesService } from '@setl/core-messages/index';
 import {
     OfiManagementCompanyService,
 } from '../../ofi-req-services/ofi-product/management-company/management-company.service';
@@ -79,6 +80,7 @@ export class CreateTransferComponent implements OnInit, OnDestroy {
                 private logService: LogService,
                 private toaster: ToasterService,
                 private route: ActivatedRoute,
+                private messagesService: MessagesService,
                 @Inject('product-config') productConfig) {
         this.accountKeeperList = productConfig.fundItems.fundAdministratorItems;
         this.ofiCurrenciesService.getCurrencyList();
@@ -262,10 +264,41 @@ export class CreateTransferComponent implements OnInit, OnDestroy {
             comment: this.placeTransferFormGroup.controls['comment'].value,
         };
 
-        this.transferService.addNewTransfer(request).then((data) => {
+        this.transferService.addNewTransfer(request).then((response) => {
             // log to remote server about order is placed
             this.logService.log('info', 'a transfer i/o has been initialized');
             this.toaster.pop('success', 'Your transfer I/O has been succesfully initiated.');
+            const data = _.get(response, '[1].Data[0]',null);
+            console.log(data);
+            const recipientsArr = [data.investorWalletID];
+            const subjectStr = this.translate.translate(
+                'INITIATION D\'UN TRANSFERT: saisie par Iznes'
+            );
+
+            const bodyStr = `
+                ${this.translate.translate(
+                    'Bonjour @investorFirstName@, un ordre de transfert de parts a été initié par IZNES dont vous trouverez les détails ci-dessous.', { investorFirstName: data.investorFirstName })}.
+                    <br><br>
+                    ${this.translate.translate('Merci de bien vouloir confirmer les détails de ce transfert en cliquant sur le bouton de Validation afin de permettre la prise en compte de l\'opération au sein de votre registre Iznes.')}.
+                    <br><br>%@link@%<br><br>
+                    ${this.translate.translate('Thank you')},
+                    <br><br>${this.translate.translate('The IZNES team')}
+            `;
+
+            const action = {
+                type: 'messageWithLink',
+                data: {
+                    links: [
+                        {
+                            link: '/#/list-of-funds/0',
+                            anchorCss: 'btn',
+                            anchorText: this.translate.translate('Start Trading'),
+                        },
+                    ],
+                },
+            };
+
+            this.messagesService.sendMessage(recipientsArr, subjectStr, bodyStr, action as any);
             this.router.navigateByUrl('/transfer-in-out');
         })
         .catch((data) => {

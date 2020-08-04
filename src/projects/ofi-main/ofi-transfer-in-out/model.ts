@@ -36,6 +36,14 @@ export interface IznesConfirmTransferRequestBody extends MemberNodeMessageBody {
     referenceID: number;
 }
 
+export interface ValidateTransferRequestData {
+    referenceID: number;
+}
+
+export interface IznesValidateTransferRequestBody extends MemberNodeMessageBody {
+    referenceID: number;
+}
+
 export interface IznesUpdateTransferRequestData {
     referenceID: number;
     price: number;
