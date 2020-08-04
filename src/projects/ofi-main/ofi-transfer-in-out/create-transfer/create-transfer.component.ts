@@ -269,17 +269,17 @@ export class CreateTransferComponent implements OnInit, OnDestroy {
             this.logService.log('info', 'a transfer i/o has been initialized');
             this.toaster.pop('success', 'Your transfer I/O has been succesfully initiated.');
             const data = _.get(response, '[1].Data[0]',null);
-            console.log(data);
+            
             const recipientsArr = [data.investorWalletID];
             const subjectStr = this.translate.translate(
-                'INITIATION D\'UN TRANSFERT: saisie par Iznes'
+                'TRANSFER INITIATION: Seized by Iznes'
             );
 
             const bodyStr = `
                 ${this.translate.translate(
-                    'Bonjour @investorFirstName@, un ordre de transfert de parts a été initié par IZNES dont vous trouverez les détails ci-dessous.', { investorFirstName: data.investorFirstName })}.
+                    'Hello @investorFirstName@, a fund transfer order has been initiated by IZNES', { investorFirstName: data.investorFirstName })}.
                     <br><br>
-                    ${this.translate.translate('Merci de bien vouloir confirmer les détails de ce transfert en cliquant sur le bouton de Validation afin de permettre la prise en compte de l\'opération au sein de votre registre Iznes.')}.
+                    ${this.translate.translate('Please confirm transfer details by validating pending transfer to allow the operation to be taken into account in your Iznes registry')}.
                     <br><br>%@link@%<br><br>
                     ${this.translate.translate('Thank you')},
                     <br><br>${this.translate.translate('The IZNES team')}
@@ -290,9 +290,9 @@ export class CreateTransferComponent implements OnInit, OnDestroy {
                 data: {
                     links: [
                         {
-                            link: '/#/list-of-funds/0',
+                            link: '/#/transfer-in-out',
                             anchorCss: 'btn',
-                            anchorText: this.translate.translate('Start Trading'),
+                            anchorText: this.translate.translate('View transfers'),
                         },
                     ],
                 },

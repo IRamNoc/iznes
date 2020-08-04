@@ -1,7 +1,7 @@
 <!-- Breadcrumbs. -->
 <div class="header-breadcrumbs">
     <h1>
-        <clr-icon shape="switch"></clr-icon> Transfer In & Out
+        <clr-icon shape="switch"></clr-icon> {{ 'Transfer In & Out' | translate }}
     </h1>
 </div>
 
@@ -9,104 +9,103 @@
     <!-- Panel header -->
     <div class="row panel-header">
         <div class="col-md-6">
-            <h2>Liste des transferts</h2>
-            Please fill in the following information to create a new transfer
+            <h2>{{ 'Transfer List' | translate }}</h2>
         </div>
     </div>
 
     <div class="border-table panel-body">
         <clr-dg-action-bar *ngIf="hasPermissionInsert">
             <button id="saveButton" type="button" routerLink="/transfer-in-out/create"
-                class="btn btn-primary">{{ 'Créer un nouveau transfert' | translate }}</button>
+                class="btn btn-primary">{{ 'Create a new transfer' | translate }}</button>
         </clr-dg-action-bar>
 
         <clr-datagrid (clrDgRefresh)="refresh($event)" [clrDgLoading]="loading" clrDgSortIcon #transfersDataGrid>
             <clr-dg-column [clrDgField]="'referenceID'" clrDgSortIcon clrDgSortNoSearch id="reference">
-                <ng-container *clrDgHideableColumn="{hidden: false}">Référence IZNES
+                <ng-container *clrDgHideableColumn="{hidden: false}">{{ 'IZNES Reference' | translate }}
                     <span class="column-label"></span>
                 </ng-container>
             </clr-dg-column>
             <clr-dg-column [clrDgField]="'externalReference'" clrDgSortIcon clrDgSortNoSearch id="externalReference">
-                <ng-container *clrDgHideableColumn="{hidden: false}">Référence Externe
+                <ng-container *clrDgHideableColumn="{hidden: false}">{{ 'External Reference' | translate }}
                     <span class="column-label"></span>
                 </ng-container>
             </clr-dg-column>
             <clr-dg-column [clrDgField]="'accountKeeper'" clrDgSortIcon clrDgSortNoSearch id="Order-Investor">
-                <ng-container *clrDgHideableColumn="{hidden: false}">TCC Historique
+                <ng-container *clrDgHideableColumn="{hidden: false}">{{ 'Historical Account Keeper' | translate }}
                     <span class="column-label"></span>
                 </ng-container>
             </clr-dg-column>
             <clr-dg-column [clrDgField]="'transferDirection'" clrDgSortIcon clrDgSortNoSearch id="Order-Portfolio">
-                <ng-container *clrDgHideableColumn="{hidden: false}">Sens
+                <ng-container *clrDgHideableColumn="{hidden: false}">{{ 'Direction' | translate }}
                     <span class="column-label"></span>
                 </ng-container>
             </clr-dg-column>
             <clr-dg-column [clrDgField]="'assetManagementCompany'" clrDgSortIcon clrDgSortNoSearch id="Order-ISIN">
-                <ng-container *clrDgHideableColumn="{hidden: false}">Société de Gestion
+                <ng-container *clrDgHideableColumn="{hidden: false}">{{ 'Management Company' | translate }}
                     <span class="column-label"></span>
                 </ng-container>
             </clr-dg-column>
             <clr-dg-column [clrDgField]="'investorCompany'" clrDgSortIcon clrDgSortNoSearch id="Order-Share-Name">
-                <ng-container *clrDgHideableColumn="{hidden: false}">Investisseur
+                <ng-container *clrDgHideableColumn="{hidden: false}">{{ 'Investor' | translate }}
                     <span class="column-label"></span>
                 </ng-container>
             </clr-dg-column>
             <clr-dg-column [clrDgField]="'investorWallet'" clrDgSortIcon clrDgSortNoSearch
                 id="Order-Asset-Manager-Company">
-                <ng-container *clrDgHideableColumn="{hidden: false}">Portefeuille
+                <ng-container *clrDgHideableColumn="{hidden: false}">{{ 'Portfolio' | translate }}
                     <span class="column-label"></span>
                 </ng-container>
             </clr-dg-column>
             <clr-dg-column [clrDgField]="'shareISIN'" clrDgSortIcon clrDgSortNoSearch id="Order-Share-Currency">
-                <ng-container *clrDgHideableColumn="{hidden: false}">ISIN
+                <ng-container *clrDgHideableColumn="{hidden: false}">{{ 'ISIN' | translate }}
                     <span class="column-label"></span>
                 </ng-container>
             </clr-dg-column>
             <clr-dg-column [clrDgField]="'shareName'" clrDgSortIcon clrDgSortNoSearch id="Order-Quantity" class="right">
-                <ng-container *clrDgHideableColumn="{hidden: false}">Nom de la part
+                <ng-container *clrDgHideableColumn="{hidden: false}">{{ 'Fund Name' | translate }}
                     <span class="column-label"></span>
                 </ng-container>
             </clr-dg-column>
             <clr-dg-column [clrDgField]="'currency'" clrDgSortIcon clrDgSortNoSearch id="Order-Traded-By">
-                <ng-container *clrDgHideableColumn="{hidden: false}">Devise
+                <ng-container *clrDgHideableColumn="{hidden: false}">{{ 'Currency' | translate }}
                     <span class="column-label"></span>
                 </ng-container>
             </clr-dg-column>
             <clr-dg-column [clrDgField]="'quantity'" clrDgSortIcon clrDgSortNoSearch id="Order-Traded-By">
-                <ng-container *clrDgHideableColumn="{hidden: false}">Quantité
+                <ng-container *clrDgHideableColumn="{hidden: false}">{{ 'Quantity' | translate }}
                     <span class="column-label"></span>
                 </ng-container>
             </clr-dg-column>
             <clr-dg-column [clrDgField]="'unitPrice'" clrDgSortIcon clrDgSortNoSearch id="Order-Latest-NAV"
                 class="right">
-                <ng-container *clrDgHideableColumn="{hidden: false}">Prix
+                <ng-container *clrDgHideableColumn="{hidden: false}">{{ 'Price' | translate }}
                     <span class="column-label"></span>
                 </ng-container>
             </clr-dg-column>
             <clr-dg-column [clrDgField]="'amount'" clrDgSortIcon clrDgSortNoSearch id="Order-Trade-Amount"
                 class="right">
-                <ng-container *clrDgHideableColumn="{hidden: false}">Montant
+                <ng-container *clrDgHideableColumn="{hidden: false}">{{ 'Amount' | translate }}
                     <span class="column-label"></span>
                 </ng-container>
             </clr-dg-column>
             <clr-dg-column [clrDgField]="'theoricalDate'" clrDgSortIcon clrDgSortNoSearch id="Order-Fee-Amount"
                 class="right">
-                <ng-container *clrDgHideableColumn="{hidden: false}">Date théorique d'impact sur le stock
+                <ng-container *clrDgHideableColumn="{hidden: false}">{{ 'Theoretical impact date on stock' | translate }}
                     <span class="column-label"></span>
                 </ng-container>
             </clr-dg-column>
             <clr-dg-column [clrDgField]="'transferStatus'" clrDgSortIcon clrDgSortNoSearch id="Order-Order-Date">
-                <ng-container *clrDgHideableColumn="{hidden: false}">Statut
+                <ng-container *clrDgHideableColumn="{hidden: false}">{{ 'Status' | translate }}
                     <span class="column-label"></span>
                 </ng-container>
             </clr-dg-column>
             <clr-dg-column [clrDgField]="'dateEntered'" clrDgSortIcon clrDgSortNoSearch id="Order-Cut-Off-Date">
-                <ng-container *clrDgHideableColumn="{hidden: false}">Date de saisie
+                <ng-container *clrDgHideableColumn="{hidden: false}">{{ 'Entry Date' | translate }}
                     <span class="column-label"></span>
                 </ng-container>
             </clr-dg-column>
             <clr-dg-column [clrDgField]="'action'" clrDgSortIcon clrDgSortNoSearch id="Order-Cut-Off-Date">
-                <ng-container *clrDgHideableColumn="{hidden: false}">Action
+                <ng-container *clrDgHideableColumn="{hidden: false}">{{ 'Action' | translate }}
                     <span class="column-label"></span>
                 </ng-container>
             </clr-dg-column>
@@ -259,21 +258,21 @@
 </clr-modal>
 
 <clr-modal [(clrModalOpen)]="isDetailModalDisplayed" [clrModalClosable]="false" [clrModalSize]="'lg'">
-    <h3 class="modal-title">Modifier le transfert #{{detailModal.referenceID}}</h3>
+    <h3 class="modal-title">{{ 'Modify transfer' | translate }} #{{detailModal.referenceID}}</h3>
 
     <div class="modal-body">
         <form [formGroup]="updateTransferFormGroup">
             <section class="form-group">
-                <h3>Informations générales</h3>
+                <h3>{{ 'General Informations' | translate }}</h3>
                 <div class="col-md-12">
-                    <label class="clr-col-12 clr-col-md-12" for="amCompany">Société de Gestion</label>
+                    <label class="clr-col-12 clr-col-md-12" for="amCompany">{{ 'Management Company' | translate }}</label>
                     <input id="investorWalletReference" class="form-control" type="text"
                         value="{{ detailModal.assetManagementCompany }}" disabled>
                 </div>
 
                 <div class="row">
                     <div class="col-md-6">
-                        <label class="clr-col-12 clr-col-md-12" for="amShareFund">Nom de la part</label>
+                        <label class="clr-col-12 clr-col-md-12" for="amShareFund">{{ 'Share Name' | translate }}</label>
                         <input id="investorWalletReference" class="form-control" type="text"
                             value="{{ detailModal.shareName }}" disabled>
                     </div>
@@ -287,21 +286,21 @@
                 </div>
 
                 <div class="col-md-12">
-                    <label class="clr-col-12 clr-col-md-12" for="investorCompany">Investisseur</label>
+                    <label class="clr-col-12 clr-col-md-12" for="investorCompany">{{ 'Investor' | translate }}</label>
                     <input id="investorWalletReference" class="form-control" type="text"
                         value="{{ detailModal.investorCompany }}" disabled>
                 </div>
 
                 <div class="col-md-12">
-                    <label class="clr-col-12 clr-col-md-12" for="investorWallet">Portfeuille</label>
+                    <label class="clr-col-12 clr-col-md-12" for="investorWallet">{{ 'Portfolio' | translate }}</label>
                     <input id="investorWalletReference" class="form-control" type="text"
                         value="{{ detailModal.investorWallet }}" disabled>
                 </div>
 
-                <h3 class="mt-1">Informations du transfert</h3>
+                <h3 class="mt-1">{{ 'Transfer Informations' | translate }}</h3>
                 <div class="row">
                 <div class="col-md-6">
-                    <label class="clr-col-12 col-col-md-12">Statut</label>
+                    <label class="clr-col-12 col-col-md-12">{{ 'Status' | translate }}</label>
                     <ng-select id="transferStatus" [placeholder]="translate.translate('Update status')"
                         [items]="transferStatusListItems" [allowClear]="false"
                         formControlName="transferStatus"
@@ -310,31 +309,31 @@
                     </ng-select>
                 </div>
                 <div class="col-md-6">
-                    <label class="clr-col-12 clr-col-md-12" for="transferDirection">Sens</label>
+                    <label class="clr-col-12 clr-col-md-12" for="transferDirection">{{ 'Direction' | translate }}</label>
                     <input id="transferDirection" class="form-control" type="text"
                         value="{{ detailModal.transferDirection }}" disabled>
                 </div>
             </div>
                 <div class="row">
                     <div class="col-md-6">
-                        <label class="clr-col-12 clr-col-md-12" for="quantity">Quantité</label>
+                        <label class="clr-col-12 clr-col-md-12" for="quantity">{{ 'Quantity' | translate }}</label>
                         <input id="quantity" formControlName="quantity" class="form-control" type="number">
                     </div>
 
                     <div class="col-md-6">
-                        <label class="clr-col-12 clr-col-md-12" for="unitPrice">Prix unitaire</label>
+                        <label class="clr-col-12 clr-col-md-12" for="unitPrice">{{ 'Unit Price' | translate }}</label>
                         <input id="unitPrice" formControlName="unitPrice" class="form-control" type="number">
                     </div>
                 </div>
 
                 <div class="row">
                     <div class="col-md-6">
-                        <label class="clr-col-12 clr-col-md-12" for="amount">Montant</label>
+                        <label class="clr-col-12 clr-col-md-12" for="amount">{{ 'Amount' | translate }}</label>
                         <input id="amount" value="{{detailModal.amount}}" class="form-control" type="number" disabled>
                     </div>
 
                     <div class="col-md-6">
-                        <label class="clr-col-12 clr-col-md-12" for="currency">Devise</label>
+                        <label class="clr-col-12 clr-col-md-12" for="currency">{{ 'Currency' | translate }}</label>
                         <input id="currency" class="form-control" type="text" value="{{ detailModal.currency }}"
                             disabled>
                     </div>
@@ -342,8 +341,7 @@
 
                 <div class="row">
                     <div class="col-md-6">
-                        <label class="clr-col-12 clr-col-md-12" for="theoricalDate">Date théorique d'entrée au registre
-                            d'IZNES</label>
+                        <label class="clr-col-12 clr-col-md-12" for="theoricalDate">{{ 'Theoretical impact date on stock' | translate }}</label>
                         <div class="input-group date-pick-wrapper">
                             <span class="fa fa-calendar" aria-hidden="true"></span>
                             <input id="theoricalDate" placeholder="Choose a date" formControlName="theoricalDate"
@@ -352,7 +350,7 @@
                     </div>
 
                     <div class="col-md-6">
-                        <label class="clr-col-12 clr-col-md-12" for="initialDate">Date initiale de l'opération</label>
+                        <label class="clr-col-12 clr-col-md-12" for="initialDate">{{ 'Initial Operation Date' | translate }}</label>
                         <div class="input-group date-pick-wrapper">
                             <span class="fa fa-calendar" aria-hidden="true"></span>
                             <input id="initialDate" placeholder="Choose a date" formControlName="initialDate"
@@ -361,16 +359,16 @@
                     </div>
 
                 </div>
-                <h3 class="mt-1">Informations additionnelles</h3>
+                <h3 class="mt-1">{{ 'Additionnal Informations' | translate }}</h3>
                 <div class="row">
                     <div class="col-md-6">
-                        <label class="clr-col-12 clr-col-md-12" for="externalReference">Référence externe</label>
+                        <label class="clr-col-12 clr-col-md-12" for="externalReference">{{ 'External Reference' | translate }}</label>
                         <input id="externalReference" formControlName="externalReference" class="form-control"
                             type="text">
                     </div>
 
                     <div class="col-md-6">
-                        <label class="clr-col-12 clr-col-md-12" for="accountKeeper">Teneur de compte historique</label>
+                        <label class="clr-col-12 clr-col-md-12" for="accountKeeper">{{ 'Historical Account Keeper' | translate }}</label>
                         <input id="investorWalletReference" class="form-control" type="text"
                             value="{{ detailModal.accountKeeper }}" disabled>
                     </div>
@@ -378,19 +376,18 @@
                 </div>
 
                 <div class="col-md-12">
-                    <label class="clr-col-12 clr-col-md-12" for="comment">Commentaire</label>
+                    <label class="clr-col-12 clr-col-md-12" for="comment">{{ 'Comment' | translate }}</label>
                     <textarea class="form-control" formControlName="comment" autocomplete="off"></textarea>
                 </div>
 
                 <div class="row">
                     <div class="col-md-6">
-                        <label class="clr-col-12 clr-col-md-12" for="createdBy">Transfert saisi par</label>
+                        <label class="clr-col-12 clr-col-md-12" for="createdBy">{{ 'Transfer Seized By' | translate }}</label>
                         <input id="createdBy" class="form-control" type="text" value="IZNES" disabled>
                     </div>
 
                     <div class="col-md-6">
-                        <label class="clr-col-12 clr-col-md-12" for="dateEntered">Date et heure de saisie du
-                            transfert</label>
+                        <label class="clr-col-12 clr-col-md-12" for="dateEntered">{{ 'Date and Time of Transfer Entry' | translate }}</label>
                         <div class="input-group date-pick-wrapper">
                             <span class="fa fa-calendar" aria-hidden="true"></span>
                             <input id="investorWalletReference" class="form-control" type="text" value="{{detailModal.dateEntered}}" disabled>

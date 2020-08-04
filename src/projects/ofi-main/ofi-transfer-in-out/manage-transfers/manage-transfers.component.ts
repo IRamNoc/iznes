@@ -26,6 +26,7 @@ import { ToasterService, Toast } from 'angular2-toaster';
 import { ClrDatagridStateInterface } from '@clr/angular';
 
 import { getMyDetail } from '@setl/core-store';
+import { MessagesService } from '@setl/core-messages/index';
 
 @Component({
     selector: 'app-manage-transfers',
@@ -96,6 +97,7 @@ export class ManageTransfersComponent implements OnInit, OnDestroy {
                 public permissionsService: PermissionsService,
                 private toaster: ToasterService,
                 private route: ActivatedRoute,
+                private messagesService: MessagesService,
                 @Inject('product-config') productConfig,
                 ) {
         this.fundAdministratorItems = productConfig.fundItems.fundAdministratorItems;
@@ -256,10 +258,27 @@ export class ManageTransfersComponent implements OnInit, OnDestroy {
     handleModalConfirmButtonClick(targetedTransfer) {
         this.transferService.defaultRequestCancelTransfer(
             targetedTransfer.referenceID,
-            (data) => {
-                this.logService.log('cancel transfer success', data); // success
+            (response) => {
+                this.logService.log('cancel transfer success'); // success
                 this.toaster.pop('success', 'Your transfer I/O has been succesfully cancelled.');
                 this.resetConfirmModalValue();
+
+                const data = _.get(response, '[1].Data[0]',null);
+
+                const recipientsArr = [data.investorWalletID];
+                const subjectStr = this.translate.translate(
+                    'TRANSFER CANCELLATION #@referenceID@', { referenceID: data.referenceID }
+                );
+
+                const bodyStr = `
+                ${this.translate.translate(
+                    'Hello, transfer order #@referenceID@ has been cancelled without your prior approval. This operation is definitively cancelled and will not impact Iznes registry', { referenceID: data.referenceID })}.
+                    <br><br>
+                    ${this.translate.translate('Thank you')},
+                    <br><br>${this.translate.translate('The IZNES team')}
+                `;
+
+                this.messagesService.sendMessage(recipientsArr, subjectStr, bodyStr);
             },
             (data) => {
                 this.logService.log('Error: ', data);
@@ -329,10 +348,27 @@ export class ManageTransfersComponent implements OnInit, OnDestroy {
 
         this.transferService.defaultRequestConfirmTransfer(
             this.transferListItems[index].referenceID,
-            (data) => {
-                this.logService.log('confirm transfer success', data);
+            (response) => {
+                this.logService.log('confirm transfer success');
                 this.toaster.pop('success', 'Your transfer I/O has been succesfully confirmed.');
                 this.confirmBtnState = false;
+
+                const data = _.get(response, '[1].Data[0]',null);
+
+                const recipientsArr = [data.investorWalletID];
+                const subjectStr = this.translate.translate(
+                    'TAKING TRANSFER #@referenceID@ INTO ACCOUNT', { referenceID: data.referenceID }
+                );
+
+                const bodyStr = `
+                ${this.translate.translate(
+                    'Hello, transfer order #@referenceID@ has been definitively taken into account under the Iznes registry.', { referenceID: data.referenceID })}.
+                    <br><br>
+                    ${this.translate.translate('Thank you')},
+                    <br><br>${this.translate.translate('The IZNES team')}
+                `;
+
+                this.messagesService.sendMessage(recipientsArr, subjectStr, bodyStr);
             },
             (data) => {
                 this.logService.log('Error: ', data);
@@ -346,8 +382,8 @@ export class ManageTransfersComponent implements OnInit, OnDestroy {
 
         this.transferService.defaultRequestValidateTransfer(
             this.transferListItems[index].referenceID,
-            (data) => {
-                this.logService.log('validate transfer success', data);
+            (response) => {
+                this.logService.log('validate transfer success');
                 this.toaster.pop('success', 'Your transfer I/O has been succesfully validated.');
                 this.validateBtnState = false;
             },
