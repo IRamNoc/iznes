@@ -795,11 +795,8 @@ export class BeneficiaryListComponent implements OnInit, OnDestroy {
      */
     updateBeneficiariesValidity() {
        const beneficiariesValue: any[] = this.form.value;
-       let kbisAndIDRequired = true;
+       let kbisAndIDRequired = false;
 
-        if (this.kycFormHelperService.isStateOwned() || this.kycFormHelperService.isCompanyRegulated() || this.kycFormHelperService.isCompanyListed()) {
-            kbisAndIDRequired = false;
-        }
 
         const highRisk = this.kycFormHelperService.isHighRiskActivity() || this.kycFormHelperService.isHighRiskCountry();
         if (highRisk) {
@@ -817,6 +814,10 @@ export class BeneficiaryListComponent implements OnInit, OnDestroy {
               this.globalHasPEP = true;
               break;
            }
+       }
+
+       if (this.kycFormHelperService.isStateOwnedAnyPercentCapital() || this.kycFormHelperService.isCompanyRegulated() || this.kycFormHelperService.isCompanyListed()) {
+           kbisAndIDRequired = false;
        }
 
        for (const beneficiaryFormGroup of (this.form as FormArray).controls) {
