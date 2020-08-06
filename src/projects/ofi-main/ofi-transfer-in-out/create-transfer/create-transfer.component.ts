@@ -224,6 +224,8 @@ export class CreateTransferComponent implements OnInit, OnDestroy {
                 }
             },
             (error) => {
+                this.logService.log('Error: ', error);
+                this.toaster.pop('error', 'Cannot fetch Investor List');
                 console.log(error);
             });
     }
@@ -265,21 +267,20 @@ export class CreateTransferComponent implements OnInit, OnDestroy {
         };
 
         this.transferService.addNewTransfer(request).then((response) => {
-            // log to remote server about order is placed
             this.logService.log('info', 'a transfer i/o has been initialized');
             this.toaster.pop('success', 'Your transfer I/O has been succesfully initiated.');
             const data = _.get(response, '[1].Data[0]',null);
             
-            const recipientsArr = [data.investorWalletID];
+            const recipientsArr = [data.investorWalletID, data.amWalletID];
             const subjectStr = this.translate.translate(
                 'TRANSFER INITIATION: Seized by Iznes'
             );
 
             const bodyStr = `
                 ${this.translate.translate(
-                    'Hello @investorFirstName@, a fund transfer order has been initiated by IZNES', { investorFirstName: data.investorFirstName })}.
+                    'Hello, a fund transfer order has been initiated by IZNES (transfer reference #@referenceID@)', { referenceID: data.referenceID })}.
                     <br><br>
-                    ${this.translate.translate('Please confirm transfer details by validating pending transfer to allow the operation to be taken into account in your Iznes registry')}.
+                    ${this.translate.translate('Please confirm transfer details by validating pending transfer to allow the operation to be taken into account into Iznes registry')}.
                     <br><br>%@link@%<br><br>
                     ${this.translate.translate('Thank you')},
                     <br><br>${this.translate.translate('The IZNES team')}
@@ -302,7 +303,8 @@ export class CreateTransferComponent implements OnInit, OnDestroy {
             this.router.navigateByUrl('/transfer-in-out');
         })
         .catch((data) => {
-            console.log(data);
+            this.logService.log('Error: ', data);
+            this.toaster.pop('error', 'Your transfer I/O cannot be created.');
         });
     }
 

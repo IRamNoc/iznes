@@ -67,7 +67,7 @@ export class ManageTransfersComponent implements OnInit, OnDestroy {
     language = 'en';
     updateTransferFormGroup: FormGroup;
     canUpdateBtn: boolean = false;
-    userType: null;
+    userType = '';
     hasPermissionUpdate: boolean = false;
     hasPermissionCancel: boolean = false;
     hasPermissionInsert: boolean = false;
@@ -116,7 +116,7 @@ export class ManageTransfersComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         const currentState = this.redux.getState();
-        this.userType = getMyDetail(currentState).userTypeStr);
+        this.userType = getMyDetail(currentState).userTypeStr;
         this.initForm();
         this.datagridParams = new DatagridParams(this.itemPerPage);
 
@@ -245,8 +245,8 @@ export class ManageTransfersComponent implements OnInit, OnDestroy {
         this.isConfirmModalDisplayed = true;
         this.confirmModal = {
             targetedTransfer: this.transferListItems[index],
-            title: `Cancel transfer #${referenceId}`,
-            body: 'Are you sure you want to cancel this transfer ?',
+            title: `${this.translate.translate(`Cancel transfer #${referenceId}`)}`,
+            body: `${this.translate.translate('Are you sure you want to cancel this transfer ?')}`,
         };
     }
 
@@ -260,12 +260,12 @@ export class ManageTransfersComponent implements OnInit, OnDestroy {
             targetedTransfer.referenceID,
             (response) => {
                 this.logService.log('cancel transfer success'); // success
-                this.toaster.pop('success', 'Your transfer I/O has been succesfully cancelled.');
+                this.toaster.pop('success', `${this.translate.translate('Your transfer I/O has been succesfully cancelled.')}`);
                 this.resetConfirmModalValue();
 
                 const data = _.get(response, '[1].Data[0]',null);
 
-                const recipientsArr = [data.investorWalletID];
+                const recipientsArr = [data.investorWalletID, data.amWalletID];
                 const subjectStr = this.translate.translate(
                     'TRANSFER CANCELLATION #@referenceID@', { referenceID: data.referenceID }
                 );
@@ -282,7 +282,7 @@ export class ManageTransfersComponent implements OnInit, OnDestroy {
             },
             (data) => {
                 this.logService.log('Error: ', data);
-                this.toaster.pop('error', 'Your transfer I/O has not been cancelled.');
+                this.toaster.pop('error', `${this.translate.translate('Your transfer I/O has not been cancelled.')}`);
                 this.resetConfirmModalValue();
             });
     }
@@ -333,12 +333,12 @@ export class ManageTransfersComponent implements OnInit, OnDestroy {
             request,
             (data) => {
                 this.logService.log('update transfer success', data);
-                this.toaster.pop('success', 'Your transfer I/O has been succesfully updated.');
+                this.toaster.pop('success', `${this.translate.translate('Your transfer I/O has been succesfully updated.')}`);
                 this.resetDetailModalValue();
             },
             (data) => {
                 this.logService.log('Error: ', data);
-                this.toaster.pop('error', 'Your transfer I/O has not been updated.');
+                this.toaster.pop('error', `${this.translate.translate('Your transfer I/O has not been updated.')}`);
                 this.resetDetailModalValue();
             });
     }
@@ -354,15 +354,14 @@ export class ManageTransfersComponent implements OnInit, OnDestroy {
                 this.confirmBtnState = false;
 
                 const data = _.get(response, '[1].Data[0]',null);
-
-                const recipientsArr = [data.investorWalletID];
+                const recipientsArr = [data.investorWalletID, data.amWalletID];
                 const subjectStr = this.translate.translate(
                     'TAKING TRANSFER #@referenceID@ INTO ACCOUNT', { referenceID: data.referenceID }
                 );
 
                 const bodyStr = `
                 ${this.translate.translate(
-                    'Hello, transfer order #@referenceID@ has been definitively taken into account under the Iznes registry.', { referenceID: data.referenceID })}.
+                    'Hello, transfer order #@referenceID@ has been definitively taken into account under the Iznes registry', { referenceID: data.referenceID })}.
                     <br><br>
                     ${this.translate.translate('Thank you')},
                     <br><br>${this.translate.translate('The IZNES team')}
@@ -372,7 +371,7 @@ export class ManageTransfersComponent implements OnInit, OnDestroy {
             },
             (data) => {
                 this.logService.log('Error: ', data);
-                this.toaster.pop('error', 'Your transfer I/O has not been confirmed.');
+                this.toaster.pop('error', `${this.translate.translate('Your transfer I/O has not been confirmed.')}`);
                 this.confirmBtnState = false;
             });
     }
@@ -384,12 +383,41 @@ export class ManageTransfersComponent implements OnInit, OnDestroy {
             this.transferListItems[index].referenceID,
             (response) => {
                 this.logService.log('validate transfer success');
-                this.toaster.pop('success', 'Your transfer I/O has been succesfully validated.');
+                this.toaster.pop('success', `${this.translate.translate('Your transfer I/O has been succesfully validated.')}`);
                 this.validateBtnState = false;
+
+                const data = _.get(response, '[1].Data[0]',null);
+                const recipientsArr = [data.investorWalletID, data.amWalletID];
+                const subjectStr = this.translate.translate(
+                    'VALIDATION OF TRANSFER #@referenceID@', { referenceID: data.referenceID }
+                );
+
+                const bodyStr = `
+                ${this.translate.translate(
+                    'Hello, transfer order #@referenceID@ has been released. Please note transfer need to be confirmed to be taken into account under the Iznes registry', { referenceID: data.referenceID })}.
+                    <br><br>%@link@%<br><br>
+                    ${this.translate.translate('Thank you')},
+                    <br><br>${this.translate.translate('The IZNES team')}
+                `;
+
+                const action = {
+                    type: 'messageWithLink',
+                    data: {
+                        links: [
+                            {
+                                link: '/#/transfer-in-out',
+                                anchorCss: 'btn',
+                                anchorText: this.translate.translate('View transfers'),
+                            },
+                        ],
+                    },
+                };
+
+                this.messagesService.sendMessage(recipientsArr, subjectStr, bodyStr, action);
             },
             (data) => {
                 this.logService.log('Error: ', data);
-                this.toaster.pop('error', 'Your transfer I/O has not been validated.');
+                this.toaster.pop('error', `${this.translate.translate('Your transfer I/O has not been validated.')}`);
                 this.validateBtnState = false;
             });
     }
