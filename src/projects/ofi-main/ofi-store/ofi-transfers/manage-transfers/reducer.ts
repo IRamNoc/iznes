@@ -1,6 +1,5 @@
 /* Core/Redux imports. */
 import { Action } from 'redux';
-import * as math from 'mathjs';
 
 /* Local types. */
 import { ManageTransfers, ManageTransferDetails } from './model';
@@ -150,14 +149,7 @@ function formatManageTransferDataResponse(rawData: any[]): ManageTransferDetails
                 userEntered: item.get('userEntered'),
             };
 
-            if (transfer.price > 0) {
-                // Already validated - do not perform estimates.
-                result[transfer.referenceID] = transfer;
-                return result;
-            }
-
             result[transfer.referenceID] = transfer;
-
             return result;
         },
         {});
