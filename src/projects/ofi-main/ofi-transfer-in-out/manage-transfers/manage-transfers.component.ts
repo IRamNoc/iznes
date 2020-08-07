@@ -12,7 +12,7 @@ import {
 } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgRedux, select } from '@angular-redux/store';
-import { Observable, combineLatest, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { LogService } from '@setl/utils';
 import { MultilingualService } from '@setl/multilingual';
 import { DatagridParams } from './datagrid-params';
@@ -129,8 +129,6 @@ export class ManageTransfersComponent implements OnInit, OnDestroy {
     }
 
     transferObjectToList(listTransfer) {
-        this.loading = false;
-    
         const transfers = _.toArray(listTransfer).map((transfer) => {
             const referenceID = transfer.referenceID;
             const externalReference = transfer.externalReference;
@@ -177,6 +175,7 @@ export class ManageTransfersComponent implements OnInit, OnDestroy {
         ofiManageTransferActions.setTotalResults(this.total);
         this.lastPage = Math.ceil(this.total / this.itemPerPage);
         this.detectChanges(true);
+        this.loading = false;
         return transfers;
     }
 
