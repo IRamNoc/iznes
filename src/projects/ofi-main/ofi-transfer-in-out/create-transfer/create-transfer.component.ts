@@ -182,6 +182,8 @@ export class CreateTransferComponent implements OnInit, OnDestroy {
     handleDropdownAmSelect(event) {
         this.placeTransferFormGroup.controls['amShareFund'].setValue('');
         this.placeTransferFormGroup.controls['amShareFundISIN'].setValue('');
+        this.placeTransferFormGroup.controls['investorCompany'].setValue('');
+        this.placeTransferFormGroup.controls['investorWallet'].setValue('');
         this.shareSelected = this.walletSelected = this.investorSelected = {};
 
         for (const key in this.managementCompanyAccessList) {
@@ -201,6 +203,8 @@ export class CreateTransferComponent implements OnInit, OnDestroy {
     }
 
     handleDropdownShareSelect(event) {
+        this.placeTransferFormGroup.controls['investorCompany'].setValue('');
+        this.placeTransferFormGroup.controls['investorWallet'].setValue('');
         this.walletSelected = this.investorSelected = {};
         this.shareSelected = this.shareList[event.id];
         this.placeTransferFormGroup.controls['currency']
@@ -231,6 +235,7 @@ export class CreateTransferComponent implements OnInit, OnDestroy {
     }
 
     handleDropdownInvestorSelect(event) {
+        this.placeTransferFormGroup.controls['investorWallet'].setValue('');
         this.walletSelected = {};
         this.investorSelected = this.investorShareList[event.id];
         this.walletListItems = Object.keys(this.investorShareList).map((key) => {
