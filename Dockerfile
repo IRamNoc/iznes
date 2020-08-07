@@ -16,10 +16,12 @@ RUN mkdir /root/.ssh/ \
 WORKDIR /app
 # install and cache app dependencies
 COPY package.json /app/package.json
+COPY yarn.lock /app/yarn.lock
 
 # --mount-type=ssh allow us to use ssh from host.
 RUN --mount=type=ssh cd /app && yarn install
 RUN yarn global add -g sass
+RUN yarn global add @angular/cli@6.0.0
 
 # add app
 COPY . /app
