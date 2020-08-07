@@ -15,6 +15,11 @@ export interface IznesNewTransferRequestBody extends MemberNodeMessageBody {
     comment: string;
 }
 
+export interface listTransferRequestData {
+    itemPerPage: number;
+    rowOffset: number;
+}
+
 export interface IznesGetTransferRequestBody extends MemberNodeMessageBody {
     pageSize: number;
     rowOffset: number;

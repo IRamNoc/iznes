@@ -6,6 +6,7 @@ import { NgRedux } from '@angular-redux/store';
 import { MemberSocketService } from '@setl/websocket-service';
 import { createMemberNodeRequest, createMemberNodeSagaRequest } from '@setl/utils/common';
 import {
+    listTransferRequestData,
     IznesNewTransferRequestBody,
     IznesGetTransferRequestBody,
     IznesCancelTransferRequestBody,
@@ -115,42 +116,12 @@ export class TransferInOutService {
         return createMemberNodeRequest(this.memberSocketService, messageBody);
     }
 
-    fetchIznesTransferList(successCallback: (res) => void, errorCallback: (res) => void) {
-        const asyncTaskPipe = this.requestIznesTransferList({
-            pageSize: 10,
-            rowOffset: 0,
-        });
-
-        this.ngRedux.dispatch(SagaHelper.runAsync(
-            [],
-            [],
-            asyncTaskPipe,
-            {},
-            res => successCallback(res),
-            res => errorCallback(res),
-        ));
-    }
-
-    requestIznesTransferList(data: any) {
-        const messageBody: IznesGetTransferRequestBody = {
-            RequestName: 'izngettransferinout',
-            token: this.memberSocketService.token,
-            pageSize: data.pageSize,
-            rowOffset: (data.rowOffset * data.pageSize),
-        };
-
-        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
-    }
-
-    defaultRequestManageTransfersList() {
+    defaultRequestManageTransfersList(data: listTransferRequestData) {
     // Set the state flag to true. so we do not request it again.
         this.ngRedux.dispatch(ofiSetRequestedManageTransfer());
 
     // Request the list.
-        const asyncTaskPipe = this.requestManageTransfersList({
-            pageSize: 10,
-            rowOffSet: 0,
-        });
+        const asyncTaskPipe = this.requestManageTransfersList(data);
 
         this.ngRedux.dispatch(SagaHelper.runAsync(
         [OFI_SET_MANAGE_TRANSFER_LIST],
@@ -160,12 +131,12 @@ export class TransferInOutService {
     ));
     }
 
-    requestManageTransfersList(data: any): any {
+    requestManageTransfersList(data: listTransferRequestData): any {
         const messageBody: IznesGetTransferRequestBody = {
             RequestName: 'izngettransferinout',
             token: this.memberSocketService.token,
-            pageSize: data.pageSize,
-            rowOffset: (data.rowOffSet * data.pageSize),
+            pageSize: data.itemPerPage,
+            rowOffset: data.rowOffset,
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
