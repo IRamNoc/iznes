@@ -14,7 +14,7 @@ import {
     isCompanyRegulated,
     isStateOwned,
     getPartyNameFromInvestorType,
-    isHighRiskActivity, isHighRiskCountry
+    isHighRiskActivity, isHighRiskCountry, isStateOwnedAnyPecentCapital
 } from './kyc-form-helper';
 import { InvestorType } from '../../shared/investor-types';
 import { FormGroup } from '@angular/forms';
@@ -247,6 +247,16 @@ export class KycFormHelperService {
     public isStateOwned(): boolean {
         if (!this.kycForm) return false;
         return isStateOwned(this.kycForm);
+    }
+
+    /**
+     * Returns whether company is listed based on form values
+     *
+     * @returns {boolean}
+     */
+    public isStateOwnedAnyPercentCapital(): boolean {
+        if (!this.kycForm) return false;
+        return isStateOwnedAnyPecentCapital(this.kycForm);
     }
 
     public isHighRiskActivity(): boolean {

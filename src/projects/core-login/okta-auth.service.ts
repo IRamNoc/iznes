@@ -13,10 +13,10 @@ export class OktaAuthService {
     constructor() {
         if (this.URL_BASE.includes('api.iznes.io')) {
             this.CLIENT_ID = '0oah49n1tfxhVKmvh0x6';
-            this.ISSUER = 'https://engieapppreview.oktapreview.com/.well-known/openid-configuration';
+            this.ISSUER = 'https://engieapppreview.oktapreview.com/oauth2/default';
         } else if (this.URL_BASE.includes('app.iznes.io')) {
             this.CLIENT_ID = '0oa470nf1sD04JCqg0i7';
-            this.ISSUER = 'https://engie.okta-emea.com/.well-known/openid-configuration';
+            this.ISSUER = 'https://engie.okta-emea.com/oauth2/default';
         } else if (this.URL_BASE.includes('testing.iznes.io')) {
             this.CLIENT_ID = '0oaakvvb46DXdpxBB4x6';
             this.ISSUER = 'https://dev-698165.okta.com/oauth2/default';
