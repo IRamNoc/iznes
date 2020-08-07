@@ -521,6 +521,7 @@ export const selectControls = [
     'riskProfile',
     'nationalIdNumberType',
     'relationType',
+    'percentType',
     'holdingType',
     'parent',
     'country',
@@ -3167,6 +3168,51 @@ export const relationTypesList = [
     },
 ];
 
+export const percentTypeList = [
+    {
+        id: 0,
+        text: "0 %"
+    },
+    {
+        id: 9,
+        text: "0 to less than 10 %"
+    },
+    {
+        id: 24,
+        text: "10 to less than 25 %"
+    },
+    {
+        id: 32, 
+        text: "25 to less than 33 %"
+    },
+    {
+        id: 49,
+        text : "33 to less than 50 %"
+    },
+    {
+        id: 65,
+        text: "50 to less than 66 %"
+    },
+    {
+        id: 74,
+        text: "66 to less than 75 %"
+    },
+    {
+        id: 89,
+        text: "75 to less than 90 %"
+    },
+    {
+        id: 99,
+        text: "90 to less than 100 %"
+    },
+    {
+        id: 100,
+        text: "100 %"
+    }
+]
+
+
+
 export const holdingTypesList = [
     {
         id: 'directHolding',
@@ -3294,6 +3340,7 @@ export const controlToName = {
     documentID: 'Document',
     holdingPercentage: 'Holding Percentage',
     relationType: 'Relation Type',
+    percentType: 'percent Type'
     holdingType: 'Holding Type',
     nationalIdNumberType: 'National Identification Number Type',
     otherNationalIdNumberType: 'Your Number Type',
@@ -3410,6 +3457,7 @@ export const controlToList = {
     countryOfBirth: 'countries',
     beneficiaryType: 'beneficiaryTypesList',
     relationType: 'relationTypesList',
+    percentType: 'percentTypeList',
     holdingType: 'holdingTypesList',
     nationalIdNumberType: 'identificationNumberList',
     typeOfRevenues: 'typeOfRevenuesList',

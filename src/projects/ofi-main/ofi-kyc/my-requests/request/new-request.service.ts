@@ -54,6 +54,7 @@ import {
     riskAcceptanceList,
     beneficiaryTypesList,
     relationTypesList,
+    percentTypeList,
     holdingTypesList,
     identificationNumberList,
     listingMarketsList,
@@ -94,6 +95,7 @@ export class NewRequestService {
     riskAcceptanceList;
     beneficiaryTypesList;
     relationTypesList;
+    percentTypeList;
     holdingTypesList;
     identificationNumberTypeList;
     listingMarketsList;
@@ -156,6 +158,7 @@ export class NewRequestService {
         this.riskAcceptanceList = riskAcceptanceList;
         this.beneficiaryTypesList = beneficiaryTypesList;
         this.relationTypesList = relationTypesList;
+        this.percentTypeList = percentTypeList;
         this.holdingTypesList = holdingTypesList;
         this.identificationNumberTypeList = identificationNumberList;
         this.listingMarketsList = listingMarketsList;
@@ -772,6 +775,7 @@ export class NewRequestService {
             common: this.formBuilder.group({
                 parent: [-1, Validators.required],
                 relationType: ['', Validators.required],
+                percentTypeList: ['', Validators.required],
                 address: ['', Validators.required],
                 address2: '',
                 zipCode: ['', this.getLengthValidator(10)],
