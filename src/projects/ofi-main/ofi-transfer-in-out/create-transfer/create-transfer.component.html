@@ -10,7 +10,7 @@
   <!-- Panel header -->
   <div class="row panel-header">
     <div class="col-md-6">
-      <h2>Créer un nouveau transfert</h2>
+      <h2>{{ 'Create a new transfer' | translate }}</h2>
       Please fill in the following information to create a new transfer
     </div>
   </div>
@@ -22,7 +22,7 @@
         <section class="form-group">
           <div class="row">
             <div class="col-md-6">
-              <label class="clr-col-12 clr-col-md-12" for="amCompany">Société de Gestion</label>
+              <label class="clr-col-12 clr-col-md-12 required-field" for="amCompany">{{ 'Management company' | translate }}</label>
               <ng-select id="amCompany" [placeholder]="translate.translate('Select an AM')"
                 [items]="mananagementCompanyItems" [allowClear]="false"
                 [formControl]="placeTransferFormGroup.controls['amCompany']"
@@ -31,7 +31,7 @@
             </div>
 
             <div class="col-md-6">
-              <label class="clr-col-12 clr-col-md-12" for="amBic">BIC</label>
+              <label class="clr-col-12 clr-col-md-12" for="amBic">{{ 'BIC' | translate }}</label>
               <input id="amBic" class="form-control" formControlName="amBic" type="text"
                 value="{{ managementCompanySelected.bic }}">
             </div>
@@ -39,7 +39,7 @@
 
           <div class="row">
             <div class="col-md-6">
-              <label class="clr-col-12 clr-col-md-12" for="amShareFund">Nom de la part</label>
+              <label class="clr-col-12 clr-col-md-12 required-field" for="amShareFund">{{ 'Share name' | translate }}</label>
               <ng-select id="amShareFund" [placeholder]="translate.translate('Select an AM Share')"
                 [items]="filteredShareList" [allowClear]="false"
                 [formControl]="placeTransferFormGroup.controls['amShareFund']"
@@ -49,7 +49,7 @@
 
             <!-- Amount -->
             <div class="col-md-6">
-              <label class="clr-col-12 clr-col-md-12" for="amShareFundISIN">ISIN</label>
+              <label class="clr-col-12 clr-col-md-12" for="amShareFundISIN">{{ 'ISIN' | translate }}</label>
               <input id="amShareFundISIN" formControlName="amShareFundISIN" class="form-control" type="text"
                 value="{{ shareSelected.isin }}">
             </div>
@@ -57,7 +57,7 @@
 
           <div class="row">
             <div class="col-md-6">
-              <label class="clr-col-12 clr-col-md-12" for="investorCompany">Investisseur</label>
+              <label class="clr-col-12 clr-col-md-12 required-field" for="investorCompany">{{ 'Investor' | translate }}</label>
               <ng-select id="investorCompany" [placeholder]="translate.translate('Select an investor')"
                 [items]="investorListItems" [allowClear]="false"
                 [formControl]="placeTransferFormGroup.controls['investorCompany']"
@@ -75,7 +75,7 @@
 
           <div class="row">
             <div class="col-md-6">
-              <label class="clr-col-12 clr-col-md-12" for="investorWallet">Portfeuille</label>
+              <label class="clr-col-12 clr-col-md-12 required-field" for="investorWallet">{{ 'Portfolio' | translate }}</label>
               <ng-select id="investorWallet" [placeholder]="translate.translate('Select a wallet')"
                 [items]="walletListItems" [allowClear]="false"
                 [formControl]="placeTransferFormGroup.controls['investorWallet']"
@@ -85,7 +85,7 @@
 
             <!-- Amount -->
             <div class="col-md-6">
-              <label class="clr-col-12 clr-col-md-12" for="investorWalletReference">Réference</label>
+              <label class="clr-col-12 clr-col-md-12" for="investorWalletReference"></label><{{ 'Reference' | translate }}</label>
               <input id="investorWalletReference" formControlName="investorWalletReference" class="form-control"
                 type="text" value="{{ walletSelected.text }}">
             </div>
@@ -93,30 +93,30 @@
 
           <div class="row">
             <div class="col-md-3">
-              <label class="clr-col-12 clr-col-md-12" for="type">Type</label>
+              <label class="clr-col-12 clr-col-md-12 required-field" for="type">{{ 'Type' | translate }}</label>
               <div class="btn-group">
                 <div class="radio btn">
                   <input type="radio" id="btn-radio-operation" (click)="type = 'operation'"
                     [checked]="type === 'operation'">
-                  <label class="clr-col-12 clr-col-md-12" for="btn-radio-operation">Opération</label>
+                  <label class="clr-col-12 clr-col-md-12" for="btn-radio-operation">{{ 'Operation' | translate }}</label>
                 </div>
                 <div class="radio btn">
                   <input type="radio" id="btn-radio-stock" (click)="type = 'stock'" [checked]="type === 'stock'">
-                  <label class="clr-col-12 clr-col-md-12" for="btn-radio-stock">Stock</label>
+                  <label class="clr-col-12 clr-col-md-12" for="btn-radio-stock">{{ 'Stock' | translate }}</label>
                 </div>
               </div>
             </div>
 
             <div class="col-md-3 offset-md-1">
-              <label class="clr-col-12 clr-col-md-12" for="sens">Sens</label>
+              <label class="clr-col-12 clr-col-md-12 required-field" for="sens">{{ 'Direction' | translate }}</label>
               <div class="btn-group">
                 <div class="radio btn">
                   <input type="radio" id="btn-radio-in" (click)="direction = 'in'" [checked]="direction === 'in'">
-                  <label class="clr-col-12 clr-col-md-12" for="btn-radio-in">In</label>
+                  <label class="clr-col-12 clr-col-md-12" for="btn-radio-in">{{ 'In' | translate }}</label>
                 </div>
                 <div class="radio btn">
                   <input type="radio" id="btn-radio-out" (click)="direction = 'out'" [checked]="direction === 'out'">
-                  <label class="clr-col-12 clr-col-md-12" for="btn-radio-out">Out</label>
+                  <label class="clr-col-12 clr-col-md-12" for="btn-radio-out">{{ 'Out' | translate }}</label>
                 </div>
               </div>
             </div>
@@ -124,12 +124,12 @@
 
           <div class="row">
             <div class="col-md-4">
-              <label class="clr-col-12 clr-col-md-12" for="quantity">Quantité</label>
+              <label class="clr-col-12 clr-col-md-12 required-field" for="quantity">{{ 'Quantity' | translate }}</label>
               <input id="quantity" formControlName="quantity" class="form-control" type="number">
             </div>
 
             <div class="col-md-4">
-              <label class="clr-col-12 clr-col-md-12" for="unitPrice">Prix unitaire</label>
+              <label class="clr-col-12 clr-col-md-12 required-field" for="unitPrice">{{ 'Unit price' | translate }}</label>
               <input id="unitPrice" formControlName="unitPrice" class="form-control" type="number">
             </div>
           </div>
@@ -137,20 +137,19 @@
           <div class="row">
 
             <div class="col-md-4">
-              <label class="clr-col-12 clr-col-md-12" for="amount">Montant</label>
+              <label class="clr-col-12 clr-col-md-12 required-field" for="amount">{{ 'Amount' | translate }}</label>
               <input id="amount" formControlName="amount" class="form-control" type="number">
             </div>
 
             <div class="col-md-4">
-              <label class="clr-col-12 clr-col-md-12" for="currency">Devise</label>
+              <label class="clr-col-12 clr-col-md-12" for="currency">{{ 'Currency' | translate }}</label>
               <input id="currency" formControlName="currency" class="form-control" type="text">
             </div>
           </div>
 
           <div class="row">
             <div class="col-md-4">
-              <label class="clr-col-12 clr-col-md-12" for="theoricalDate">Date théorique d'entrée au registre
-                d'IZNES</label>
+              <label class="clr-col-12 clr-col-md-12 required-field" for="theoricalDate">{{ 'Theoretical entry date in IZNES register' | translate }}</label>
               <div class="input-group date-pick-wrapper">
                 <span class="fa fa-calendar" aria-hidden="true"></span>
                 <input id="theoricalDate" placeholder="Choose a date" formControlName="theoricalDate"
@@ -159,7 +158,7 @@
             </div>
 
             <div class="col-md-4">
-              <label class="clr-col-12 clr-col-md-12" for="initialDate">Date initiale de l'opération</label>
+              <label class="clr-col-12 clr-col-md-12 required-field" for="initialDate">{{ 'Initial operation date' | translate }}</label>
               <div class="input-group date-pick-wrapper">
                 <span class="fa fa-calendar" aria-hidden="true"></span>
                 <input id="initialDate" placeholder="Choose a date" formControlName="initialDate"
@@ -171,12 +170,12 @@
 
           <div class="row">
             <div class="col-md-4">
-              <label class="clr-col-12 clr-col-md-12" for="externalReference">Référence externe</label>
+              <label class="clr-col-12 clr-col-md-12" for="externalReference">{{ 'External reference' | translate }}</label>
               <input id="externalReference" formControlName="externalReference" class="form-control" type="text">
             </div>
 
             <div class="col-md-4">
-              <label class="clr-col-12 clr-col-md-12" for="accountKeeper">Teneur de compte historique</label>
+              <label class="clr-col-12 clr-col-md-12 required-field" for="accountKeeper">{{ 'Historical account keeper' | translate }}</label>
               <ng-select id="accountKeeper" [placeholder]="translate.translate('Select an account keeper')"
                 [items]="accountKeeperList" [allowClear]="true"
                 [formControl]="placeTransferFormGroup.controls['accountKeeper']"
@@ -187,18 +186,18 @@
           </div>
 
           <div class="col-md-8">
-            <label class="clr-col-12 clr-col-md-12" for="comment">Commentaire</label>
+            <label class="clr-col-12 clr-col-md-12" for="comment">{{ 'Comment' | translate }}</label>
             <textarea class="form-control" formControlName="comment" autocomplete="off"></textarea>
           </div>
 
           <div class="row">
             <div class="col-md-4">
-              <label class="clr-col-12 clr-col-md-12" for="createdBy">Transfert saisi par</label>
+              <label class="clr-col-12 clr-col-md-12" for="createdBy">{{ 'Transfer seized by' | translate }}</label>
               <input id="createdBy" formControlName="createdBy" class="form-control" type="text">
             </div>
 
             <div class="col-md-4">
-              <label class="clr-col-12 clr-col-md-12" for="dateEntered">Date et heure de saisie du transfert</label>
+              <label class="clr-col-12 clr-col-md-12" for="dateEntered">{{ 'Date and time of transfer entry' | translate }}</label>
               <div class="input-group date-pick-wrapper">
                 <span class="fa fa-calendar" aria-hidden="true"></span>
                 <input id="dateEntered" placeholder="Choose a date" formControlName="dateEntered"
