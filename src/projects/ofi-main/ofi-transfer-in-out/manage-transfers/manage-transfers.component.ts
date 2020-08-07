@@ -2,7 +2,6 @@ import * as _ from 'lodash';
 import * as moment from 'moment';
 /* Core/Angular imports. */
 import {
-    AfterViewInit,
     ChangeDetectorRef,
     Component,
     OnDestroy,
@@ -13,11 +12,11 @@ import {
 } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgRedux, select } from '@angular-redux/store';
-import { ActivatedRoute, Router } from '@angular/router';
-import { Observable, combineLatest as observableCombineLatest, Subscription, zip } from 'rxjs';
+import { Observable, combineLatest, Subscription } from 'rxjs';
 import { LogService } from '@setl/utils';
 import { MultilingualService } from '@setl/multilingual';
 import { DatagridParams } from './datagrid-params';
+import { ofiManageTransferActions } from '../../ofi-store';
 import { TransferInOutService } from '../transfer-in-out.service';
 import { OfiCurrenciesService } from '@ofi/ofi-main/ofi-req-services/ofi-currencies/service';
 import { PermissionsService } from '@setl/utils/services/permissions';
@@ -83,12 +82,10 @@ export class ManageTransfersComponent implements OnInit, OnDestroy {
 
     @select(['ofi', 'ofiCurrencies', 'currencies']) currenciesObs;
     @select(['ofi', 'ofiTransfers', 'manageTransfers', 'transferList']) transferObs;
-    @select(['ofi', 'ofiTransfers', 'manageTransfers', 'totalResults']) readonly totalResults$: Observable<number>;
     @select(['user', 'myDetail']) myDetailsOb;
 
     constructor(private fb: FormBuilder,
                 private cdr: ChangeDetectorRef,
-                private router: Router,
                 private redux: NgRedux<any>,
                 private logService: LogService,
                 private transferService: TransferInOutService,
@@ -96,7 +93,6 @@ export class ManageTransfersComponent implements OnInit, OnDestroy {
                 private ofiCurrenciesService: OfiCurrenciesService,
                 public permissionsService: PermissionsService,
                 private toaster: ToasterService,
-                private route: ActivatedRoute,
                 private messagesService: MessagesService,
                 @Inject('product-config') productConfig,
                 ) {
@@ -105,14 +101,6 @@ export class ManageTransfersComponent implements OnInit, OnDestroy {
         this.ofiCurrenciesService.getCurrencyList();
         this.subscriptions.push(this.currenciesObs.subscribe(c => this.getCurrencyList(c)));
     }
-
-    appSubscribe<T>(
-        obs: Observable<T>,
-        next?: (value: T) => void,
-        error?: (error: any) => void,
-        complete?: () => void,
-    )
-    { }
 
     ngOnInit() {
         const currentState = this.redux.getState();
@@ -129,16 +117,10 @@ export class ManageTransfersComponent implements OnInit, OnDestroy {
         this.transferService.defaultRequestManageTransfersList();
         this.subscriptions.push(
             this.transferObs.subscribe(transfers => this.transferListItems = this.transferObjectToList(transfers)));
-        this.appSubscribe(this.totalResults$, (total) => {
-            console.log(total);
-            this.total = total;
-            this.lastPage = Math.ceil(this.total / this.itemPerPage);
-            this.detectChanges(true);
-        });
     }
 
     refresh(state: ClrDatagridStateInterface) {
-
+        console.log("there is a refresh");
         if (!state.page) {
             return;
         }
@@ -149,8 +131,8 @@ export class ManageTransfersComponent implements OnInit, OnDestroy {
 
     transferObjectToList(listTransfer) {
         this.loading = false;
-
-        return _.toArray(listTransfer).map((transfer) => {
+    
+        const transfers = _.toArray(listTransfer).map((transfer) => {
             const referenceID = transfer.referenceID;
             const externalReference = transfer.externalReference;
             const accountKeeper = _.find(this.fundAdministratorItems, { id: transfer.accountKeeperID }).text;
@@ -168,6 +150,7 @@ export class ManageTransfersComponent implements OnInit, OnDestroy {
             const transferStatus = transfer.transferStatus;
             const dateEntered = transfer.dateEntered;
             const comment = transfer.comment;
+            const totalResult = transfer.totalResult;
 
             return {
                 referenceID,
@@ -187,8 +170,15 @@ export class ManageTransfersComponent implements OnInit, OnDestroy {
                 transferStatus,
                 dateEntered,
                 comment,
+                totalResult,
             };
         });
+
+        this.total = _.get(transfers, '[0].totalResult', 0);
+        ofiManageTransferActions.setTotalResults(this.total);
+        this.lastPage = Math.ceil(this.total / this.itemPerPage);
+        this.detectChanges(true);
+        return transfers;
     }
 
     initDatePickerConfig() {

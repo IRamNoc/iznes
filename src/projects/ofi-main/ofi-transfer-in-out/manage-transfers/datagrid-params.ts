@@ -1,5 +1,4 @@
 import { get, isEqual } from 'lodash';
-import * as moment from 'moment';
 import { ClrDatagridStateInterface } from '@clr/angular';
 import { Subject } from 'rxjs';
 
