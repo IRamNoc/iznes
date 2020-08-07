@@ -120,7 +120,6 @@ export class ManageTransfersComponent implements OnInit, OnDestroy {
     }
 
     refresh(state: ClrDatagridStateInterface) {
-        console.log("there is a refresh");
         if (!state.page) {
             return;
         }
