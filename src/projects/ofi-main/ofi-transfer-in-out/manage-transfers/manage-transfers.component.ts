@@ -55,6 +55,7 @@ export class ManageTransfersComponent implements OnInit, OnDestroy {
     total: number;
     lastPage: number;
     readonly itemPerPage = 10;
+    rowOffset = 0;
     private datagridParams: DatagridParams;
     loading = true;
     isConfirmModalDisplayed = false;
@@ -114,22 +115,29 @@ export class ManageTransfersComponent implements OnInit, OnDestroy {
             hasPermission => this.hasPermissionInsert = hasPermission);
         this.permissionsService.hasPermission('manageTransferI/O', 'canDelete').then(
             hasPermission => this.hasPermissionCancel = hasPermission);
-        this.transferService.defaultRequestManageTransfersList();
+        this.transferService.defaultRequestManageTransfersList({ itemPerPage: this.itemPerPage, rowOffset: this.rowOffset });
         this.subscriptions.push(
             this.transferObs.subscribe(transfers => this.transferListItems = this.transferObjectToList(transfers)));
     }
 
     refresh(state: ClrDatagridStateInterface) {
-        if (!state.page) {
+        if (!state.page)
             return;
+
+        if(state.page.from !== this.rowOffset) {
+            this.rowOffset = state.page.from;
+            this.transferService.defaultRequestManageTransfersList({ itemPerPage: this.itemPerPage, rowOffset: this.rowOffset });
+            this.transferService.setOrderListPage(state.page.from / state.page.size + 1);
         }
 
-        this.transferService.setOrderListPage(state.page.from / state.page.size + 1);
+        if (state.sort)
+            this.transferListItems = _.orderBy(this.transferListItems, [state.sort.by], [state.sort.reverse ? 'asc' : 'desc']);
+
         this.datagridParams.applyState(state);
     }
 
     transferObjectToList(listTransfer) {
-        const transfers = _.toArray(listTransfer).map((transfer) => {
+        let transfers = _.toArray(listTransfer).map((transfer) => {
             const referenceID = transfer.referenceID;
             const externalReference = transfer.externalReference;
             const accountKeeper = _.find(this.fundAdministratorItems, { id: transfer.accountKeeperID }).text;
@@ -170,6 +178,8 @@ export class ManageTransfersComponent implements OnInit, OnDestroy {
                 totalResult,
             };
         });
+
+        transfers = _.orderBy(transfers, ['referenceID'], ['desc']);
 
         this.total = _.get(transfers, '[0].totalResult', 0);
         ofiManageTransferActions.setTotalResults(this.total);
@@ -375,6 +385,7 @@ export class ManageTransfersComponent implements OnInit, OnDestroy {
                 this.validateBtnState = false;
 
                 const data = _.get(response, '[1].Data[0]',null);
+   
                 const recipientsArr = [data.investorWalletID, data.amWalletID];
                 const subjectStr = this.translate.translate(
                     'VALIDATION OF TRANSFER #@referenceID@', { referenceID: data.referenceID }
