@@ -241,7 +241,6 @@
                                 placeholder="{{ 'Define a value @valueType@' | translate: { valueType: '(%)' } }}"
                                 [isDisabled]="disabled">
                     </ng-select>
-                    {{form.get('common.votingPercentage').value()}}
                 </div>
             </div>
         </div>
@@ -409,7 +408,7 @@
 
         <div class="row col-sm-12">
             <div class="form-group required-field col-sm-6">
-                <label for="holdingPercentage-benef-{{index}}">{{ 'Holding Percentage' | translate }}</label> WAHT IS LE FUCK ICI
+                <label for="holdingPercentage-benef-{{index}}">{{ 'Holding Percentage' | translate }}</label>
                 <input id="holdingPercentage-benef-{{index}}"
                        type="number"
                        min="0"
