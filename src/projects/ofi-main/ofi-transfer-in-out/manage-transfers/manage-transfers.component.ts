@@ -296,11 +296,15 @@ export class ManageTransfersComponent implements OnInit, OnDestroy {
     openTransferDetails(index) {
         this.detailModal = { ... this.transferListItems[index] };
         this.detailModal['dateEntered'] = moment(this.detailModal['dateEntered'].dateEntered).format('YYYY-MM-DD');
+        this.updatePermission = false;
+        /*
+        disabled functionality for the moment, update transfer will be not used first release
+
         if (!this.hasPermissionUpdate || this.detailModal['transferStatus'] !== 'pending') {
             this.updatePermission = false;
         } else {
             this.updatePermission = true;
-        }
+        }*/
         this.updateForm(this.detailModal);
         this.isDetailModalDisplayed = true;
     }
@@ -401,7 +405,7 @@ export class ManageTransfersComponent implements OnInit, OnDestroy {
 
                 const bodyStr = `
                 ${this.translate.translate(
-                    'Hello, transfer order #@referenceID@ has been released. Please note transfer need to be confirmed to be taken into account under the Iznes registry', { referenceID: data.referenceID })}.
+                    'Hello, transfer order #@referenceID@ has been validated. Please note transfer need to be confirmed to be taken into account under the Iznes registry', { referenceID: data.referenceID })}.
                     <br><br>%@link@%<br><br>
                     ${this.translate.translate('Thank you')},
                     <br><br>${this.translate.translate('The IZNES team')}
