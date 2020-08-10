@@ -790,7 +790,6 @@ export class NewRequestService {
                 ]],
                 holdingType: ['', Validators.required],
                 nationality: ['', Validators.required],
-
                 votingPercentage: ['', [
                     Validators.required,
                     Validators.min(0),

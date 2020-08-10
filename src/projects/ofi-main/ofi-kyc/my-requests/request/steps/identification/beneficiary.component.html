@@ -226,7 +226,7 @@
                 <div class="form-group required-field">
                     <ng-select id="holdingPercentage-benef"
                                 [items]="percentTypeList"
-                                [formControl]="form.get('common.percentTypeList')"
+                                [formControl]="form.get('common.holdingPercentage')"
                                 placeholder="{{ 'Define a value @valueType@' | translate: { valueType: '(%)' } }}"
                                 [isDisabled]="disabled">
                     </ng-select>
@@ -237,10 +237,11 @@
                 <div class="form-group required-field">
                     <ng-select id="votingPercentage-benef"
                                 [items]="percentTypeList"
-                                [formControl]="form.get('common.percentTypeList')"
+                                [formControl]="form.get('common.votingPercentage')"
                                 placeholder="{{ 'Define a value @valueType@' | translate: { valueType: '(%)' } }}"
                                 [isDisabled]="disabled">
                     </ng-select>
+                    {{form.get('common.votingPercentage').value()}}
                 </div>
             </div>
         </div>
@@ -408,7 +409,7 @@
 
         <div class="row col-sm-12">
             <div class="form-group required-field col-sm-6">
-                <label for="holdingPercentage-benef-{{index}}">{{ 'Holding Percentage' | translate }}</label>
+                <label for="holdingPercentage-benef-{{index}}">{{ 'Holding Percentage' | translate }}</label> WAHT IS LE FUCK ICI
                 <input id="holdingPercentage-benef-{{index}}"
                        type="number"
                        min="0"
