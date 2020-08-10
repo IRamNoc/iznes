@@ -109,17 +109,20 @@ export class ManageTransfersComponent implements OnInit, OnDestroy {
         this.initForm();
         this.datagridParams = new DatagridParams(this.itemPerPage);
 
+        // Get all permissions parameters
         this.permissionsService.hasPermission('manageTransferI/O', 'canUpdate').then(
             hasPermission => this.hasPermissionUpdate = hasPermission);
         this.permissionsService.hasPermission('manageTransferI/O', 'canInsert').then(
             hasPermission => this.hasPermissionInsert = hasPermission);
         this.permissionsService.hasPermission('manageTransferI/O', 'canDelete').then(
             hasPermission => this.hasPermissionCancel = hasPermission);
+
         this.transferService.defaultRequestManageTransfersList({ itemPerPage: this.itemPerPage, rowOffset: this.rowOffset });
         this.subscriptions.push(
             this.transferObs.subscribe(transfers => this.transferListItems = this.transferObjectToList(transfers)));
     }
 
+    // Trigger refresh function when sort or page change is triggered on transfer list table
     refresh(state: ClrDatagridStateInterface) {
         if (!state.page)
             return;
@@ -136,6 +139,7 @@ export class ManageTransfersComponent implements OnInit, OnDestroy {
         this.datagridParams.applyState(state);
     }
 
+    // Converts Transfer List Object to Array
     transferObjectToList(listTransfer) {
         let transfers = _.toArray(listTransfer).map((transfer) => {
             const referenceID = transfer.referenceID;
@@ -179,8 +183,10 @@ export class ManageTransfersComponent implements OnInit, OnDestroy {
             };
         });
 
+        // Sorting transfer by refrenceID DESC by default
         transfers = _.orderBy(transfers, ['referenceID'], ['desc']);
 
+        // set how many pages will be for handle paginatin
         this.total = _.get(transfers, '[0].totalResult', 0);
         ofiManageTransferActions.setTotalResults(this.total);
         this.lastPage = Math.ceil(this.total / this.itemPerPage);
@@ -253,6 +259,7 @@ export class ManageTransfersComponent implements OnInit, OnDestroy {
         this.confirmModal = {};
     }
 
+    // Function is triggered when iznesadmin user wants to cancel a transfer and confirm with modal his transfer cancellation
     handleModalConfirmButtonClick(targetedTransfer) {
         this.transferService.defaultRequestCancelTransfer(
             targetedTransfer.referenceID,
@@ -285,6 +292,7 @@ export class ManageTransfersComponent implements OnInit, OnDestroy {
             });
     }
 
+    // opens modal to get transfer informations // when a user have update permission rights, he can modify some informations if transfer has "pending" status
     openTransferDetails(index) {
         this.detailModal = { ... this.transferListItems[index] };
         this.detailModal['dateEntered'] = moment(this.detailModal['dateEntered'].dateEntered).format('YYYY-MM-DD');
@@ -412,7 +420,7 @@ export class ManageTransfersComponent implements OnInit, OnDestroy {
                     },
                 };
 
-                this.messagesService.sendMessage(recipientsArr, subjectStr, bodyStr, action);
+                this.messagesService.sendMessage(recipientsArr, subjectStr, bodyStr, action as any);
             },
             (data) => {
                 this.logService.log('Error: ', data);
