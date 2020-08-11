@@ -53,7 +53,15 @@ export class BeneficiaryLineComponent {
     }
 
     get holdingPercentage() {
-        return getValue(this.stakeholderValue, 'common.holdingPercentage');
+        if (typeof getValue(this.stakeholderValue, 'common.holdingPercentage') === 'object' ){
+            const holdingPercentageText = getValue(this.stakeholderValue, 'common.holdingPercentage[0].text');
+            if (holdingPercentageText) return holdingPercentageText;
+
+            return this.getAndSetStakeholderTextValues(this.newRequestService.percentTypeList, 'common.holdingPercentage');
+        }
+
+        const valueID = getValue(this.stakeholderValue, 'common.holdingPercentage');
+        return (this.newRequestService.percentTypeList.find(item => item.id === valueID) || {}).text;
     }
 
     get holdingType() {
@@ -71,7 +79,14 @@ export class BeneficiaryLineComponent {
     }
 
     get votingPercentage() {
-        return getValue(this.stakeholderValue, 'common.votingPercentage');
+        if (typeof getValue(this.stakeholderValue, 'common.votingPercentage') === 'object' ){
+            const votingPercentageText = getValue(this.stakeholderValue, 'common.votingPercentage[0].text');
+            if (votingPercentageText) return votingPercentageText;
+    
+            return this.getAndSetStakeholderTextValues(this.newRequestService.percentTypeList, 'common.votingPercentage');
+        }
+        const valueID = getValue(this.stakeholderValue, 'common.holdingPercentage');
+        return (this.newRequestService.percentTypeList.find(item => item.id === valueID) || {}).text;
     }
 
     constructor(
