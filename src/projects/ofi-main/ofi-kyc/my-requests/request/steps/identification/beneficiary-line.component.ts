@@ -2,6 +2,7 @@ import { Component, Input, Output, EventEmitter, HostListener, ElementRef } from
 import { get as getValue, find } from 'lodash';
 import { NewRequestService } from '../../new-request.service';
 import { countries } from '../../../requests.config';
+import { MultilingualService } from '@setl/multilingual';
 
 import { BeneficiaryService } from './beneficiary.service';
 
@@ -57,11 +58,11 @@ export class BeneficiaryLineComponent {
             const holdingPercentageText = getValue(this.stakeholderValue, 'common.holdingPercentage[0].text');
             if (holdingPercentageText) return holdingPercentageText;
 
-            return this.getAndSetStakeholderTextValues(this.newRequestService.percentTypeList, 'common.holdingPercentage');
+            return this.translate.translate(this.getAndSetStakeholderTextValues(this.newRequestService.percentTypeList, 'common.holdingPercentage'));
         }
 
         const valueID = getValue(this.stakeholderValue, 'common.holdingPercentage');
-        return (this.newRequestService.percentTypeList.find(item => item.id === valueID) || {}).text;
+        return this.translate.translate((this.newRequestService.percentTypeList.find(item => item.id === valueID) || {}).text);
     }
 
     get holdingType() {
@@ -83,16 +84,17 @@ export class BeneficiaryLineComponent {
             const votingPercentageText = getValue(this.stakeholderValue, 'common.votingPercentage[0].text');
             if (votingPercentageText) return votingPercentageText;
     
-            return this.getAndSetStakeholderTextValues(this.newRequestService.percentTypeList, 'common.votingPercentage');
+            return this.translate.translate(this.getAndSetStakeholderTextValues(this.newRequestService.percentTypeList, 'common.votingPercentage'));
         }
         const valueID = getValue(this.stakeholderValue, 'common.holdingPercentage');
-        return (this.newRequestService.percentTypeList.find(item => item.id === valueID) || {}).text;
+        return this.translate.translate((this.newRequestService.percentTypeList.find(item => item.id === valueID) || {}).text);
     }
 
     constructor(
         private beneficiaryService: BeneficiaryService,
         private element: ElementRef,
         private newRequestService: NewRequestService,
+        public translate: MultilingualService,
     ) {
     }
 
