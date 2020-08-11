@@ -803,22 +803,23 @@ export class BeneficiaryListComponent implements OnInit, OnDestroy {
             kbisAndIDRequired = true;
         }
 
-       for (const beneficiaryValue of beneficiariesValue) {
-           this.globalHasPEP = false;
-           const beneficiaryType = beneficiaryValue.beneficiaryType;
-           const isNaturalPerson = beneficiaryType === 'naturalPerson';
-           const isPoliticallyExposed = getValue(beneficiaryValue, ['naturalPerson', 'isPoliticallyExposed'], 0) === 1;
+        if (this.kycFormHelperService.isStateOwnedAnyPercentCapital() || this.kycFormHelperService.isCompanyRegulated() || this.kycFormHelperService.isCompanyListed()) {
+            kbisAndIDRequired = false;
+        }
 
-           if (isPoliticallyExposed && isNaturalPerson) {
-              kbisAndIDRequired = true;
-              this.globalHasPEP = true;
-              break;
-           }
-       }
+        for (const beneficiaryValue of beneficiariesValue) {
+            this.globalHasPEP = false;
+            const beneficiaryType = beneficiaryValue.beneficiaryType;
+            const isNaturalPerson = beneficiaryType === 'naturalPerson';
+            const isPoliticallyExposed = getValue(beneficiaryValue, ['naturalPerson', 'isPoliticallyExposed'], 0) === 1;
 
-       if (this.kycFormHelperService.isStateOwnedAnyPercentCapital() || this.kycFormHelperService.isCompanyRegulated() || this.kycFormHelperService.isCompanyListed()) {
-           kbisAndIDRequired = false;
-       }
+            if (isPoliticallyExposed && isNaturalPerson) {
+                kbisAndIDRequired = true;
+                this.globalHasPEP = true;
+                break;
+            }
+        }
+
 
        for (const beneficiaryFormGroup of (this.form as FormArray).controls) {
            if (kbisAndIDRequired) {
