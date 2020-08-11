@@ -19,7 +19,6 @@ import { ManageTransfersComponent } from './manage-transfers/manage-transfers.co
 @NgModule({
     imports: [
         CommonModule,
-        CommonModule,
         ReactiveFormsModule,
         BrowserModule,
         FormsModule,
