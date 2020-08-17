@@ -86,7 +86,7 @@ export class BeneficiaryLineComponent {
     
             return this.translate.translate(this.getAndSetStakeholderTextValues(this.newRequestService.percentTypeList, 'common.votingPercentage'));
         }
-        const valueID = getValue(this.stakeholderValue, 'common.holdingPercentage');
+        const valueID = getValue(this.stakeholderValue, 'common.votingPercentage');
         return this.translate.translate((this.newRequestService.percentTypeList.find(item => item.id === valueID) || {}).text);
     }
 
