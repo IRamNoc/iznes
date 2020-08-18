@@ -236,29 +236,4 @@ export class TransferInOutService {
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
     }
-    /*
-
-    defaultRequestConfirmTransfer(referenceID: number, successCallback: (res) => void, errorCallback: (res) => void) {
-        const asyncTaskPipe = this.requestConfirmTransfer({ referenceID });
-
-        this.ngRedux.dispatch(SagaHelper.runAsync(
-                [],
-                [],
-                asyncTaskPipe,
-                {},
-                res => successCallback(res),
-                res => errorCallback(res),
-            ));
-    }
-
-    requestConfirmTransfer(data: IznesConfirmTransferRequestData) {
-        const messageBody: IznesConfirmTransferRequestBody = {
-            RequestName: 'iznconfirmtransferinout',
-            token: this.memberSocketService.token,
-            referenceID: data.referenceID,
-        };
-
-        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
-    }
-    */
 }
