@@ -145,7 +145,7 @@ export class OfiProfileMyInformationsComponent implements OnInit, OnDestroy {
             this.userInfoExtended.amCompanyName = d.amCompanyName || 'IZNES';
         });
 
-        this.setHomePage = this.activatedRoute.snapshot.paramMap.get('sethomepage') || '';
+        this.setHomePage = this.activatedRoute.snapshot.paramMap.get('sethomepage') || undefined;
 
         this.connectedWalletId$.pipe(takeUntil(this.unSubscribe)).subscribe((id) => {
             this.connectedWalletId = id;

@@ -117,17 +117,26 @@ export function getNonZeroValue(val1: number, val2: number, defaultValue: number
  * @param {{orderType: number | string; sellBuyLinkOrderID: number | string}} orderData
  * @return {string}
  */
-export function getOrderTypeString(orderData: {orderType: number | string; sellBuyLinkOrderID: number | string }): string {
+export function getOrderTypeString(orderData: {orderType: number | string; sellBuyLinkOrderID: number | string; isTransfer: number }): string {
     const orderType = orderData.orderType;
     const sellBuyLinkOrderId = orderData.sellBuyLinkOrderID;
+    const isTransfer = orderData.isTransfer;
 
     if (!sellBuyLinkOrderId) {
-       if (Number(orderType) === OrderType.Subscription) {
+       if (Number(orderType) === OrderType.Subscription && !isTransfer) {
           return 'Subscription';
        }
 
-       if(Number(orderType) === OrderType.Redemption) {
+       if (Number(orderType) === OrderType.Subscription && isTransfer) {
+            return 'Transfer In';
+       }
+
+       if (Number(orderType) === OrderType.Redemption && !isTransfer) {
           return 'Redemption';
+       }
+       
+       if (Number(orderType) === OrderType.Redemption && isTransfer) {
+           return 'Transfer Out';
        }
     } else {
         if (Number(orderType) === OrderType.Subscription) {

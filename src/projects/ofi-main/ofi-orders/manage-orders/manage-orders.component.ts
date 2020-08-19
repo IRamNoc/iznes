@@ -566,6 +566,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
             const orderRef = this.getOrderRef(orderId);
             const orderTypeStr = this.getOrderTypeString(order);
             const initialized = order.initialized;
+            const isTransfer = order.isTransfer;
 
             return {
                 ...list[orderId],
@@ -581,7 +582,8 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
                 markedForPayment,
                 readyForPayment,
                 orderUnpaid: this.orderUnpaid(list[orderId]),
-                initialized
+                initialized,
+                isTransfer
             };
         });
     }
@@ -1025,7 +1027,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
      * @param {{orderId: number | string; sellBuyLinkOrderID: number | string}} orderData
      * @return {string | boolean}
      */
-    getOrderTypeString(orderData: { orderType: number | string; sellBuyLinkOrderID: number | string; }): string | boolean {
+    getOrderTypeString(orderData: { orderType: number | string; sellBuyLinkOrderID: number | string; isTransfer: number }): string | boolean {
         const orderString = getOrderTypeString(orderData);
         return this.translate.getTranslationByString(orderString);
     }

@@ -222,6 +222,15 @@ export function isStateOwned(f: FormGroup): boolean {
 }
 
 /**
+ * State-owned comes from Identification > Company Information field “Is company state-owned?”
+ */
+export function isStateOwnedAnyPecentCapital(f: FormGroup): boolean {
+    const stateOwned = !!get(f, 'controls.identification.controls.companyInformation.controls.companyStateOwned.value', 0);
+
+    return stateOwned;
+}
+
+/**
  * Regulated comes from Identification > Company Information field “Is the activity regulated?”
  */
 export function isCompanyRegulated(f: FormGroup): boolean {
