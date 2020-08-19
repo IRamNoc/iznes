@@ -60,8 +60,8 @@ export class ManageTransfersComponent implements OnInit, OnDestroy {
     loading = true;
     isConfirmModalDisplayed = false;
     isDetailModalDisplayed = false;
-    confirmModal = {};
-    detailModal = {};
+    confirmModal: any = {};
+    detailModal: any = {};
 
     // Locale
     language = 'en';
