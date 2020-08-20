@@ -1,0 +1,420 @@
+<!-- Breadcrumbs. -->
+<div class="header-breadcrumbs">
+    <h1>
+        <clr-icon shape="switch"></clr-icon> {{ 'Transfer In & Out' | translate }}
+    </h1>
+</div>
+
+<div class="well">
+    <!-- Panel header -->
+    <div class="row panel-header">
+        <div class="col-md-6">
+            <h2>{{ 'Transfer List' | translate }}</h2>
+        </div>
+    </div>
+
+    <div class="border-table panel-body">
+        <clr-dg-action-bar *ngIf="hasPermissionInsert">
+            <button id="saveButton" type="button" routerLink="/transfer-in-out/create"
+                class="btn btn-primary">{{ 'Create a new transfer' | translate }}</button>
+        </clr-dg-action-bar>
+
+        <clr-datagrid (clrDgRefresh)="refresh($event)" [clrDgLoading]="loading" clrDgSortIcon #transfersDataGrid>
+            <clr-dg-column [clrDgField]="'referenceID'" clrDgSortIcon clrDgSortNoSearch id="reference">
+                <ng-container *clrDgHideableColumn="{hidden: false}">{{ 'IZNES Reference' | translate }}
+                    <span class="column-label"></span>
+                </ng-container>
+            </clr-dg-column>
+            <clr-dg-column [clrDgField]="'externalReference'" clrDgSortIcon clrDgSortNoSearch id="externalReference">
+                <ng-container *clrDgHideableColumn="{hidden: false}">{{ 'External Reference' | translate }}
+                    <span class="column-label"></span>
+                </ng-container>
+            </clr-dg-column>
+            <clr-dg-column [clrDgField]="'accountKeeper'" clrDgSortIcon clrDgSortNoSearch id="Order-Investor">
+                <ng-container *clrDgHideableColumn="{hidden: false}">{{ 'Historical Account Keeper' | translate }}
+                    <span class="column-label"></span>
+                </ng-container>
+            </clr-dg-column>
+            <clr-dg-column [clrDgField]="'transferDirection'" clrDgSortIcon clrDgSortNoSearch id="Order-Portfolio">
+                <ng-container *clrDgHideableColumn="{hidden: false}">{{ 'Direction' | translate }}
+                    <span class="column-label"></span>
+                </ng-container>
+            </clr-dg-column>
+            <clr-dg-column [clrDgField]="'assetManagementCompany'" clrDgSortIcon clrDgSortNoSearch id="Order-ISIN">
+                <ng-container *clrDgHideableColumn="{hidden: false}">{{ 'Management Company' | translate }}
+                    <span class="column-label"></span>
+                </ng-container>
+            </clr-dg-column>
+            <clr-dg-column [clrDgField]="'investorCompany'" clrDgSortIcon clrDgSortNoSearch id="Order-Share-Name">
+                <ng-container *clrDgHideableColumn="{hidden: false}">{{ 'Investor' | translate }}
+                    <span class="column-label"></span>
+                </ng-container>
+            </clr-dg-column>
+            <clr-dg-column [clrDgField]="'investorWallet'" clrDgSortIcon clrDgSortNoSearch
+                id="Order-Asset-Manager-Company">
+                <ng-container *clrDgHideableColumn="{hidden: false}">{{ 'Portfolio' | translate }}
+                    <span class="column-label"></span>
+                </ng-container>
+            </clr-dg-column>
+            <clr-dg-column [clrDgField]="'shareISIN'" clrDgSortIcon clrDgSortNoSearch id="Order-Share-Currency">
+                <ng-container *clrDgHideableColumn="{hidden: false}">{{ 'ISIN' | translate }}
+                    <span class="column-label"></span>
+                </ng-container>
+            </clr-dg-column>
+            <clr-dg-column [clrDgField]="'shareName'" clrDgSortIcon clrDgSortNoSearch id="Order-Quantity" class="right">
+                <ng-container *clrDgHideableColumn="{hidden: false}">{{ 'Fund Name' | translate }}
+                    <span class="column-label"></span>
+                </ng-container>
+            </clr-dg-column>
+            <clr-dg-column [clrDgField]="'currency'" clrDgSortIcon clrDgSortNoSearch id="Order-Traded-By">
+                <ng-container *clrDgHideableColumn="{hidden: false}">{{ 'Currency' | translate }}
+                    <span class="column-label"></span>
+                </ng-container>
+            </clr-dg-column>
+            <clr-dg-column [clrDgField]="'quantity'" clrDgSortIcon clrDgSortNoSearch id="Order-Traded-By">
+                <ng-container *clrDgHideableColumn="{hidden: false}">{{ 'Quantity' | translate }}
+                    <span class="column-label"></span>
+                </ng-container>
+            </clr-dg-column>
+            <clr-dg-column [clrDgField]="'unitPrice'" clrDgSortIcon clrDgSortNoSearch id="Order-Latest-NAV"
+                class="right">
+                <ng-container *clrDgHideableColumn="{hidden: false}">{{ 'Price' | translate }}
+                    <span class="column-label"></span>
+                </ng-container>
+            </clr-dg-column>
+            <clr-dg-column [clrDgField]="'amount'" clrDgSortIcon clrDgSortNoSearch id="Order-Trade-Amount"
+                class="right">
+                <ng-container *clrDgHideableColumn="{hidden: false}">{{ 'Amount' | translate }}
+                    <span class="column-label"></span>
+                </ng-container>
+            </clr-dg-column>
+            <clr-dg-column [clrDgField]="'theoricalDate'" clrDgSortIcon clrDgSortNoSearch id="Order-Fee-Amount"
+                class="right">
+                <ng-container *clrDgHideableColumn="{hidden: false}">{{ 'Theoretical impact date on stock' | translate }}
+                    <span class="column-label"></span>
+                </ng-container>
+            </clr-dg-column>
+            <clr-dg-column [clrDgField]="'transferStatus'" clrDgSortIcon clrDgSortNoSearch id="Order-Order-Date">
+                <ng-container *clrDgHideableColumn="{hidden: false}">{{ 'Status' | translate }}
+                    <span class="column-label"></span>
+                </ng-container>
+            </clr-dg-column>
+            <clr-dg-column [clrDgField]="'dateEntered'" clrDgSortIcon clrDgSortNoSearch id="Order-Cut-Off-Date">
+                <ng-container *clrDgHideableColumn="{hidden: false}">{{ 'Entry Date' | translate }}
+                    <span class="column-label"></span>
+                </ng-container>
+            </clr-dg-column>
+            <clr-dg-column [clrDgField]="'action'" clrDgSortIcon clrDgSortNoSearch id="Order-Cut-Off-Date">
+                <ng-container *clrDgHideableColumn="{hidden: false}">{{ 'Action' | translate }}
+                    <span class="column-label"></span>
+                </ng-container>
+            </clr-dg-column>
+
+
+            <clr-dg-row *ngFor="let transfer of transferListItems; let i = index" clrDgRowClickable>
+                <clr-dg-cell (click)="openTransferDetails(i)">
+                    {{ transfer.referenceID }}
+                </clr-dg-cell>
+                <clr-dg-cell (click)="openTransferDetails(i)">
+                    {{ transfer.externalReference }}
+                </clr-dg-cell>
+                <clr-dg-cell (click)="openTransferDetails(i)">
+                    {{ transfer.accountKeeper }}
+                </clr-dg-cell>
+                <clr-dg-cell (click)="openTransferDetails(i)">
+                    <b>
+                        <span class="label label-light-blue"
+                            *ngIf="transfer.transferDirection === 'in'">&nbsp;{{ transfer.transferDirection }}&nbsp;</span>
+                        <span class="label label-blue"
+                            *ngIf="transfer.transferDirection === 'out'">{{ transfer.transferDirection }}</span>
+                    </b>
+                </clr-dg-cell>
+                <clr-dg-cell (click)="openTransferDetails(i)">
+                    {{ transfer.assetManagementCompany }}
+                </clr-dg-cell>
+                <clr-dg-cell (click)="openTransferDetails(i)">
+                    {{ transfer.investorCompany }}
+                </clr-dg-cell>
+                <clr-dg-cell (click)="openTransferDetails(i)">
+                    {{ transfer.investorWallet }}
+                </clr-dg-cell>
+                <clr-dg-cell (click)="openTransferDetails(i)">
+                    {{ transfer.shareISIN }}
+                </clr-dg-cell>
+                <clr-dg-cell (click)="openTransferDetails(i)">
+                    {{ transfer.shareName }}
+                </clr-dg-cell>
+                <clr-dg-cell (click)="openTransferDetails(i)">
+                    {{ transfer.currency }}
+                </clr-dg-cell>
+                <clr-dg-cell (click)="openTransferDetails(i)">
+                    {{ transfer.quantity }}
+                </clr-dg-cell>
+                <clr-dg-cell (click)="openTransferDetails(i)">
+                    {{ transfer.unitPrice }}
+                </clr-dg-cell>
+                <clr-dg-cell (click)="openTransferDetails(i)">
+                    {{ transfer.amount }}
+                </clr-dg-cell>
+                <clr-dg-cell (click)="openTransferDetails(i)">
+                    {{ transfer.theoricalDate }}
+                </clr-dg-cell>
+                <clr-dg-cell (click)="openTransferDetails(i)">
+                    <span *ngIf="transfer.transferStatus === 'pending'"
+                        class="label label-warning">{{ 'Pending' | translate }}
+                    </span>
+
+                    <span *ngIf="transfer.transferStatus === 'validated'"
+                        class="label label-info">{{ 'Validated' | translate }}
+                    </span>
+
+                    <span *ngIf="transfer.transferStatus === 'confirmed'"
+                        class="label label-success">{{ 'Confirmed' | translate }}
+                    </span>
+
+                    <span *ngIf="transfer.transferStatus === 'completed'"
+                        class="label">{{ 'Completed' | translate }}
+                    </span>
+
+                    <span *ngIf="transfer.transferStatus === 'cancelled'"
+                        class="label label-danger">{{ 'Cancelled' | translate }}
+                    </span>
+                </clr-dg-cell>
+                <clr-dg-cell (click)="openTransferDetails(i)">
+                    {{ transfer.dateEntered }}
+                </clr-dg-cell>
+                <clr-dg-cell class="right">
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-sm btn-danger"
+                            *ngIf="transfer.transferStatus === 'pending' && hasPermissionCancel"
+                            (click)="cancelTransfer(i)">{{ 'Cancel' | translate }}</button>
+                        <button type="button" class="btn btn-sm btn-danger"
+                            *ngIf="transfer.transferStatus !== 'pending' && hasPermissionCancel" disabled>{{ 'Cancel' | translate }}</button>
+                        <button type="button" class="btn btn-sm btn-primary" [clrLoading]="confirmBtnState"
+                            *ngIf="transfer.transferStatus === 'validated' && userType === 'am'"
+                            (click)="confirmTransfer(i)">{{ 'Confirm' | translate }}</button>
+                        <button type="button" class="btn btn-sm btn-primary"
+                            *ngIf="transfer.transferStatus !== 'validated' && userType === 'am'" disabled>{{ 'Confirm' | translate }}</button>
+                        <button type="button" class="btn btn-sm btn-primary" [clrLoading]="validateBtnState"
+                            *ngIf="transfer.transferStatus === 'pending' && userType === 'investor'"
+                            (click)="validateTransfer(i)">{{ 'Validate' | translate }}</button>
+                        <button type="button" class="btn btn-sm btn-primary"
+                            *ngIf="transfer.transferStatus !== 'pending' && userType === 'investor'" disabled>{{ 'Validate' | translate }}</button>
+                    </div>
+                </clr-dg-cell>
+            </clr-dg-row>
+
+            <clr-dg-footer class="full-options">
+                <!-- Optional customization of hide/show columns toggle -->
+                <clr-dg-column-toggle>
+                    <clr-dg-column-toggle-title>{{ 'Show/Hide Fields' | translate }}
+                    </clr-dg-column-toggle-title>
+                    <clr-dg-column-toggle-button clrType="selectAll">
+                        <button type="button" class="btn btn-primary">
+                            Select All
+                        </button>
+                    </clr-dg-column-toggle-button>
+                    <clr-dg-column-toggle-button clrType="ok">
+                        <button type="button" class="btn btn-primary" style="padding:0 20px">
+                            <clr-icon shape="check"></clr-icon>
+                        </button>
+                    </clr-dg-column-toggle-button>
+                </clr-dg-column-toggle>
+
+                <!--{{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}-->
+                <clr-dg-pagination #pagination [clrDgPageSize]="itemPerPage" [clrDgLastPage]="lastPage">
+                </clr-dg-pagination>
+            </clr-dg-footer>
+        </clr-datagrid>
+    </div>
+</div>
+
+<clr-modal [(clrModalOpen)]="isConfirmModalDisplayed" [clrModalClosable]="false">
+    <h3 class="modal-title">{{ confirmModal.title }}</h3>
+
+    <div class="modal-body">
+        <div class="jaspero__dialog-icon">
+            <div class="f-modal-alert">
+                <div class="f-modal-icon f-modal-info-error scaleWarning">
+                    <span class="f-modal-body pulseWarningInsRed"></span>
+                    <span class="f-modal-dot pulseWarningInsRed"></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="jaspero__dialog-content" [innerHtml]="confirmModal.body"></div>
+    </div>
+
+    <div class="modal-footer">
+        <button id='cancelModalBackButton' type="button" class="btn btn-outline" (click)="resetConfirmModalValue()">
+            {{ 'Back' | translate }}
+        </button>
+
+        <button id='cancelModalConfirmButton' type="button" class="btn btn-danger cancel-modal-confirm-btn"
+            (click)="handleModalConfirmButtonClick(confirmModal.targetedTransfer)">
+            {{ 'Confirm' | translate }}
+        </button>
+    </div>
+</clr-modal>
+
+<clr-modal [(clrModalOpen)]="isDetailModalDisplayed" [clrModalClosable]="false" [clrModalSize]="'lg'">
+    <h3 class="modal-title">{{ 'Modify transfer' | translate }} #{{detailModal.referenceID}}</h3>
+
+    <div class="modal-body">
+        <form [formGroup]="updateTransferFormGroup">
+            <section class="form-group">
+                <h3>{{ 'General Informations' | translate }}</h3>
+                <div class="col-md-12">
+                    <label class="clr-col-12 clr-col-md-12" for="amCompany">{{ 'Management Company' | translate }}</label>
+                    <input id="investorWalletReference" class="form-control" type="text"
+                        value="{{ detailModal.assetManagementCompany }}" disabled>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="clr-col-12 clr-col-md-12" for="amShareFund">{{ 'Share Name' | translate }}</label>
+                        <input id="investorWalletReference" class="form-control" type="text"
+                            value="{{ detailModal.shareName }}" disabled>
+                    </div>
+
+                    <!-- Amount -->
+                    <div class="col-md-6">
+                        <label class="clr-col-12 clr-col-md-12" for="amShareFundISIN">ISIN</label>
+                        <input id="amShareFundISIN" class="form-control" type="text" value="{{ detailModal.shareISIN}}"
+                            disabled>
+                    </div>
+                </div>
+
+                <div class="col-md-12">
+                    <label class="clr-col-12 clr-col-md-12" for="investorCompany">{{ 'Investor' | translate }}</label>
+                    <input id="investorWalletReference" class="form-control" type="text"
+                        value="{{ detailModal.investorCompany }}" disabled>
+                </div>
+
+                <div class="col-md-12">
+                    <label class="clr-col-12 clr-col-md-12" for="investorWallet">{{ 'Portfolio' | translate }}</label>
+                    <input id="investorWalletReference" class="form-control" type="text"
+                        value="{{ detailModal.investorWallet }}" disabled>
+                </div>
+
+                <h3 class="mt-1">{{ 'Transfer Informations' | translate }}</h3>
+                <div class="row">
+                <div class="col-md-6">
+                    <label class="clr-col-12 col-col-md-12">{{ 'Status' | translate }}</label>
+                    <ng-select id="transferStatus" [placeholder]="translate.translate('Update status')"
+                        [items]="transferStatusListItems" [allowClear]="false"
+                        formControlName="transferStatus"
+                        [isDisabled]="!updatePermission"
+                        (selected)="handleDropdownTransferStatusSelect($event)">
+                    </ng-select>
+                </div>
+                <div class="col-md-6">
+                    <label class="clr-col-12 clr-col-md-12" for="transferDirection">{{ 'Direction' | translate }}</label>
+                    <input id="transferDirection" class="form-control" type="text"
+                        value="{{ detailModal.transferDirection }}" disabled>
+                </div>
+            </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="clr-col-12 clr-col-md-12" for="quantity">{{ 'Quantity' | translate }}</label>
+                        <input id="quantity" formControlName="quantity" class="form-control" type="number">
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="clr-col-12 clr-col-md-12" for="unitPrice">{{ 'Unit Price' | translate }}</label>
+                        <input id="unitPrice" formControlName="unitPrice" class="form-control" type="number">
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="clr-col-12 clr-col-md-12" for="amount">{{ 'Amount' | translate }}</label>
+                        <input id="amount" value="{{detailModal.amount}}" class="form-control" type="number" disabled>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="clr-col-12 clr-col-md-12" for="currency">{{ 'Currency' | translate }}</label>
+                        <input id="currency" class="form-control" type="text" value="{{ detailModal.currency }}"
+                            disabled>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="clr-col-12 clr-col-md-12" for="theoricalDate">{{ 'Theoretical impact date on stock' | translate }}</label>
+                        <div class="input-group date-pick-wrapper">
+                            <span class="fa fa-calendar" aria-hidden="true"></span>
+                            <input id="theoricalDate" placeholder="Choose a date" formControlName="theoricalDate"
+                                [dpDayPicker]="datePickerConfig" formmode="day" theme="dp-material">
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="clr-col-12 clr-col-md-12" for="initialDate">{{ 'Initial Operation Date' | translate }}</label>
+                        <div class="input-group date-pick-wrapper">
+                            <span class="fa fa-calendar" aria-hidden="true"></span>
+                            <input id="initialDate" placeholder="Choose a date" formControlName="initialDate"
+                                [dpDayPicker]="datePickerConfig" mode="day" theme="dp-material">
+                        </div>
+                    </div>
+
+                </div>
+                <h3 class="mt-1">{{ 'Additionnal Informations' | translate }}</h3>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="clr-col-12 clr-col-md-12" for="externalReference">{{ 'External Reference' | translate }}</label>
+                        <input id="externalReference" formControlName="externalReference" class="form-control"
+                            type="text">
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="clr-col-12 clr-col-md-12" for="accountKeeper">{{ 'Historical Account Keeper' | translate }}</label>
+                        <input id="investorWalletReference" class="form-control" type="text"
+                            value="{{ detailModal.accountKeeper }}" disabled>
+                    </div>
+
+                </div>
+
+                <div class="col-md-12">
+                    <label class="clr-col-12 clr-col-md-12" for="comment">{{ 'Comment' | translate }}</label>
+                    <textarea class="form-control" formControlName="comment" autocomplete="off"></textarea>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="clr-col-12 clr-col-md-12" for="createdBy">{{ 'Transfer Seized By' | translate }}</label>
+                        <input id="createdBy" class="form-control" type="text" value="IZNES" disabled>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="clr-col-12 clr-col-md-12" for="dateEntered">{{ 'Date and Time of Transfer Entry' | translate }}</label>
+                        <div class="input-group date-pick-wrapper">
+                            <span class="fa fa-calendar" aria-hidden="true"></span>
+                            <input id="investorWalletReference" class="form-control" type="text" value="{{detailModal.dateEntered}}" disabled>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </form>
+    </div>
+
+    <div class="modal-footer">
+        <div class="col-md-12">
+            <button id='cancelModalBackButton' type="button" class="btn btn-outline" (click)="resetDetailModalValue()">
+                {{ 'Back' | translate }}
+            </button>
+
+            <button *ngIf="updatePermission" id='UpdateModalButton' type="button" [disabled]="!canUpdateBtn"
+                class="btn btn-primary cancel-modal-confirm-btn"
+                (click)="handleModalUpdateButtonClick(detailModal.referenceID)">
+                {{ 'Update' | translate }}
+            </button>
+        </div>
+        <div class="col-md-12">
+            <span class="label label-danger mt-1 mb-1" *ngIf="detailModal.transferStatus === 'validated' && updatePermission">Attention,
+                vous venez de passer le statut en
+                "validated", vous ne pourrez plus modifier celui-ci
+                par la suite.</span>
+        </div>
+    </div>
+</clr-modal>

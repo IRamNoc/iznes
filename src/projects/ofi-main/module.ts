@@ -25,6 +25,7 @@ import { SetlLayoutModule } from '@setl/core-layout';
 import { OfiSubPortfolio } from './ofi-sub-portfolio/module'
 import { OfiPortfolioManagerModule } from "./ofi-portfolio-manager/portfolio-manager.module";
 import { OfiMandateInvestorModule } from './ofi-mandate-investor/mandate-investor.module';
+import { OfiTransferInOutModule } from './ofi-transfer-in-out/ofi-transfer-in-out.module';
 
 /* Decorator. */
 @NgModule({
@@ -50,6 +51,7 @@ import { OfiMandateInvestorModule } from './ofi-mandate-investor/mandate-investo
         OfiSubPortfolio,
         OfiPortfolioManagerModule,
         OfiMandateInvestorModule,
+        OfiTransferInOutModule
     ],
     exports: [
         OfiFundInvestModule,

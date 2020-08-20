@@ -40,6 +40,8 @@ import {
     FundAuditComponent,
     OfiInviteMandateInvestorsComponent,
     OfiManagementCompanyComponent,
+    ManageTransfersComponent,
+    CreateTransferComponent,
 } from '@ofi/ofi-main';
 
 import { requestsRoute } from '@ofi/ofi-main/ofi-kyc/my-requests/requests-route.config';
@@ -655,6 +657,21 @@ export const ROUTES: Routes = [
                         path: 'my-orders/:tabid',
                         canActivate: [LoginGuardService],
                         component: ManageOrdersComponent,
+                    },
+                ],
+            },
+            {
+                path: 'transfer-in-out',
+                canActivate: [LoginGuardService],
+                children:
+                [
+                    {
+                        path: '',
+                        component: ManageTransfersComponent,
+                    },
+                    {
+                        path: 'create',
+                        component: CreateTransferComponent,
                     },
                 ],
             },

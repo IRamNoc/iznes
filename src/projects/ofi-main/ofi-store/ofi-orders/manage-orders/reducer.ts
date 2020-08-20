@@ -198,7 +198,6 @@ function handleValidatedOrder(state: ManageOrders, action: PayloadAction): Manag
 
 function formatManageOrderDataResponse(rawData: any[]): ManageOrderDetails[] {
     const rawDataList = fromJS(rawData);
-
     const manageOrdersList = rawDataList.reduce(
         (result, item, idx) => {
             const order = {
@@ -240,6 +239,7 @@ function formatManageOrderDataResponse(rawData: any[]): ManageOrderDetails[] {
                 orderNote: item.get('orderNote'),
                 orderStatus: item.get('orderStatus'),
                 orderType: item.get('orderType'),
+                isTransfer: item.get('isTransfer'),
                 sellBuyLinkOrderID: item.get('sellBuyLinkOrderID'),
                 platFormFee: item.get('platFormFee'),
                 classificationFee: item.get('classificationFee'),

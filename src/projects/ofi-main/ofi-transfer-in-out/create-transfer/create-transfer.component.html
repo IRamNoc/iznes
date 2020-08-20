@@ -1,0 +1,218 @@
+<!-- Breadcrumbs. -->
+<div class="header-breadcrumbs">
+  <h1>
+    <clr-icon shape="switch"></clr-icon> Transfer In & Out
+  </h1>
+</div>
+
+<!-- Subscription/Redemption tab -->
+<div class="well">
+  <!-- Panel header -->
+  <div class="row panel-header">
+    <div class="col-md-6">
+      <h2>{{ 'Create a new transfer' | translate }}</h2>
+      <p>Please fill in the following information to create a new transfer</p>
+    </div>
+  </div>
+
+  <!-- Panel body -->
+  <div class="row panel-body">
+    <div class="col-md-12">
+      <form [formGroup]="placeTransferFormGroup" (ngSubmit)="handleSubmitButtonClick()">
+        <section class="form-group">
+          <div class="row">
+            <div class="col-md-6">
+              <label class="clr-col-12 clr-col-md-12 required-field" for="amCompany">{{ 'Management company' | translate }}</label>
+              <ng-select id="amCompany" [placeholder]="translate.translate('Select an AM')"
+                [items]="mananagementCompanyItems" [allowClear]="false"
+                [formControl]="placeTransferFormGroup.controls['amCompany']"
+                (selected)="handleDropdownAmSelect($event)">
+              </ng-select>
+            </div>
+
+            <div class="col-md-6">
+              <label class="clr-col-12 clr-col-md-12" for="amBic">{{ 'BIC' | translate }}</label>
+              <input id="amBic" class="form-control" formControlName="amBic" type="text"
+                value="{{ managementCompanySelected.bic }}">
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-6">
+              <label class="clr-col-12 clr-col-md-12 required-field" for="amShareFund">{{ 'Share name' | translate }}</label>
+              <ng-select id="amShareFund" [placeholder]="translate.translate('Select an AM Share')"
+                [items]="filteredShareList" [allowClear]="false"
+                [formControl]="placeTransferFormGroup.controls['amShareFund']"
+                (selected)="handleDropdownShareSelect($event)">
+              </ng-select>
+            </div>
+
+            <!-- Amount -->
+            <div class="col-md-6">
+              <label class="clr-col-12 clr-col-md-12" for="amShareFundISIN">{{ 'ISIN' | translate }}</label>
+              <input id="amShareFundISIN" formControlName="amShareFundISIN" class="form-control" type="text"
+                value="{{ shareSelected.isin }}">
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-6">
+              <label class="clr-col-12 clr-col-md-12 required-field" for="investorCompany">{{ 'Investor' | translate }}</label>
+              <ng-select id="investorCompany" [placeholder]="translate.translate('Select an investor')"
+                [items]="investorListItems" [allowClear]="false"
+                [formControl]="placeTransferFormGroup.controls['investorCompany']"
+                (selected)="handleDropdownInvestorSelect($event)">
+              </ng-select>
+            </div>
+
+            <!-- Amount -->
+            <div class="col-md-6">
+              <label class="clr-col-12 clr-col-md-12" for="investorReference"></label>
+              <input id="investorReference" formControlName="investorReference" class="form-control" type="text"
+                value="{{ investorSelected.companyName }}">
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-6">
+              <label class="clr-col-12 clr-col-md-12 required-field" for="investorWallet">{{ 'Portfolio' | translate }}</label>
+              <ng-select id="investorWallet" [placeholder]="translate.translate('Select a wallet')"
+                [items]="walletListItems" [allowClear]="false"
+                [formControl]="placeTransferFormGroup.controls['investorWallet']"
+                (selected)="handleDropdownInvestorWalletSelect($event)">
+              </ng-select>
+            </div>
+
+            <!-- Amount -->
+            <div class="col-md-6">
+              <label class="clr-col-12 clr-col-md-12" for="investorWalletReference">{{ 'Reference' | translate }}</label>
+              <input id="investorWalletReference" formControlName="investorWalletReference" class="form-control"
+                type="text" value="{{ walletSelected.text }}">
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-3">
+              <label class="clr-col-12 clr-col-md-12 required-field" for="type">{{ 'Type' | translate }}</label>
+              <div class="btn-group">
+                <div class="radio btn">
+                  <input type="radio" id="btn-radio-operation" (click)="type = 'operation'"
+                    [checked]="type === 'operation'">
+                  <label class="clr-col-12 clr-col-md-12" for="btn-radio-operation">{{ 'Operation' | translate }}</label>
+                </div>
+                <div class="radio btn">
+                  <input type="radio" id="btn-radio-stock" (click)="type = 'stock'" [checked]="type === 'stock'">
+                  <label class="clr-col-12 clr-col-md-12" for="btn-radio-stock">{{ 'Stock' | translate }}</label>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-3 offset-md-1">
+              <label class="clr-col-12 clr-col-md-12 required-field" for="sens">{{ 'Direction' | translate }}</label>
+              <div class="btn-group">
+                <div class="radio btn">
+                  <input type="radio" id="btn-radio-in" (click)="direction = 'in'" [checked]="direction === 'in'">
+                  <label class="clr-col-12 clr-col-md-12" for="btn-radio-in">{{ 'In' | translate }}</label>
+                </div>
+                <div class="radio btn">
+                  <input type="radio" id="btn-radio-out" (click)="direction = 'out'" [checked]="direction === 'out'">
+                  <label class="clr-col-12 clr-col-md-12" for="btn-radio-out">{{ 'Out' | translate }}</label>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-4">
+              <label class="clr-col-12 clr-col-md-12 required-field" for="quantity">{{ 'Quantity' | translate }}</label>
+              <input id="quantity" formControlName="quantity" class="form-control" type="number">
+            </div>
+
+            <div class="col-md-4">
+              <label class="clr-col-12 clr-col-md-12 required-field" for="unitPrice">{{ 'Unit price' | translate }}</label>
+              <input id="unitPrice" formControlName="unitPrice" class="form-control" type="number">
+            </div>
+          </div>
+
+          <div class="row">
+
+            <div class="col-md-4">
+              <label class="clr-col-12 clr-col-md-12 required-field" for="amount">{{ 'Amount' | translate }}</label>
+              <input id="amount" formControlName="amount" class="form-control" type="number">
+            </div>
+
+            <div class="col-md-4">
+              <label class="clr-col-12 clr-col-md-12" for="currency">{{ 'Currency' | translate }}</label>
+              <input id="currency" formControlName="currency" class="form-control" type="text">
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-4">
+              <label class="clr-col-12 clr-col-md-12 required-field" for="theoricalDate">{{ 'Theoretical entry date in IZNES register' | translate }}</label>
+              <div class="input-group date-pick-wrapper">
+                <span class="fa fa-calendar" aria-hidden="true"></span>
+                <input id="theoricalDate" placeholder="Choose a date" formControlName="theoricalDate"
+                  [dpDayPicker]="datePickerConfig" mode="day" theme="dp-material">
+              </div>
+            </div>
+
+            <div class="col-md-4">
+              <label class="clr-col-12 clr-col-md-12 required-field" for="initialDate">{{ 'Initial operation date' | translate }}</label>
+              <div class="input-group date-pick-wrapper">
+                <span class="fa fa-calendar" aria-hidden="true"></span>
+                <input id="initialDate" placeholder="Choose a date" formControlName="initialDate"
+                  [dpDayPicker]="datePickerConfig" mode="day" theme="dp-material">
+              </div>
+            </div>
+
+          </div>
+
+          <div class="row">
+            <div class="col-md-4">
+              <label class="clr-col-12 clr-col-md-12" for="externalReference">{{ 'External reference' | translate }}</label>
+              <input id="externalReference" formControlName="externalReference" class="form-control" type="text">
+            </div>
+
+            <div class="col-md-4">
+              <label class="clr-col-12 clr-col-md-12 required-field" for="accountKeeper">{{ 'Historical account keeper' | translate }}</label>
+              <ng-select id="accountKeeper" [placeholder]="translate.translate('Select an account keeper')"
+                [items]="accountKeeperList" [allowClear]="true"
+                [formControl]="placeTransferFormGroup.controls['accountKeeper']"
+                (selected)="handleDropdownAccountKeeperSelect($event)">
+              </ng-select>
+            </div>
+
+          </div>
+
+          <div class="col-md-8">
+            <label class="clr-col-12 clr-col-md-12" for="comment">{{ 'Comment' | translate }}</label>
+            <textarea class="form-control" formControlName="comment" autocomplete="off"></textarea>
+          </div>
+
+          <div class="row">
+            <div class="col-md-4">
+              <label class="clr-col-12 clr-col-md-12" for="createdBy">{{ 'Transfer seized by' | translate }}</label>
+              <input id="createdBy" formControlName="createdBy" class="form-control" type="text">
+            </div>
+
+            <div class="col-md-4">
+              <label class="clr-col-12 clr-col-md-12" for="dateEntered">{{ 'Date and time of transfer entry' | translate }}</label>
+              <div class="input-group date-pick-wrapper">
+                <span class="fa fa-calendar" aria-hidden="true"></span>
+                <input id="dateEntered" placeholder="Choose a date" formControlName="dateEntered"
+                  [dpDayPicker]="datePickerConfig" mode="day" theme="dp-material">
+              </div>
+            </div>
+          </div>
+        </section>
+
+      <div class="form-group col-sm-12">
+        <button id="cancelButton" type="button" class="btn btn-light"
+          (click)="handleCancelButtonClick()">{{ 'Cancel' | translate }}</button>
+        <button id="saveButton" type="submit" [disabled]="!disableBtn" class="btn btn-primary">{{ 'Save' | translate }}</button>
+      </div>
+    </form>
+    </div>
+  </div>
+</div>

@@ -32,6 +32,10 @@ import {
  */
 import { OfiOrdersReducer, OfiOrdersState } from './ofi-orders';
 /*
+ Ofi Transfers
+ */
+import { OfiTransfersReducer, OfiTransfersState } from './ofi-transfers';
+/*
  Ofi Reports
  */
 import { OfiReportsReducer, OfiReportsState } from './ofi-reports';
@@ -93,6 +97,13 @@ export {
     ofiSetRequestedManageOrder,
     ofiManageOrderActions,
 } from './ofi-orders';
+
+export {
+    OFI_SET_MANAGE_TRANSFER_LIST,
+    ofiClearRequestedManageTransfer,
+    ofiSetRequestedManageTransfer,
+    ofiManageTransferActions,
+} from './ofi-transfers';
 
 export {
     OFI_SET_AM_HOLDERS_LIST,
@@ -206,6 +217,7 @@ export interface OfiState {
     ofiCorpActions: OfiCorpActionsState;
     ofiProduct: OfiProductState;
     ofiOrders: OfiOrdersState;
+    ofiTransfers: OfiTransfersState;
     ofiClientTx: OfiClientTxState;
     ofiKyc: KycState;
     ofiReports: OfiReportsState;
@@ -221,6 +233,7 @@ export const OfiReducer: Reducer<OfiState> = combineReducers<OfiState>({
     ofiCorpActions: OfiCorpActionsReducer,
     ofiProduct: OfiProductReducer,
     ofiOrders: OfiOrdersReducer,
+    ofiTransfers: OfiTransfersReducer,
     ofiClientTx: OfiClientTxReducer,
     ofiKyc: KycReducer,
     ofiReports: OfiReportsReducer,

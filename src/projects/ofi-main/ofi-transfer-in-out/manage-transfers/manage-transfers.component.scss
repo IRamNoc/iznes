@@ -1,0 +1,54 @@
+.border-table {
+    margin: 1% 1% 1%;
+}
+
+.sortable {
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -o-user-select: none;
+    user-select: none;
+}
+
+.additionalInfos .row div {
+    position: relative;
+    margin-top: 2rem;
+}
+
+.additionalInfos .row div table {
+    position: absolute;
+    bottom: 0;
+    width: 90%;
+}
+
+.datagrid-host {
+    height: auto !important;
+}
+
+.fakeLink {
+    color: #007cbb;
+    cursor: pointer;
+}
+
+.nopadding {
+    padding: 0 !important;
+}
+
+.nomargin {
+    margin: 0 !important;
+}
+
+.cancel-modal-confirm-btn {
+    color: #ffffff !important;
+}
+
+.readonly-textarea {
+    display: block;
+    padding: 2px 10px;
+    background-color: #efefef;
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    line-height: 32px;
+    height: 100px;
+}
