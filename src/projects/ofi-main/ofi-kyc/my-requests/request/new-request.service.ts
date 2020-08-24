@@ -943,7 +943,7 @@ export class NewRequestService {
                 return reduce(
                     single,
                     (acc, curr) => {
-                        const val = curr.id ? curr.id : curr;
+                        const val = (typeof curr.id != 'undefined') ? curr.id : curr;
 
                         return acc ? [acc, val].join(' ') : val;
                     },

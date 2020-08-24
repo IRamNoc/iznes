@@ -527,6 +527,8 @@ export const selectControls = [
     'financialRating',
     'regulator',
     'signingAuthority',
+    'holdingPercentage',
+    'votingPercentage',
 ];
 
 export const controlOrder = [
