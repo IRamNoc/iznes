@@ -780,11 +780,11 @@ export class NewRequestService {
                 zipCode: ['', this.getLengthValidator(10)],
                 city: ['', this.getLengthValidator(255)],
                 country: ['', Validators.required],
-                countryTaxResidence: ['', Validators.required],
-                holdingPercentage: ['', Validators.required,],
+                countryTaxResidence: [0, Validators.required],
+                holdingPercentage: [0, Validators.required,],
+                votingPercentage: ['', [Validators.required,]],
                 holdingType: ['', Validators.required],
                 nationality: ['', Validators.required],
-                votingPercentage: ['', [Validators.required,]],
                 exerciseControl: [0, Validators.required],
                 document: this.createDocumentFormGroup('kycbeneficiarydoc', !this.isProduction),
             }),
@@ -943,7 +943,7 @@ export class NewRequestService {
                 return reduce(
                     single,
                     (acc, curr) => {
-                        const val = curr.id ? curr.id : curr;
+                        const val = (typeof curr.id != 'undefined') ? curr.id : curr;
 
                         return acc ? [acc, val].join(' ') : val;
                     },

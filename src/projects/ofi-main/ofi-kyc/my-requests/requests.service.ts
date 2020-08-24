@@ -80,8 +80,8 @@ export class RequestsService {
     }
 
     shapeServerData(data) {
-        return _.mapValues(data, (value: string, key) => {
-            if (!value) {
+        return _.mapValues(data, (value: any, key) => {
+            if (!value && value !== 0) {
                 return value;
             }
 
