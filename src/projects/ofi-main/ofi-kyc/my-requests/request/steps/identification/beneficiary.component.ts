@@ -47,6 +47,7 @@ export class BeneficiaryComponent implements OnInit, OnDestroy {
     countries;
     parentsFiltered;
     holdingTypeText;
+    percentTypeList;
     /** Allowed file types passed to FileDrop */
     public allowedFileTypes: string[] = ['application/pdf'];
     /** Whether KBIS or ID field is required */
@@ -67,6 +68,7 @@ export class BeneficiaryComponent implements OnInit, OnDestroy {
         this.holdingTypesList = this.translate.translate(this.newRequestService.holdingTypesList);
         this.identificationNumberTypeList = this.translate.translate(this.newRequestService.identificationNumberTypeList);
         this.countries = this.translate.translate(countries);
+        this.percentTypeList = this.translate.translate(this.newRequestService.percentTypeList);
     }
 
     ngOnInit() {

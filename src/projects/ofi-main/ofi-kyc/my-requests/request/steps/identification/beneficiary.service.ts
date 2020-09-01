@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { AbstractControl, Validators, FormControl, FormArray } from '@angular/forms';
 import { get as getValue, find, isNumber } from 'lodash';
 import { sirenValidator, siretValidator } from '@setl/utils/helper/validators';
-import { countries, relationTypesList, holdingTypesList, beneficiaryTypesList } from '../../../requests.config';
+import { countries, relationTypesList, holdingTypesList, beneficiaryTypesList, percentTypeList } from '../../../requests.config';
 import has = Reflect.has;
 
 @Injectable({
@@ -96,6 +96,8 @@ export class BeneficiaryService {
             const parentControl = stakeholder.get('common.parent');
             const relationTypeControl = stakeholder.get('common.relationType');
             const holdingTypeControl = stakeholder.get('common.holdingType');
+            const holdingPercentageControl = stakeholder.get('common.holdingPercentage');
+            const votingPercentageControl = stakeholder.get('common.votingPercentage');
 
             const nationalityValue = nationalityControl.value;
             const nationalityId = getValue(nationalityValue, '[0].id');
@@ -135,6 +137,18 @@ export class BeneficiaryService {
 
             if (holdingType) {
                 holdingTypeControl.patchValue([holdingType]);
+            }
+            const holdingPercentageValue = holdingPercentageControl.value;
+            const holdingPercentageId = getValue(holdingPercentageValue, '[0].id');
+            const holdingPercentage = find(percentTypeList, ['id', holdingPercentageId]);
+            if (holdingPercentage) {
+                holdingPercentageControl.patchValue([holdingPercentage]);
+            }
+            const votingPercentageValue = votingPercentageControl.value;
+            const votingPercentageId = getValue(votingPercentageValue, '[0].id');
+            const votingPercentage = find(percentTypeList, ['id', votingPercentageId]);
+            if (votingPercentage) {
+                votingPercentageControl.patchValue([votingPercentage]);
             }
         });
     }

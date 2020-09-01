@@ -2,6 +2,7 @@ import { Component, Input, Output, EventEmitter, HostListener, ElementRef } from
 import { get as getValue, find } from 'lodash';
 import { NewRequestService } from '../../new-request.service';
 import { countries } from '../../../requests.config';
+import { MultilingualService } from '@setl/multilingual';
 
 import { BeneficiaryService } from './beneficiary.service';
 
@@ -53,7 +54,15 @@ export class BeneficiaryLineComponent {
     }
 
     get holdingPercentage() {
-        return getValue(this.stakeholderValue, 'common.holdingPercentage');
+        if (typeof getValue(this.stakeholderValue, 'common.holdingPercentage') === 'object' ){
+            const holdingPercentageText = getValue(this.stakeholderValue, 'common.holdingPercentage[0].text');
+            if (holdingPercentageText) return holdingPercentageText;
+
+            return this.translate.translate(this.getAndSetStakeholderTextValues(this.newRequestService.percentTypeList, 'common.holdingPercentage'));
+        }
+
+        const valueID = getValue(this.stakeholderValue, 'common.holdingPercentage');
+        return this.translate.translate((this.newRequestService.percentTypeList.find(item => item.id === valueID) || {}).text);
     }
 
     get holdingType() {
@@ -71,20 +80,28 @@ export class BeneficiaryLineComponent {
     }
 
     get votingPercentage() {
-        return getValue(this.stakeholderValue, 'common.votingPercentage');
+        if (typeof getValue(this.stakeholderValue, 'common.votingPercentage') === 'object' ){
+            const votingPercentageText = getValue(this.stakeholderValue, 'common.votingPercentage[0].text');
+            if (votingPercentageText) return votingPercentageText;
+    
+            return this.translate.translate(this.getAndSetStakeholderTextValues(this.newRequestService.percentTypeList, 'common.votingPercentage'));
+        }
+        const valueID = getValue(this.stakeholderValue, 'common.votingPercentage');
+        return this.translate.translate((this.newRequestService.percentTypeList.find(item => item.id === valueID) || {}).text);
     }
 
     constructor(
         private beneficiaryService: BeneficiaryService,
         private element: ElementRef,
         private newRequestService: NewRequestService,
+        public translate: MultilingualService,
     ) {
     }
 
     getAndSetStakeholderTextValues(list, formControlPath) {
         const controlValue = getValue(this.stakeholderValue, `${formControlPath}`, '');
         const valueID = getValue(controlValue, '[0].id');
-        if (!valueID) return '';
+        if (typeof valueID == 'undefined') return '';
         controlValue[0].text = (list.find(item => item.id === valueID) || {}).text || '';
         return controlValue[0].text;
     }
