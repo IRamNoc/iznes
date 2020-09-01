@@ -28,9 +28,9 @@
         <td>{{stakeholder.parent}}</td>
         <td>{{stakeholder.countryTaxResidence}}</td>
         <td>{{stakeholder.nationality}}</td>
-        <td>{{stakeholder.holdingPercentage}}</td>
+        <td>{{percentageType(stakeholder.holdingPercentage)}}</td>
         <td>{{stakeholder.holdingType | translate}}</td>
-        <td>{{stakeholder.votingPercentage}}</td>
+        <td>{{percentageType(stakeholder.votingPercentage)}}</td>
         <td class="action">
             <button class="btn btn-sm" (click)="selectStakeholder(stakeholder)">
                 {{'View' | translate}}
