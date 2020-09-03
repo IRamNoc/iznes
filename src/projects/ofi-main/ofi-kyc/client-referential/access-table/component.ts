@@ -97,11 +97,12 @@ export class OfiFundAccessTable {
 
     checkFee(id, type) {
         const index = this.tableData.findIndex(i => i.id === Number(id));
+        const maxFee = this.getMaxFee(index, type)
 
         if (isNaN(parseFloat(this.tableData[index][type])) || !isFinite(this.tableData[index][type])) this.tableData[index][type] = 0;
         this.tableData[index][type] = Math.round((this.tableData[index][type]) * DIVIDER_NUMBER) / DIVIDER_NUMBER;
         if (this.tableData[index][type] < 0) this.tableData[index][type] = 0;
-        if (this.tableData[index][type] > this.tableData[index]['max']) this.tableData[index][type] = this.tableData[index]['max'];
+        if (this.tableData[index][type] > maxFee) this.tableData[index][type] = maxFee;
         this.updateChanges('fees');
     }
 
@@ -322,5 +323,17 @@ export class OfiFundAccessTable {
      */
     getInvestorWalletName() {
         return this.investorData['investorWalletName'];
+    }
+
+    private getMaxFee(idx: number, type: 'entry'|'exit') {
+        let maxFee;
+        if (type === 'entry') {
+            maxFee = this.tableData[idx]['maxSubscriptionFee'];
+        } else if (type === 'exit') {
+            maxFee = this.tableData[idx]['maxRedemptionFee'];
+        } else {
+            throw new Error('unknow fee type');
+        }
+        return maxFee;
     }
 }
