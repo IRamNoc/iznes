@@ -220,7 +220,7 @@ export class CreateTransferComponent implements OnInit, OnDestroy {
                             return {
                                 id: key,
                                 text:
-                                    `${this.investorShareList[key].companyName}`,
+                                    `${this.investorShareList[key].Type === "investor" ? this.investorShareList[key].companyName : this.investorShareList[key].walletName }`,
                                 walletID: this.investorShareList[key].walletID,
                             };
                         }),
