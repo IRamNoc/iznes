@@ -26,6 +26,7 @@ export interface ManageTransferDetails {
     investorLastName: any;
     investorSubportfolioID: any;
     investorWalletID: any;
+    investorWalletName: any;
     maximumNumDecimal: any;
     price: any;
     quantity: any;

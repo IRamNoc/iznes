@@ -133,7 +133,7 @@
                     {{ transfer.assetManagementCompany }}
                 </clr-dg-cell>
                 <clr-dg-cell (click)="openTransferDetails(i)">
-                    {{ transfer.investorCompany }}
+                    {{ transfer.investorCompany.length ? transfer.investorCompany : transfer.investorWalletName  }}
                 </clr-dg-cell>
                 <clr-dg-cell (click)="openTransferDetails(i)">
                     {{ transfer.investorWallet }}
