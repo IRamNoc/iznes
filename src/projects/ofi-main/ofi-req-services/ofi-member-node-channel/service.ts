@@ -125,7 +125,7 @@ export class OfiMemberNodeChannelService {
                 break;
 
             case 'iznesupdatetransfer':
-                this.logService.log(' | go the broadcast order', data);
+                this.logService.log(' | go the broadcast transfer', data);
                 this.ngRedux.dispatch(ofiManageTransferActions.ofiUpdateTransfer(data.Data));
                 break;
 
