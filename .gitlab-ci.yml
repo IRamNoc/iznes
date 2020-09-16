@@ -1,7 +1,7 @@
 stages:
 #     - lint
 #     - test
-    - build
+#    - build
     - to_iznes
 
 # lint:
@@ -42,56 +42,56 @@ stages:
 #         paths:
 #             - coverage/
 
-build:
-    image: docker:19.03.7-git
-    tags:
-        - dind
-    services:
-        - docker:18-dind
-    stage: build
-    except:
-        - tags
+# build:
+#     image: docker:19.03.7-git
+#     tags:
+#         - dind
+#     services:
+#         - docker:18-dind
+#     stage: build
+#     except:
+#         - tags
 
-    before_script:
-        - eval $(ssh-agent -s)
-        - echo "$SSH_KEY" | base64 -d | ssh-add - > /dev/null
-        - mkdir -p ~/.ssh
-        - chmod 700 ~/.ssh
-        - ssh-keyscan si-nexus01.dev.setl.io >> ~/.ssh/known_hosts
-        - chmod 644 ~/.ssh/known_hosts
-    script:
-        - export DOCKER_BUILDKIT=1
-        # pass shell into docker, for it to use.
-        - docker build --ssh default -t dreg.ad.setl.io/setl/opencsd-iznes:latest .
-        - mkdir images
-        - docker save dreg.ad.setl.io/setl/opencsd-iznes:latest > images/opencsd-iznes.tar
-    artifacts:
-        expire_in: 1 day
-        paths:
-            - images/
+#     before_script:
+#         - eval $(ssh-agent -s)
+#         - echo "$SSH_KEY" | base64 -d | ssh-add - > /dev/null
+#         - mkdir -p ~/.ssh
+#         - chmod 700 ~/.ssh
+#         - ssh-keyscan si-nexus01.dev.setl.io >> ~/.ssh/known_hosts
+#         - chmod 644 ~/.ssh/known_hosts
+#     script:
+#         - export DOCKER_BUILDKIT=1
+#         # pass shell into docker, for it to use.
+#         - docker build --ssh default -t dreg.ad.setl.io/setl/opencsd-iznes:latest .
+#         - mkdir images
+#         - docker save dreg.ad.setl.io/setl/opencsd-iznes:latest > images/opencsd-iznes.tar
+#     artifacts:
+#         expire_in: 1 day
+#         paths:
+#             - images/
 
-build-tags:
-    image: node:12
-    only:
-        - tags
-    stage: build
+# build-tags:
+#     image: node:12
+#     only:
+#         - tags
+#     stage: build
 
-    before_script:
-        - eval $(ssh-agent -s)
-        - echo "$SSH_KEY" | base64 -d | ssh-add - > /dev/null
-        - mkdir -p ~/.ssh
-        - chmod 700 ~/.ssh
-        - ssh-keyscan si-nexus01.dev.setl.io >> ~/.ssh/known_hosts
-        - ssh-keyscan si-jenkins02.dev.setl.io >> ~/.ssh/known_hosts
-        - chmod 644 ~/.ssh/known_hosts
-        - apt update && apt install -y rsync
-        - yarn global add @angular/cli@6.0.0;
+#     before_script:
+#         - eval $(ssh-agent -s)
+#         - echo "$SSH_KEY" | base64 -d | ssh-add - > /dev/null
+#         - mkdir -p ~/.ssh
+#         - chmod 700 ~/.ssh
+#         - ssh-keyscan si-nexus01.dev.setl.io >> ~/.ssh/known_hosts
+#         - ssh-keyscan si-jenkins02.dev.setl.io >> ~/.ssh/known_hosts
+#         - chmod 644 ~/.ssh/known_hosts
+#         - apt update && apt install -y rsync
+#         - yarn global add @angular/cli@6.0.0;
 
-    script:
-        - yarn install
-        - yarn run build-prod
-        - echo $CI_COMMIT_TAG > "$CI_PROJECT_DIR/dist/VERSION"
-        - rsync -av "$CI_PROJECT_DIR/dist/" "jenkins@si-jenkins02.dev.setl.io:/var/lib/jenkins/build/opencsd-iznes/$CI_COMMIT_TAG/"
+#     script:
+#         - yarn install
+#         - yarn run build-prod
+#         - echo $CI_COMMIT_TAG > "$CI_PROJECT_DIR/dist/VERSION"
+#         - rsync -av "$CI_PROJECT_DIR/dist/" "jenkins@si-jenkins02.dev.setl.io:/var/lib/jenkins/build/opencsd-iznes/$CI_COMMIT_TAG/"
 
 to_iznes:
     stage: to_iznes
@@ -99,7 +99,8 @@ to_iznes:
         - master
     image: node:10-jessie
     script:
-        - git remote show iznes && echo ok || git remote add iznes "https://okettsetl:$IZNES_ACCESS_TOKEN@gitlab.com/iznes/frontend.git"
+        - git remote show iznes && git remote rm iznes || echo ok
+        - git remote add iznes "https://okettsetl:$IZNES_ACCESS_TOKEN@gitlab.com/iznes/frontend.git"
         - git branch
         - git checkout master
         - git push -u iznes master --force
