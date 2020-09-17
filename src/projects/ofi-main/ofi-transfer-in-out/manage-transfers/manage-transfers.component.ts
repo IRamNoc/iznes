@@ -149,6 +149,7 @@ export class ManageTransfersComponent implements OnInit, OnDestroy {
             const assetManagementCompany = transfer.assetManagementCompanyName;
             const investorCompany = transfer.investorCompanyName;
             const investorWallet = transfer.accountLabel;
+            const investorWalletName = transfer.investorWalletName;
             const shareISIN = transfer.fundShareISIN;
             const shareName = transfer.fundShareName;
             const currency = this.currencyList[transfer.currency]['text'] || 'EUR';
@@ -169,6 +170,7 @@ export class ManageTransfersComponent implements OnInit, OnDestroy {
                 assetManagementCompany,
                 investorCompany,
                 investorWallet,
+                investorWalletName,
                 shareISIN,
                 shareName,
                 currency,

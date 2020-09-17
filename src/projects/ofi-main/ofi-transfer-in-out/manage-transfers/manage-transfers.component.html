@@ -133,7 +133,7 @@
                     {{ transfer.assetManagementCompany }}
                 </clr-dg-cell>
                 <clr-dg-cell (click)="openTransferDetails(i)">
-                    {{ transfer.investorCompany }}
+                    {{ transfer.investorCompany != null ? transfer.investorCompany : transfer.investorWalletName }}
                 </clr-dg-cell>
                 <clr-dg-cell (click)="openTransferDetails(i)">
                     {{ transfer.investorWallet }}
@@ -288,7 +288,7 @@
                 <div class="col-md-12">
                     <label class="clr-col-12 clr-col-md-12" for="investorCompany">{{ 'Investor' | translate }}</label>
                     <input id="investorWalletReference" class="form-control" type="text"
-                        value="{{ detailModal.investorCompany }}" disabled>
+                        value="{{ detailModal.investorCompany != null ? detailModal.investorCompany : detailModal.investorWalletName }}" disabled>
                 </div>
 
                 <div class="col-md-12">

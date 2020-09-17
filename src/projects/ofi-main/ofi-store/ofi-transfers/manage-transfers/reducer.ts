@@ -138,6 +138,7 @@ function formatManageTransferDataResponse(rawData: any[]): ManageTransferDetails
                 investorLastName: item.get('investorLastName'),
                 investorSubportfolioID: item.get('investorSubportfolioID'),
                 investorWalletID: item.get('investorWalletID'),
+                investorWalletName: item.get('investorWalletName'),
                 maximumNumDecimal: item.get('maximumNumDecimal'),
                 price: item.get('price'),
                 quantity: item.get('quantity'),
