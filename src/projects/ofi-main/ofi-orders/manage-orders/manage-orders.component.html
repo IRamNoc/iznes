@@ -469,10 +469,10 @@
                             <span *ngIf="order.orderStatus == 3" class="label label-info">{{ 'Waiting Settlement' | translate }}
                             </span>
 
-                            <span *ngIf="order.orderUnpaid" class="label label-error">{{ 'Unpaid' | translate }}
+                            <span *ngIf="order.orderStatus == 4 && order.orderUnpaid" class="label label-error">{{ 'Unpaid' | translate }}
                             </span>
 
-                            <span *ngIf="!order.orderUnpaid" class="label label-info">{{ 'Waiting Settlement' | translate }}
+                            <span *ngIf="order.orderStatus == 4 && !order.orderUnpaid" class="label label-info">{{ 'Waiting Settlement' | translate }}
                             </span>
 
                             <span *ngIf="order.orderStatus == -1" class="label label-success">{{ 'Settled' | translate }}
