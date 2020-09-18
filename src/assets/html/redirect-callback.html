@@ -1,5 +1,6 @@
 <!-- callback.html -->
-<script src="../js/okta-auth-js.min.js"></script>
+<script src="https://global.oktacdn.com/okta-auth-js/4.0.0/okta-auth-js.min.js" type="text/javascript"></script>
+
 <script>
   // OIDC variables
   const baseURL = location.origin;
@@ -8,10 +9,10 @@
   let issuer, clientId = '';
 
   if (baseURL.includes('api.iznes.io') === true) {
-    issuer = ' https://engieapppreview.oktapreview.com/oauth2/default';
+    issuer = 'https://engieapppreview.oktapreview.com';
     clientId = '0oah49n1tfxhVKmvh0x6';
   } else if (baseURL.includes('app.iznes.io') === true) {
-    issuer = 'https://engie.okta-emea.com/oauth2/default';
+    issuer = 'https://engie.okta-emea.com';
     clientId = '0oa470nf1sD04JCqg0i7';
   } else if (baseURL.includes('testing.iznes.io') === true) {
     issuer = 'https://dev-698165.okta.com/oauth2/default';
