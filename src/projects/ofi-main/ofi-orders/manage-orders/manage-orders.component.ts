@@ -528,7 +528,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     orderUnpaid(order: { settlementDate: string, orderStatus: number }): boolean {
-        return moment(order.settlementDate).add(1, 'days').format('Y-M-D') <= moment().format('Y-M-D') && +order.orderStatus === 4;
+        return moment(order.settlementDate).add(1, 'days').format('Y-MM-DD') <= moment().format('Y-MM-DD') && +order.orderStatus === 4;
     }
 
     getAmOrdersListFromRedux(list, listOrder: number[]) {
