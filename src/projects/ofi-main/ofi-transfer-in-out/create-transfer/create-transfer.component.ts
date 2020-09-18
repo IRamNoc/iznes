@@ -220,11 +220,11 @@ export class CreateTransferComponent implements OnInit, OnDestroy {
                             return {
                                 id: key,
                                 text:
-                                    `${this.investorShareList[key].companyName}`,
-                                accountID: this.investorShareList[key].accountID,
+                                    `${this.investorShareList[key].Type === "investor" ? this.investorShareList[key].companyName : this.investorShareList[key].walletName }`,
+                                walletID: this.investorShareList[key].walletID,
                             };
                         }),
-                        'accountID');
+                        'walletID');
                 }
             },
             (error) => {
@@ -239,7 +239,7 @@ export class CreateTransferComponent implements OnInit, OnDestroy {
         this.walletSelected = {};
         this.investorSelected = this.investorShareList[event.id];
         this.walletListItems = Object.keys(this.investorShareList).map((key) => {
-            if (this.investorShareList[key].accountID === this.investorSelected['accountID']) {
+            if (this.investorShareList[key].walletID === this.investorSelected['walletID']) {
                 return {
                     id: key,
                     text: this.investorShareList[key].accountLabel,
