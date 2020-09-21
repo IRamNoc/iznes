@@ -212,13 +212,14 @@ export class BeneficiaryComponent implements OnInit, OnDestroy {
         const beneficiaryType = this.form.get('beneficiaryType').value;
         const isNaturalPerson = beneficiaryType === 'naturalPerson';
         const isPoliticallyExposed = !!this.form.get('naturalPerson.isPoliticallyExposed').value;
-        if ((isPoliticallyExposed && isNaturalPerson) || this.globalHasPEP) {
-            required = true;
-            // this.form.get('common.document').markAsTouched();
-        }
 
         if (this.kycHelper.isStateOwnedAnyPercentCapital() || this.kycHelper.isCompanyRegulated() || this.kycHelper.isCompanyListed()) {
             required = false;
+        }
+
+        if ((isPoliticallyExposed && isNaturalPerson) || this.globalHasPEP) {
+            required = true;
+            // this.form.get('common.document').markAsTouched();
         }
 
         this.toggleKbisAndIdRequired(required);
