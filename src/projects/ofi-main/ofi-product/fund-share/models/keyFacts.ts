@@ -48,7 +48,7 @@ export class ShareKeyFactsMandatory extends DynamicFormsValidator {
     };
     iban: FormItem = {
         type: FormItemType.text,
-        label: 'IBAN',
+        label: 'Fund\'s IBAN dedicated to IZNES',
         required: true,
         validator: Validators.compose([
             validateIBAN,
