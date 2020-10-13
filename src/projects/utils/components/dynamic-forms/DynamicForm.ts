@@ -8,6 +8,7 @@ export interface FormItem {
     control?: FormControl;
     label: string;
     mltag?: string;
+    placeholder?: string;
     preset?: string | number | boolean;
     style?: FormItemStyle[];
     type: FormItemType;
