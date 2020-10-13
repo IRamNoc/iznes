@@ -718,11 +718,12 @@
                                             </div>
 
                                             <div class="form-group col-sm-6">
-                                                <label class="control-label" for="tradingAccount">{{ 'Trading Account' | translate }}</label>
+                                                <label class="control-label" for="tradingAccount">{{ 'Fund\'s securities account dedicated to IZNES at the aggregator' | translate }}</label>
                                                 <input type="text"
                                                         name="tradingAccount"
                                                         id="tradingAccount"
                                                         formControlName="tradingAccount"
+                                                        [placeholder]="translate.translate('Mandatory in case of S/R on the fund')"
                                                         [disabled]="isAdmin()">
                                                 <span *ngIf="fundForm.controls['tradingAccount'].touched && fundForm.controls['tradingAccount'].hasError('pattern')"
                                                     class="field-error">{{ 'Incorrect Account' | translate }}</span>
