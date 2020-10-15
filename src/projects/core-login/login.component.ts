@@ -329,7 +329,7 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit, Log
         this.ngRedux.dispatch(loginRequestAction);
 
         const asyncTaskPipe = this.myUserService.loginSSORequest({
-            emailAddress: oktaInfos.email,
+            emailAddress: oktaInfos.preferred_username,
             accessToken: oktaInfos.sub,
         })
         
