@@ -23,7 +23,6 @@ import { FileDropComponent } from '@setl/core-filedrop';
 @Component({
     selector: 'ofi-sub-portfolio',
     styleUrls: ['./component.scss'],
-    providers: [OfiSubPortfolioService],
     templateUrl: './component.html',
 })
 
@@ -51,6 +50,7 @@ export class OfiSubPortfolioComponent implements OnDestroy {
 
     @select(['user', 'siteSettings', 'language']) languageOb;
     @select(['user', 'connected', 'connectedWallet']) connectedWalletOb;
+    @select(['user', 'authentication', 'allowCBDC']) allowCBDC$;
     @select(['ofi', 'ofiCurrencies', 'currencies']) currencyList$;
 
     constructor(
@@ -148,6 +148,7 @@ export class OfiSubPortfolioComponent implements OnDestroy {
                 bic: new FormControl('', [Validators.required, CustomValidators.bicValidator]),
                 securityAccount: new FormControl('', [Validators.required, Validators.maxLength(16)]),
                 cashAccount: new FormControl('', [Validators.maxLength(16)]),
+                useCBDC: new FormControl(''),
                 notes: new FormControl('', [Validators.maxLength(500)]),
                 bankIdentificationStatement,
             },

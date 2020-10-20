@@ -147,6 +147,7 @@
                                 </ng-select>
                             </div>
                             <span *ngIf="address.hasError('required') && address.touched" class="field-error">{{ 'Field is required' | translate }}</span>
+                            <span *ngIf="useCBDC" class="text-success">{{ 'Set to use Central Bank Digital Currency (CBDC)' | translate }}</span>
                         </div>
                     </div>
                 </div>
