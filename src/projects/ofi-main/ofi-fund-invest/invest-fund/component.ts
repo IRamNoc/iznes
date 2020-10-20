@@ -221,7 +221,7 @@ export class InvestFundComponent implements OnInit, OnDestroy {
 
     valuationNav: ValuationNav;
 
-    // Whether selected portfolio is set to use is
+    // Whether selected portfolio is set to use CBDC
     useCBDC: boolean;
 
     /**
