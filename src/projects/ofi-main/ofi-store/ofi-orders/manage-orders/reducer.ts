@@ -249,6 +249,7 @@ function formatManageOrderDataResponse(rawData: any[]): ManageOrderDetails[] {
                 totalResult: item.get('totalResult'),
                 valuationDate: item.get('valuationDate'),
                 paymentMsgStatus: item.get('paymentMsgStatus'),
+                useCBDC: item.get('useCBDC'),
             };
 
             if (order.price > 0) {

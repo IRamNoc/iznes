@@ -28,9 +28,9 @@
                                 <!-- Asset management company -->
                                 <label for="assetManagementCompany">{{ 'Asset Management Company' | translate }}</label>
 
-                                <input id="assetManagementCompany" 
+                                <input id="assetManagementCompany"
                                         class="form-control"
-                                        type="text" 
+                                        type="text"
                                         formControlName="assetManagementCompany">
                             </div>
 
@@ -40,11 +40,11 @@
 
                                 <div class="form-control">
                                     <div class="form-group col-sm-6">
-                                        <ng-select id="investmentPortfolio" 
-                                                    [placeholder]="translate.translate('Select an investment portfolio')" 
-                                                    [items]="investmentPortfolioItems" 
-                                                    [allowClear]="true" 
-                                                    [formControl]="placeOrdersFormGroup.controls['investmentPortfolio']" 
+                                        <ng-select id="investmentPortfolio"
+                                                    [placeholder]="translate.translate('Select an investment portfolio')"
+                                                    [items]="investmentPortfolioItems"
+                                                    [allowClear]="true"
+                                                    [formControl]="placeOrdersFormGroup.controls['investmentPortfolio']"
                                                     (selected)="handleDropdownItemSelect($event)">
                                         </ng-select>
                                     </div>
@@ -70,18 +70,18 @@
                                     <!-- One-off charges -->
                                     <div class="col-sm-6">
                                         <label for="oneOffCharges">{{ 'One-off Charges' | translate }}</label>
-                                        <input id="oneOffCharges" 
-                                                class="form-control" 
-                                                type="number" 
+                                        <input id="oneOffCharges"
+                                                class="form-control"
+                                                type="number"
                                                 formControlName="oneOffCharges">
                                     </div>
 
                                     <!-- On-going charges -->
                                     <div class="col-sm-6">
                                         <label for="onGoingCharges">{{ 'On-going Charges' | translate }}</label>
-                                        <input id="onGoingCharges" 
-                                                class="form-control" 
-                                                type="number" 
+                                        <input id="onGoingCharges"
+                                                class="form-control"
+                                                type="number"
                                                 formControlName="onGoingCharges">
                                     </div>
 
@@ -89,9 +89,9 @@
                                     <div class="col-sm-6">
                                         <label for="costsTransactionsInitiated">{{ 'Costs related to transactions initiated' | translate }}</label>
 
-                                        <input id="costsTransactionsInitiated" 
-                                                class="form-control" 
-                                                type="number" 
+                                        <input id="costsTransactionsInitiated"
+                                                class="form-control"
+                                                type="number"
                                                 formControlName="costsTransactionsInitiated">
                                     </div>
 
@@ -99,18 +99,18 @@
                                     <div class="col-sm-6">
                                         <label for="chargesAnciliaryServices">{{ 'Charges related to anciliary services' | translate }}</label>
 
-                                        <input id="chargesAnciliaryServices" 
-                                                class="form-control" 
-                                                type="number" 
+                                        <input id="chargesAnciliaryServices"
+                                                class="form-control"
+                                                type="number"
                                                 formControlName="chargesAnciliaryServices">
                                     </div>
 
                                     <!-- Incidental costs -->
                                     <div class="col-sm-6">
                                         <label for="incidentalCosts">{{ 'Incidental Costs' | translate }}</label>
-                                        <input id="incidentalCosts" 
-                                                class="form-control" 
-                                                type="number" 
+                                        <input id="incidentalCosts"
+                                                class="form-control"
+                                                type="number"
                                                 formControlName="incidentalCosts">
                                     </div>
                                 </div>
@@ -177,11 +177,11 @@
 
                                 <div class="input-group date-pick-wrapper">
                                     <span class="fa fa-calendar" aria-hidden="true"></span>
-                                    <input id="navDate" 
-                                            [placeholder]="translate.translate('Choose a date')" 
-                                            formControlName="navDate" 
-                                            [dpDayPicker]="datePickerConfig" 
-                                            mode="day" 
+                                    <input id="navDate"
+                                            [placeholder]="translate.translate('Choose a date')"
+                                            formControlName="navDate"
+                                            [dpDayPicker]="datePickerConfig"
+                                            mode="day"
                                             theme="dp-material">
                                 </div>
                             </div>
@@ -211,11 +211,11 @@
 
                                 <div class="input-group date-pick-wrapper">
                                     <span class="fa fa-calendar" aria-hidden="true"></span>
-                                    <input id="orderDate" 
-                                            [placeholder]="translate.translate('Choose a date')" 
-                                            formControlName="orderDate" 
-                                            [dpDayPicker]="datePickerConfig" 
-                                            mode="day" 
+                                    <input id="orderDate"
+                                            [placeholder]="translate.translate('Choose a date')"
+                                            formControlName="orderDate"
+                                            [dpDayPicker]="datePickerConfig"
+                                            mode="day"
                                             theme="dp-material">
                                 </div>
                             </div>
@@ -226,11 +226,11 @@
 
                                 <div class="input-group date-pick-wrapper">
                                     <span class="fa fa-calendar" aria-hidden="true"></span>
-                                    <input id="cutOffDate" 
-                                            [placeholder]="translate.translate('Choose a date')" 
-                                            formControlName="cutOffDate" 
-                                            [dpDayPicker]="datePickerConfig" 
-                                            mode="day" 
+                                    <input id="cutOffDate"
+                                            [placeholder]="translate.translate('Choose a date')"
+                                            formControlName="cutOffDate"
+                                            [dpDayPicker]="datePickerConfig"
+                                            mode="day"
                                             theme="dp-material">
                                 </div>
                             </div>
@@ -241,10 +241,10 @@
 
                                 <div class="input-group date-pick-wrapper">
                                     <span class="fa fa-calendar" aria-hidden="true"></span>
-                                    <input id="dateInfoNavDate" 
-                                            [placeholder]="translate.translate('Choose a date')" formControlName="dateInfoNavDate" 
-                                            [dpDayPicker]="datePickerConfig" 
-                                            mode="day" 
+                                    <input id="dateInfoNavDate"
+                                            [placeholder]="translate.translate('Choose a date')" formControlName="dateInfoNavDate"
+                                            [dpDayPicker]="datePickerConfig"
+                                            mode="day"
                                             theme="dp-material">
                                 </div>
                             </div>
@@ -255,10 +255,10 @@
 
                                 <div class="input-group date-pick-wrapper">
                                     <span class="fa fa-calendar" aria-hidden="true"></span>
-                                    <input id="settlementDate" 
-                                            [placeholder]="translate.translate('Choose a date')" formControlName="settlementDate" 
-                                            [dpDayPicker]="datePickerConfig" 
-                                            mode="day" 
+                                    <input id="settlementDate"
+                                            [placeholder]="translate.translate('Choose a date')" formControlName="settlementDate"
+                                            [dpDayPicker]="datePickerConfig"
+                                            mode="day"
                                             theme="dp-material">
                                 </div>
                             </div>
@@ -279,18 +279,18 @@
                             <!-- Order Reference -->
                             <div class="col-sm-6">
                                 <label for="orderReference">{{ 'Order Reference' | translate }}</label>
-                                <input id="orderReference" 
-                                        class="form-control" 
-                                        type="text" 
+                                <input id="orderReference"
+                                        class="form-control"
+                                        type="text"
                                         formControlName="orderReference">
                             </div>
 
                             <!-- Order Type -->
                             <div class="col-sm-6">
                                 <label for="orderType">{{ 'Order Type' | translate }}</label>
-                                <input id="orderType" 
-                                        class="form-control" 
-                                        type="text" 
+                                <input id="orderType"
+                                        class="form-control"
+                                        type="text"
                                         formControlName="orderType">
                             </div>
 
@@ -299,26 +299,26 @@
                             <!-- Quantity -->
                             <div class="col-sm-6">
                                 <label for="quantity">{{ 'Quantity' | translate }}</label>
-                                <input id="quantity" 
-                                        class="form-control" 
-                                        type="number" 
+                                <input id="quantity"
+                                        class="form-control"
+                                        type="number"
                                         formControlName="quantity">
                             </div>
 
                             <!-- Amount -->
                             <div class="col-sm-6">
                                 <label for="amount">{{ 'Amount' | translate }}</label>
-                                <input id="amount" 
-                                        class="form-control" 
-                                        type="number" 
+                                <input id="amount"
+                                        class="form-control"
+                                        type="number"
                                         formControlName="amount">
                             </div>
 
                             <!-- Comment -->
                             <div class="col-sm-12">
                                 <label for="comment">{{ 'Comment' | translate }}</label>
-                                <textarea id="comment" 
-                                            class="form-control" 
+                                <textarea id="comment"
+                                            class="form-control"
                                             [placeholder]="translate.translate('Please feel free to type any comment here')" formControlName="comment">
                                 </textarea>
                             </div>
@@ -328,10 +328,10 @@
                     <!-- Checkbox -->
                     <div class="form-group col-sm-12">
                         <div class="form-check">
-                            <input id="checkbox" 
-                                    class="form-check-input" 
-                                    type="checkbox" 
-                                    formControlName="isDisclaimerChecked" 
+                            <input id="checkbox"
+                                    class="form-check-input"
+                                    type="checkbox"
+                                    formControlName="isDisclaimerChecked"
                                     value="false">
 
                             <label class="form-check-label" for="checkbox">{{ 'I confirm that I have read and understood the latest version of the Key Investor Information Document (KIID) for the fund share I am considering investing in.' | translate }}</label>
@@ -344,9 +344,9 @@
                     <div class="form-group col-sm-12">
                         <button id="cancelButton" type="button" class="btn btn-light" (click)="handleCancelButtonClick()">{{ 'Cancel' | translate }}</button>
 
-                        <button id="saveButton" 
-                                type="submit" 
-                                class="btn btn-primary" 
+                        <button id="saveButton"
+                                type="submit"
+                                class="btn btn-primary"
                                 [disabled]="!placeOrdersFormGroup.controls['isDisclaimerChecked'].value">
                                 {{ 'Save' | translate }}</button>
                     </div>

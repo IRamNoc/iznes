@@ -53,6 +53,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { FileDownloader } from '@setl/utils/services/file-downloader/service';
 import { OfiNavService } from '../../ofi-req-services/ofi-product/nav/service';
 import { validateKiid } from '../../ofi-store/ofi-fund-invest/ofi-fund-access-my';
+import { OfiSubPortfolioService } from '../../ofi-sub-portfolio/sub-portfolio/service';
 
 interface DateChangeEvent {
     type: string;
@@ -96,6 +97,7 @@ export class InvestFundComponent implements OnInit, OnDestroy {
     @select(['wallet', 'myWalletAddress', 'requestedAddressList']) requestedAddressListOb;
     @select(['wallet', 'myWalletAddress', 'requestedLabel']) requestedLabelListOb;
     @select(['user', 'connected', 'connectedWallet']) connectedWalletOb;
+    @select(['ofi', 'ofiSubPortfolio', 'bankingDetails']) subportfolioDetails$;
 
     toastTimer;
     timerToast: Toast;
@@ -218,6 +220,9 @@ export class InvestFundComponent implements OnInit, OnDestroy {
     orderDatesChange$ = new Subject<DateChangeEvent>();
 
     valuationNav: ValuationNav;
+
+    // Whether selected portfolio is set to use CBDC
+    useCBDC: boolean;
 
     /**
      * This function pads floats as string with zeros
@@ -520,6 +525,7 @@ export class InvestFundComponent implements OnInit, OnDestroy {
         private shareService: OfiFundShareService,
         private ofiNavService: OfiNavService,
         private remoteLoggerService: RemoteLoggerService,
+        private ofiSubPortfolioService: OfiSubPortfolioService, // instantiate to ensure we have subportfolio banking details data
     ) {
         this.fundClassifications = fundClassifications;
     }
@@ -885,8 +891,10 @@ export class InvestFundComponent implements OnInit, OnDestroy {
         }
     }
 
-    handleSelectedAddress(value) {
+    async handleSelectedAddress(value) {
         this.addressSelected = value;
+        const subportfolioDetails = await this.subportfolioDetails$.pipe(take(1)).toPromise();
+        this.useCBDC = _.get(subportfolioDetails, [value.id, 'useCBDC'], false);
     }
 
     handleClose() {
