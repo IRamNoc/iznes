@@ -240,6 +240,7 @@ function formatManageOrderDataResponse(rawData: any[]): ManageOrderDetails[] {
                 orderStatus: item.get('orderStatus'),
                 orderType: item.get('orderType'),
                 isTransfer: item.get('isTransfer'),
+                reference: item.get('reference'),
                 sellBuyLinkOrderID: item.get('sellBuyLinkOrderID'),
                 platFormFee: item.get('platFormFee'),
                 classificationFee: item.get('classificationFee'),
