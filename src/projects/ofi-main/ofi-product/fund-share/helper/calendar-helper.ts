@@ -532,19 +532,19 @@ export class CalendarHelper {
 
     isLastCalenderDayOfTheMonth(dateToCheck) {
         const dateToCheckCopy = dateToCheck.clone();
-        const lastDayOfTheMonth = dateToCheckCopy.add('months', 1).date(0);
+        const lastDayOfTheMonth = dateToCheckCopy.clonse().add('months', 1).date(0);
         return Boolean(lastDayOfTheMonth.get('date') === dateToCheckCopy.get('date'));
     }
 
     isLastBusinessDayOfTheMonth(dateToCheck) {
         const dateToCheckCopy = dateToCheck.clone();
-        const firstDayOfNextMonth = dateToCheckCopy.add('months', 1).date(1);
+        const firstDayOfNextMonth = dateToCheckCopy.clone().add('months', 1).date(1);
         const lastBusinessDayOfTheMonth = firstDayOfNextMonth.prevBusinessDay();
         return Boolean(lastBusinessDayOfTheMonth.get('date') === dateToCheckCopy.get('date'));
     }
 
     isLastWeekOfTheMonth(dateToCheck) {
-        const currentWeekIndex = this.getWeekIndexOfTheMonth(dateToCheck);
+        const currentWeekIndex = this.getWeekIndexOfTheMonth(dateToCheck.clone());
         return Number(currentWeekIndex) === 4;
     }
 

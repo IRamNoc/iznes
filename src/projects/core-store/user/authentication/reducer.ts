@@ -26,6 +26,7 @@ export const AuthenticationReducer = function (state: AuthenticationState = init
         if (mustChangePassword === 0 || mustChangePassword === 1) {
             mustChangePassword = (mustChangePassword === 1);
         }
+        const allowCBDC = _.get(loginedData, 'allowCBDC', false) === '1';
 
         const isLogin = token !== 'twoFactorRequired';
 
@@ -33,6 +34,7 @@ export const AuthenticationReducer = function (state: AuthenticationState = init
             token,
             apiKey,
             useTwoFactor,
+            allowCBDC,
             isLogin,
             defaultHomePage,
             mustChangePassword,

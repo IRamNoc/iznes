@@ -14,7 +14,9 @@ import { OfiSubPortfolioReqService } from '@ofi/ofi-main/ofi-req-services/ofi-su
 import { FileService } from '@setl/core-req-services/file/file.service';
 import { WalletNodeRequestService, MyWalletsService, InitialisationService } from '@setl/core-req-services';
 
-@Injectable()
+@Injectable({
+    providedIn: 'root',
+})
 export class OfiSubPortfolioService {
 
     private subscriptions: Array<Subscription> = [];
@@ -156,6 +158,7 @@ export class OfiSubPortfolioService {
             accountCurrency: _.get(values.accountCurrency, [0, 'id'], values.accountCurrency),
             ownerCountry: _.get(values.ownerCountry, [0, 'id'], values.ownerCountry),
             bankIdentificationStatement: JSON.stringify(bankIdentificationStatement),
+            useCBDC: values.useCBDC ? 1 : 0,
         };
     }
 

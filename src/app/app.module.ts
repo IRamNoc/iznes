@@ -78,6 +78,7 @@ import { AppState } from './store/app.reducer';
  * Environment
  */
 import { environment } from '../environments/environment';
+import { OfiSubPortfolioService } from '@setl/ofi-main/ofi-sub-portfolio/sub-portfolio/service';
 
 /**
  * Membersocket service factory
@@ -134,7 +135,7 @@ export function memberSocketServiceFactory() {
     providers: [
         { provide: ErrorHandler, useClass: GlobalErrorHandler },
         { provide: LocationStrategy, useClass: HashLocationStrategy },
-        
+
         {
             provide: MemberSocketService,
             useFactory: memberSocketServiceFactory,
@@ -165,6 +166,7 @@ export function memberSocketServiceFactory() {
         LoginGuardService,
         LogService,
         RemoteLoggerService,
+        OfiSubPortfolioService,
     ],
     bootstrap: [AppComponent],
 })
