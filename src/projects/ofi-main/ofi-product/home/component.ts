@@ -1,5 +1,5 @@
 // Vendor
-import { ChangeDetectorRef, Component, Inject, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, Inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
 
 import { fromJS } from 'immutable';
 
@@ -12,7 +12,7 @@ import { PermissionsService } from '@setl/utils/services/permissions';
 /* Alert service. */
 import { AlertsService } from '@setl/jaspero-ng2-alerts';
 /* Utils. */
-import { NumberConverterService, ConfirmationService } from '@setl/utils';
+import { NumberConverterService, ConfirmationService, FileDownloader } from '@setl/utils';
 import { OfiFundService } from '@ofi/ofi-main/ofi-req-services/ofi-product/fund/fund.service';
 import { OfiFundShareService } from '@ofi/ofi-main/ofi-req-services/ofi-product/fund-share/service';
 import * as FundShareModels from '@ofi/ofi-main/ofi-product/fund-share/models';
@@ -33,6 +33,7 @@ const AM_USERTYPE = 36;
     templateUrl: './component.html',
 })
 
+
 export class ProductHomeComponent implements OnInit, OnDestroy {
     /* Public properties. */
     amManagementCompany = '';
@@ -43,6 +44,9 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
     managementCompanyAccessList = [];
     draftList = [];
     showOnlyActive = true;
+    showFileUploadModal = false;
+    hasResult = true;
+    productUpdateCsvFile = null;
 
     fundCurrencyItems = [];
     countryItems = [];
@@ -54,6 +58,9 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
     hasPermissionInsertUmbrellaFund: boolean = false;
     hasPermissionInsertFund: boolean = false;
     hasPermissionInsertFundShare: boolean = false;
+
+    @ViewChild('globalproductUpdateCsvFile')
+    globalproductUpdateCsvFile: any;
 
     /* Private properties. */
     subscriptions: Array<Subscription> = [];
@@ -86,6 +93,7 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
                 private alertsService: AlertsService,
                 private route: ActivatedRoute,
                 private router: Router,
+                private alertService: AlertsService,
                 private numberConverterService: NumberConverterService,
                 private ofiFundService: OfiFundService,
                 private ofiFundShareService: OfiFundShareService,
@@ -940,5 +948,84 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
                   </tbody>
               </table>
           `);
+    }
+
+    resetProductsUploadModal() {
+        this.globalproductUpdateCsvFile.nativeElement.value = '';
+        this.productUpdateCsvFile = null;
+        this.showFileUploadModal = false;
+        this.hasResult = true;
+
+        this.changeDetectorRef.markForCheck();
+    }
+
+    handleProductsUploadSubmitClick() {
+        if (this.productUpdateCsvFile) {
+            const reader = new FileReader();
+            reader.readAsText(this.productUpdateCsvFile);
+
+            reader.onload = () => {
+                const payload = {
+                    productsData: JSON.stringify(reader.result),
+                };
+
+                this.ofiFundService.uploadProductsFile(
+                    'global',
+                    payload,
+                    this.ngRedux,
+                    res => this.handleUploadProductFailSuccess(res),
+                    err => this.handleUploadProductFail(err),
+                );
+
+                this.hasResult = false;
+            };
+        }
+    }
+
+    handleUploadProductFailSuccess(res) {
+        this.resetProductsUploadModal();
+
+        if (res) {
+            const successMessage = res[1].Data[0].Message;
+
+            this.alertService.create(
+                'success',
+                `
+                <table class="table grid">
+                    <tbody>
+                        <tr>
+                            <td class="text-center text-success">${this.translate.translate(successMessage)}</td>
+                        </tr>
+                    </tbody>
+                </table>`,
+                {},
+                this.translate.translate('Products updates Upload - Success'),
+            );
+        }
+    }
+
+    handleUploadProductFail(err) {
+        this.resetProductsUploadModal();
+
+        if (err) {
+            const errorMessage = err[1].Data[0].Message;
+
+            this.alertService.create(
+                'error',
+                `
+                <table class="table grid">
+                    <tbody>
+                        <tr>
+                            <td class="text-center text-danger">${this.translate.translate('Products updates upload has failed for the following reason:')}</td>
+                        </tr>
+                        <tr>
+                            <td class="text-center text-danger">${this.translate.translate(errorMessage)}</td>
+                        </tr>
+                    </tbody>
+                </table>`,
+                {},
+                this.translate.translate('Products updates Upload - Error'),
+            );
+        }
     }
 }
