@@ -257,9 +257,11 @@ export class OfiFundService {
      */
     uploadProductsFile(mode = GLOBAL_UPLOAD_MODE, requestData: UploadProductsFileRequestData, ngRedux: NgRedux<any>, successCallback: (res) => void, errorCallback: (err) => void) {
         let messageBody: UploadProductsFileMessageBody = {
-            RequestName: (mode === DETAIL_UPLOAD_MODE) ? 'iznuploadproductsconfigfunds' : 'iznuploadglobalnavshares',
+            RequestName: (mode === DETAIL_UPLOAD_MODE) ? 'iznuploadproductsconfigfunds' : 'iznuploadproductsconfigfunds',
             token: this.memberSocketService.token,
             productsData: requestData.productsData,
+            filename: requestData.filename,
+            managementCompanyID: requestData.managementCompanyID,
         };
 
         if (mode === DETAIL_UPLOAD_MODE) {
