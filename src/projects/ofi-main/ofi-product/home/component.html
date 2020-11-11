@@ -9,7 +9,7 @@
             <button *ngIf="isAssetManager()"
             id="test"
             class="btn btn-primary action-button"
-            [disabled]="false"
+            [disabled]="!hasPermissionUpdateUmbrellaFund || !hasPermissionUpdateFund || !hasPermissionUpdateFundShare"
             (click)="showFileUploadModal = true">{{ 'Import product updates' | translate }}
             </button>
         </div>

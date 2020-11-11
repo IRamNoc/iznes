@@ -59,6 +59,10 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
     hasPermissionInsertFund: boolean = false;
     hasPermissionInsertFundShare: boolean = false;
 
+    hasPermissionUpdateUmbrellaFund: boolean = false;
+    hasPermissionUpdateFund: boolean = false;
+    hasPermissionUpdateFundShare: boolean = false;
+
     @ViewChild('globalproductUpdateCsvFile')
     globalproductUpdateCsvFile: any;
 
@@ -114,6 +118,10 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
         this.hasPermissionInsertUmbrellaFund = await this.permissionsService.hasPermission('manageUmbrellaFund', 'canInsert');
         this.hasPermissionInsertFund = await this.permissionsService.hasPermission('manageFund', 'canInsert');
         this.hasPermissionInsertFundShare = await this.permissionsService.hasPermission('manageFundShare', 'canInsert');
+
+        this.hasPermissionUpdateUmbrellaFund = await this.permissionsService.hasPermission('manageUmbrellaFund', 'canUpdate');
+        this.hasPermissionUpdateFund = await this.permissionsService.hasPermission('manageFund', 'canUpdate');
+        this.hasPermissionUpdateFundShare = await this.permissionsService.hasPermission('manageFundShare', 'canUpdate');
         this.changeDetectorRef.detectChanges();
 
         this.initColumns();
