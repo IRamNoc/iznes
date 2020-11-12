@@ -1,3 +1,47 @@
-<p>
-  product-setup works!
-</p>
+<div class="header-breadcrumbs">
+	<h1><i class="fa fa-building"></i>{{ amManagementCompany }}</h1>
+	<span class="p2">{{ 'BIC Code' | translate }}: {{ amManagementCompanyBic }}</span>
+
+	<div class="well" *ngFor="let panel of panelDefs">
+		<!-- Panel header -->
+		<div class="row panel-header">
+			<div class="col-xs-6">
+				<a href="#" (click)="panel.open = !panel.open; $event.preventDefault();">
+					<i class="fa fa-chevron-right" [class.rotate]="panel.open"></i>
+					<h3> {{ '@panel.title@' | translate: {'panel.title': panel.title} }} ({{panel.count}})</h3>
+				</a>
+			</div>
+		</div>
+
+		<!-- Panel body -->
+		<div class="row panel-body" [class.hidden]="!panel.open">
+			<div class="col-xs-12">
+				<clr-datagrid #myDataGrid>
+					<clr-dg-column [clrDgField]="column.dataSource" *ngFor="let column of panel.columns">
+						{{column.label}}
+					</clr-dg-column>
+
+					<ng-container *ngIf="!panel.buttons">
+						<clr-dg-row *clrDgItems="let row of panel.data; index as i"
+							id="{{'product-dashboard-' + panel.title + row[panel.linkIdent]}}"
+							(click)="goToView(panel.link, row[panel.linkIdent])" clrDgRowClickable>
+							<clr-dg-cell *ngFor="let dataCol of panel.columns" data-id="{{row.id}}"
+								id="{{'product-dashboard-' + panel.linkIdent + '-' + i + '-' + dataCol.dataSource }}">
+								<span *ngIf="dataCol.dataSource == panel.columnLink"
+									id="{{'product-dashboard-link-' + panel.linkIdent + '-' + i }}">
+									{{row[dataCol.dataSource]}}
+								</span>
+								<span *ngIf="dataCol.dataSource != panel.columnLink">{{row[dataCol.dataSource]}}</span>
+							</clr-dg-cell>
+						</clr-dg-row>
+					</ng-container>
+
+					<clr-dg-footer>{{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
+
+						<clr-dg-pagination #pagination [clrDgPageSize]="10"></clr-dg-pagination>
+					</clr-dg-footer>
+				</clr-datagrid>
+			</div>
+		</div>
+	</div>
+</div>
