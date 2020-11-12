@@ -40,6 +40,7 @@ import {
 } from './fund-audit/fund-audit-datagrid/fund-audit-datagrid.component';
 import { OfiManagementCompanyComponent } from './management-company/management-company.component';
 import { ManagagementCompanyService } from './management-company/management-company.service';
+import { ProductSetupComponent } from './setup/product-setup.component';
 
 /* Graphs. */
 import { OfiKYCModule } from '@ofi/ofi-main/ofi-kyc/module';
@@ -73,6 +74,7 @@ import { WalletSwitchService } from './fund-share/service/wallet-switch.service'
         FundAuditComponent,
         FundAuditDatagridComponent,
         OfiManagementCompanyComponent,
+        ProductSetupComponent,
     ],
     exports: [
         ProductHomeComponent,
@@ -89,6 +91,7 @@ import { WalletSwitchService } from './fund-share/service/wallet-switch.service'
         FundAuditComponent,
         FundAuditDatagridComponent,
         OfiManagementCompanyComponent,
+        ProductSetupComponent,
     ],
     imports: [
         CommonModule,
