@@ -183,6 +183,7 @@ export class InvestFundComponent implements OnInit, OnDestroy {
     address: FormControl;
     disclaimer: FormControl;
     feeControl: FormControl;
+    reference: FormControl;
 
     addressSelected: any;
 
@@ -555,6 +556,7 @@ export class InvestFundComponent implements OnInit, OnDestroy {
         this.disclaimer = new FormControl('');
 
         this.feeControl = new FormControl('');
+        this.reference = new FormControl('', Validators.maxLength(20));
 
         // Subscription form
         this.form = new FormGroup({
@@ -570,6 +572,7 @@ export class InvestFundComponent implements OnInit, OnDestroy {
             settlementDate: this.settlementDate,
             disclaimer: this.disclaimer,
             feeControl: this.feeControl,
+            reference: this.reference,
         });
 
         // this.setInitialFormValue();
@@ -912,6 +915,7 @@ export class InvestFundComponent implements OnInit, OnDestroy {
             orderBy: this.actionBy,
             orderValue: this.orderValue,
             comment: this.form.controls.comment.value,
+            reference: this.form.controls.reference.value,
         };
     }
 
@@ -927,6 +931,7 @@ export class InvestFundComponent implements OnInit, OnDestroy {
             orderby: this.actionBy, // ('q', 'a' )
             ordervalue: this.orderValue, // (order value relate to orderby)
             comment: '',
+            reference: '',
         };
     }
 
@@ -1436,6 +1441,7 @@ export class InvestFundComponent implements OnInit, OnDestroy {
             { field: 'quantity', value: 0 },
             { field: 'amount', value: 0 },
             { field: 'comment', value: null },
+            { field: 'reference', value: null },
         ];
         Object.keys(form.controls).forEach((key) => {
             resetList.forEach((field) => {

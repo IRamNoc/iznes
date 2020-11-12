@@ -16,6 +16,7 @@ export interface OrderRequest {
     orderby: string; // ('q', 'a' )
     ordervalue: string; // (order value relate to orderby)
     comment: string;
+    reference: string;
     // The reason we need 'sb'(sell buy) in ordertype, and we want to keep the existing two order type: sub and redeem.
     // So when we got ordertype of 'sb' in the backend, we want to split the request into two orders (subscription and
     // redemption), but we also need a way to identify whether a order is sell buy order.
