@@ -121,7 +121,7 @@
                 <div *ngIf="allowCBDC$ | async" class="form-group col-sm-6">
                     <label>{{'Use Central Bank Digital Currency (CBDC)?' | translate}}</label>
                     <label class="switch">
-                        <input type="checkbox" class="form-control" formControlName="useCBDC" [checked]="tabDetail[0]['formControl'].controls['useCBDC'].value">
+                        <input id="cbdc-toggle" type="checkbox" class="form-control" formControlName="useCBDC" [checked]="tabDetail[0]['formControl'].controls['useCBDC'].value">
                         <span class="slider round"></span>
                     </label>
                 </div>
