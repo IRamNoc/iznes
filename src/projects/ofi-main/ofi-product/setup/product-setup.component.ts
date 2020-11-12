@@ -36,6 +36,8 @@ export class ProductSetupComponent implements OnInit, OnDestroy {
 	]) managementCompanyAccessListObs;
 	@select(['ofi', 'ofiProduct', 'ofiFundShareList', 'requestedIznesShare']) requestedShareListObs;
 	@select(['ofi', 'ofiProduct', 'ofiFundShareList', 'iznShareList']) shareListObs;
+	@select(['ofi', 'ofiKyc', 'clientReferential', 'requested']) requestedOb;
+    @select(['ofi', 'ofiKyc', 'clientReferential', 'clientReferential']) readonly clientReferentialOb: Observable<any[]>;
 
 	constructor(private ngRedux: NgRedux<any>,
 		private ofiManagementCompanyService: OfiManagementCompanyService,
@@ -320,7 +322,32 @@ export class ProductSetupComponent implements OnInit, OnDestroy {
 	initPanelDefs(): void {
 		this.panelDefs = [
 			{
-				title: 'Permitted shares for placing orders in IZNES',
+				title: 'Permitted shares for placing orders',
+				columns: [
+					this.columns['isin'],
+					this.columns['fundShareName'],
+					this.columns['custodianBank'],
+					this.columns['iban'],
+					this.columns['tradingAccount'],
+					this.columns['subscriptionTradeCyclePeriod'],
+					this.columns['navPeriodForSubscription'],
+					this.columns['subscriptionCutOffTime'],
+					this.columns['subscriptionCutOffTimeZone'],
+					this.columns['subscriptionSettlementPeriod'],
+					this.columns['subscriptionEnableNonWorkingDay'],
+					this.columns['redemptionTradeCyclePeriod'],
+					this.columns['navPeriodForRedemption'],
+					this.columns['redemptionCutOffTime'],
+					this.columns['redemptionCutOffTimeZone'],
+					this.columns['redemptionSettlementPeriod'],
+					this.columns['redemptionEnableNonWorkingDay'],
+				],
+				open: true,
+				data: this.shareList,
+				count: this.shareList.length,
+			},
+			{
+				title: 'Not permitted shares for placing orders',
 				columns: [
 					this.columns['isin'],
 					this.columns['fundShareName'],
