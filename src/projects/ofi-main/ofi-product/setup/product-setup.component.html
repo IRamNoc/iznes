@@ -7,14 +7,13 @@
 		<div class="row panel-header">
 			<div class="col-xs-6">
 				<a href="#" (click)="panel.open = !panel.open; $event.preventDefault();">
-					<i class="fa fa-chevron-right" [class.rotate]="panel.open"></i>
-					<h3> {{ '@panel.title@' | translate: {'panel.title': panel.title} }} ({{panel.count}})</h3>
+					<h3> <span class="fa fa-chevron-right" [class.rotate]="panel.open"></span> {{ '@panel.title@' | translate: {'panel.title': panel.title} }} ({{panel.count}})</h3>
 				</a>
 			</div>
 		</div>
 
 		<!-- Panel body -->
-		<div class="row panel-body" [class.hidden]="!panel.open">
+		<div class="row panel-body" *ngIf="!panel.children" [class.hidden]="!panel.open">
 			<div class="col-xs-12">
 				<clr-datagrid #myDataGrid>
 					<clr-dg-column [clrDgField]="column.dataSource" *ngFor="let column of panel.columns">
@@ -43,5 +42,79 @@
 				</clr-datagrid>
 			</div>
 		</div>
+
+		<div class="row panel-body" *ngIf="panel.children" [class.hidden]="!panel.open">
+			<div class="well-children" *ngFor="let children of panel.children">
+
+				<div class="row panel-header" style="padding: 0 !important;">
+					<div class="col-xs-6">
+						<a href="#" (click)="children.open = !children.open; $event.preventDefault();">
+							<h6 style="color: #e65f05"> <span class="fa fa-chevron-right" [class.rotate]="children.open"></span> {{ children.title | translate }} ({{children.count}})</h6>
+						</a>
+					</div>
+				</div>
+				
+				<div class="row panel-body" style="border-top: none !important; padding: 0 !important;" [class.hidden]="!children.open">	
+					<div class="col-xs-12">
+						<clr-datagrid #myDataGrid>
+							<clr-dg-column [clrDgField]="childColumn.dataSource" *ngFor="let childColumn of children.columns">
+								{{childColumn.label}}
+							</clr-dg-column>
+						
+						
+							<ng-container>
+								<clr-dg-row *clrDgItems="let row of children.data; index as i"
+									id="{{'product-dashboard-' + children.title + row[children.linkIdent]}}"
+									(click)="goToView(children.link, row[children.linkIdent])" clrDgRowClickable>
+									<clr-dg-cell *ngFor="let dataCol of children.columns" data-id="{{row.id}}"
+										id="{{'product-dashboard-' + children.linkIdent + '-' + i + '-' + dataCol.dataSource }}">
+										<span *ngIf="dataCol.dataSource == children.columnLink"
+											id="{{'product-dashboard-link-' + children.linkIdent + '-' + i }}">
+											{{row[dataCol.dataSource]}}
+										</span>
+										<span *ngIf="dataCol.dataSource != children.columnLink">{{row[dataCol.dataSource]}}</span>
+									</clr-dg-cell>
+								</clr-dg-row>
+							</ng-container>
+						
+						
+							<clr-dg-footer>{{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
+							
+								<clr-dg-pagination #pagination [clrDgPageSize]="10"></clr-dg-pagination>
+							</clr-dg-footer>
+						</clr-datagrid>
+					</div>
+				</div>
+			</div>
+		<!--
+			<div class="col-xs-12">
+				<clr-datagrid #myDataGrid>
+					<clr-dg-column [clrDgField]="column.dataSource" *ngFor="let column of panel.columns">
+						{{column.label}}
+					</clr-dg-column>
+
+					<ng-container *ngIf="!panel.buttons">
+						<clr-dg-row *clrDgItems="let row of panel.data; index as i"
+							id="{{'product-dashboard-' + panel.title + row[panel.linkIdent]}}"
+							(click)="goToView(panel.link, row[panel.linkIdent])" clrDgRowClickable>
+							<clr-dg-cell *ngFor="let dataCol of panel.columns" data-id="{{row.id}}"
+								id="{{'product-dashboard-' + panel.linkIdent + '-' + i + '-' + dataCol.dataSource }}">
+								<span *ngIf="dataCol.dataSource == panel.columnLink"
+									id="{{'product-dashboard-link-' + panel.linkIdent + '-' + i }}">
+									{{row[dataCol.dataSource]}}
+								</span>
+								<span *ngIf="dataCol.dataSource != panel.columnLink">{{row[dataCol.dataSource]}}</span>
+							</clr-dg-cell>
+						</clr-dg-row>
+					</ng-container>
+
+					<clr-dg-footer>{{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
+
+						<clr-dg-pagination #pagination [clrDgPageSize]="10"></clr-dg-pagination>
+					</clr-dg-footer>
+				</clr-datagrid>
+			</div>
+		</div>
+		-->
 	</div>
 </div>

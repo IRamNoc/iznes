@@ -8,6 +8,7 @@ import {
 } from '@ofi/ofi-main/ofi-req-services/ofi-product/management-company/management-company.service';
 import { OfiFundService } from '@ofi/ofi-main/ofi-req-services/ofi-product/fund/fund.service';
 import { OfiFundShareService } from '@ofi/ofi-main/ofi-req-services/ofi-product/fund-share/service';
+import { OfiPortfolioMangerService } from '../../ofi-req-services/ofi-portfolio-manager/service';
 import * as FundShareModels from '@ofi/ofi-main/ofi-product/fund-share/models';
 import { MultilingualService } from '@setl/multilingual';
 
@@ -25,16 +26,19 @@ export class ProductSetupComponent implements OnInit, OnDestroy {
 	shareList = [];
 	fundCurrencyItems = [];
 	filteredShareList = [];
+	investorsFundsList = [];
 	panelDefs = [];
 	columns = {};
 
 	subscriptions: Array<Subscription> = [];
+
 
 	@select(['ofi', 'ofiProduct', 'ofiFund', 'fundList', 'iznFundList']) fundListObs;
 	@select([
 		'ofi', 'ofiProduct', 'ofiManagementCompany', 'managementCompanyList', 'managementCompanyList',
 	]) managementCompanyAccessListObs;
 	@select(['ofi', 'ofiProduct', 'ofiFundShareList', 'requestedIznesShare']) requestedShareListObs;
+	@select(['ofi']) requestedTestObs;
 	@select(['ofi', 'ofiProduct', 'ofiFundShareList', 'iznShareList']) shareListObs;
 	@select(['ofi', 'ofiKyc', 'clientReferential', 'requested']) requestedOb;
     @select(['ofi', 'ofiKyc', 'clientReferential', 'clientReferential']) readonly clientReferentialOb: Observable<any[]>;
@@ -45,6 +49,7 @@ export class ProductSetupComponent implements OnInit, OnDestroy {
 		private ofiFundShareService: OfiFundShareService,
 		private changeDetectorRef: ChangeDetectorRef,
 		public translate: MultilingualService,
+		private ofiPortfolioMangerService: OfiPortfolioMangerService,
 	) {
 		this.ofiFundService.getFundList();
 		this.ofiManagementCompanyService.getManagementCompanyList();
@@ -59,6 +64,12 @@ export class ProductSetupComponent implements OnInit, OnDestroy {
 			.subscribe(managementCompanyList => this.getManagementCompanyListFromRedux(managementCompanyList)));
 		this.subscriptions.push(this.requestedShareListObs.subscribe(requested => this.requestShareList(requested)));
 		this.subscriptions.push(this.shareListObs.subscribe(shares => this.getShareList(shares)));
+		this.ofiPortfolioMangerService.defaultRequestPortfolioManagerListDashboard((success) => {
+			const pmList = _.get(success, '[1].Data', []);
+			this.getInvestorsFundsList(pmList);
+		}, (error) => {
+
+		});
 		this.changeDetectorRef.detectChanges();
 	}
 
@@ -112,6 +123,99 @@ export class ProductSetupComponent implements OnInit, OnDestroy {
 	}
 
 	/**
+	 * Populate the investors funds list
+	 *
+	 * @param {object} investorsfunds
+	 * @return {void}
+	 */
+	getInvestorsFundsList(investorsfunds): void {
+		const investorFund = [];
+
+		if ((investorsfunds !== undefined) && Object.keys(investorsfunds).length >0 ) {
+			Object.keys(investorsfunds).map((key) => {
+				const investorfund = investorsfunds[key];
+				const alreadyExist = _.findIndex(investorFund, { 'pmID': investorfund.pmID });
+				
+				if (alreadyExist != -1) {
+					return investorFund[alreadyExist].data.push({
+						fundAdministrator: investorfund.fundAdministrator,
+						fundCustodianBank: investorfund.fundCustodianBank,
+						fundName: investorfund.fundName,
+						investorName: investorfund.investorName,
+						portfolioName: investorfund.portfolioName,
+						subportfolioBIC: investorfund.subportfolioBIC,
+						subportfolioEntityReceivingPaymentInstructions: "N/A",
+						subportfolioEntityReceivingPositionCertificates: "N/A",
+						subportfolioEntityReceivingTransactionNotices: "N/A",
+						subportfolioEtablishmentName: investorfund.subportfolioEtablishmentName,
+						subportfolioHashIdentifierCode: investorfund.subportfolioHashIdentifierCode,
+						subportfolioIBAN: investorfund.subportfolioIBAN,
+						subportfolioName: investorfund.subportfolioName,
+						subportfolioSecurityAccount: investorfund.subportfolioSecurityAccount,
+					})
+				}
+				
+				return investorFund.push({
+					emailAddress: investorfund.emailAddress,
+					firstName: investorfund.firstName,
+					lastName: investorfund.lastName,
+					type: investorfund.type,
+					pmID: investorfund.pmID,
+					data: [{
+						fundAdministrator: investorfund.fundAdministrator,
+						fundCustodianBank: investorfund.fundCustodianBank,
+						fundName: investorfund.fundName,
+						investorName: investorfund.investorName,
+						portfolioName: investorfund.portfolioName,
+						subportfolioBIC: investorfund.subportfolioBIC,
+						subportfolioEntityReceivingPaymentInstructions: "N/A",
+						subportfolioEntityReceivingPositionCertificates: "N/A",
+						subportfolioEntityReceivingTransactionNotices: "N/A",
+						subportfolioEtablishmentName: investorfund.subportfolioEtablishmentName,
+						subportfolioHashIdentifierCode: investorfund.subportfolioHashIdentifierCode,
+						subportfolioIBAN: investorfund.subportfolioIBAN,
+						subportfolioName: investorfund.subportfolioName,
+						subportfolioSecurityAccount: investorfund.subportfolioSecurityAccount,
+					}],
+				});
+			});
+
+			this.investorsFundsList = investorFund;
+
+			_.forEach(this.investorsFundsList, (investor) => {
+				console.log(investor);
+				this.panelDefs[2].children.push({
+					title: `${investor.emailAddress} - ${investor.firstName} ${investor.lastName} - ${investor.type}`,
+					isSubtitle: true,
+					columns: [
+						this.columns['investorName'],
+						this.columns['investorFundName'],
+						this.columns['investorPortfolioName'],
+						this.columns['investorSubportfolioName'],
+						this.columns['investorSubportfolioAddress'],
+						this.columns['investorFundCustodianBank'],
+						this.columns['investorSubportfolioBank'],
+						this.columns['investorSubportfolioBIC'],
+						this.columns['investorSubportfolioIBAN'],
+						this.columns['investorSubportfolioSecurityAccount'],
+						this.columns['investorSubportfolioEntityReceivingPaymentInstructions'],
+						this.columns['investorSubportfolioEntityReceivingPositionCertificates'],
+						this.columns['investorSubportfolioEntityReceivingTransactionNotices'],
+						this.columns['investorFundAdministrator'],
+					],
+					open: true,
+					data: investor.data,
+					count: investor.data.length,
+				})
+			})
+			//this.panelDefs[2].data = this.investorsFundsList;
+			//this.panelDefs[2].count = this.investorsFundsList.length;
+			this.panelDefs[2].count = this.investorsFundsList.length;
+			this.changeDetectorRef.markForCheck();
+		}
+	}
+
+	/**
 	 * Populate the Share list
 	 *
 	 * @param {object} shares
@@ -128,10 +232,6 @@ export class ProductSetupComponent implements OnInit, OnDestroy {
 					const status = _.find(keyFactsStatus.shareClassInvestmentStatus.listItems, (item) => {
 						return item.id === share.shareClassInvestmentStatus;
 					}).text;
-
-					console.log(status);
-
-					const shareCurrency = this.fundCurrencyItems.find(p => p.id === share.shareClassCurrency);
 
 					if (Number(share.draft) === 0) {
 
@@ -155,7 +255,7 @@ export class ProductSetupComponent implements OnInit, OnDestroy {
 							redemptionCutOffTimeZone: share.redemptionCutOffTimeZone,
 							redemptionSettlementPeriod: share.redemptionSettlementPeriod,
 							redemptionEnableNonWorkingDay: share.redemptionEnableNonWorkingDay,
-							shareClassInvestmentStatus: share.shareClassInvestmentStatus, // actif ou non
+							shareClassInvestmentStatus: status,
 						});
 					}
 				}
@@ -311,6 +411,77 @@ export class ProductSetupComponent implements OnInit, OnDestroy {
 				dataSource: 'redemptionEnableNonWorkingDay',
 				sortable: true,
 			},
+
+			investorName: {
+				label: this.translate.translate('Investor'),
+				dataSource: 'investorName',
+				sortable: true,
+			},
+			investorFundName: {
+				label: this.translate.translate('Fund Name'),
+				dataSource: 'fundName',
+				sortable: true,
+			},
+			investorPortfolioName: {
+				label: this.translate.translate('Portfolio Name'),
+				dataSource: 'portfolioName',
+				sortable: true,
+			},
+			investorSubportfolioName: {
+				label: this.translate.translate('Sub-portfolio Name'),
+				dataSource: 'subportfolioName',
+				sortable: true,
+			},
+			investorSubportfolioAddress: {
+				label: this.translate.translate('Sub-portfolio Address'),
+				dataSource: 'subportfolioHashIdentifierCode',
+				sortable: true,
+			},
+			investorFundCustodianBank: {
+				label: this.translate.translate('Fund Custodian Bank'),
+				dataSource: 'fundCustodianBank',
+				sortable: true,
+			},
+			investorSubportfolioBank: {
+				label: this.translate.translate('Sub-portfolio Bank'),
+				dataSource: 'subportfolioEtablishmentName',
+				sortable: true,
+			},
+			investorSubportfolioBIC: {
+				label: this.translate.translate('BIC'),
+				dataSource: 'subportfolioBIC',
+				sortable: true,
+			},
+			investorSubportfolioIBAN: {
+				label: this.translate.translate('Main IBAN'),
+				dataSource: 'subportfolioIBAN',
+				sortable: true,
+			},
+			investorSubportfolioSecurityAccount: {
+				label: this.translate.translate('AIC securities account'),
+				dataSource: 'subportfolioSecurityAccount',
+				sortable: true,
+			},
+			investorSubportfolioEntityReceivingPaymentInstructions: {
+				label: this.translate.translate('Subscription payment instructions'),
+				dataSource: 'subportfolioEntityReceivingPaymentInstructions',
+				sortable: true,
+			},
+			investorSubportfolioEntityReceivingPositionCertificates: {
+				label: this.translate.translate('Position Certificates'),
+				dataSource: 'subportfolioEntityReceivingPositionCertificates',
+				sortable: true,
+			},
+			investorSubportfolioEntityReceivingTransactionNotices: {
+				label: this.translate.translate('Transaction Notices'),
+				dataSource: 'subportfolioEntityReceivingTransactionNotices',
+				sortable: true,
+			},
+			investorFundAdministrator: {
+				label: this.translate.translate('Fund Administrator'),
+				datasource: 'fundAdministrator',
+				sortable: true,
+			}
 		};
 	}
 
@@ -371,6 +542,17 @@ export class ProductSetupComponent implements OnInit, OnDestroy {
 				data: this.shareList,
 				count: this.shareList.length,
 			},
+			{
+				title: 'Investor funds - Portfolios and sub-portfolios',
+				children: [],
+				open: true,
+			},
+			{
+				title: 'Interfunds authorisations',
+				open: true,
+				data: [],
+				count: [],
+			}
 		];
 	}
 }
