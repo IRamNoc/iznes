@@ -92,7 +92,7 @@ build-tags:
         - yarn run build-prod
         - echo $CI_COMMIT_TAG > "$CI_PROJECT_DIR/dist/VERSION"
         - rsync -av "$CI_PROJECT_DIR/dist/" "jenkins@si-jenkins02.dev.setl.io:/var/lib/jenkins/build/opencsd-iznes/$CI_COMMIT_TAG/"
-        - rsync "jenkins@si-jenkins02.dev.setl.io:/var/lib/jenkins/build/iznes-cbdc-portal/master/" "jenkins@si-jenkins02.dev.setl.io:/var/lib/jenkins/build/opencsd-iznes/$CI_COMMIT_TAG/portal/"
+        - rsync -av "jenkins@si-jenkins02.dev.setl.io:/var/lib/jenkins/build/iznes-cbdc-portal/master/" "jenkins@si-jenkins02.dev.setl.io:/var/lib/jenkins/build/opencsd-iznes/$CI_COMMIT_TAG/portal/"
 
 to_iznes:
     stage: to_iznes
