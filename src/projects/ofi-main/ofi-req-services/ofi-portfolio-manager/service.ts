@@ -93,6 +93,16 @@ export class OfiPortfolioMangerService {
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
     }
 
+    requestPortfolioManagerDetailPromise(pmId: number): any {
+        const messageBody: OfiPortfolioManagerDetailrequestBody = {
+            RequestName: 'iznportfoliomanagerlist',
+            token: this.memberSocketService.token,
+            pmid: pmId,
+        };
+
+        return createMemberNodeRequest(this.memberSocketService, messageBody);
+    }
+
     /**
      * Get portfolio manager for am dashboard with default action
      * @param: none

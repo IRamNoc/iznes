@@ -1,6 +1,7 @@
-import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit, Inject } from '@angular/core';
 import { NgRedux, select } from '@angular-redux/store';
-import { Observable, Subscription, combineLatest as observableCombineLatest } from 'rxjs';
+import { Observable, Subscription, Subject, combineLatest, of, from } from 'rxjs';
+import { filter, map, tap, mergeMap, take } from 'rxjs/operators';
 import { fromJS } from 'immutable';
 import * as _ from 'lodash';
 import {
@@ -11,7 +12,14 @@ import { OfiFundShareService } from '@ofi/ofi-main/ofi-req-services/ofi-product/
 import { OfiPortfolioMangerService } from '../../ofi-req-services/ofi-portfolio-manager/service';
 import * as FundShareModels from '@ofi/ofi-main/ofi-product/fund-share/models';
 import { MultilingualService } from '@setl/multilingual';
+import { OfiPortfolioManagerDataService } from '../../ofi-data-service/portfolio-manager/ofi-portfolio-manager-data.service';
+import { PortfolioManagerDetail } from '../../ofi-store/ofi-portfolio-manager/portfolio-manage-list/model';
+import { AppObservableHandler } from '@setl/utils/decorators/app-observable-handler';
+import {
+	TradeCyclePeriodEnum,
+} from '@ofi/ofi-main/ofi-product/fund-share/FundShareEnum';
 
+@AppObservableHandler
 @Component({
 	selector: 'app-product-setup',
 	templateUrl: './product-setup.component.html',
@@ -27,8 +35,17 @@ export class ProductSetupComponent implements OnInit, OnDestroy {
 	fundCurrencyItems = [];
 	filteredShareList = [];
 	investorsFundsList = [];
+	investorsFundsShareAccess = [];
 	panelDefs = [];
 	columns = {};
+
+
+	fundAdministratorItems = {};
+	fundCustodianBankItems = {};
+
+	portfolioManager$: Observable<PortfolioManagerDetail>;
+	pm: PortfolioManagerDetail;
+	unsubscribe = new Subject<boolean>();
 
 	subscriptions: Array<Subscription> = [];
 
@@ -41,7 +58,7 @@ export class ProductSetupComponent implements OnInit, OnDestroy {
 	@select(['ofi']) requestedTestObs;
 	@select(['ofi', 'ofiProduct', 'ofiFundShareList', 'iznShareList']) shareListObs;
 	@select(['ofi', 'ofiKyc', 'clientReferential', 'requested']) requestedOb;
-    @select(['ofi', 'ofiKyc', 'clientReferential', 'clientReferential']) readonly clientReferentialOb: Observable<any[]>;
+	@select(['ofi', 'ofiKyc', 'clientReferential', 'clientReferential']) readonly clientReferentialOb: Observable<any[]>;
 
 	constructor(private ngRedux: NgRedux<any>,
 		private ofiManagementCompanyService: OfiManagementCompanyService,
@@ -50,7 +67,22 @@ export class ProductSetupComponent implements OnInit, OnDestroy {
 		private changeDetectorRef: ChangeDetectorRef,
 		public translate: MultilingualService,
 		private ofiPortfolioMangerService: OfiPortfolioMangerService,
+		private ofiPortfolioManagerDataService: OfiPortfolioManagerDataService,
+		@Inject('product-config') productConfig,
 	) {
+		this.fundAdministratorItems = productConfig.fundItems.fundAdministratorItems;
+		this.fundCustodianBankItems = productConfig.fundItems.custodianBankItems;
+
+		this.subscriptions.push(this.ofiPortfolioManagerDataService.getPortfolioManagerArrayList().pipe(
+			filter((d) => !!d),
+			mergeMap((pmList: any[]) => {
+				var pmDetailList$ = pmList.map(pm => this.ofiPortfolioMangerService.requestPortfolioManagerDetailPromise(pm.pmId));
+				return combineLatest(pmDetailList$);
+			}),
+		).subscribe(d => {
+			this.investorsFundsShareAccess = d
+		}));
+
 		this.ofiFundService.getFundList();
 		this.ofiManagementCompanyService.getManagementCompanyList();
 	}
@@ -59,17 +91,18 @@ export class ProductSetupComponent implements OnInit, OnDestroy {
 		this.initColumns();
 		this.initPanelDefs();
 
-		this.subscriptions.push(this.fundListObs.subscribe(funds => this.getFundList(funds)));
-		this.subscriptions.push(this.managementCompanyAccessListObs
-			.subscribe(managementCompanyList => this.getManagementCompanyListFromRedux(managementCompanyList)));
-		this.subscriptions.push(this.requestedShareListObs.subscribe(requested => this.requestShareList(requested)));
-		this.subscriptions.push(this.shareListObs.subscribe(shares => this.getShareList(shares)));
 		this.ofiPortfolioMangerService.defaultRequestPortfolioManagerListDashboard((success) => {
 			const pmList = _.get(success, '[1].Data', []);
 			this.getInvestorsFundsList(pmList);
 		}, (error) => {
 
 		});
+
+		this.subscriptions.push(this.fundListObs.subscribe(funds => this.getFundList(funds)));
+		this.subscriptions.push(this.managementCompanyAccessListObs
+			.subscribe(managementCompanyList => this.getManagementCompanyListFromRedux(managementCompanyList)));
+		this.subscriptions.push(this.requestedShareListObs.subscribe(requested => this.requestShareList(requested)));
+		this.subscriptions.push(this.shareListObs.subscribe(shares => this.getShareList(shares)));
 		this.changeDetectorRef.detectChanges();
 	}
 
@@ -131,16 +164,20 @@ export class ProductSetupComponent implements OnInit, OnDestroy {
 	getInvestorsFundsList(investorsfunds): void {
 		const investorFund = [];
 
-		if ((investorsfunds !== undefined) && Object.keys(investorsfunds).length >0 ) {
+		if ((investorsfunds !== undefined) && Object.keys(investorsfunds).length > 0) {
 			Object.keys(investorsfunds).map((key) => {
 				const investorfund = investorsfunds[key];
 				const alreadyExist = _.findIndex(investorFund, { 'pmID': investorfund.pmID });
-				
+
+				const fundAdministrator = _.find(this.fundAdministratorItems, { id: investorfund.fundAdministrator }).text;
+				const fundCustodianBank = _.find(this.fundCustodianBankItems, { id: investorfund.fundCustodianBank }).text;
+
 				if (alreadyExist != -1) {
 					return investorFund[alreadyExist].data.push({
-						fundAdministrator: investorfund.fundAdministrator,
-						fundCustodianBank: investorfund.fundCustodianBank,
+						fundAdministrator,
+						fundCustodianBank,
 						fundName: investorfund.fundName,
+						walletID: investorfund.walletID,
 						investorName: investorfund.investorName,
 						portfolioName: investorfund.portfolioName,
 						subportfolioBIC: investorfund.subportfolioBIC,
@@ -152,9 +189,9 @@ export class ProductSetupComponent implements OnInit, OnDestroy {
 						subportfolioIBAN: investorfund.subportfolioIBAN,
 						subportfolioName: investorfund.subportfolioName,
 						subportfolioSecurityAccount: investorfund.subportfolioSecurityAccount,
-					})
+					});
 				}
-				
+
 				return investorFund.push({
 					emailAddress: investorfund.emailAddress,
 					firstName: investorfund.firstName,
@@ -162,8 +199,8 @@ export class ProductSetupComponent implements OnInit, OnDestroy {
 					type: investorfund.type,
 					pmID: investorfund.pmID,
 					data: [{
-						fundAdministrator: investorfund.fundAdministrator,
-						fundCustodianBank: investorfund.fundCustodianBank,
+						fundAdministrator,
+						fundCustodianBank,
 						fundName: investorfund.fundName,
 						investorName: investorfund.investorName,
 						portfolioName: investorfund.portfolioName,
@@ -176,6 +213,7 @@ export class ProductSetupComponent implements OnInit, OnDestroy {
 						subportfolioIBAN: investorfund.subportfolioIBAN,
 						subportfolioName: investorfund.subportfolioName,
 						subportfolioSecurityAccount: investorfund.subportfolioSecurityAccount,
+						walletID: investorfund.walletID,
 					}],
 				});
 			});
@@ -183,7 +221,6 @@ export class ProductSetupComponent implements OnInit, OnDestroy {
 			this.investorsFundsList = investorFund;
 
 			_.forEach(this.investorsFundsList, (investor) => {
-				console.log(investor);
 				this.panelDefs[2].children.push({
 					title: `${investor.emailAddress} - ${investor.firstName} ${investor.lastName} - ${investor.type}`,
 					isSubtitle: true,
@@ -208,8 +245,7 @@ export class ProductSetupComponent implements OnInit, OnDestroy {
 					count: investor.data.length,
 				})
 			})
-			//this.panelDefs[2].data = this.investorsFundsList;
-			//this.panelDefs[2].count = this.investorsFundsList.length;
+
 			this.panelDefs[2].count = this.investorsFundsList.length;
 			this.changeDetectorRef.markForCheck();
 		}
@@ -234,27 +270,28 @@ export class ProductSetupComponent implements OnInit, OnDestroy {
 					}).text;
 
 					if (Number(share.draft) === 0) {
-
+						const custodianBank = _.find(this.fundCustodianBankItems, { id: this.fundList.find(p => p.fundID === Number(share.fundID)).custodianBankID }).text;
 						shareList.push({
 							fundID: share.fundID,
+							fundName: share.fundName,
 							fundShareID: share.fundShareID,
 							iban: share.iban,
 							isin: share.isin,
 							fundShareName: share.fundShareName,
-							custodianBank: this.fundList.find(p => p.fundID === Number(share.fundID)).custodianBankID,
+							custodianBank,
 							tradingAccount: this.fundList.find(p => p.fundID === Number(share.fundID)).tradingAccount,
-							subscriptionTradeCyclePeriod: share.subscriptionTradeCyclePeriod,
-							navPeriodForSubscription: share.navPeriodForSubscription,
+							subscriptionTradeCyclePeriod: TradeCyclePeriodEnum[share.subscriptionTradeCyclePeriod],
+							navPeriodForSubscription: share.navPeriodForSubscription === 0 ? 'D' : share.navPeriodForSubscription > 0 ? `D+${share.navPeriodForSubscription}` : `D${share.navPeriodForSubscription}`,
 							subscriptionCutOffTime: share.subscriptionCutOffTime,
 							subscriptionCutOffTimeZone: share.subscriptionCutOffTimeZone,
-							subscriptionSettlementPeriod: share.subscriptionSettlementPeriod,
-							subscriptionEnableNonWorkingDay: share.subscriptionEnableNonWorkingDay,
-							redemptionTradeCyclePeriod: share.redemptionTradeCyclePeriod,
-							navPeriodForRedemption: share.navPeriodForRedemption,
+							subscriptionSettlementPeriod: share.subscriptionSettlementPeriod === 0 ? 'D' : share.subscriptionSettlementPeriod > 0 ? `D+${share.subscriptionSettlementPeriod}` : `D${share.subscriptionSettlementPeriod}`,
+							subscriptionEnableNonWorkingDay: !share.subscriptionEnableNonWorkingDay ? this.translate.translate("No") : this.translate.translate("Yes"),
+							redemptionTradeCyclePeriod: TradeCyclePeriodEnum[share.redemptionTradeCyclePeriod],
+							navPeriodForRedemption: share.navPeriodForRedemption === 0 ? 'D' : share.navPeriodForRedemption > 0 ? `D+${share.navPeriodForRedemption}` : `D${share.navPeriodForRedemption}`,
 							redemptionCutOffTime: share.redemptionCutOffTime,
 							redemptionCutOffTimeZone: share.redemptionCutOffTimeZone,
-							redemptionSettlementPeriod: share.redemptionSettlementPeriod,
-							redemptionEnableNonWorkingDay: share.redemptionEnableNonWorkingDay,
+							redemptionSettlementPeriod: share.redemptionSettlementPeriod === 0 ? 'D' : share.redemptionSettlementPeriod > 0 ? `D+${share.redemptionSettlementPeriod}` : `D${share.redemptionSettlementPeriod}`,
+							redemptionEnableNonWorkingDay: !share.redemptionEnableNonWorkingDay ? this.translate.translate("No") : this.translate.translate("Yes"),
 							shareClassInvestmentStatus: status,
 						});
 					}
@@ -267,7 +304,46 @@ export class ProductSetupComponent implements OnInit, OnDestroy {
 
 		this.panelDefs[0].data = this.filteredShareList;
 		this.panelDefs[0].count = this.filteredShareList.length;
+		this.populateInterFundsTable();
 		this.changeDetectorRef.markForCheck();
+	}
+
+	/**
+	 * Populate inter funds table
+	 * 
+	 */
+	async populateInterFundsTable() {
+		const walletIDs = _.reduce(this.investorsFundsList, (result, value) => {
+			_.forEach(value.data, (data) => result.push(data.walletID));
+			return _.uniq(result);
+		}, []);
+
+		const investorFundAccess = [];
+		const interfundsAuthorization = [];
+
+		await Promise.all(_.map(walletIDs, async (walletID) => {
+			const data = await this.ofiFundShareService.requestInvestorFundAccess({ investorWalletId: walletID });
+			const result = _.get(data, '[1].Data', null);
+			return _.forEach(result, (res) => investorFundAccess.push(res));
+		})).then(() => {
+			_.forEach(this.fundList, (fund) => {
+				interfundsAuthorization[fund.fundName] = [];
+				const shares = _.filter(this.shareList, (share) => share.fundID === fund.fundID);
+				_.forEach(shares, (share) => {
+					const test = _.find(investorFundAccess, { shareID: share.fundShareID });
+					interfundsAuthorization[fund.fundName].push({
+						fundShareName: share.fundShareName,
+						isin: share.isin,
+						hasAccess: test ? "Yes" : "No"
+					});
+				})
+			});
+			this.panelDefs[3].children = interfundsAuthorization;
+			this.panelDefs[3].count = interfundsAuthorization.length;
+			
+			console.log(interfundsAuthorization);
+			this.changeDetectorRef.markForCheck();
+		});
 	}
 
 
@@ -283,13 +359,6 @@ export class ProductSetupComponent implements OnInit, OnDestroy {
 		if (_.values(funds).length > 0) {
 			_.values(funds).map((fund) => {
 				if (Number(fund.draft) === 0) {
-
-					/*
-					const domicile = _.find(this.countryItems, { id: fund.domicile }) || { text: '' };
-					const lawStatus = _.find(this.legalFormItems, { id: fund.legalForm }) || { text: '' };
-					const fundCurrency = this.fundCurrencyItems.find(p => p.id === Number(fund.fundCurrency));
-					*/
-
 					fundList.push({
 						fundID: fund.fundID,
 						fundName: fund.fundName,
@@ -301,8 +370,6 @@ export class ProductSetupComponent implements OnInit, OnDestroy {
 			});
 		}
 
-		// this.panelDefs[1].data = this.fundList;
-		// this.panelDefs[1].count = this.fundList.length;
 		this.fundList = fundList;
 		this.changeDetectorRef.markForCheck();
 	}
@@ -479,9 +546,9 @@ export class ProductSetupComponent implements OnInit, OnDestroy {
 			},
 			investorFundAdministrator: {
 				label: this.translate.translate('Fund Administrator'),
-				datasource: 'fundAdministrator',
+				dataSource: 'fundAdministrator',
 				sortable: true,
-			}
+			},
 		};
 	}
 
@@ -549,9 +616,8 @@ export class ProductSetupComponent implements OnInit, OnDestroy {
 			},
 			{
 				title: 'Interfunds authorisations',
+				children: [],
 				open: true,
-				data: [],
-				count: [],
 			}
 		];
 	}
