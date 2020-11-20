@@ -36,6 +36,7 @@ export class ProductSetupComponent implements OnInit, OnDestroy {
 	filteredShareList = [];
 	investorsFundsList = [];
 	investorsFundsShareAccess = [];
+	interfundsAuthorization = [];
 	panelDefs = [];
 	columns = {};
 
@@ -224,6 +225,7 @@ export class ProductSetupComponent implements OnInit, OnDestroy {
 				this.panelDefs[2].children.push({
 					title: `${investor.emailAddress} - ${investor.firstName} ${investor.lastName} - ${investor.type}`,
 					isSubtitle: true,
+					colored: true,
 					columns: [
 						this.columns['investorName'],
 						this.columns['investorFundName'],
@@ -319,7 +321,6 @@ export class ProductSetupComponent implements OnInit, OnDestroy {
 		}, []);
 
 		const investorFundAccess = [];
-		const interfundsAuthorization = [];
 
 		await Promise.all(_.map(walletIDs, async (walletID) => {
 			const data = await this.ofiFundShareService.requestInvestorFundAccess({ investorWalletId: walletID });
@@ -327,21 +328,29 @@ export class ProductSetupComponent implements OnInit, OnDestroy {
 			return _.forEach(result, (res) => investorFundAccess.push(res));
 		})).then(() => {
 			_.forEach(this.fundList, (fund) => {
-				interfundsAuthorization[fund.fundName] = [];
+				this.interfundsAuthorization[fund.fundName] = [];
 				const shares = _.filter(this.shareList, (share) => share.fundID === fund.fundID);
 				_.forEach(shares, (share) => {
 					const test = _.find(investorFundAccess, { shareID: share.fundShareID });
-					interfundsAuthorization[fund.fundName].push({
-						fundShareName: share.fundShareName,
+					this.interfundsAuthorization[fund.fundName].push({
+						fundShareName: `${share.fundShareName} ${share.isin}`,
 						isin: share.isin,
 						hasAccess: test ? "Yes" : "No"
 					});
 				})
+				this.panelDefs[3].children.push({
+					title: fund.fundName,
+					isSubtitle: true,
+					isInterfund: true,
+					columns: [
+						this.columns['fundShareName'],
+						this.columns['hasAccess'],
+					],
+					open: true,
+					data: this.interfundsAuthorization[fund.fundName],
+					count: this.interfundsAuthorization[fund.fundName].length,
+				});
 			});
-			this.panelDefs[3].children = interfundsAuthorization;
-			this.panelDefs[3].count = interfundsAuthorization.length;
-			
-			console.log(interfundsAuthorization);
 			this.changeDetectorRef.markForCheck();
 		});
 	}
@@ -549,6 +558,11 @@ export class ProductSetupComponent implements OnInit, OnDestroy {
 				dataSource: 'fundAdministrator',
 				sortable: true,
 			},
+			hasAccess: {
+				label: this.translate.translate('Has Access'),
+				dataSource: 'hasAccess',
+				sortable: true,
+			}
 		};
 	}
 

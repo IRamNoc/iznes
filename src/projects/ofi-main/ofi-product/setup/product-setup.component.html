@@ -8,7 +8,7 @@
 			<div class="col-xs-6">
 				<a href="#" (click)="panel.open = !panel.open; $event.preventDefault();">
 					<h3> <span class="fa fa-chevron-right" [class.rotate]="panel.open"></span>
-						{{ '@panel.title@' | translate: {'panel.title': panel.title} }} ({{panel.count}})</h3>
+						{{ '@panel.title@' | translate: {'panel.title': panel.title} }} <span *ngIf="panel.count">({{panel.count}})</span></h3>
 				</a>
 			</div>
 		</div>
@@ -23,8 +23,7 @@
 
 					<ng-container *ngIf="!panel.buttons">
 						<clr-dg-row *clrDgItems="let row of panel.data; index as i"
-							id="{{'product-dashboard-' + panel.title + row[panel.linkIdent]}}"
-							(click)="goToView(panel.link, row[panel.linkIdent])" clrDgRowClickable>
+							id="{{'product-dashboard-' + panel.title + row[panel.linkIdent]}}">
 							<clr-dg-cell *ngFor="let dataCol of panel.columns" data-id="{{row.id}}"
 								id="{{'product-dashboard-' + panel.linkIdent + '-' + i + '-' + dataCol.dataSource }}">
 								<span *ngIf="dataCol.dataSource == panel.columnLink"
@@ -50,7 +49,10 @@
 				<div class="row panel-header" style="padding: 0 !important;">
 					<div class="col-xs-6">
 						<a href="#" (click)="children.open = !children.open; $event.preventDefault();">
-							<h6 style="color: #e65f05"> <span class="fa fa-chevron-right"
+							<h6 *ngIf="children.colored" style="color: #e65f05"> <span class="fa fa-chevron-right"
+									[class.rotate]="children.open"></span> {{ children.title | translate }}
+								({{children.count}})</h6>
+							<h6 *ngIf="!children.colored"> <span class="fa fa-chevron-right"
 									[class.rotate]="children.open"></span> {{ children.title | translate }}
 								({{children.count}})</h6>
 						</a>
@@ -69,16 +71,10 @@
 
 							<ng-container>
 								<clr-dg-row *clrDgItems="let row of children.data; index as i"
-									id="{{'product-dashboard-' + children.title + row[children.linkIdent]}}"
-									(click)="goToView(children.link, row[children.linkIdent])" clrDgRowClickable>
+									id="{{'product-dashboard-' + children.title + row[children.linkIdent]}}">
 									<clr-dg-cell *ngFor="let dataCol of children.columns" data-id="{{row.id}}"
 										id="{{'product-dashboard-' + children.linkIdent + '-' + i + '-' + dataCol.dataSource }}">
-										<span *ngIf="dataCol.dataSource == children.columnLink"
-											id="{{'product-dashboard-link-' + children.linkIdent + '-' + i }}">
-											{{row[dataCol.dataSource]}}
-										</span>
-										<span
-											*ngIf="dataCol.dataSource != children.columnLink">{{row[dataCol.dataSource]}}</span>
+										<span *ngIf="dataCol.dataSource != children.columnLink">{{row[dataCol.dataSource]}}</span>
 									</clr-dg-cell>
 								</clr-dg-row>
 							</ng-container>
@@ -94,39 +90,4 @@
 			</div>
 		</div>
 	</div>
-
-	<!--
-	<div class="well">
-		<div class="row panel-header">
-			<div class="col-xs-6">
-				<a>
-					<h3> <span class="fa fa-chevron-right"></span>{{ 'Interfunds authorisations' | translate }}</h3>
-				</a>
-			</div>
-		</div>
-
-		<div class="row panel-body"></div>
-		<div class="col-xs-12">
-			<clr-datagrid #myDataGrid>
-				<clr-dg-column>{{ 'Investor funds / Shares' | translate }}</clr-dg-column>
-				<clr-dg-column [clrDgField]="share.fundShareName" *ngFor="let share of shareList">
-					{{ share.fundShareName }}
-				</clr-dg-column>
-
-				<ng-container>
-					<clr-dg-row>
-						<clr-dg-cell></clr-dg-cell>
-					</clr-dg-row>
-				</ng-container>
-
-
-				<clr-dg-footer>{{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
-
-					<clr-dg-pagination #pagination [clrDgPageSize]="10"></clr-dg-pagination>
-				</clr-dg-footer>
-			</clr-datagrid>
-		</div>
-		{{ shareList }}
-	</div>
--->
 </div>
