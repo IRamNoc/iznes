@@ -130,7 +130,7 @@ export class OfiPortfolioMangerService {
             token: this.memberSocketService.token,
         }
 
-        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+        return createMemberNodeRequest(this.memberSocketService, messageBody);
     }
 
 

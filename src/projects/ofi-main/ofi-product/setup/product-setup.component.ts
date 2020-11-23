@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit, Inject } from '@angular/core';
 import { NgRedux, select } from '@angular-redux/store';
-import { Observable, Subscription, Subject } from 'rxjs';
+import { Subscription, Subject } from 'rxjs';
 import { fromJS } from 'immutable';
 import * as _ from 'lodash';
 import {
@@ -60,28 +60,31 @@ export class ProductSetupComponent implements OnInit, OnDestroy {
 	) {
 		this.fundAdministratorItems = productConfig.fundItems.fundAdministratorItems;
 		this.fundCustodianBankItems = productConfig.fundItems.custodianBankItems;
-		this.ofiFundService.getFundList();
-		this.ofiManagementCompanyService.getManagementCompanyList();
 	}
 
 	async ngOnInit() {
 		this.initColumns();
 		this.initPanelDefs();
 
-		this.ofiFundShareService.defaultRequestAllInvestorsFundAccess((success) => {
-			this.investorsFundsShareAccess = _.get(success, '[1].Data', []);
-		}, (error) => {});
+		this.ofiFundService.getFundList();
+		this.ofiManagementCompanyService.getManagementCompanyList();
 
-		this.ofiPortfolioMangerService.defaultRequestPortfolioManagerListDashboard((success) => {
-			const pmList = _.get(success, '[1].Data', []);
-			this.getInvestorsFundsList(pmList);
-		}, (error) => {});
+		// request portfolio managers list using promises
+		const reponsePmList = await this.ofiPortfolioMangerService.requestPortfolioManagerListDashboard();
+		const pmList = _.get(reponsePmList, '[1].Data', []);
+		this.getInvestorsFundsList(pmList);
 
 		this.subscriptions.push(this.fundListObs.subscribe(funds => this.getFundList(funds)));
 		this.subscriptions.push(this.managementCompanyAccessListObs
 			.subscribe(managementCompanyList => this.getManagementCompanyListFromRedux(managementCompanyList)));
 		this.subscriptions.push(this.requestedShareListObs.subscribe(requested => this.requestShareList(requested)));
-		this.subscriptions.push(this.shareListObs.subscribe(shares => this.getShareList(shares)));
+		this.subscriptions.push(this.shareListObs.subscribe(async shares => {
+			// request all investors fund access using promises
+			const responseInvestorsFundsShareAccess = await this.ofiFundShareService.requestAllInvestorsFundAccess();
+			this.investorsFundsShareAccess = _.get(responseInvestorsFundsShareAccess, '[1].Data', []);
+			if (!Object.keys(shares).length) return;
+			this.getShareList(shares);
+		}));
 		this.changeDetectorRef.detectChanges();
 	}
 
@@ -253,7 +256,7 @@ export class ProductSetupComponent implements OnInit, OnDestroy {
 					if (Number(share.draft) === 0) {
 						const custodianBank = _.find(this.fundCustodianBankItems, { id: this.fundList.find(p => p.fundID === Number(share.fundID)).custodianBankID }).text;
 						const isPermitted = _.find(this.investorsFundsShareAccess, { shareID: share.fundShareID });
-
+						
 						if (isPermitted) {
 							shareListPermitted.push({
 								fundID: share.fundID,
@@ -363,40 +366,6 @@ export class ProductSetupComponent implements OnInit, OnDestroy {
 			});
 		});
 		this.changeDetectorRef.markForCheck();
-
-		/*
-		await Promise.all(_.map(walletIDs, async (walletID) => {
-			const data = await this.ofiFundShareService.requestInvestorFundAccess({ investorWalletId: walletID });
-			const result = _.get(data, '[1].Data', null);
-			return _.forEach(result, (res) => investorFundAccess.push(res));
-		})).then(() => {
-			_.forEach(this.fundList, (fund) => {
-				this.interfundsAuthorization[fund.fundName] = [];
-				const shares = _.filter(this.shareList, (share) => share.fundID === fund.fundID);
-				_.forEach(shares, (share) => {
-					const test = _.find(investorFundAccess, { shareID: share.fundShareID });
-					this.interfundsAuthorization[fund.fundName].push({
-						fundShareName: `${share.fundShareName} ${share.isin}`,
-						isin: share.isin,
-						hasAccess: test ? "Yes" : "No"
-					});
-				})
-				this.panelDefs[3].children.push({
-					title: fund.fundName,
-					isSubtitle: true,
-					isInterfund: true,
-					columns: [
-						this.columns['fundShareName'],
-						this.columns['hasAccess'],
-					],
-					open: true,
-					data: this.interfundsAuthorization[fund.fundName],
-					count: this.interfundsAuthorization[fund.fundName].length,
-				});
-			});
-			this.changeDetectorRef.markForCheck();
-		});
-		*/
 	}
 
 

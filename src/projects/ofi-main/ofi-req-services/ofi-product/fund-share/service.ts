@@ -205,12 +205,12 @@ export class OfiFundShareService {
      * @return {any}
      */
     requestAllInvestorsFundAccess(): any {
-        const messageBody: InvestorFundAccessRequestBody = {
+        const messageBody: any = {
             RequestName: 'iznesgetallinvestorsfundaccess',
             token: this.memberSocketService.token,
         };
 
-        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+        return createMemberNodeRequest(this.memberSocketService, messageBody);
     }
 
     /**
