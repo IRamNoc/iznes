@@ -184,6 +184,36 @@ export class OfiFundShareService {
     }
 
     /**
+     * Asset manager Request fund share access for all investors
+     * @param: none
+     */
+    defaultRequestAllInvestorsFundAccess(successCallback: (res) => void, errorCallback: (res) => void) {
+        const asyncTaskPipe = this.requestAllInvestorsFundAccess();
+
+        this.ngRedux.dispatch(SagaHelper.runAsync(
+            [],
+            [],
+            asyncTaskPipe,
+            {},
+            res => successCallback(res),
+            res => errorCallback(res),
+        ));
+    }
+
+    /**
+     * Asset manager Request fund share access for all investors
+     * @return {any}
+     */
+    requestAllInvestorsFundAccess(): any {
+        const messageBody: InvestorFundAccessRequestBody = {
+            RequestName: 'iznesgetallinvestorsfundaccess',
+            token: this.memberSocketService.token,
+        };
+
+        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+    }
+
+    /**
      * Asset manager Request holdings for particular kycId.
      * @return {any}
      */

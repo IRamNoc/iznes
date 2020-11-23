@@ -1,7 +1,6 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit, Inject } from '@angular/core';
 import { NgRedux, select } from '@angular-redux/store';
-import { Observable, Subscription, Subject, combineLatest, of, from } from 'rxjs';
-import { filter, map, tap, mergeMap, take } from 'rxjs/operators';
+import { Observable, Subscription, Subject } from 'rxjs';
 import { fromJS } from 'immutable';
 import * as _ from 'lodash';
 import {
@@ -12,14 +11,10 @@ import { OfiFundShareService } from '@ofi/ofi-main/ofi-req-services/ofi-product/
 import { OfiPortfolioMangerService } from '../../ofi-req-services/ofi-portfolio-manager/service';
 import * as FundShareModels from '@ofi/ofi-main/ofi-product/fund-share/models';
 import { MultilingualService } from '@setl/multilingual';
-import { OfiPortfolioManagerDataService } from '../../ofi-data-service/portfolio-manager/ofi-portfolio-manager-data.service';
-import { PortfolioManagerDetail } from '../../ofi-store/ofi-portfolio-manager/portfolio-manage-list/model';
-import { AppObservableHandler } from '@setl/utils/decorators/app-observable-handler';
 import {
 	TradeCyclePeriodEnum,
 } from '@ofi/ofi-main/ofi-product/fund-share/FundShareEnum';
 
-@AppObservableHandler
 @Component({
 	selector: 'app-product-setup',
 	templateUrl: './product-setup.component.html',
@@ -32,34 +27,27 @@ export class ProductSetupComponent implements OnInit, OnDestroy {
 	managementCompanyList = [];
 	fundList = [];
 	shareList = [];
+	shareListPermitted = [];
+	shareListNotPermitted = [];
 	fundCurrencyItems = [];
-	filteredShareList = [];
-	investorsFundsList = [];
+	investorsFundsList = []; 
 	investorsFundsShareAccess = [];
 	interfundsAuthorization = [];
 	panelDefs = [];
 	columns = {};
 
-
 	fundAdministratorItems = {};
 	fundCustodianBankItems = {};
 
-	portfolioManager$: Observable<PortfolioManagerDetail>;
-	pm: PortfolioManagerDetail;
 	unsubscribe = new Subject<boolean>();
-
 	subscriptions: Array<Subscription> = [];
-
 
 	@select(['ofi', 'ofiProduct', 'ofiFund', 'fundList', 'iznFundList']) fundListObs;
 	@select([
 		'ofi', 'ofiProduct', 'ofiManagementCompany', 'managementCompanyList', 'managementCompanyList',
 	]) managementCompanyAccessListObs;
 	@select(['ofi', 'ofiProduct', 'ofiFundShareList', 'requestedIznesShare']) requestedShareListObs;
-	@select(['ofi']) requestedTestObs;
 	@select(['ofi', 'ofiProduct', 'ofiFundShareList', 'iznShareList']) shareListObs;
-	@select(['ofi', 'ofiKyc', 'clientReferential', 'requested']) requestedOb;
-	@select(['ofi', 'ofiKyc', 'clientReferential', 'clientReferential']) readonly clientReferentialOb: Observable<any[]>;
 
 	constructor(private ngRedux: NgRedux<any>,
 		private ofiManagementCompanyService: OfiManagementCompanyService,
@@ -68,22 +56,10 @@ export class ProductSetupComponent implements OnInit, OnDestroy {
 		private changeDetectorRef: ChangeDetectorRef,
 		public translate: MultilingualService,
 		private ofiPortfolioMangerService: OfiPortfolioMangerService,
-		private ofiPortfolioManagerDataService: OfiPortfolioManagerDataService,
 		@Inject('product-config') productConfig,
 	) {
 		this.fundAdministratorItems = productConfig.fundItems.fundAdministratorItems;
 		this.fundCustodianBankItems = productConfig.fundItems.custodianBankItems;
-
-		this.subscriptions.push(this.ofiPortfolioManagerDataService.getPortfolioManagerArrayList().pipe(
-			filter((d) => !!d),
-			mergeMap((pmList: any[]) => {
-				var pmDetailList$ = pmList.map(pm => this.ofiPortfolioMangerService.requestPortfolioManagerDetailPromise(pm.pmId));
-				return combineLatest(pmDetailList$);
-			}),
-		).subscribe(d => {
-			this.investorsFundsShareAccess = d
-		}));
-
 		this.ofiFundService.getFundList();
 		this.ofiManagementCompanyService.getManagementCompanyList();
 	}
@@ -92,12 +68,14 @@ export class ProductSetupComponent implements OnInit, OnDestroy {
 		this.initColumns();
 		this.initPanelDefs();
 
+		this.ofiFundShareService.defaultRequestAllInvestorsFundAccess((success) => {
+			this.investorsFundsShareAccess = _.get(success, '[1].Data', []);
+		}, (error) => {});
+
 		this.ofiPortfolioMangerService.defaultRequestPortfolioManagerListDashboard((success) => {
 			const pmList = _.get(success, '[1].Data', []);
 			this.getInvestorsFundsList(pmList);
-		}, (error) => {
-
-		});
+		}, (error) => {});
 
 		this.subscriptions.push(this.fundListObs.subscribe(funds => this.getFundList(funds)));
 		this.subscriptions.push(this.managementCompanyAccessListObs
@@ -260,7 +238,8 @@ export class ProductSetupComponent implements OnInit, OnDestroy {
 	 * @return {void}
 	 */
 	getShareList(shares): void {
-		const shareList = [];
+		const shareListPermitted = [];
+		const shareListNotPermitted = [];
 
 		if ((shares !== undefined) && Object.keys(shares).length > 0) {
 			Object.keys(shares).map((key) => {
@@ -273,39 +252,72 @@ export class ProductSetupComponent implements OnInit, OnDestroy {
 
 					if (Number(share.draft) === 0) {
 						const custodianBank = _.find(this.fundCustodianBankItems, { id: this.fundList.find(p => p.fundID === Number(share.fundID)).custodianBankID }).text;
-						shareList.push({
-							fundID: share.fundID,
-							fundName: share.fundName,
-							fundShareID: share.fundShareID,
-							iban: share.iban,
-							isin: share.isin,
-							fundShareName: share.fundShareName,
-							custodianBank,
-							tradingAccount: this.fundList.find(p => p.fundID === Number(share.fundID)).tradingAccount,
-							subscriptionTradeCyclePeriod: TradeCyclePeriodEnum[share.subscriptionTradeCyclePeriod],
-							navPeriodForSubscription: share.navPeriodForSubscription === 0 ? 'D' : share.navPeriodForSubscription > 0 ? `D+${share.navPeriodForSubscription}` : `D${share.navPeriodForSubscription}`,
-							subscriptionCutOffTime: share.subscriptionCutOffTime,
-							subscriptionCutOffTimeZone: share.subscriptionCutOffTimeZone,
-							subscriptionSettlementPeriod: share.subscriptionSettlementPeriod === 0 ? 'D' : share.subscriptionSettlementPeriod > 0 ? `D+${share.subscriptionSettlementPeriod}` : `D${share.subscriptionSettlementPeriod}`,
-							subscriptionEnableNonWorkingDay: !share.subscriptionEnableNonWorkingDay ? this.translate.translate("No") : this.translate.translate("Yes"),
-							redemptionTradeCyclePeriod: TradeCyclePeriodEnum[share.redemptionTradeCyclePeriod],
-							navPeriodForRedemption: share.navPeriodForRedemption === 0 ? 'D' : share.navPeriodForRedemption > 0 ? `D+${share.navPeriodForRedemption}` : `D${share.navPeriodForRedemption}`,
-							redemptionCutOffTime: share.redemptionCutOffTime,
-							redemptionCutOffTimeZone: share.redemptionCutOffTimeZone,
-							redemptionSettlementPeriod: share.redemptionSettlementPeriod === 0 ? 'D' : share.redemptionSettlementPeriod > 0 ? `D+${share.redemptionSettlementPeriod}` : `D${share.redemptionSettlementPeriod}`,
-							redemptionEnableNonWorkingDay: !share.redemptionEnableNonWorkingDay ? this.translate.translate("No") : this.translate.translate("Yes"),
-							shareClassInvestmentStatus: status,
-						});
+						const isPermitted = _.find(this.investorsFundsShareAccess, { shareID: share.fundShareID });
+
+						if (isPermitted) {
+							shareListPermitted.push({
+								fundID: share.fundID,
+								fundName: share.fundName,
+								fundShareID: share.fundShareID,
+								iban: share.iban,
+								isin: share.isin,
+								fundShareName: share.fundShareName,
+								custodianBank,
+								tradingAccount: this.fundList.find(p => p.fundID === Number(share.fundID)).tradingAccount,
+								subscriptionTradeCyclePeriod: TradeCyclePeriodEnum[share.subscriptionTradeCyclePeriod],
+								navPeriodForSubscription: share.navPeriodForSubscription === 0 ? 'D' : share.navPeriodForSubscription > 0 ? `D+${share.navPeriodForSubscription}` : `D${share.navPeriodForSubscription}`,
+								subscriptionCutOffTime: share.subscriptionCutOffTime,
+								subscriptionCutOffTimeZone: share.subscriptionCutOffTimeZone,
+								subscriptionSettlementPeriod: share.subscriptionSettlementPeriod === 0 ? 'D' : share.subscriptionSettlementPeriod > 0 ? `D+${share.subscriptionSettlementPeriod}` : `D${share.subscriptionSettlementPeriod}`,
+								subscriptionEnableNonWorkingDay: !share.subscriptionEnableNonWorkingDay ? this.translate.translate("No") : this.translate.translate("Yes"),
+								redemptionTradeCyclePeriod: TradeCyclePeriodEnum[share.redemptionTradeCyclePeriod],
+								navPeriodForRedemption: share.navPeriodForRedemption === 0 ? 'D' : share.navPeriodForRedemption > 0 ? `D+${share.navPeriodForRedemption}` : `D${share.navPeriodForRedemption}`,
+								redemptionCutOffTime: share.redemptionCutOffTime,
+								redemptionCutOffTimeZone: share.redemptionCutOffTimeZone,
+								redemptionSettlementPeriod: share.redemptionSettlementPeriod === 0 ? 'D' : share.redemptionSettlementPeriod > 0 ? `D+${share.redemptionSettlementPeriod}` : `D${share.redemptionSettlementPeriod}`,
+								redemptionEnableNonWorkingDay: !share.redemptionEnableNonWorkingDay ? this.translate.translate("No") : this.translate.translate("Yes"),
+								shareClassInvestmentStatus: status,
+							});
+						} else {
+							shareListNotPermitted.push({
+								fundID: share.fundID,
+								fundName: share.fundName,
+								fundShareID: share.fundShareID,
+								iban: share.iban,
+								isin: share.isin,
+								fundShareName: share.fundShareName,
+								custodianBank,
+								tradingAccount: this.fundList.find(p => p.fundID === Number(share.fundID)).tradingAccount,
+								subscriptionTradeCyclePeriod: TradeCyclePeriodEnum[share.subscriptionTradeCyclePeriod],
+								navPeriodForSubscription: share.navPeriodForSubscription === 0 ? 'D' : share.navPeriodForSubscription > 0 ? `D+${share.navPeriodForSubscription}` : `D${share.navPeriodForSubscription}`,
+								subscriptionCutOffTime: share.subscriptionCutOffTime,
+								subscriptionCutOffTimeZone: share.subscriptionCutOffTimeZone,
+								subscriptionSettlementPeriod: share.subscriptionSettlementPeriod === 0 ? 'D' : share.subscriptionSettlementPeriod > 0 ? `D+${share.subscriptionSettlementPeriod}` : `D${share.subscriptionSettlementPeriod}`,
+								subscriptionEnableNonWorkingDay: !share.subscriptionEnableNonWorkingDay ? this.translate.translate("No") : this.translate.translate("Yes"),
+								redemptionTradeCyclePeriod: TradeCyclePeriodEnum[share.redemptionTradeCyclePeriod],
+								navPeriodForRedemption: share.navPeriodForRedemption === 0 ? 'D' : share.navPeriodForRedemption > 0 ? `D+${share.navPeriodForRedemption}` : `D${share.navPeriodForRedemption}`,
+								redemptionCutOffTime: share.redemptionCutOffTime,
+								redemptionCutOffTimeZone: share.redemptionCutOffTimeZone,
+								redemptionSettlementPeriod: share.redemptionSettlementPeriod === 0 ? 'D' : share.redemptionSettlementPeriod > 0 ? `D+${share.redemptionSettlementPeriod}` : `D${share.redemptionSettlementPeriod}`,
+								redemptionEnableNonWorkingDay: !share.redemptionEnableNonWorkingDay ? this.translate.translate("No") : this.translate.translate("Yes"),
+								shareClassInvestmentStatus: status,
+							});
+						}
 					}
 				}
 			});
 		}
 
-		this.shareList = shareList;
-		this.filteredShareList = this.shareList;
+		this.shareListPermitted = shareListPermitted;
+		this.shareListNotPermitted = shareListNotPermitted;
 
-		this.panelDefs[0].data = this.filteredShareList;
-		this.panelDefs[0].count = this.filteredShareList.length;
+		this.shareList = [ ...this.shareListPermitted, ...this.shareListNotPermitted];
+
+		this.panelDefs[0].data = this.shareListPermitted;
+		this.panelDefs[0].count = this.shareListPermitted.length;
+
+		this.panelDefs[1].data = this.shareListNotPermitted;
+		this.panelDefs[1].count = this.shareListNotPermitted.length;
 		this.populateInterFundsTable();
 		this.changeDetectorRef.markForCheck();
 	}
@@ -320,8 +332,39 @@ export class ProductSetupComponent implements OnInit, OnDestroy {
 			return _.uniq(result);
 		}, []);
 
-		const investorFundAccess = [];
+		const investorFundAccess = _.reduce(this.investorsFundsShareAccess, (result, value) => {
+			if (walletIDs.includes(value.investorWalletID))
+				result.push(value);
+			return result;
+		}, []);
 
+		_.forEach(this.fundList, (fund) => {
+			this.interfundsAuthorization[fund.fundName] = [];
+			const shares = _.filter(this.shareList, (share) => share.fundID === fund.fundID);
+			_.forEach(shares, (share) => {
+				const test = _.find(investorFundAccess, { shareID: share.fundShareID });
+				this.interfundsAuthorization[fund.fundName].push({
+					fundShareName: `${share.fundShareName} ${share.isin}`,
+					isin: share.isin,
+					hasAccess: test ? "Yes" : "No"
+				});
+			})
+			this.panelDefs[3].children.push({
+				title: fund.fundName,
+				isSubtitle: true,
+				isInterfund: true,
+				columns: [
+					this.columns['fundShareName'],
+					this.columns['hasAccess'],
+				],
+				open: true,
+				data: this.interfundsAuthorization[fund.fundName],
+				count: this.interfundsAuthorization[fund.fundName].length,
+			});
+		});
+		this.changeDetectorRef.markForCheck();
+
+		/*
 		await Promise.all(_.map(walletIDs, async (walletID) => {
 			const data = await this.ofiFundShareService.requestInvestorFundAccess({ investorWalletId: walletID });
 			const result = _.get(data, '[1].Data', null);
@@ -353,6 +396,7 @@ export class ProductSetupComponent implements OnInit, OnDestroy {
 			});
 			this.changeDetectorRef.markForCheck();
 		});
+		*/
 	}
 
 
@@ -595,8 +639,8 @@ export class ProductSetupComponent implements OnInit, OnDestroy {
 					this.columns['redemptionEnableNonWorkingDay'],
 				],
 				open: true,
-				data: this.shareList,
-				count: this.shareList.length,
+				data: this.shareListPermitted,
+				count: this.shareListPermitted.length,
 			},
 			{
 				title: 'Not permitted shares for placing orders',
@@ -620,8 +664,8 @@ export class ProductSetupComponent implements OnInit, OnDestroy {
 					this.columns['redemptionEnableNonWorkingDay'],
 				],
 				open: true,
-				data: this.shareList,
-				count: this.shareList.length,
+				data: this.shareListNotPermitted,
+				count: this.shareListNotPermitted.length,
 			},
 			{
 				title: 'Investor funds - Portfolios and sub-portfolios',
