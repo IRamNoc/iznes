@@ -104,6 +104,7 @@ export class OfiOrdersService {
         orderBy: string;
         orderValue: number;
         comment: string;
+        reference: string;
     }): any {
         const messageBody: IznesNewOrderRequestBody = {
             RequestName: 'iznesneworder',
@@ -117,6 +118,7 @@ export class OfiOrdersService {
             orderby: requestData.orderBy,
             ordervalue: requestData.orderValue,
             comment: requestData.comment,
+            reference: requestData.reference,
         };
 
         return createMemberNodeRequest(this.memberSocketService, messageBody);

@@ -270,6 +270,11 @@
                             <span class="column-label"></span>
                         </ng-container>
                     </clr-dg-column>
+                    <clr-dg-column [clrDgField]="'reference'" clrDgSortIcon clrDgSortNoSearch id="reference">
+                        <ng-container *clrDgHideableColumn="{hidden: false}">{{ 'Order Client Reference' | translate }}
+                            <span class="column-label"></span>
+                        </ng-container>
+                    </clr-dg-column>
                     <clr-dg-column [clrDgField]="'orderType'" clrDgSortIcon clrDgSortNoSearch id="Order-Type">
                         <ng-container *clrDgHideableColumn="{hidden: false}">{{ 'Order Type' | translate }}
                             <span class="column-label"></span>
@@ -368,6 +373,11 @@
                             <!-- orderRef -->
                             {{ order.orderRef }}
                             <div *ngIf="showColumnSpacer" class="column-spacer">{{getColumnSpaceText(order.orderRef)}}</div>
+                        </clr-dg-cell>
+                        <clr-dg-cell (click)="buildLink(order, $event)">
+                            <!-- orderRef -->
+                            {{ order.reference }}
+                            <div *ngIf="showColumnSpacer" class="column-spacer">{{getColumnSpaceText(order.reference)}}</div>
                         </clr-dg-cell>
                         <clr-dg-cell (click)="buildLink(order, $event)">
                             <!-- orderType -->

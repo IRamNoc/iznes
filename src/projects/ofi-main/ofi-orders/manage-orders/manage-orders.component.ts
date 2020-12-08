@@ -567,6 +567,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
             const orderTypeStr = this.getOrderTypeString(order);
             const initialized = order.initialized;
             const isTransfer = order.isTransfer;
+            const reference = order.reference;
 
             return {
                 ...list[orderId],
@@ -583,7 +584,8 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
                 readyForPayment,
                 orderUnpaid: this.orderUnpaid(list[orderId]),
                 initialized,
-                isTransfer
+                isTransfer,
+                reference,
             };
         });
     }

@@ -46,6 +46,7 @@ export interface ManageOrderDetails {
     orderStatus: any;
     orderType: any;
     isTransfer: any;
+    reference: any;
     platFormFee: any;
     price: any;
     quantity: any;
