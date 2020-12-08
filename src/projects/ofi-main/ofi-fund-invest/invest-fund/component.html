@@ -150,6 +150,17 @@
                             <span *ngIf="useCBDC" class="text-success">{{ 'Set to use Central Bank Digital Currency (CBDC)' | translate }}</span>
                         </div>
                     </div>
+                    
+                    <div class="col-sm-6" #reference>
+                        <div class="form-group">
+                            <label class="control-label" for="reference">
+                               {{ 'Order Client Reference' | translate }}
+                            </label>
+                            <div>
+                                <input id="reference" type="text" class="form-control" formControlName="reference" autocomplete="off" >
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="row">

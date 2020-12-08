@@ -92,6 +92,7 @@ export interface IznesNewOrderRequestBody extends MemberNodeMessageBody {
     orderby: string;
     ordervalue: number;
     comment: string;
+    reference: string;
 }
 
 export interface IznesMarkOrderSettleRequestBody extends MemberNodeMessageBody {
