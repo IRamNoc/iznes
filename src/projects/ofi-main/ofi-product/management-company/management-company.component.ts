@@ -179,13 +179,14 @@ export class OfiManagementCompanyComponent implements OnInit, OnDestroy {
 
     public editCompany(company) {
         this.managementCompanyForm.setValue({
-            ..._.omit(company, ['signatureTitle', 'signatureHash', 'logoTitle', 'logoHash']),
+            ..._.omit(company, ['signatureTitle', 'signatureHash', 'logoTitle', 'logoHash','externalEmail']),
             country: [_.find(this.countries, { id: company.country })],
             taxResidence: [_.find(this.countries, { id: company.taxResidence })],
             legalFormName: [_.find(this.legalFormList, { id: company.legalFormName })],
             phoneNumberPrefix: [_.find(this.phoneNumbersCountryCodes, { id: company.phoneNumberPrefix })],
             signature: null,
             logo: null,
+            externalEmail: null,
             // todo
             // need better approach
             // it always empty array at the moment (because we do not need to update the type of management company now), put it in just to satisfy the form group.
