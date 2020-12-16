@@ -192,7 +192,6 @@ export class OfiManagementCompanyComponent implements OnInit, OnDestroy {
             // it always empty array at the moment (because we do not need to update the type of management company now), put it in just to satisfy the form group.
             managementCompanyType: [],
         });
-        console.log(this.managementCompanyForm.getRawValue());
         this.fileMetadata.setProperties({
             signatureTitle: company.signatureTitle,
             signatureHash: company.signatureHash,
