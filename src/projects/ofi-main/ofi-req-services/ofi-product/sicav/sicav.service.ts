@@ -35,6 +35,7 @@ interface InsertSicavData {
     giinCode: any;
     logoName: any;
     logoURL: any;
+    externalEmail: string;
 }
 
 interface UpdateSicavData {
@@ -61,6 +62,8 @@ interface UpdateSicavData {
     giinCode: any;
     logoName: any;
     logoURL: any;
+    externalEmail: string;
+
 }
 
 interface DeleteSicavData {
@@ -151,6 +154,8 @@ export class OfiSicavService {
             giinCode: sicavData.giinCode,
             logoName: sicavData.logoName,
             logoURL: sicavData.logoURL,
+            externalEmail: sicavData.externalEmail,
+
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
@@ -183,6 +188,8 @@ export class OfiSicavService {
             giinCode: sicavData.giinCode,
             logoName: sicavData.logoName,
             logoURL: sicavData.logoURL,
+            externalEmail: sicavData.externalEmail,
+
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);

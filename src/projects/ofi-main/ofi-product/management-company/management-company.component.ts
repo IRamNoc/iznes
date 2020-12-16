@@ -37,6 +37,7 @@ export class OfiManagementCompanyComponent implements OnInit, OnDestroy {
     modalTitle = '';
     modalText = '';
 
+
     showConfirmModal = false;
     companyToDelete: any;
 

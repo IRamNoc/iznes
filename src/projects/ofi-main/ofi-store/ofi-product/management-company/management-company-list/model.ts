@@ -17,7 +17,7 @@ export interface ManagementCompanyDetail {
     numSiretOrSiren: string;
     shareCapital: string;
     commercialContact: string;
-    operationalContact: string;
+    opeManagementCompanyListStaterationalContact: string;
     directorContact: string;
     lei: string;
     bic: string;
@@ -31,6 +31,7 @@ export interface ManagementCompanyDetail {
     logoHash: string;
     isThirdPartyKyc: boolean;
     managementCompanyType: 'nowcp' | 'common' | 'id2s';
+    externalEmail: string;
 }
 
 export interface ManagementCompanyListState {

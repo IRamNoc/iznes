@@ -85,7 +85,11 @@ function formatManagementCompanyDataResponse(rawCompanyData: Array<any>): Array<
                 logoHash: item.get('logoHash'),
                 signatureTitle: item.get('signatureTitle'),
                 signatureHash: item.get('signatureHash'),
+                externalEmail: item.get('externalEmail'),
             };
+
+
+
             return result;
         },
         {}));
@@ -185,6 +189,7 @@ function handleGetInvestorManagementCompanyList(state: InvManagementCompanyListS
                 signatureHash: it.signatureHash,
                 isThirdPartyKyc: !!it.isThirdPartyKyc,
                 managementCompanyType: it.managementCompanyType,
+                externalEmail: it.externalEmail,
             });
 
             investorManagementCompanyList = investorManagementCompanyList.push(item);

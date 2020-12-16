@@ -28,6 +28,7 @@ export class OfiManagementCompanyService {
     accountId = 0;
     isManagementCompanyRequested: boolean;
     isInvestorManagementCompanyRequested: boolean;
+    
 
     unSubscribe: Subject<any> = new Subject();
 
@@ -127,8 +128,7 @@ export class OfiManagementCompanyService {
             RequestName: 'getmanagementcompanylist',
             token: this.memberSocketService.token,
             accountID: this.accountId,
-        };
-
+        }
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
     }
 

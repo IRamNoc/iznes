@@ -126,6 +126,9 @@ describe('OfiManagementCompanyComponent', () => {
         logoTitle: 'logoTitle',
         logoHash: 'logoHash',
         managementCompanyType: 'common',
+        externalEmail: 'externalEmail',
+
+        
     };
 
     beforeAll(done => (async () => {
@@ -260,7 +263,7 @@ describe('OfiManagementCompanyComponent', () => {
         it('should be invalid with no documents in production mode', () => {
             const noDocCompany = {
                 ...fakeCompany,
-                signatureHash: null,
+                signatureHash: nulloperationalContact,
             };
             comp.editCompany(noDocCompany);
             expect(comp.isFormValid).toEqual(false);
