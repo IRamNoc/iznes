@@ -34,3 +34,24 @@ export interface PortfolioManagerList {
         [pmId: string]: PortfolioManagerDetail;
     };
 }
+
+export interface PortfolioManagerDetailDashboard {
+    emailAddress: string,
+    firstName: string,
+    lastName: string,
+    type: string,
+    investorName: string,
+    fundName: string,
+    portfolioName: string,
+    subportfolioName: string,
+    subportfolioHashIdentifierCode: string,
+    fundCustodianBank: number,
+    subportfolioEtablishmentName: string,
+    subportfolioBIC: string,
+    subportfolioIBAN: string,
+    subportfolioSecurityAccount: string,
+    subportfolioEntityReceivingPaymentInstructions: string,
+    subportfolioEntityReceivingPositionCertificates: string,
+    subportfolioEntityReceivingTransactionNotices: string,
+    fundAdministrator: string
+}

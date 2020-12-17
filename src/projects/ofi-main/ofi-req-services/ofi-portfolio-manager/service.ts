@@ -18,6 +18,7 @@ import {
     OfiPortfolioManagerUpdateRequestBody,
     OfiWealthManagerDetailrequestBody,
     OfiWealthManagerUpdateRequestBody,
+    OfiPortfolioManagerListDashboardrequestBody,
 } from './model';
 
 @Injectable()
@@ -91,6 +92,47 @@ export class OfiPortfolioMangerService {
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
     }
+
+    requestPortfolioManagerDetailPromise(pmId: number): any {
+        const messageBody: OfiPortfolioManagerDetailrequestBody = {
+            RequestName: 'iznportfoliomanagerlist',
+            token: this.memberSocketService.token,
+            pmid: pmId,
+        };
+
+        return createMemberNodeRequest(this.memberSocketService, messageBody);
+    }
+
+    /**
+     * Get portfolio manager for am dashboard with default action
+     * @param: none
+     */
+    defaultRequestPortfolioManagerListDashboard(successCallback: (res) => void, errorCallback: (res) => void) {
+        const asyncTaskPipe = this.requestPortfolioManagerListDashboard();
+
+        this.ngRedux.dispatch(SagaHelper.runAsync(
+            [],
+            [],
+            asyncTaskPipe,
+            {},
+            res => successCallback(res),
+            res => errorCallback(res),
+        ));
+    }
+
+    /**
+     * Get portfolio manager for am dashboard
+     * @param: none
+     */
+    requestPortfolioManagerListDashboard() {
+        const messageBody: OfiPortfolioManagerListDashboardrequestBody = {
+            RequestName: 'izngetallinvestorsfunds',
+            token: this.memberSocketService.token,
+        }
+
+        return createMemberNodeRequest(this.memberSocketService, messageBody);
+    }
+
 
     /**
      * Get portfolio manager detail with default action.
