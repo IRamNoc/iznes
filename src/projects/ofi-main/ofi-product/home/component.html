@@ -1,7 +1,66 @@
 <!-- Breadcrumbs. -->
 <div class="header-breadcrumbs">
-    <h1 id="am-product-home"><i class="fa fa-bar-chart"></i>{{ 'Shares / Funds / Umbrella Funds' | translate }}</h1>
+    <div class="row">
+        <div class="col-xs-8">
+            <h1 id="am-product-home"><i class="fa fa-bar-chart"></i>{{ 'Shares / Funds / Umbrella Funds' | translate }}</h1>
+        </div>
+        
+        <div class="col-xs-4 text-right">
+            <button *ngIf="isAssetManager()"
+            id="test"
+            class="btn btn-primary action-button"
+            [disabled]="!hasPermissionUpdateUmbrellaFund || !hasPermissionUpdateFund || !hasPermissionUpdateFundShare"
+            (click)="showFileUploadModal = true">{{ 'Import product updates' | translate }}
+            </button>
+        </div>
+    </div>
 </div>
+
+<clr-modal [(clrModalOpen)]="showFileUploadModal">
+    <h3 id="override_header" class="modal-title">{{ 'Import product updates' | translate }}</h3>
+    <div class="modal-body">
+        <form>
+            <section class="form-block">
+                <div class="form-group col-sm-12">
+                    <label class="control-label" for="globalproductUpdateCsvFile">{{ 'File to upload: ' | translate }}</label>
+                    <input #globalproductUpdateCsvFile id="globalproductUpdateCsvFile" name="globalproductUpdateCsvFile" type="file" accept="text/csv"
+                        (change)="productUpdateCsvFile = $event.target.files[0]" />
+                </div>
+            </section>
+        </form>
+        <div class="mt-1 alert alert-warning alert-sm">
+            <button type="button" class="close" aria-label="Close">
+                <clr-icon aria-hidden="true" shape="close"></clr-icon>
+            </button>
+            <div class="alert-item static">
+                <small>
+                    <ul>
+                        <li>{{ 'Filename : DateFunds_BIC code of the company set in IZNES_Transmission date(YYYYMMDD)_Transmission time(hhHmmMssS)_Effect date(YYYYYMMDD)_Version of the file.csv' | translate }}</li>
+                        <li>{{ 'Example' | translate }} : DataFunds_FIEHFRP1XXX_20200324_18H35M21S_20200326_34.csv</li>
+                        <li>{{ 'The data must be separated by a semicolon «;».' | translate }}</li>
+                        <li>{{ 'The 1st line must contain the OpenFunds references (OFST###) and the 2nd line the OpenFunds data labels.' | translate }}</li>
+                        <li>{{ 'The data of the OPC shares to be processed must be on the 3rd line of the file.' | translate }}</li>
+                        <li>{{ 'Column «OFST020000» must be present and contain the ISIN code of the products to be updated; no product creation is done by data import.' | translate }}</li>
+                    </ul>
+                </small>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button id='globalNavModalCancelButton' type="button" class="btn btn-outline" [disabled]="!hasResult" (click)="resetProductsUploadModal()">
+            {{ 'Cancel' | translate }}
+        </button>
+
+        <button *ngIf="hasResult" id='globalNavModalSubmitButton' type="button" class="btn btn-primary" (click)="handleProductsUploadSubmitClick()"
+            [disabled]="!productUpdateCsvFile">
+            {{ 'Upload' | translate }}
+        </button>
+
+        <div *ngIf='!hasResult' class="btn btn-primary">
+            <i class="fa fa-spinner fa-spin"></i>
+        </div>
+    </div>
+</clr-modal>
 
 <!-- Main content. -->
 <section class="subtitle">
