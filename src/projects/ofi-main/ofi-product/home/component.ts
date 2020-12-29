@@ -976,7 +976,7 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
                 const payload = {
                     productsData: JSON.stringify(reader.result),
                     filename: this.productUpdateCsvFile.name,
-                    managementCompanyID: this.managementCompanyAccessList[1].companyID,
+                    managementCompanyID: _.find(this.managementCompanyAccessList, 'companyID').companyID,
                 };
 
                 this.ofiFundService.uploadProductsFile(
