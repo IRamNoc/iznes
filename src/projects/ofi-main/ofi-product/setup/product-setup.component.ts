@@ -431,12 +431,12 @@ export class ProductSetupComponent implements OnInit, OnDestroy {
 				sortable: true,
 			},
 			iban: {
-				label: this.translate.translate('IBAN'),
+				label: this.translate.translate(`Funds's IBAN dedicated to IZNES`),
 				dataSource: 'iban',
 				sortable: true,
 			},
 			tradingAccount: {
-				label: this.translate.translate(`Funds's IBAN dedicated to IZNES`),
+				label: this.translate.translate(`Fund's securities account dedicated to IZNES`),
 				dataSource: 'tradingAccount',
 				sortable: true,
 			},
