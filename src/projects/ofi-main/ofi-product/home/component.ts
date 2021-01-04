@@ -1004,7 +1004,7 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
                 <table class="table grid">
                     <tbody>
                         <tr>
-                            <td class="text-center text-success">${this.translate.translate(successMessage)}</td>
+                            <td class="text-center text-success">${this.translate.translate("Your file has been uploaded successfully. It will be processed at 4:00 am and a log file will be sent to you."}</td>
                         </tr>
                     </tbody>
                 </table>`,
