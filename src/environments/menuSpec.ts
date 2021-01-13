@@ -381,9 +381,9 @@ const myAssetManagers = {
         },
     ],
 };
-
+// updated on 12/11/20, previously Configuration
 const productConfiguration = {
-    label: 'Configuration',
+    label: 'Calendar',
     label_txt: 'txt_productconfig',
     icon_class: 'cog',
     element_id: 'menu-product-config',

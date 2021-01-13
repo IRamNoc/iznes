@@ -28,3 +28,7 @@ export interface OfiWealthManagerUpdateRequestBody extends MemberNodeMessageBody
     pmid: number;
     status: number;
 }
+
+export interface OfiPortfolioManagerListDashboardrequestBody extends MemberNodeMessageBody {
+    token: string;
+}

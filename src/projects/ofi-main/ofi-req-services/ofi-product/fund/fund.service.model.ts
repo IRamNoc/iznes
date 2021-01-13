@@ -114,3 +114,17 @@ export interface fetchFundAuditRequestBody extends MemberNodeMessageBody {
     token: any;
     fundID: number;
 }
+
+export interface UploadProductsFileMessageBody extends MemberNodeMessageBody {
+    RequestName: string;
+    token: string;
+    productsData: string;
+    filename: string;
+    managementCompanyID: number;
+}
+
+export interface UploadProductsFileRequestData {
+    productsData: string;
+    filename: string;
+    managementCompanyID: number;
+}

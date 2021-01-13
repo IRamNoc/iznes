@@ -154,10 +154,10 @@
                     <div class="col-sm-6" #reference>
                         <div class="form-group">
                             <label class="control-label" for="reference">
-                               {{ 'Order Client Reference' | translate }}
+                               {{ 'Order Client Reference' | translate }} (max 20 {{ 'characters' | translate }})
                             </label>
                             <div>
-                                <input id="reference" type="text" class="form-control" formControlName="reference" autocomplete="off" >
+                                <input id="reference" maxlength="20" type="text" class="form-control" formControlName="reference" autocomplete="off" >
                             </div>
                         </div>
                     </div>

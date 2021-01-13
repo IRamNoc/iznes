@@ -31,6 +31,7 @@ import {
     OfiProfileMyInformationsComponent,
     OfiSignUpComponent,
     ProductConfigurationComponent,
+    ProductSetupComponent,
     OfiInvMyDocumentsComponent,
     OfiRedirectTokenComponent,
     MyHoldingsComponent,
@@ -355,6 +356,11 @@ export const ROUTES: Routes = [
                     {
                         path: 'configuration',
                         component: ProductConfigurationComponent,
+                        canActivate: [LoginGuardService],
+                    },
+                    {
+                        path: 'setup',
+                        component: ProductSetupComponent,
                         canActivate: [LoginGuardService],
                     },
                 ],

@@ -34,6 +34,7 @@ export { OfiMyInformationsComponent } from './ofi-my-informations/my-information
  */
 export { ProductHomeComponent } from './ofi-product/home/component';
 export { ProductConfigurationComponent } from './ofi-product/configuration/component';
+export { ProductSetupComponent } from './ofi-product/setup/product-setup.component';
 export { UmbrellaFundComponent } from './ofi-product/umbrella-fund/component';
 export { FundShareComponent } from './ofi-product/fund-share/form/component';
 export { AddNewFundShareComponent } from './ofi-product/fund-share/add-new/component';
