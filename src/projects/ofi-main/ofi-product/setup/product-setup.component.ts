@@ -321,7 +321,7 @@ export class ProductSetupComponent implements OnInit, OnDestroy {
 
 		this.panelDefs[1].data = this.shareListNotPermitted;
 		this.panelDefs[1].count = this.shareListNotPermitted.length;
-		this.populateInterFundsTable();
+		// this.populateInterFundsTable(); -- TODO: 13/01/21 NEED TO FIX LOGIC ON MATRICIAL TABLE
 		this.changeDetectorRef.markForCheck();
 	}
 
@@ -641,11 +641,14 @@ export class ProductSetupComponent implements OnInit, OnDestroy {
 				children: [],
 				open: true,
 			},
+			/*
+			-- TODO: 13/01/21 NEED TO FIX LOGIC ON MATRICIAL TABLE
 			{
 				title: 'Interfunds authorisations',
 				children: [],
 				open: true,
 			}
+			*/
 		];
 	}
 }
