@@ -347,6 +347,10 @@ export class ProductSetupComponent implements OnInit, OnDestroy {
 		this.changeDetectorRef.markForCheck();
 	}
 
+	/**
+	 * Generate funds columns
+	 * @param fundName 
+	 */
 	generateFundsColumn(fundName) {
 		return {
 			label: fundName,
