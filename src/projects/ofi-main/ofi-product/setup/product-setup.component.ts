@@ -71,7 +71,8 @@ export class ProductSetupComponent implements OnInit, OnDestroy {
 
 		// request portfolio managers list using promises
 		const reponsePmList = await this.ofiPortfolioMangerService.requestPortfolioManagerListDashboard();
-		const pmList = _.get(reponsePmList, '[1].Data', []);
+		let pmList = _.get(reponsePmList, '[1].Data', []);
+		pmList = pmList.filter((pm) => pm.pmID !== null);
 		this.getInvestorsFundsList(pmList);
 
 		this.subscriptions.push(this.fundListObs.subscribe(funds => this.getFundList(funds)));
