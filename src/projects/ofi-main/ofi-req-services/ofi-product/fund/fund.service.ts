@@ -13,6 +13,8 @@ import {
     IznesFundRequestMessageBody,
     IznDeleteFundDraftRequestBody,
     fetchFundAuditRequestBody,
+    UploadProductsFileMessageBody,
+    UploadProductsFileRequestData,
 } from './fund.service.model';
 import {
     setRequestedIznesFunds,
@@ -21,6 +23,9 @@ import {
 } from '@ofi/ofi-main/ofi-store/ofi-product/fund/fund-list/actions';
 import { GET_IZN_FUND_LIST } from '../../../ofi-store/ofi-product/fund/fund-list';
 import { OfiUmbrellaFundService } from '../umbrella-fund/service';
+
+const GLOBAL_UPLOAD_MODE = 'global';
+const DETAIL_UPLOAD_MODE = 'detail';
 
 @Injectable()
 export class OfiFundService {
@@ -240,4 +245,41 @@ export class OfiFundService {
             {},
         ));
     }
+
+    /**
+     * Send the content of csv file as JSON to backend
+     *
+     * @param {string} mode
+     * @param {UploadProductsFileRequestData} requestData
+     * @param {NgRedux<any>} ngRedux
+     * @param {(res) => void} successCallback
+     * @param {(err) => void} errorCallback
+     */
+    uploadProductsFile(mode = GLOBAL_UPLOAD_MODE, requestData: UploadProductsFileRequestData, ngRedux: NgRedux<any>, successCallback: (res) => void, errorCallback: (err) => void) {
+        let messageBody: UploadProductsFileMessageBody = {
+            RequestName: (mode === DETAIL_UPLOAD_MODE) ? 'iznuploadproductsconfigfunds' : 'iznuploadproductsconfigfunds',
+            token: this.memberSocketService.token,
+            productsData: requestData.productsData,
+            filename: requestData.filename,
+            managementCompanyID: requestData.managementCompanyID,
+        };
+
+        if (mode === DETAIL_UPLOAD_MODE) {
+            messageBody = { ...messageBody };
+        }
+
+        ngRedux.dispatch(
+            SagaHelper.runAsync(
+                [],
+                [],
+                createMemberNodeSagaRequest(this.memberSocketService, messageBody),
+                {},
+                res => successCallback(res),
+                err => errorCallback(err),
+            ),
+        );
+    }
 }
+
+//iznuploadglobalnavshares
+// iznuploadglobalnavshares
