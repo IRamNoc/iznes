@@ -333,19 +333,19 @@ export class ProductSetupComponent implements OnInit, OnDestroy {
 	 */
 	async populateInterFundsTable() {
 
-		console.log(this.investorsFundsShareAccess);
-		console.log(this.investorsFundsList);
-
-		const funds = [{ label: 'Fund Shares', dataSource: 'fundShare' }, ..._.map(this.fundList, (fund) => this.generateFundsColumn(fund.fundName))];
-
-		const shares = _.map(this.shareList, (share) => {
-			return { fundShare: share.fundShareName }
-		});
-
-
-		this.panelDefs[3].data = shares;
-		this.panelDefs[3].columns = funds;
-		this.panelDefs[3].count = shares.length;
+		// console.log(this.investorsFundsShareAccess);
+		// console.log(this.investorsFundsList);
+// 
+		// const funds = [{ label: 'Fund Shares', dataSource: 'fundShare' }, ..._.map(this.fundList, (fund) => this.generateFundsColumn(fund.fundName))];
+// 
+		// const shares = _.map(this.shareList, (share) => {
+		// 	return { fundShare: share.fundShareName }
+		// });
+// 
+// 
+		// this.panelDefs[3].data = shares;
+		// this.panelDefs[3].columns = funds;
+		// this.panelDefs[3].count = shares.length;
 		this.changeDetectorRef.markForCheck();
 	}
 
@@ -642,6 +642,11 @@ export class ProductSetupComponent implements OnInit, OnDestroy {
 			{
 				title: 'Interfunds authorisations',
 				open: true,
+				columns: [
+					this.columns['investorFundName'],
+					this.columns['fundShareName'],
+					this.columns['hasAccess'],
+				],
 			}
 		];
 	}
