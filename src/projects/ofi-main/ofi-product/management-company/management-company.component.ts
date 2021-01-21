@@ -235,7 +235,6 @@ export class OfiManagementCompanyComponent implements OnInit, OnDestroy {
     }
 
     save() {
-        console.log(this.isFormValid);
         if (!this.isFormValid) {
             return;
         }
