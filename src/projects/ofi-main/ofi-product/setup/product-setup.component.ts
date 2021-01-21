@@ -211,6 +211,7 @@ export class ProductSetupComponent implements OnInit, OnDestroy {
 					columns: [
 						this.columns['investorName'],
 						this.columns['investorFundName'],
+						this.columns['investorWalletID'],
 						this.columns['investorPortfolioName'],
 						this.columns['investorSubportfolioName'],
 						this.columns['investorSubportfolioAddress'],
@@ -506,6 +507,11 @@ export class ProductSetupComponent implements OnInit, OnDestroy {
 			investorPortfolioName: {
 				label: this.translate.translate('Portfolio Name'),
 				dataSource: 'portfolioName',
+				sortable: true,
+			},
+			investorWalletID: {
+				label: this.translate.translate('Wallet ID'),
+				dataSource: 'walletID',
 				sortable: true,
 			},
 			investorSubportfolioName: {
