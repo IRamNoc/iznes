@@ -32,7 +32,8 @@ export class ProductSetupComponent implements OnInit, OnDestroy {
 	fundCurrencyItems = [];
 	investorsFundsList = []; 
 	investorsFundsShareAccess = [];
-	interfundsAuthorization = {};
+	porfolioManagerFunds = [];
+	pmFundWalletList = [];
 	panelDefs = [];
 	columns = {};
 
@@ -74,6 +75,9 @@ export class ProductSetupComponent implements OnInit, OnDestroy {
 		let pmList = _.get(reponsePmList, '[1].Data', []);
 		pmList = pmList.filter((pm) => pm.pmID !== null);
 		this.getInvestorsFundsList(pmList);
+
+		const responsePmFundWalletList = await this.ofiPortfolioMangerService.requestPortfolioManagerWalletsListDashboard();
+		this.pmFundWalletList = _.get(responsePmFundWalletList, '[1].Data', []);
 
 		this.subscriptions.push(this.fundListObs.subscribe(funds => this.getFundList(funds)));
 		this.subscriptions.push(this.managementCompanyAccessListObs
@@ -332,20 +336,29 @@ export class ProductSetupComponent implements OnInit, OnDestroy {
 	 * 
 	 */
 	async populateInterFundsTable() {
+		let interFundData = [];
+		
+		this.fundList.forEach((fund) => {
+			this.shareList.forEach((share) => {
+				interFundData.push({
+					fundID: fund.fundID,
+					fundShareID: share.fundShareID,
+					fundWalletID: _.find(this.pmFundWalletList, { fundID: fund.fundID }).walletID,
+					fundName: fund.fundName,
+					fundShareName : share.fundShareName,
+				});
+			});
+		});
 
-		// console.log(this.investorsFundsShareAccess);
-		// console.log(this.investorsFundsList);
-// 
-		// const funds = [{ label: 'Fund Shares', dataSource: 'fundShare' }, ..._.map(this.fundList, (fund) => this.generateFundsColumn(fund.fundName))];
-// 
-		// const shares = _.map(this.shareList, (share) => {
-		// 	return { fundShare: share.fundShareName }
-		// });
-// 
-// 
-		// this.panelDefs[3].data = shares;
-		// this.panelDefs[3].columns = funds;
-		// this.panelDefs[3].count = shares.length;
+		interFundData.map((value) => {
+			const isMatching = _.find(this.investorsFundsShareAccess, { shareID: value.fundShareID, investorWalletID: value.fundWalletID });
+			value.hasAccess = isMatching !== undefined ? this.translate.translate("Yes") : this.translate.translate("No");
+			return value;
+		});
+
+
+		this.panelDefs[3].data = interFundData;
+		this.panelDefs[3].count = interFundData.length;
 		this.changeDetectorRef.markForCheck();
 	}
 

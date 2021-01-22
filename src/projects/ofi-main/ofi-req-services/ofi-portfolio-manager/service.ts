@@ -133,6 +133,19 @@ export class OfiPortfolioMangerService {
         return createMemberNodeRequest(this.memberSocketService, messageBody);
     }
 
+    /**
+     * 
+     * Get Porffolio managers funds wallets
+     * @param: none
+     */
+    requestPortfolioManagerWalletsListDashboard() {
+        const messageBody: OfiPortfolioManagerListDashboardrequestBody = {
+            RequestName: 'izngetallinvestorsfundswallets',
+            token: this.memberSocketService.token,
+        }
+
+        return createMemberNodeRequest(this.memberSocketService, messageBody);
+    }
 
     /**
      * Get portfolio manager detail with default action.
