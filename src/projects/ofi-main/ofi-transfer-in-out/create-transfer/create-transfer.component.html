@@ -124,8 +124,9 @@
 
           <div class="row">
             <div class="col-md-4">
-              <label class="clr-col-12 clr-col-md-12 required-field" for="quantity">{{ 'Quantity' | translate }}</label>
-              <input id="quantity" formControlName="quantity" class="form-control" type="number">
+            <label class="clr-col-12 clr-col-md-12 required-field" for="quantity">{{ 'Quantity' | translate }}<small class="text-danger" *ngIf="this.placeTransferFormGroup.controls.quantity.errors?.pattern">
+              Max share decimal : {{this.shareSelected.maximumNumDecimal}} </small></label>
+              <input id="quantity"formControlName="quantity" class="form-control" type="number">
             </div>
 
             <div class="col-md-4">
