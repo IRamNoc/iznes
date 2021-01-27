@@ -165,7 +165,7 @@ export class CreateTransferComponent implements OnInit, OnDestroy {
         // update amount on price input change
         this.placeTransferFormGroup.get('unitPrice').valueChanges.subscribe((value: number) => {
             this.placeTransferFormGroup.controls['amount'].patchValue(
-                value * this.placeTransferFormGroup.controls['quantity'].value,
+                (value * this.placeTransferFormGroup.controls['quantity'].value).toFixed(2),
             );
         });
 
@@ -207,6 +207,11 @@ export class CreateTransferComponent implements OnInit, OnDestroy {
         this.placeTransferFormGroup.controls['investorWallet'].setValue('');
         this.walletSelected = this.investorSelected = {};
         this.shareSelected = this.shareList[event.id];
+        
+        this.placeTransferFormGroup.controls['quantity'].clearValidators();
+        this.placeTransferFormGroup.controls['quantity'].setValidators(Validators.required);
+        this.placeTransferFormGroup.controls['quantity'].setValidators(Validators.pattern("^\\d*\\.?\\d{0," + this.shareSelected.maximumNumDecimal + "}$"));
+        
         this.placeTransferFormGroup.controls['currency']
             .setValue(this.currencyList[this.shareSelected['shareClassCurrency']]['text'] || 'EUR');
         this.transferService.fetchInvestorListByShareID(
