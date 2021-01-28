@@ -7,8 +7,7 @@
 		<div class="row panel-header">
 			<div class="col-xs-6">
 				<a href="#" (click)="panel.open = !panel.open; $event.preventDefault();">
-					<h3> <span class="fa fa-chevron-right" [class.rotate]="panel.open"></span>
-						{{ '@panel.title@' | translate: {'panel.title': panel.title} }} <span *ngIf="panel.count">({{panel.count}})</span></h3>
+					<h3><span class="fa fa-chevron-right" [class.rotate]="panel.open"></span>{{ 'panel.title' | translate: {'panel.title': panel.title} }}<span *ngIf="panel.count"> ({{panel.count}})</span></h3>
 				</a>
 			</div>
 		</div>
@@ -50,10 +49,10 @@
 					<div class="col-xs-6">
 						<a href="#" (click)="children.open = !children.open; $event.preventDefault();">
 							<h6 *ngIf="children.colored" style="color: #e65f05"> <span class="fa fa-chevron-right"
-									[class.rotate]="children.open"></span> {{ children.title | translate }}
+									[class.rotate]="children.open"></span>{{ children.title | translate }}
 								({{children.count}})</h6>
 							<h6 *ngIf="!children.colored"> <span class="fa fa-chevron-right"
-									[class.rotate]="children.open"></span> {{ children.title | translate }}
+									[class.rotate]="children.open"></span>{{ children.title | translate }}
 								({{children.count}})</h6>
 						</a>
 					</div>

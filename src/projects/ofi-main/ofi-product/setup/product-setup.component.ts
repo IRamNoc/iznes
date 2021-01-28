@@ -598,7 +598,7 @@ export class ProductSetupComponent implements OnInit, OnDestroy {
 	initPanelDefs(): void {
 		this.panelDefs = [
 			{
-				title: 'Authorized IZNES shares',
+				title: this.translate.translate('Authorized IZNES shares'),
 				columns: [
 					this.columns['isin'],
 					this.columns['fundShareName'],
@@ -623,7 +623,7 @@ export class ProductSetupComponent implements OnInit, OnDestroy {
 				count: this.shareListPermitted.length,
 			},
 			{
-				title: 'IZNES shares pending allocation',
+				title: this.translate.translate('IZNES shares pending allocation'),
 				columns: [
 					this.columns['isin'],
 					this.columns['fundShareName'],
@@ -648,12 +648,12 @@ export class ProductSetupComponent implements OnInit, OnDestroy {
 				count: this.shareListNotPermitted.length,
 			},
 			{
-				title: 'Investor Funds authorized in IZNES',
+				title: this.translate.translate('Investor Funds authorized in IZNES'),
 				children: [],
 				open: true,
 			},
 			{
-				title: 'Interfunds authorisations',
+				title: this.translate.translate('Interfunds authorisations'),
 				open: true,
 				columns: [
 					this.columns['investorFundName'],
