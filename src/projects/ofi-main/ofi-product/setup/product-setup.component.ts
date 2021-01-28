@@ -337,6 +337,9 @@ export class ProductSetupComponent implements OnInit, OnDestroy {
 	 */
 	async populateInterFundsTable() {
 		let interFundData = [];
+
+		console.log(this.shareList);
+		console.log(this.pmFundWalletList);
 		
 		this.fundList.forEach((fund) => {
 			this.shareList.forEach((share) => {
@@ -349,6 +352,8 @@ export class ProductSetupComponent implements OnInit, OnDestroy {
 				});
 			});
 		});
+
+		console.log(interFundData);
 
 		interFundData.map((value) => {
 			const isMatching = _.find(this.investorsFundsShareAccess, { shareID: value.fundShareID, investorWalletID: value.fundWalletID });
