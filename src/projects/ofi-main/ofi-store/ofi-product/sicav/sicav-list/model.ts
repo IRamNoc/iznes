@@ -22,6 +22,8 @@ export interface SicavDetail {
     giinCode: string;
     logoName: string;
     logoURL: string;
+    externalEmail: string;
+
 }
 
 export interface SicavListState {

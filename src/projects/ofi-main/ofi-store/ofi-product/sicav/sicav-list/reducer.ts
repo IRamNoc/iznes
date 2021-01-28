@@ -65,8 +65,10 @@ function formatSicavDataResponse(rawSicavData: Array<any>): Array<SicavDetail> {
                 giinCode: item.get('giinCode'),
                 logoName: item.get('logoName'),
                 logoURL: item.get('logoURL'),
+                externalEmail: item.get('externalEmail'),
+
             };
-            return result;
+            
         },
         {}));
 

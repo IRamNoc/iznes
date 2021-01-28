@@ -102,11 +102,13 @@ export class OfiMyInformationsComponent implements OnInit, OnDestroy {
                     Validators.required,
                 ]),
             ],
+           
             phoneNumber: [
                 '',
                 Validators.compose([
                     Validators.required,
                     Validators.pattern(/^\d+$/),
+            
                 ]),
             ],
         });
@@ -117,6 +119,9 @@ export class OfiMyInformationsComponent implements OnInit, OnDestroy {
             .subscribe(managementCompanyList => this.getManagementCompanyListFromRedux(managementCompanyList))
         );
     }
+    
+    
+
 
     ngOnInit() {
     }

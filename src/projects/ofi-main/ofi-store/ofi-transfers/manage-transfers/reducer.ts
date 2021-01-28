@@ -148,6 +148,7 @@ function formatManageTransferDataResponse(rawData: any[]): ManageTransferDetails
                 transferDirection: item.get('transferDirection'),
                 transferStatus: item.get('transferStatus'),
                 userEntered: item.get('userEntered'),
+
             };
 
             result[transfer.referenceID] = transfer;
