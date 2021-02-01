@@ -12,6 +12,7 @@
     <div class="col-md-6">
       <h2>{{ 'Create a new transfer' | translate }}</h2>
       <p>Please fill in the following information to create a new transfer</p>
+      <p class="alert alert-danger">Rappel : Veuillez contrôler que vous avez bien sélectionné le bon PORTEFEUILLE pour l'envoi de notifications via la messagerie interne</p>
     </div>
   </div>
 
@@ -124,8 +125,9 @@
 
           <div class="row">
             <div class="col-md-4">
-              <label class="clr-col-12 clr-col-md-12 required-field" for="quantity">{{ 'Quantity' | translate }}</label>
-              <input id="quantity" formControlName="quantity" class="form-control" type="number">
+            <label class="clr-col-12 clr-col-md-12 required-field" for="quantity">{{ 'Quantity' | translate }}<small class="text-danger" *ngIf="this.placeTransferFormGroup.controls.quantity.errors?.pattern">
+              Max share decimal : {{this.shareSelected.maximumNumDecimal}} </small></label>
+              <input id="quantity"formControlName="quantity" class="form-control" type="number">
             </div>
 
             <div class="col-md-4">

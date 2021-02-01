@@ -154,7 +154,7 @@
                     {{ transfer.unitPrice }}
                 </clr-dg-cell>
                 <clr-dg-cell (click)="openTransferDetails(i)">
-                    {{ transfer.amount }}
+                    {{ transfer.amount.toFixed(2) }}
                 </clr-dg-cell>
                 <clr-dg-cell (click)="openTransferDetails(i)">
                     {{ transfer.theoricalDate }}

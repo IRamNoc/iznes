@@ -32,7 +32,8 @@ export class ProductSetupComponent implements OnInit, OnDestroy {
 	fundCurrencyItems = [];
 	investorsFundsList = []; 
 	investorsFundsShareAccess = [];
-	interfundsAuthorization = [];
+	porfolioManagerFunds = [];
+	pmFundWalletList = [];
 	panelDefs = [];
 	columns = {};
 
@@ -71,8 +72,12 @@ export class ProductSetupComponent implements OnInit, OnDestroy {
 
 		// request portfolio managers list using promises
 		const reponsePmList = await this.ofiPortfolioMangerService.requestPortfolioManagerListDashboard();
-		const pmList = _.get(reponsePmList, '[1].Data', []);
+		let pmList = _.get(reponsePmList, '[1].Data', []);
+		pmList = pmList.filter((pm) => pm.pmID !== null);
 		this.getInvestorsFundsList(pmList);
+
+		const responsePmFundWalletList = await this.ofiPortfolioMangerService.requestPortfolioManagerWalletsListDashboard();
+		this.pmFundWalletList = _.get(responsePmFundWalletList, '[1].Data', []);
 
 		this.subscriptions.push(this.fundListObs.subscribe(funds => this.getFundList(funds)));
 		this.subscriptions.push(this.managementCompanyAccessListObs
@@ -210,6 +215,7 @@ export class ProductSetupComponent implements OnInit, OnDestroy {
 					columns: [
 						this.columns['investorName'],
 						this.columns['investorFundName'],
+						this.columns['investorWalletID'],
 						this.columns['investorPortfolioName'],
 						this.columns['investorSubportfolioName'],
 						this.columns['investorSubportfolioAddress'],
@@ -321,7 +327,7 @@ export class ProductSetupComponent implements OnInit, OnDestroy {
 
 		this.panelDefs[1].data = this.shareListNotPermitted;
 		this.panelDefs[1].count = this.shareListNotPermitted.length;
-		// this.populateInterFundsTable(); -- TODO: 13/01/21 NEED TO FIX LOGIC ON MATRICIAL TABLE
+		this.populateInterFundsTable();
 		this.changeDetectorRef.markForCheck();
 	}
 
@@ -330,42 +336,42 @@ export class ProductSetupComponent implements OnInit, OnDestroy {
 	 * 
 	 */
 	async populateInterFundsTable() {
-		const walletIDs = _.reduce(this.investorsFundsList, (result, value) => {
-			_.forEach(value.data, (data) => result.push(data.walletID));
-			return _.uniq(result);
-		}, []);
-
-		const investorFundAccess = _.reduce(this.investorsFundsShareAccess, (result, value) => {
-			if (walletIDs.includes(value.investorWalletID))
-				result.push(value);
-			return result;
-		}, []);
-
-		_.forEach(this.fundList, (fund) => {
-			this.interfundsAuthorization[fund.fundName] = [];
-			const shares = _.filter(this.shareList, (share) => share.fundID === fund.fundID);
-			_.forEach(shares, (share) => {
-				const test = _.find(investorFundAccess, { shareID: share.fundShareID });
-				this.interfundsAuthorization[fund.fundName].push({
-					fundShareName: `${share.fundShareName} ${share.isin}`,
-					isin: share.isin,
-					hasAccess: test ? "Yes" : "No"
+		let interFundData = [];
+		
+		this.fundList.forEach((fund) => {
+			this.shareList.forEach((share) => {
+				interFundData.push({
+					fundID: fund.fundID,
+					fundShareID: share.fundShareID,
+					fundWalletID: _.get(_.find(this.pmFundWalletList, { fundID: fund.fundID }), 'walletID', -1),
+					fundName: fund.fundName,
+					fundShareName : share.fundShareName,
 				});
-			})
-			this.panelDefs[3].children.push({
-				title: fund.fundName,
-				isSubtitle: true,
-				isInterfund: true,
-				columns: [
-					this.columns['fundShareName'],
-					this.columns['hasAccess'],
-				],
-				open: true,
-				data: this.interfundsAuthorization[fund.fundName],
-				count: this.interfundsAuthorization[fund.fundName].length,
 			});
 		});
+
+		interFundData.map((value) => {
+			const isMatching = _.find(this.investorsFundsShareAccess, { shareID: value.fundShareID, investorWalletID: value.fundWalletID });
+			value.hasAccess = isMatching !== undefined ? this.translate.translate("Yes") : this.translate.translate("No");
+			return value;
+		});
+
+
+		this.panelDefs[3].data = interFundData;
+		this.panelDefs[3].count = interFundData.length;
 		this.changeDetectorRef.markForCheck();
+	}
+
+	/**
+	 * Generate funds columns
+	 * @param fundName 
+	 */
+	generateFundsColumn(fundName) {
+		return {
+			label: fundName,
+			dataSource: fundName,
+			sortable: true,
+		}
 	}
 
 
@@ -516,6 +522,11 @@ export class ProductSetupComponent implements OnInit, OnDestroy {
 				dataSource: 'portfolioName',
 				sortable: true,
 			},
+			investorWalletID: {
+				label: this.translate.translate('Wallet ID'),
+				dataSource: 'walletID',
+				sortable: true,
+			},
 			investorSubportfolioName: {
 				label: this.translate.translate('Sub-portfolio Name'),
 				dataSource: 'subportfolioName',
@@ -587,7 +598,7 @@ export class ProductSetupComponent implements OnInit, OnDestroy {
 	initPanelDefs(): void {
 		this.panelDefs = [
 			{
-				title: 'Permitted shares for placing orders',
+				title: this.translate.translate('Authorized IZNES shares'),
 				columns: [
 					this.columns['isin'],
 					this.columns['fundShareName'],
@@ -612,7 +623,7 @@ export class ProductSetupComponent implements OnInit, OnDestroy {
 				count: this.shareListPermitted.length,
 			},
 			{
-				title: 'Not permitted shares for placing orders',
+				title: this.translate.translate('IZNES shares pending allocation'),
 				columns: [
 					this.columns['isin'],
 					this.columns['fundShareName'],
@@ -637,18 +648,19 @@ export class ProductSetupComponent implements OnInit, OnDestroy {
 				count: this.shareListNotPermitted.length,
 			},
 			{
-				title: 'Investor funds - Portfolios and sub-portfolios',
+				title: this.translate.translate('Investor Funds authorized in IZNES'),
 				children: [],
 				open: true,
 			},
-			/*
-			-- TODO: 13/01/21 NEED TO FIX LOGIC ON MATRICIAL TABLE
 			{
-				title: 'Interfunds authorisations',
-				children: [],
+				title: this.translate.translate('Interfunds authorisations'),
 				open: true,
+				columns: [
+					this.columns['investorFundName'],
+					this.columns['fundShareName'],
+					this.columns['hasAccess'],
+				],
 			}
-			*/
 		];
 	}
 }

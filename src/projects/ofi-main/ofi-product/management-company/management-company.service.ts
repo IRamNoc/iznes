@@ -158,6 +158,9 @@ export class ManagagementCompanyService {
             logo: [
                 '',
             ],
+            externalEmail: [
+                '',
+            ],
             managementCompanyType: [[{id: 'common', 'text': 'Common'}]]
         });
     }

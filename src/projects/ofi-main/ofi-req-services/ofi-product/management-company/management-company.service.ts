@@ -28,6 +28,7 @@ export class OfiManagementCompanyService {
     accountId = 0;
     isManagementCompanyRequested: boolean;
     isInvestorManagementCompanyRequested: boolean;
+    
 
     unSubscribe: Subject<any> = new Subject();
 
@@ -127,8 +128,7 @@ export class OfiManagementCompanyService {
             RequestName: 'getmanagementcompanylist',
             token: this.memberSocketService.token,
             accountID: this.accountId,
-        };
-
+        }
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
     }
 
@@ -164,6 +164,7 @@ export class OfiManagementCompanyService {
             logoTitle: mcData.logoTitle,
             logoHash: mcData.logoHash,
             managementCompanyType: get(mcData.managementCompanyType, '[0].id', 'common'),
+            externalEmail: mcData.externalEmail,
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
@@ -201,6 +202,7 @@ export class OfiManagementCompanyService {
             signatureHash: mcData.signatureHash,
             logoTitle: mcData.logoTitle,
             logoHash: mcData.logoHash,
+            externalEmail: mcData.externalEmail,
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
