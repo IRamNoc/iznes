@@ -263,7 +263,7 @@ describe('OfiManagementCompanyComponent', () => {
         it('should be invalid with no documents in production mode', () => {
             const noDocCompany = {
                 ...fakeCompany,
-                signatureHash: nulloperationalContact,
+                signatureHash: null,
             };
             comp.editCompany(noDocCompany);
             expect(comp.isFormValid).toEqual(false);
