@@ -63,6 +63,10 @@ import {
     UserTeamsListComponent,
     AccountSignUpComponent,
     AccountSignUpRedirectComponent,
+    MtdashboardBaseComponent,
+    Mt10xAmComponent,
+    Mt10xInvComponent,
+    Mt502Component,
 } from '@setl/core-account-admin';
 import {
     ProductHomeComponent,
@@ -783,6 +787,25 @@ export const ROUTES: Routes = [
                         canActivate: [LoginGuardService],
                         component: UserTeamsCreateUpdateComponent,
                     },
+                    {
+                        path: 'mtdashboard',
+                        canActivate: [LoginGuardService],
+                        component: MtdashboardBaseComponent,
+                        children: [
+                            {
+                                path: 'mt502',
+                                component: Mt502Component
+                            },
+                            {
+                                path: 'mt10x-am',
+                                component: Mt10xAmComponent
+                            },
+                            {
+                                path: 'mt10x-inv',
+                                component: Mt10xInvComponent
+                            }
+                        ]
+                    }
                 ],
             },
         ],
