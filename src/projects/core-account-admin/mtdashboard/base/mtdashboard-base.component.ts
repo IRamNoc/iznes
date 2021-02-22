@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { MultilingualService } from '@setl/multilingual';
 
 @Component({
   selector: 'app-mtdashboard-base',
@@ -7,7 +8,9 @@ import { Component, OnInit } from '@angular/core';
 })
 export class MtdashboardBaseComponent implements OnInit {
 
-  constructor() { }
+  constructor(protected translate: MultilingualService) {
+    
+   }
 
   ngOnInit() {
   }
