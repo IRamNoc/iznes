@@ -20,9 +20,7 @@ export class MtdashboardBaseComponent implements OnInit {
   constructor(
     protected translate: MultilingualService,
     private router: Router,
-    ) {
-    
-   }
+    ) {}
 
   ngOnInit() {
     this.isMT502 = (this.router.url.indexOf('/account-admin/mtdashboard/mt502') !== -1) ? true : false;
