@@ -13,3 +13,5 @@ export {
 } from './users';
 
 export { AccountSignUpComponent, AccountSignUpRedirectComponent } from './signup';
+
+export { AccountGodmodeComponent } from './godmode/component';

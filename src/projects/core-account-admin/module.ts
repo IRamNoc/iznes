@@ -51,6 +51,8 @@ import {
     AccountSignupService,
 } from './signup';
 
+import { AccountGodmodeComponent } from './godmode/component';
+
 @NgModule({
     imports: [
         RouterModule,
@@ -87,6 +89,7 @@ import {
         UsersStatusComponent,
         AccountSignUpComponent,
         AccountSignUpRedirectComponent,
+        AccountGodmodeComponent,
     ],
     providers: [
         UserTeamsService,

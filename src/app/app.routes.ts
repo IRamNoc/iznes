@@ -63,6 +63,7 @@ import {
     UserTeamsListComponent,
     AccountSignUpComponent,
     AccountSignUpRedirectComponent,
+    AccountGodmodeComponent,
 } from '@setl/core-account-admin';
 import {
     ProductHomeComponent,
@@ -783,6 +784,11 @@ export const ROUTES: Routes = [
                         canActivate: [LoginGuardService],
                         component: UserTeamsCreateUpdateComponent,
                     },
+                    {
+                        path: 'god-mode',
+                        canActivate: [LoginGuardService],
+                        component: AccountGodmodeComponent,
+                    }
                 ],
             },
         ],
