@@ -56,6 +56,7 @@ import {
     Mt10xInvComponent,
     Mt502Component,
     MtdashboardBaseComponent,
+    MtdashboardService,
 } from './mtdashboard';
 
 @NgModule({
@@ -106,6 +107,7 @@ import {
         AccountAdminPermissionsServiceBase,
         AccountAdminBaseService,
         AccountSignupService,
+        MtdashboardService,
     ],
     exports: [],
 })

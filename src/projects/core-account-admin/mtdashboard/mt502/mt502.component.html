@@ -1,16 +1,18 @@
-<form id="precentra-funds-filters">
+<form [formGroup]="placeFiltersFormGroup" (ngSubmit)="getMTDashboardList()">
   <div class="row">
-
     <div class="col-lg-4">
       <label class="control-label" for="From Date">
         {{ 'From Date' | translate }}
       </label>
       <div class="input-group date-pick-wrapper">
         <span class="fa fa-calendar" aria-hidden="true"></span>
-        <input id="precentra-funds-date-from"
+        <input id="fromDate" formControlName="fromDate" [dpDayPicker]="fromConfigDate"
           [placeholder]="(!isPeriod) ? translate.translate('Choose a date') : translate.translate('Date From')"
           mode="day" theme="dp-material">
       </div>
+
+
+
     </div>
     <div class="col-lg-4">
       <label class="control-label" for="To Date">
@@ -18,7 +20,7 @@
       </label>
       <div class="input-group date-pick-wrapper">
         <span class="fa fa-calendar" aria-hidden="true"></span>
-        <input id="precentra-funds-date-from"
+        <input id="toDate" formControlName="toDate" [dpDayPicker]="toConfigDate"
           [placeholder]="(!isPeriod) ? translate.translate('Choose a date') : translate.translate('Date From')"
           mode="day" theme="dp-material">
       </div>
@@ -31,7 +33,7 @@
           {{ 'Code ISIN' | translate }}
         </label>
         <div>
-          <input type="text" class="form-control" value="ISIN" [readonly]="false" [placeholder]="ISIN">
+          <input id="isinCode" type="text" class="form-control" formControlName="isinCode">
         </div>
       </div>
     </div>
@@ -41,21 +43,27 @@
           {{ 'Share Name' | translate }}
         </label>
         <div>
-          <input type="text" class="form-control" value="Share Name" [readonly]="false" [placeholder]="ISIN">
+          <input type="text" class="form-control" formControlName="shareName">
         </div>
       </div>
     </div>
     <div class="col-lg-4">
       <div class="form-group">
         <label class="control-label" for="Centralizer">
-          {{ 'Centralizer' | translate }}
+          {{ 'Centralizing Agents' | translate }}
         </label>
         <div>
-          <ng-select id="precentra-funds-list" [allowClear]="true"
-            [placeholder]="translate.translate('Drop-down list of centralizers')">
+          <ng-select id="precentra-funds-list" [allowClear]="true" [items]="centralizingAgentList"
+            [formControl]="placeFiltersFormGroup.controls['centralizingAgent']"
+            [placeholder]="translate.translate('Select Centralizing Agent')"
+            (selected)="handleDropdownCentralizingAgentSelect($event)">
           </ng-select>
         </div>
       </div>
+    </div>
+
+    <div class="form-group col-sm-12">
+      <button id="submitbutton" type="submit" class="btn btn-primary">{{ 'Search' | translate }}</button>
     </div>
 
   </div>
