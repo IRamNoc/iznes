@@ -1,3 +1,89 @@
-<p>
-  mt502 works!
-</p>
+<form id="precentra-funds-filters">
+  <div class="row">
+
+    <div class="col-lg-4">
+      <label class="control-label" for="From Date">
+        {{ 'From Date' | translate }}
+      </label>
+      <div class="input-group date-pick-wrapper">
+        <span class="fa fa-calendar" aria-hidden="true"></span>
+        <input id="precentra-funds-date-from"
+          [placeholder]="(!isPeriod) ? translate.translate('Choose a date') : translate.translate('Date From')"
+          mode="day" theme="dp-material">
+      </div>
+    </div>
+    <div class="col-lg-4">
+      <label class="control-label" for="To Date">
+        {{ 'To Date' | translate }}
+      </label>
+      <div class="input-group date-pick-wrapper">
+        <span class="fa fa-calendar" aria-hidden="true"></span>
+        <input id="precentra-funds-date-from"
+          [placeholder]="(!isPeriod) ? translate.translate('Choose a date') : translate.translate('Date From')"
+          mode="day" theme="dp-material">
+      </div>
+    </div>
+  </div>
+  <div class="row mt-1">
+    <div class="col-lg-4">
+      <div class="form-group">
+        <label class="control-label" for="Code ISIN">
+          {{ 'Code ISIN' | translate }}
+        </label>
+        <div>
+          <input type="text" class="form-control" value="ISIN" [readonly]="false" [placeholder]="ISIN">
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-4">
+      <div class="form-group">
+        <label class="control-label" for="Share Name">
+          {{ 'Share Name' | translate }}
+        </label>
+        <div>
+          <input type="text" class="form-control" value="Share Name" [readonly]="false" [placeholder]="ISIN">
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-4">
+      <div class="form-group">
+        <label class="control-label" for="Centralizer">
+          {{ 'Centralizer' | translate }}
+        </label>
+        <div>
+          <ng-select id="precentra-funds-list" [allowClear]="true"
+            [placeholder]="translate.translate('Drop-down list of centralizers')">
+          </ng-select>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</form>
+
+<div class="well">
+  <!-- Panel body -->
+  <div class="col-xs-12">
+    <clr-datagrid #myDataGrid>
+      <clr-dg-column [clrDgField]="column.dataSource" *ngFor="let column of panelDef.columns">
+        {{column.label}}
+      </clr-dg-column>
+
+      <ng-container *ngIf="!panelDef.buttons">
+        <clr-dg-row *clrDgItems="let row of panelDef.data; index as i" id="{{'row[panelDef.linkIdent]'}}">
+          <clr-dg-cell *ngFor="let dataCol of panelDef.columns" data-id="{{row.id}}" id="{{'dataCol.dataSource'}}">
+            <span *ngIf="dataCol.dataSource == panelDef.columnLink" id="{{panelDef.linkIdent}}">
+              {{row[dataCol.dataSource]}}
+            </span>
+            <span *ngIf="dataCol.dataSource != panelDef.columnLink">{{row[dataCol.dataSource]}}</span>
+          </clr-dg-cell>
+        </clr-dg-row>
+      </ng-container>
+
+      <clr-dg-footer>{{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
+
+        <clr-dg-pagination #pagination [clrDgPageSize]="10"></clr-dg-pagination>
+      </clr-dg-footer>
+    </clr-datagrid>
+  </div>
+</div>
