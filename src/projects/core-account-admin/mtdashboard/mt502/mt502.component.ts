@@ -2,6 +2,10 @@ import { ChangeDetectorRef, Component, OnDestroy, OnInit, Inject } from '@angula
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { MultilingualService } from '@setl/multilingual';
 import { MtdashboardService } from '../service';
+import * as moment from 'moment';
+
+/* Low dash. */
+import * as _ from 'lodash';
 
 @Component({
   selector: 'app-mt502',
@@ -11,14 +15,17 @@ import { MtdashboardService } from '../service';
 
 export class Mt502Component implements OnInit, OnDestroy {
 
-  panelDef = {};
+  panelDef: any = {};
   panelColumns = {};
   centralizingAgentList = [];
   language = 'en';
   isPeriod = true;
   selectedCentralizingAgent: number = null;
   fundItems: any;
+  mtMessagesList = [];
   placeFiltersFormGroup: FormGroup;
+  total: number = 0;
+  lastPage: number = 0;
   readonly itemPerPage = 10;
   rowOffset = 0;
 
@@ -89,7 +96,7 @@ export class Mt502Component implements OnInit, OnDestroy {
       },
       orderType: {
         label: this.translate.translate('Order Type'),
-        dataSource: 'orderType',
+        dataSource: 'typeOrder',
         sortable: true,
       },
       quantity: {
@@ -172,13 +179,34 @@ export class Mt502Component implements OnInit, OnDestroy {
       toDate: this.placeFiltersFormGroup.controls['toDate'].value,
     };
 
-    this.mtDashboardService.defaultRequestMTDashboardList(request, (data) => {
-      console.log(data);
-    }, (error) => {
-      console.log(error);
-    });
+    this.mtDashboardService.requestMTDashboardList(request).then((result) => {
+      const data = result[1].Data;
+      if (data.error) {
+        //this.showAlert(this.translate.translate('Unable to view file'), 'error');
+      } else {
+        const items = data.map((item) => {
+          return {
+            date: moment(new Date(item.orderDate)).format('YYYY-MM-DD'),
+            centralizingAgent: this.centralizingAgentList[item.centralizingAgentId].text || this.translate.translate('none'),
+            typeOrder: item.orderType === 3 ? this.translate.translate("Subscription") : this.translate.translate("Redemption"),
+            messageType: `MT502 (${item.byAmountOrQuantity === 1 ? this.translate.translate("Quantity") : this.translate.translate("Amount")})`,
+            cutoffDate: moment(new Date(item.cutoff)).format('HH[h]mm'),
+            generationIznes: moment(new Date(item.dateentered)).format('HH[h]mm'),
+            sendToCentralizer: _.get(item, 'sendToCentralizingAgent') ? moment(new Date(item.sendToCentralizingAgent)).format('HH[h]mm') : this.translate.translate("Unknown"),
+            quantity: item.estimatedQuantity / 100000, // BLOCKCHAIN NUMBER DIVISER
+            ...item
+          }
+        });
 
-    console.log(request);
+        console.log(items);
+
+        this.mtMessagesList = items;
+        this.panelDef.data = this.mtMessagesList;
+        this.total = _.get(data, '[0].totalResults', 0);
+        this.lastPage = Math.ceil(this.total / this.itemPerPage);
+        this.detectChanges(true);
+      };
+    })
   }
 
   initPanelDefinition() {
@@ -199,12 +227,25 @@ export class Mt502Component implements OnInit, OnDestroy {
         this.panelColumns['providerTreatment'],
         this.panelColumns['comments'],
       ],
-
       open: true,
-      data: [],
-      count: 0,
     };
   }
+
+  detectChanges(detect = false) {
+    this.cdr.markForCheck();
+    if (detect) {
+      this.cdr.detectChanges();
+    }
+  }
+
+  refresh(state) {
+    if(!state.page) {
+        return;
+    }
+
+    this.rowOffset = state.page.to - 1;
+    this.getMTDashboardList();
+}
 
   ngOnDestroy(): void {
     this.cdr.detach();

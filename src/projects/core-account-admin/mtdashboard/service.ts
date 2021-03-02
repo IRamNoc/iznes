@@ -3,7 +3,7 @@ import { NgRedux } from '@angular-redux/store';
 
 /* Membersocket and nodeSagaRequest import. */
 import { MemberSocketService } from '@setl/websocket-service';
-import { createMemberNodeRequest, createMemberNodeSagaRequest } from '@setl/utils/common';
+import { createMemberNodeRequest } from '@setl/utils/common';
 import {
   listMtDashboardData,
   IznesGetMtDashboardRequestBody,
@@ -32,7 +32,7 @@ export class MtdashboardService {
       {},
       res => successCallback(res),
       res => errorCallback(res),
-  ));
+    ));
   }
 
   requestMTDashboardList(data: listMtDashboardData): any {
