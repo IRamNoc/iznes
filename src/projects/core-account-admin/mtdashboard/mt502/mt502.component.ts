@@ -28,6 +28,7 @@ export class Mt502Component implements OnInit, OnDestroy {
   lastPage: number = 0;
   readonly itemPerPage = 10;
   rowOffset = 0;
+  firstInit: boolean = true;
 
   // Datepicker config
   fromConfigDate = {
@@ -198,13 +199,12 @@ export class Mt502Component implements OnInit, OnDestroy {
           }
         });
 
-        console.log(items);
-
-        this.mtMessagesList = items;
+        this.mtMessagesList = _.uniqBy([...this.mtMessagesList, ...items], 'mtid');
         this.panelDef.data = this.mtMessagesList;
         this.total = _.get(data, '[0].totalResults', 0);
         this.lastPage = Math.ceil(this.total / this.itemPerPage);
         this.detectChanges(true);
+        this.firstInit = false;
       };
     })
   }
@@ -239,16 +239,15 @@ export class Mt502Component implements OnInit, OnDestroy {
   }
 
   refresh(state) {
-    if(!state.page) {
-        return;
+    if (!state.page || this.firstInit) {
+      return;
     }
 
     this.rowOffset = state.page.to - 1;
     this.getMTDashboardList();
-}
+  }
 
   ngOnDestroy(): void {
     this.cdr.detach();
-    //this.subscriptions.map(subscription => subscription.unsubscribe());
   }
 }
