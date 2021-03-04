@@ -1,50 +1,100 @@
-<form [formGroup]="filtersForm" id="precentra-funds-filters">
+<form [formGroup]="placeFiltersFormGroup" (ngSubmit)="getMTDashboardList()">
   <div class="row">
-      <div class="col-lg-4">
-      <div class="input-button-group">
-        <ng-select id="precentra-funds-list" [items]="fundsList" [allowClear]="true"
-          [placeholder]="translate.translate('All Funds')" [formControl]="filtersForm.controls['selectList']">
-        </ng-select>
-      </div>
-    </div>
     <div class="col-lg-4">
-      <!-- <div class="input-button-group">
-        <ng-select id="precentra-funds-date-type" [items]="fundSpecificDates" [allowClear]="true"
-          [placeholder]="translate.translate('Please select a type of date')"
-          [formControl]="filtersForm.controls['specificDate']">
-        </ng-select>
-      </div> -->
-      <div class="form-group">
-        <div>
-            <input type="text"
-                    class="form-control"
-                    value="ISIN"
-                    [readonly]="false"  [placeholder]="ISIN">
-        </div>
-    </div>
-    </div>  
-    <div class="col-lg-4">
+      <label class="control-label" for="From Date">
+        {{ 'From Date' | translate }}
+      </label>
       <div class="input-group date-pick-wrapper">
         <span class="fa fa-calendar" aria-hidden="true"></span>
-        <input id="precentra-funds-date-from" formControlName="dateFrom" [dpDayPicker]="fromConfigDate"
+        <input id="fromDate" formControlName="fromDate" [dpDayPicker]="fromConfigDate"
           [placeholder]="(!isPeriod) ? translate.translate('Choose a date') : translate.translate('Date From')"
           mode="day" theme="dp-material">
       </div>
     </div>
+    <div class="col-lg-4">
+      <label class="control-label" for="To Date">
+        {{ 'To Date' | translate }}
+      </label>
+      <div class="input-group date-pick-wrapper">
+        <span class="fa fa-calendar" aria-hidden="true"></span>
+        <input id="toDate" formControlName="toDate" [dpDayPicker]="toConfigDate"
+          [placeholder]="(!isPeriod) ? translate.translate('Choose a date') : translate.translate('Date From')"
+          mode="day" theme="dp-material">
+      </div>
+    </div>
+    <div class="col-lg-4">
+      <div class="form-group">
+        <label class="control-label" for="Code ISIN">
+          {{ 'Code ISIN' | translate }}
+        </label>
+        <div>
+          <input id="isinCode" type="text" class="form-control" formControlName="isinCode">
+        </div>
+      </div>
+    </div>
   </div>
-  <clr-datagrid>
-    <clr-dg-column>User ID</clr-dg-column>
-    <clr-dg-column>Name</clr-dg-column>
-    <clr-dg-column>Creation date</clr-dg-column>
-    <clr-dg-column>Favorite color</clr-dg-column>
-  
-    <clr-dg-row >
-      <clr-dg-cell>test</clr-dg-cell>
-      <clr-dg-cell>test</clr-dg-cell>
-      <clr-dg-cell>test</clr-dg-cell>
-      <clr-dg-cell>test</clr-dg-cell>
-    </clr-dg-row>
-  
-    <clr-dg-footer> Print length here</clr-dg-footer>
-  </clr-datagrid>
+  <div class="row mt-1">    
+    <div class="col-lg-4">
+      <div class="form-group">
+        <label class="control-label" for="Share Name">
+          {{ 'Share Name' | translate }}
+        </label>
+        <div>
+          <input type="text" class="form-control" formControlName="shareName">
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-4">
+      <div class="form-group">
+        <label class="control-label" for="Depositary">
+          {{ 'Depositary' | translate }}
+        </label>
+        <div>
+          <input type="text" class="form-control" formControlName="depositary">
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-4">
+      <div class="form-group">
+        <label class="control-label" for="Client Name">
+          {{ 'Client Name' | translate }}
+        </label>
+        <div>
+          <input type="text" class="form-control" formControlName="clientName">
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group col-sm-12">
+      <button id="submitbutton" type="submit" class="btn btn-primary">{{ 'Search' | translate }}</button>
+    </div>
+
+  </div>
+ 
 </form>
+
+<div class="well">
+  <!-- Panel body -->
+  <div class="col-xs-12">
+    <clr-datagrid (clrDgRefresh)="refresh($event)" #myDataGrid>
+      <clr-dg-column [clrDgField]="column.dataSource" *ngFor="let column of panelDef.columns">
+        {{column.label}}
+      </clr-dg-column>
+
+      <ng-container *ngIf="!panelDef.buttons">
+        <clr-dg-row *clrDgItems="let row of panelDef.data; index as i" id="{{'row[panelDef.linkIdent]'}}">
+          <clr-dg-cell *ngFor="let dataCol of panelDef.columns" data-id="{{row.id}}" id="{{'dataCol.dataSource'}}">
+            <span *ngIf="dataCol.dataSource == panelDef.columnLink" id="{{panelDef.linkIdent}}">
+              {{row[dataCol.dataSource]}}
+            </span>
+            <span *ngIf="dataCol.dataSource != panelDef.columnLink">{{row[dataCol.dataSource]}}</span>
+          </clr-dg-cell>
+        </clr-dg-row>
+      </ng-container>
+
+      <clr-dg-footer>Total {{ total }} MT Messages
+        <clr-dg-pagination #pagination [clrDgPageSize]="itemPerPage" [clrDgLastPage]="lastPage"></clr-dg-pagination>
+      </clr-dg-footer>
+    </clr-datagrid>
+  </div>
+</div>

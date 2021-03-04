@@ -68,7 +68,7 @@ export class Mt502Component implements OnInit, OnDestroy {
     @Inject('product-config') productConfig,
   ) {
     this.fundItems = productConfig.fundItems;
-    this.centralizingAgentList = this.fundItems.centralizingAgentItems;
+    this.centralizingAgentList = this.fundItems.custodianBankItems;
   }
 
   ngOnInit() {
@@ -188,7 +188,7 @@ export class Mt502Component implements OnInit, OnDestroy {
         const items = data.map((item) => {
           return {
             date: moment(new Date(item.orderDate)).format('YYYY-MM-DD'),
-            centralizingAgent: this.centralizingAgentList[item.centralizingAgentId].text || this.translate.translate('none'),
+            centralizingAgent: _.get(_.find(this.centralizingAgentList, { id: item.centralizingAgentId }), 'text', this.translate.translate('none')),
             typeOrder: item.orderType === 3 ? this.translate.translate("Subscription") : this.translate.translate("Redemption"),
             messageType: `MT502 (${item.byAmountOrQuantity === 1 ? this.translate.translate("Quantity") : this.translate.translate("Amount")})`,
             cutoffDate: moment(new Date(item.cutoff)).format('HH[h]mm'),

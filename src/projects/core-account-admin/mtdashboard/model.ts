@@ -10,6 +10,18 @@ export interface listMtDashboardData {
     fundShareName: string;
     centralizingAgentId: number;
 }
+export interface listAssetDashboardData {
+    itemPerPage: number;
+    rowOffset: number;
+    mtType: string;
+    fromDate: string;
+    toDate: string;
+    isinCode: string;
+    fundShareName: string;
+    depositary: string;
+    clientName: string;
+    // centralizingAgentId: number;
+}
 
 export interface IznesGetMtDashboardRequestBody  extends MemberNodeMessageBody {
     pageSize: number;
@@ -20,4 +32,17 @@ export interface IznesGetMtDashboardRequestBody  extends MemberNodeMessageBody {
     isinCode: string;
     fundShareName: string;
     centralizingAgentId: number;
+}
+
+export interface IznesGetAssetManagerDashboardRequestBody  extends MemberNodeMessageBody {
+    pageSize: number;
+    rowOffset: number;
+    mtType: string;
+    fromDate: string;
+    toDate: string;
+    isinCode: string;
+    fundShareName: string;
+    depositary: string;
+    clientName: string;
+    // centralizingAgentId: number;
 }

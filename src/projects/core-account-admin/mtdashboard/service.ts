@@ -7,6 +7,8 @@ import { createMemberNodeRequest } from '@setl/utils/common';
 import {
   listMtDashboardData,
   IznesGetMtDashboardRequestBody,
+  IznesGetAssetManagerDashboardRequestBody,
+  listAssetDashboardData,
 } from './model';
 
 import { SagaHelper } from '@setl/utils';
@@ -47,6 +49,26 @@ export class MtdashboardService {
       isinCode: data.isinCode,
       fundShareName: data.fundShareName,
       centralizingAgentId: data.centralizingAgentId,
+    };
+
+    return createMemberNodeRequest(this.memberSocketService, messageBody);
+  }
+  requestAssetManagerDashboardList(data: listAssetDashboardData): any {
+    const messageBody: IznesGetAssetManagerDashboardRequestBody = {
+      RequestName: 'izngetassetmanagerdashboardlist',
+      token: this.memberSocketService.token,
+      pageSize: data.itemPerPage,
+      rowOffset: data.rowOffset,
+      mtType: data.mtType,
+      fromDate: data.fromDate,
+      toDate: data.toDate,
+      isinCode: data.isinCode,
+      fundShareName: data.fundShareName,
+      depositary: data.depositary,
+      clientName: data.clientName,
+      // centralizingAgentId: data.centralizingAgentId,
+    
+
     };
 
     return createMemberNodeRequest(this.memberSocketService, messageBody);
