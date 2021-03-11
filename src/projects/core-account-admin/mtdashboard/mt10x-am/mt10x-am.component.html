@@ -1,4 +1,4 @@
-<form [formGroup]="placeFiltersFormGroup" (ngSubmit)="getMTDashboardList()">
+<form [formGroup]="placeFiltersFormGroup" (ngSubmit)="getMTDashboardList(true)">
   <div class="row">
     <div class="col-lg-4">
       <label class="control-label" for="From Date">
@@ -33,6 +33,7 @@
       </div>
     </div>
   </div>
+
   <div class="row mt-1">    
     <div class="col-lg-4">
       <div class="form-group">
@@ -40,17 +41,28 @@
           {{ 'Share Name' | translate }}
         </label>
         <div>
-          <input type="text" class="form-control" formControlName="shareName">
+          <!-- <input type="text" class="form-control" formControlName="shareName"> -->
+          <ng-select id="precentra-funds-list" [allowClear]="true" [items]="shareNameList"
+            [formControl]="placeFiltersFormGroup.controls['shareName']"
+            [placeholder]="translate.translate('Select Share Name')"
+            (selected)="handleDropdownshareNameSelect($event)">
+          </ng-select>
         </div>
       </div>
     </div>
+    
     <div class="col-lg-4">
       <div class="form-group">
         <label class="control-label" for="Depositary">
-          {{ 'Depositary' | translate }}
+          {{ 'Depository' | translate }}
         </label>
         <div>
-          <input type="text" class="form-control" formControlName="depositary">
+          <ng-select id="precentra-funds-list" [allowClear]="true" [items]="depositoryList"
+          [formControl]="placeFiltersFormGroup.controls['depositary']"
+          [placeholder]="translate.translate('Select Depository')"
+          (selected)="handleDropdownDepositorySelect($event)">
+        </ng-select>
+        
         </div>
       </div>
     </div>
@@ -60,7 +72,11 @@
           {{ 'Client Name' | translate }}
         </label>
         <div>
-          <input type="text" class="form-control" formControlName="clientName">
+          <ng-select id="precentra-funds-list" [allowClear]="true" [items]="clientNameList"
+          [formControl]="placeFiltersFormGroup.controls['clientName']"
+          [placeholder]="translate.translate('Select ClientName')"
+          (selected)="handleDropdownClientnameSelect($event)">
+        </ng-select>
         </div>
       </div>
     </div>

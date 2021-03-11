@@ -799,6 +799,15 @@ export const fundItems = {
         { id: 8, text: 'State Street Bank Luxembourg' },
         { id: 9, text: 'State Street Global Services France' },
     ],
+    shareNameItems: [
+        { id: 1, text: 'Share1' },
+      ],
+      depositoryItems: [
+        { id: 1, text: 'depository1' },
+      ],
+      clientNameItems: [
+        { id: 1, text: 'client1' },
+      ],
 };
 
 export default {
