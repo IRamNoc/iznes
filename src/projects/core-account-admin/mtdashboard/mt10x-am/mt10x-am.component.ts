@@ -8,7 +8,8 @@ import * as moment from 'moment';
 import * as _ from 'lodash';
 import { Subscription } from 'rxjs';
 import { select } from '@angular-redux/store';
-import { OfiFundShareService } from '@setl/ofi-main/ofi-req-services/ofi-product/fund-share/service';
+import { OfiFundShareService } from '@ofi/ofi-main/ofi-req-services/ofi-product/fund-share/service';
+import { ControlClassService } from '@clr/angular/forms/common/providers/control-class.service';
 @Component({
   selector: 'app-mt10x-am',
   templateUrl: './mt10x-am.component.html',
@@ -17,9 +18,10 @@ import { OfiFundShareService } from '@setl/ofi-main/ofi-req-services/ofi-product
 export class Mt10xAmComponent implements OnInit, OnDestroy {
 
 
-  shareList: any[] = [];  
+  shareList: any[] = [];
   filteredShareList: any[] = [];
   subscriptions: Array<Subscription> = [];
+  selectedFundShareName: any = "";
   panelDef: any = {};
   panelColumns = {};
   centralizingAgentList = [];
@@ -29,8 +31,8 @@ export class Mt10xAmComponent implements OnInit, OnDestroy {
   language = 'en';
   isPeriod = true;
   selectedCentralizingAgent: number = null;
-  selectedShare: number = null;
-  selectedClient: number = null;
+  selectedShare: any = "";
+  selectedClient: any = "";
   selectedDepsoitory: number = null;
   fundItems: any;
   mtMessagesList = [];
@@ -70,22 +72,21 @@ export class Mt10xAmComponent implements OnInit, OnDestroy {
       return false;
     },
   };
- /** Observables */
-@select(['ofi', 'ofiProduct', 'ofiFundShare', 'fundShare']) fundShareObs;
+  /** Observables */
+  @select(['ofi', 'ofiProduct', 'ofiFundShare', 'fundShare']) fundShareObs;
   constructor(
     public translate: MultilingualService,
     private fb: FormBuilder,
-    private cdr: ChangeDetectorRef,
+    private changeDetectorRef: ChangeDetectorRef,
     private mtDashboardService: MtdashboardService,
     private ofiFundShareService: OfiFundShareService,
     @Inject('product-config') productConfig,
-  ) {   
-    this.ofiFundShareService.fetchIznesAdminShareList(); 
-    this.subscriptions.push(this.fundShareObs.subscribe(shares => this.shareList = shares));
+  ) {
+    this.ofiFundShareService.fetchIznesShareList();
     this.fundItems = productConfig.fundItems;
     this.centralizingAgentList = this.fundItems.centralizingAgentItems;
-    this.shareNameList = this.fundItems.shareNameItems;
-    this.depositoryList = this.fundItems.depositoryItems;
+    // this.shareNameList = this.fundItems.shareNameItems;
+    this.depositoryList = this.fundItems.custodianBankItems;
     this.clientNameList = this.fundItems.clientNameItems;
   }
 
@@ -94,17 +95,17 @@ export class Mt10xAmComponent implements OnInit, OnDestroy {
     this.initPanelColumns();
     this.initPanelDefinition();
     this.getMTDashboardList(false);
-    
-    this.filteredShareList = Object.keys(this.shareList).map((key) => {
-      console.log(this.shareList[key].managementCompanyId,"sharee")
-      // if (this.shareList[key].managementCompanyId === event.id) {
-      //     return {
-      //         id: key,
-      //         text: this.shareList[key].fundShareName,
-      //     };
-      // }
-  });
-    console.log(this.shareList,"share list")
+    this.subscriptions.push(this.fundShareObs.subscribe(shares => this.getShareList(shares)));
+  }
+
+  getShareList(shares) {
+    this.shareList = shares;
+    this.shareNameList = Object.keys(this.shareList).map((key) => {
+      return {
+        id: key,
+        text: this.shareList[key].fundShareName,
+      };
+    });
   }
 
   initPanelColumns(): void {
@@ -216,31 +217,35 @@ export class Mt10xAmComponent implements OnInit, OnDestroy {
   handleDropdownshareNameSelect(event) {
     console.log(event)
     // this.selectedShare = this.shareNameList[event.id].id;
-    this.selectedShare = event.id;
+    this.selectedShare = event.text;
   }
   handleDropdownDepositorySelect(event) {
     // this.selectedClient = this.depositoryList[event.id].id;
-    this.selectedClient =event.id;
+    this.selectedDepsoitory = event.id;
+    
   }
   handleDropdownClientnameSelect(event) {
     // this.selectedDepsoitory = this.clientNameList[event.id].id;
-    this.selectedDepsoitory = event.id;
+    this.selectedClient = event.text;
   }
 
   getMTDashboardList(isSearch: Boolean) {
+    let shareName = this.placeFiltersFormGroup.controls['shareName'].value;
+    let clientName = this.placeFiltersFormGroup.controls['clientName'].value;
+    let depositaryValue = this.placeFiltersFormGroup.controls['depositary'].value;
     const request = {
       itemPerPage: this.itemPerPage,
       rowOffset: this.rowOffset,
       mtType: 'mt101',
       isinCode: this.placeFiltersFormGroup.controls['isinCode'].value,
-      fundShareName: this.placeFiltersFormGroup.controls['shareName'].value,
-      depositary: this.placeFiltersFormGroup.controls['depositary'].value,
-      clientName: this.placeFiltersFormGroup.controls['clientName'].value,
+      fundShareName: shareName[0] ? shareName[0].text : "",
+      depositary: depositaryValue[0] ? depositaryValue[0].id : "",
+      clientName: clientName[0] ? clientName[0].text : "",
       // centralizingAgentId: this.placeFiltersFormGroup.controls['centralizingAgent'].value.length ? this.selectedCentralizingAgent : null,
       fromDate: moment(this.placeFiltersFormGroup.controls['fromDate'].value).format('YYYY-MM-DD 00:00:00'),
       toDate: moment(this.placeFiltersFormGroup.controls['toDate'].value).format('YYYY-MM-DD 23:59:59'),
     };
-
+    console.log(request)
     this.mtDashboardService.requestAssetManagerDashboardList(request).then((result) => {
       const data = result[1].Data;
       if (data.error) {
@@ -298,9 +303,9 @@ export class Mt10xAmComponent implements OnInit, OnDestroy {
   }
 
   detectChanges(detect = false) {
-    this.cdr.markForCheck();
+    this.changeDetectorRef.markForCheck();
     if (detect) {
-      this.cdr.detectChanges();
+      this.changeDetectorRef.detectChanges();
     }
   }
 
@@ -314,8 +319,8 @@ export class Mt10xAmComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.cdr.detach();
+    this.changeDetectorRef.detach();
   }
 
-  }
-  
+}
+

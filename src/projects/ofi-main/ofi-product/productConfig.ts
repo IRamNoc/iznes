@@ -800,13 +800,15 @@ export const fundItems = {
         { id: 9, text: 'State Street Global Services France' },
     ],
     shareNameItems: [
+        { id: 1, text: 'AMC 1 FUND SHARE MONEY IC' },
         { id: 1, text: 'Share1' },
       ],
       depositoryItems: [
         { id: 1, text: 'depository1' },
       ],
       clientNameItems: [
-        { id: 1, text: 'client1' },
+        { id: 1, text: 'IZN00AFMI10' },
+        { id: 2, text: 'IZN00AF58' },
       ],
 };
 
