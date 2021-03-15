@@ -211,7 +211,7 @@ export class Mt502Component implements OnInit, OnDestroy {
       fundShareName: shareName[0] ? shareName[0].text : "",
       centralizingAgent: centralizingAgentId[0] ? centralizingAgentId[0].id : 0, 
       fromDate: moment(this.placeFiltersFormGroup.controls['fromDate'].value).format('YYYY-MM-DD 00:00:00'),
-      toDate: moment(this.placeFiltersFormGroup.controls['toDate'].value).format('YYYY-MM-DD 23:59:59'),
+      toDate: moment(this.placeFiltersFormGroup.controls['toDate'].value).format('YYYY-MM-DD 23:55:00'),
     };
 
     this.mtDashboardService.requestMTDashboardList(request).then((result) => {

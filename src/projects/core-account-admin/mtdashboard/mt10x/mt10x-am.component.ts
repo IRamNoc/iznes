@@ -233,7 +233,7 @@ export class Mt10xAmComponent implements OnInit, OnDestroy {
       depositary: depositaryValue[0] ? depositaryValue[0].id : "",
       clientName: "", // TODO: investor name search filter
       fromDate: moment(this.placeFiltersFormGroup.controls['fromDate'].value).format('YYYY-MM-DD 00:00:00'),
-      toDate: moment(this.placeFiltersFormGroup.controls['toDate'].value).format('YYYY-MM-DD 23:59:59'),
+      toDate: moment(this.placeFiltersFormGroup.controls['toDate'].value).format('YYYY-MM-DD 23:55:00'),
     };
 
     this.mtDashboardService.requestAssetManagerDashboardList(request).then((result) => {
