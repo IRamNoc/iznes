@@ -65,7 +65,6 @@ import {
     AccountSignUpRedirectComponent,
     MtdashboardBaseComponent,
     Mt10xAmComponent,
-    Mt10xInvComponent,
     Mt502Component,
 } from '@setl/core-account-admin';
 import {
@@ -797,12 +796,8 @@ export const ROUTES: Routes = [
                                 component: Mt502Component
                             },
                             {
-                                path: 'mt10x-am',
+                                path: 'mt10x',
                                 component: Mt10xAmComponent
-                            },
-                            {
-                                path: 'mt10x-inv',
-                                component: Mt10xInvComponent
                             }
                         ]
                     }

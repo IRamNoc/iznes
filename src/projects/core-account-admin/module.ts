@@ -53,7 +53,6 @@ import {
 
 import {
     Mt10xAmComponent,
-    Mt10xInvComponent,
     Mt502Component,
     MtdashboardBaseComponent,
     MtdashboardService,
@@ -96,7 +95,6 @@ import {
         AccountSignUpComponent,
         AccountSignUpRedirectComponent,
         Mt10xAmComponent,
-        Mt10xInvComponent,
         Mt502Component,
         MtdashboardBaseComponent,
     ],

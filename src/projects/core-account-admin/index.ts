@@ -14,7 +14,6 @@ export {
 
 export {
     Mt10xAmComponent,
-    Mt10xInvComponent,
     Mt502Component,
     MtdashboardBaseComponent,
 } from './mtdashboard';

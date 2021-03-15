@@ -10,12 +10,10 @@ import { Router } from '@angular/router';
 export class MtdashboardBaseComponent implements OnInit {
   
   mt502Url = '/account-admin/mtdashboard/mt502';
-  mt10xamUrl = '/account-admin/mtdashboard/mt10x-am';
-  mt10xinvUrl = '/account-admin/mtdashboard/mt10x-inv';
+  mt10xamUrl = '/account-admin/mtdashboard/mt10x';
 
   isMT502: boolean = false; 
   isMT10XAM: boolean = false; 
-  isMT10XINV: boolean = false;
 
   constructor(
     protected translate: MultilingualService,
@@ -24,10 +22,9 @@ export class MtdashboardBaseComponent implements OnInit {
 
   ngOnInit() {
     this.isMT502 = (this.router.url.indexOf('/account-admin/mtdashboard/mt502') !== -1) ? true : false;
-    this.isMT10XAM = (this.router.url.indexOf('/account-admin/mtdashboard/mt10x-am') !== -1) ? true : false;
-    this.isMT10XINV = (this.router.url.indexOf('/account-admin/mtdashboard/mt10x-inv') !== -1) ? true : false;
+    this.isMT10XAM = (this.router.url.indexOf('/account-admin/mtdashboard/mt10x') !== -1) ? true : false;
 
-    if (!this.isMT10XAM && !this.isMT10XINV && !this.isMT502) {
+    if (!this.isMT10XAM && !this.isMT502) {
       return this.router.navigateByUrl('/account-admin/mtdashboard/mt502');
     }
   }
