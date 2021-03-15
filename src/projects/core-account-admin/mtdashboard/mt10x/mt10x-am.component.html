@@ -1,0 +1,96 @@
+<form [formGroup]="placeFiltersFormGroup" (ngSubmit)="getMTDashboardList(true)">
+  <div class="row">
+    <div class="col-lg-4">
+      <label class="control-label" for="From Date">
+        {{ 'From Date' | translate }}
+      </label>
+      <div class="input-group date-pick-wrapper">
+        <span class="fa fa-calendar" aria-hidden="true"></span>
+        <input id="fromDate" formControlName="fromDate" [dpDayPicker]="fromConfigDate"
+          [placeholder]="(!isPeriod) ? translate.translate('Choose a date') : translate.translate('Date From')"
+          mode="day" theme="dp-material">
+      </div>
+    </div>
+    <div class="col-lg-4">
+      <label class="control-label" for="To Date">
+        {{ 'To Date' | translate }}
+      </label>
+      <div class="input-group date-pick-wrapper">
+        <span class="fa fa-calendar" aria-hidden="true"></span>
+        <input id="toDate" formControlName="toDate" [dpDayPicker]="toConfigDate"
+          [placeholder]="(!isPeriod) ? translate.translate('Choose a date') : translate.translate('Date From')"
+          mode="day" theme="dp-material">
+      </div>
+    </div>
+    <div class="col-lg-4">
+      <div class="form-group">
+        <label class="control-label" for="Code ISIN">
+          {{ 'ISIN' | translate }}
+        </label>
+        <div>
+          <input id="isinCode" type="text" class="form-control" formControlName="isinCode">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row mt-1">
+    <div class="col-lg-4">
+      <div class="form-group">
+        <label class="control-label" for="Share Name">
+          {{ 'Share Name' | translate }}
+        </label>
+        <div>
+          <ng-select id="precentra-funds-list" [allowClear]="true" [items]="shareNameList"
+            [formControl]="placeFiltersFormGroup.controls['shareName']"
+            [placeholder]="translate.translate('Select Share Name')" (selected)="handleDropdownshareNameSelect($event)">
+          </ng-select>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-4">
+      <div class="form-group">
+        <label class="control-label" for="Depositary">
+          {{ 'Depository' | translate }}
+        </label>
+        <div>
+          <ng-select id="precentra-funds-list" [allowClear]="true" [items]="depositoryList"
+            [formControl]="placeFiltersFormGroup.controls['depositary']"
+            [placeholder]="translate.translate('Select Depository')"
+            (selected)="handleDropdownDepositorySelect($event)">
+          </ng-select>
+        </div>
+      </div>
+    </div>
+    <div class="form-group col-sm-12">
+      <button id="submitbutton" type="submit" class="btn btn-primary">{{ 'Search' | translate }}</button>
+    </div>
+  </div>
+</form>
+
+<div class="well">
+  <!-- Panel body -->
+  <div class="col-xs-12">
+    <clr-datagrid (clrDgRefresh)="refresh($event)" #myDataGrid>
+      <clr-dg-column [clrDgField]="column.dataSource" *ngFor="let column of panelDef.columns">
+        {{column.label}}
+      </clr-dg-column>
+
+      <ng-container *ngIf="!panelDef.buttons">
+        <clr-dg-row *clrDgItems="let row of panelDef.data; index as i" id="{{'row[panelDef.linkIdent]'}}">
+          <clr-dg-cell *ngFor="let dataCol of panelDef.columns" data-id="{{row.id}}" id="{{'dataCol.dataSource'}}">
+            <span *ngIf="dataCol.dataSource == panelDef.columnLink" id="{{panelDef.linkIdent}}">
+              {{row[dataCol.dataSource]}}
+            </span>
+            <span *ngIf="dataCol.dataSource != panelDef.columnLink">{{row[dataCol.dataSource]}}</span>
+          </clr-dg-cell>
+        </clr-dg-row>
+      </ng-container>
+
+      <clr-dg-footer>Total {{ total }} MT Messages
+        <clr-dg-pagination #pagination [clrDgPageSize]="itemPerPage" [clrDgLastPage]="lastPage"></clr-dg-pagination>
+      </clr-dg-footer>
+    </clr-datagrid>
+  </div>
+</div>
