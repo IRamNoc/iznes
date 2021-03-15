@@ -6,6 +6,9 @@ import * as moment from 'moment';
 
 /* Low dash. */
 import * as _ from 'lodash';
+import { select } from '@angular-redux/store';
+import { OfiFundShareService } from '@setl/ofi-main/ofi-req-services/ofi-product/fund-share/service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-mt502',
@@ -14,7 +17,11 @@ import * as _ from 'lodash';
 })
 
 export class Mt502Component implements OnInit, OnDestroy {
-
+  shareList: any[] = [];  
+  shareNameList = [];
+  filteredShareList: any[] = [];
+  subscriptions: Array<Subscription> = [];
+  selectedFundShareName: any = "";
   panelDef: any = {};
   panelColumns = {};
   centralizingAgentList = [];
@@ -30,8 +37,8 @@ export class Mt502Component implements OnInit, OnDestroy {
   rowOffset = 0;
   firstInit: boolean = true;
 
-  // Datepicker config
-  fromConfigDate = {
+   // Datepicker config
+   fromConfigDate = {
     firstDayOfWeek: 'mo',
     format: 'YYYY-MM-DD',
     closeOnSelect: true,
@@ -59,14 +66,18 @@ export class Mt502Component implements OnInit, OnDestroy {
       return false;
     },
   };
+  /** Observables */
+  @select(['ofi', 'ofiProduct', 'ofiFundShare', 'fundShare']) fundShareObs;
 
   constructor(
     public translate: MultilingualService,
     private fb: FormBuilder,
     private cdr: ChangeDetectorRef,
-    private mtDashboardService: MtdashboardService,
+    private mtDashboardService: MtdashboardService,    
+    private ofiFundShareService: OfiFundShareService,
     @Inject('product-config') productConfig,
   ) {
+    this.ofiFundShareService.fetchIznesShareList();
     this.fundItems = productConfig.fundItems;
     this.centralizingAgentList = this.fundItems.custodianBankItems;
   }
@@ -76,6 +87,16 @@ export class Mt502Component implements OnInit, OnDestroy {
     this.initPanelColumns();
     this.initPanelDefinition();
     this.getMTDashboardList();
+    this.subscriptions.push(this.fundShareObs.subscribe(shares => this.getShareList(shares)));
+  }
+  getShareList(shares) {
+    this.shareList = shares;
+    this.shareNameList = Object.keys(this.shareList).map((key) => {
+      return {
+        id: key,
+        text: this.shareList[key].fundShareName,
+      };
+    });
   }
 
   initPanelColumns(): void {
@@ -159,8 +180,8 @@ export class Mt502Component implements OnInit, OnDestroy {
       isinCode: [''],
       shareName: [''],
       centralizingAgent: [0],
-      fromDate: [''],
-      toDate: [''],
+      fromDate: [moment().add('-3', 'year').format('YYYY-MM-DD')],
+      toDate: [moment()],
     });
   }
 
@@ -168,16 +189,18 @@ export class Mt502Component implements OnInit, OnDestroy {
     this.selectedCentralizingAgent = this.centralizingAgentList[event.id].id;
   }
 
-  getMTDashboardList() {
+  getMTDashboardList(isSearch: Boolean) {
+    let shareName = this.placeFiltersFormGroup.controls['shareName'].value;
+    let centralizingAgentId=this.placeFiltersFormGroup.controls['centralizingAgent'].value;
     const request = {
       itemPerPage: this.itemPerPage,
       rowOffset: this.rowOffset,
       mtType: 'mt502',
       isinCode: this.placeFiltersFormGroup.controls['isinCode'].value,
-      fundShareName: this.placeFiltersFormGroup.controls['shareName'].value,
-      centralizingAgentId: this.placeFiltersFormGroup.controls['centralizingAgent'].value.length ? this.selectedCentralizingAgent : null,
-      fromDate: this.placeFiltersFormGroup.controls['fromDate'].value,
-      toDate: this.placeFiltersFormGroup.controls['toDate'].value,
+      fundShareName: shareName[0] ? shareName[0].text : "",
+      centralizingAgent: centralizingAgentId[0] ? centralizingAgentId[0].id : 0, 
+      fromDate: moment(this.placeFiltersFormGroup.controls['fromDate'].value).format('YYYY-MM-DD 00:00:00'),
+      toDate: moment(this.placeFiltersFormGroup.controls['toDate'].value).format('YYYY-MM-DD 23:59:59'),
     };
 
     this.mtDashboardService.requestMTDashboardList(request).then((result) => {
@@ -198,8 +221,12 @@ export class Mt502Component implements OnInit, OnDestroy {
             ...item
           }
         });
-
-        this.mtMessagesList = _.uniqBy([...this.mtMessagesList, ...items], 'mtid');
+        if (isSearch) {
+          this.mtMessagesList = items;
+        } else {
+          this.mtMessagesList = isSearch === true ? items : _.uniqBy([...this.mtMessagesList, ...items], 'mtid');
+        }
+        // this.mtMessagesList = _.uniqBy([...this.mtMessagesList, ...items], 'mtid');
         this.panelDef.data = this.mtMessagesList;
         this.total = _.get(data, '[0].totalResults', 0);
         this.lastPage = Math.ceil(this.total / this.itemPerPage);

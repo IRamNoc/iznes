@@ -8,7 +8,7 @@ export interface listMtDashboardData {
     toDate: string;
     isinCode: string;
     fundShareName: string;
-    centralizingAgentId: number;
+    centralizingAgent: number;
 }
 export interface listAssetDashboardData {
     itemPerPage: number;
@@ -31,7 +31,7 @@ export interface IznesGetMtDashboardRequestBody  extends MemberNodeMessageBody {
     toDate: string;
     isinCode: string;
     fundShareName: string;
-    centralizingAgentId: number;
+    centralizingAgent: number;
 }
 
 export interface IznesGetAssetManagerDashboardRequestBody  extends MemberNodeMessageBody {

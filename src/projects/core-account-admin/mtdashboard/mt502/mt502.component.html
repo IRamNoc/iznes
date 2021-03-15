@@ -1,4 +1,4 @@
-<form [formGroup]="placeFiltersFormGroup" (ngSubmit)="getMTDashboardList()">
+<form [formGroup]="placeFiltersFormGroup" (ngSubmit)="getMTDashboardList(true)">
   <div class="row">
     <div class="col-lg-4">
       <label class="control-label" for="From Date">
@@ -43,7 +43,11 @@
           {{ 'Share Name' | translate }}
         </label>
         <div>
-          <input type="text" class="form-control" formControlName="shareName">
+          <ng-select id="precentra-funds-list" [allowClear]="true" [items]="shareNameList"
+            [formControl]="placeFiltersFormGroup.controls['shareName']"
+            [placeholder]="translate.translate('Select Share Name')"
+            (selected)="handleDropdownshareNameSelect($event)">
+          </ng-select>
         </div>
       </div>
     </div>

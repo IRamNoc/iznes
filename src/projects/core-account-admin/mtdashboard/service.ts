@@ -48,7 +48,7 @@ export class MtdashboardService {
       toDate: data.toDate,
       isinCode: data.isinCode,
       fundShareName: data.fundShareName,
-      centralizingAgentId: data.centralizingAgentId,
+      centralizingAgent: data.centralizingAgent,
     };
 
     return createMemberNodeRequest(this.memberSocketService, messageBody);
