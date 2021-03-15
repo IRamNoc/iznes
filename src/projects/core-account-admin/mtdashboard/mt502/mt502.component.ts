@@ -2,6 +2,7 @@ import { ChangeDetectorRef, Component, OnDestroy, OnInit, Inject } from '@angula
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { MultilingualService } from '@setl/multilingual';
 import { MtdashboardService } from '../service';
+import { ToasterService, Toast } from 'angular2-toaster';
 import * as moment from 'moment';
 
 /* Low dash. */
@@ -17,6 +18,14 @@ import { Subscription } from 'rxjs';
 })
 
 export class Mt502Component implements OnInit, OnDestroy {
+  toastTimer;
+  timerToast: Toast;
+  toasterConfig: any = {
+      type: 'warning',
+      title: '',
+      timeout: 0,
+      tapToDismiss: false,
+  };
   shareList: any[] = [];  
   shareNameList = [];
   filteredShareList: any[] = [];
@@ -75,6 +84,7 @@ export class Mt502Component implements OnInit, OnDestroy {
     private cdr: ChangeDetectorRef,
     private mtDashboardService: MtdashboardService,    
     private ofiFundShareService: OfiFundShareService,
+    private toaster: ToasterService,
     @Inject('product-config') productConfig,
   ) {
     this.ofiFundShareService.fetchIznesShareList();
@@ -86,7 +96,7 @@ export class Mt502Component implements OnInit, OnDestroy {
     this.initFilterForm();
     this.initPanelColumns();
     this.initPanelDefinition();
-    this.getMTDashboardList();
+    this.getMTDashboardList(false);
     this.subscriptions.push(this.fundShareObs.subscribe(shares => this.getShareList(shares)));
   }
   getShareList(shares) {
@@ -112,7 +122,7 @@ export class Mt502Component implements OnInit, OnDestroy {
         sortable: true,
       },
       isin: {
-        label: this.translate.translate('ISIN Code'),
+        label: this.translate.translate('ISIN'),
         dataSource: 'isin',
         sortable: true,
       },
@@ -192,6 +202,7 @@ export class Mt502Component implements OnInit, OnDestroy {
   getMTDashboardList(isSearch: Boolean) {
     let shareName = this.placeFiltersFormGroup.controls['shareName'].value;
     let centralizingAgentId=this.placeFiltersFormGroup.controls['centralizingAgent'].value;
+
     const request = {
       itemPerPage: this.itemPerPage,
       rowOffset: this.rowOffset,
@@ -206,7 +217,7 @@ export class Mt502Component implements OnInit, OnDestroy {
     this.mtDashboardService.requestMTDashboardList(request).then((result) => {
       const data = result[1].Data;
       if (data.error) {
-        //this.showAlert(this.translate.translate('Unable to view file'), 'error');
+        return this.toaster.pop('error', this.translate.translate('There is a problem with the request.'));
       } else {
         const items = data.map((item) => {
           return {
@@ -226,7 +237,6 @@ export class Mt502Component implements OnInit, OnDestroy {
         } else {
           this.mtMessagesList = isSearch === true ? items : _.uniqBy([...this.mtMessagesList, ...items], 'mtid');
         }
-        // this.mtMessagesList = _.uniqBy([...this.mtMessagesList, ...items], 'mtid');
         this.panelDef.data = this.mtMessagesList;
         this.total = _.get(data, '[0].totalResults', 0);
         this.lastPage = Math.ceil(this.total / this.itemPerPage);
@@ -271,7 +281,7 @@ export class Mt502Component implements OnInit, OnDestroy {
     }
 
     this.rowOffset = state.page.to - 1;
-    this.getMTDashboardList();
+    this.getMTDashboardList(false);
   }
 
   ngOnDestroy(): void {

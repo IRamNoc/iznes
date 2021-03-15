@@ -10,10 +10,8 @@
           [placeholder]="(!isPeriod) ? translate.translate('Choose a date') : translate.translate('Date From')"
           mode="day" theme="dp-material">
       </div>
-
-
-
     </div>
+
     <div class="col-lg-4">
       <label class="control-label" for="To Date">
         {{ 'To Date' | translate }}
@@ -25,18 +23,19 @@
           mode="day" theme="dp-material">
       </div>
     </div>
-  </div>
-  <div class="row mt-1">
+
     <div class="col-lg-4">
       <div class="form-group">
-        <label class="control-label" for="Code ISIN">
-          {{ 'Code ISIN' | translate }}
+        <label class="control-label" for="isinCode">
+          {{ 'ISIN' | translate }}
         </label>
         <div>
           <input id="isinCode" type="text" class="form-control" formControlName="isinCode">
         </div>
       </div>
     </div>
+  </div>
+  <div class="row mt-1">
     <div class="col-lg-4">
       <div class="form-group">
         <label class="control-label" for="Share Name">
@@ -46,7 +45,7 @@
           <ng-select id="precentra-funds-list" [allowClear]="true" [items]="shareNameList"
             [formControl]="placeFiltersFormGroup.controls['shareName']"
             [placeholder]="translate.translate('Select Share Name')"
-            (selected)="handleDropdownshareNameSelect($event)">
+          >
           </ng-select>
         </div>
       </div>
