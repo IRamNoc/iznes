@@ -9,6 +9,7 @@ export interface Subportfolio {
     investorReference: string;
     accountLabel: string;
     accountCurrency: number;
+    custodianAccountHolder: number;
     label: string;
     addressLine1: string;
     addressLine2: string;

@@ -96,7 +96,18 @@
                     </label>
                     <input type="text" formControlName="hashIdentifierCode" class="form-control">
                 </div>
+
+                <div class="form-group col-sm-6">
+                    <label class="control-label">
+                        {{ 'Custodian Account Holder' | translate}}
+                    </label>
+                    <ng-select [items]="custodianAccountItems" formControlName="custodianAccountHolder"
+                        placeholder="{{' Please select a Custodian Account' | translate}}">
+                    </ng-select>
+                    <span class="field-error">{{ getFormError('custodianAccountHolder') }}</span>
+                </div>
             </div>
+
             <div class="row">
                 <div class="form-group col-sm-6">
                     <label class="control-label">

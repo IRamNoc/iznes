@@ -156,6 +156,7 @@ export class OfiSubPortfolioService {
             walletId: this.connectedWalletId,
             country: _.get(values, 'country[0].id', values.country),
             accountCurrency: _.get(values.accountCurrency, [0, 'id'], values.accountCurrency),
+            custodianAccountHolder: _.get(values.custodianAccountHolder, [0], 'id', values.custodianAccountHolder),
             ownerCountry: _.get(values.ownerCountry, [0, 'id'], values.ownerCountry),
             bankIdentificationStatement: JSON.stringify(bankIdentificationStatement),
             useCBDC: values.useCBDC ? 1 : 0,

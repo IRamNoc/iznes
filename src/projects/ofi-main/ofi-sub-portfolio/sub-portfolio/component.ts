@@ -36,6 +36,10 @@ export class OfiSubPortfolioComponent implements OnDestroy {
     public editForm: boolean = false;
     public countries: any[] = this.translate.translate(fundItems.domicileItems);
     currenciesItems = [];
+    custodianAccountItems = [
+        { id: 1, text: "SGSS Test" },
+        { id: 2, text: "BPSS Test" }
+    ];
     file = {
         control: null,
         fileData: {
@@ -131,6 +135,7 @@ export class OfiSubPortfolioComponent implements OnDestroy {
                 investorReference: new FormControl('', [Validators.maxLength(255)]),
                 accountLabel: new FormControl('', [Validators.required, CustomValidators.swiftNameAddressValidator]),
                 accountCurrency: new FormControl('', [Validators.required]),
+                custodianAccountHolder: new FormControl(''),
                 label: new FormControl('', [Validators.required, this.duplicatedLabel.bind(this), Validators.maxLength(200)]),
                 establishmentName: new FormControl('', [Validators.required, Validators.maxLength(45)]),
                 addressLine1: new FormControl('', [Validators.required, Validators.maxLength(255)]),
