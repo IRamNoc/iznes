@@ -180,6 +180,15 @@ export class ShareKeyFactsMandatory extends DynamicFormsValidator {
             return this.allowSellBuy.value() === false || this.allowSellBuy.value() === 0;
         },
     };
+    ktpCode: FormItem = {
+
+        type: FormItemType.text,
+
+        label: 'KTP Code',
+
+        required: true,
+
+    };
 }
 
 export class ShareKeyFactsOptional {

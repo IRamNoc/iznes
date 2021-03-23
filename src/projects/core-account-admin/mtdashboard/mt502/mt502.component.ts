@@ -86,7 +86,7 @@ export class Mt502Component implements OnInit, OnDestroy {
     this.initFilterForm();
     this.initPanelColumns();
     this.initPanelDefinition();
-    this.getMTDashboardList();
+    this.getMTDashboardList(false);
     this.subscriptions.push(this.fundShareObs.subscribe(shares => this.getShareList(shares)));
   }
   getShareList(shares) {
@@ -271,7 +271,7 @@ export class Mt502Component implements OnInit, OnDestroy {
     }
 
     this.rowOffset = state.page.to - 1;
-    this.getMTDashboardList();
+    this.getMTDashboardList(false);
   }
 
   ngOnDestroy(): void {
