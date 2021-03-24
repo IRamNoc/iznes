@@ -36,7 +36,21 @@ export class OfiSubPortfolioComponent implements OnDestroy {
     public editForm: boolean = false;
     public countries: any[] = this.translate.translate(fundItems.domicileItems);
     currenciesItems = [];
-    custodianAccountItems = [];
+    custodianPaymentItems = [
+        { id: 0, text: 'None / Aucun' },
+        { id: 1, text: 'SGSS' },
+        { id: 5, text: 'CACEIS Bank France' }
+    ];
+    custodianPositionItems = [
+        { id: 0, text: 'None / Aucun' },
+        { id: 1, text: 'SGSS' },
+        { id: 5, text: 'CACEIS Bank France' },
+        { id: 10, text: 'Generali' }
+    ];
+    custodianTransactionNoticesItems = [
+        { id: 0, text: 'None / Aucun' },
+        { id: 5, text: 'CACEIS' }
+    ];
     file = {
         control: null,
         fileData: {
@@ -55,7 +69,6 @@ export class OfiSubPortfolioComponent implements OnDestroy {
     @select(['ofi', 'ofiCurrencies', 'currencies']) currencyList$;
 
     constructor(
-        @Inject('product-config') productConfig,
         private ngRedux: NgRedux<any>,
         private alertsService: AlertsService,
         private ofiSubPortfolioReqService: OfiSubPortfolioReqService,
@@ -66,7 +79,6 @@ export class OfiSubPortfolioComponent implements OnDestroy {
         private ofiCurrenciesService: OfiCurrenciesService,
         private changeDetectorRef: ChangeDetectorRef,
     ) {
-        this.custodianAccountItems = productConfig.fundItems.custodianBankItems;
         this.ofiCurrenciesService.getCurrencyList();
         this.tabDetail = [{
             title: {
@@ -179,9 +191,9 @@ export class OfiSubPortfolioComponent implements OnDestroy {
         });
         this.tabDetail[0]['formControl'].controls.hashIdentifierCode.patchValue(address);
         this.tabDetail[0]['formControl'].controls.accountCurrency.patchValue([_.find(this.currenciesItems, { id: subPortfolio.accountCurrency })]);
-        this.tabDetail[0]['formControl'].controls.custodianPayment.patchValue([_.find(this.custodianAccountItems, { id: subPortfolio.custodianPaymentID })]);
-        this.tabDetail[0]['formControl'].controls.custodianPosition.patchValue([_.find(this.custodianAccountItems, { id: subPortfolio.custodianPositionID })]);
-        this.tabDetail[0]['formControl'].controls.custodianTransactionNotices.patchValue([_.find(this.custodianAccountItems, { id: subPortfolio.custodianTransactionNoticesID })]);
+        this.tabDetail[0]['formControl'].controls.custodianPayment.patchValue([_.find(this.custodianPaymentItems, { id: subPortfolio.custodianPaymentID })]);
+        this.tabDetail[0]['formControl'].controls.custodianPosition.patchValue([_.find(this.custodianPositionItems, { id: subPortfolio.custodianPositionID })]);
+        this.tabDetail[0]['formControl'].controls.custodianTransactionNotices.patchValue([_.find(this.custodianTransactionNoticesItems, { id: subPortfolio.custodianTransactionNoticesID })]);
         this.file.fileData = subPortfolio.bankIdentificationStatement;
         this.file.control.patchValue(subPortfolio.bankIdentificationStatement.fileID);
 

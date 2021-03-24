@@ -103,7 +103,7 @@
                     <label class="control-label">
                         {{ 'Entity to receive subscription payment instructions by sFTP' | translate}}
                     </label>
-                    <ng-select [items]="custodianAccountItems" formControlName="custodianPayment"
+                    <ng-select [items]="custodianPaymentItems" formControlName="custodianPayment"
                         placeholder="{{' Please select a Custodian' | translate}}">
                     </ng-select>
                 </div>
@@ -112,7 +112,7 @@
                     <label class="control-label">
                         {{ 'Entity to Receive Position Certificates (AIC/MT535) by sFTP' | translate}}
                     </label>
-                    <ng-select [items]="custodianAccountItems" formControlName="custodianPosition"
+                    <ng-select [items]="custodianPositionItems" formControlName="custodianPosition"
                         placeholder="{{' Please select a Custodian' | translate}}">
                     </ng-select>
                 </div>
@@ -121,7 +121,7 @@
                     <label class="control-label">
                         {{ 'Entity to Receive Transaction Notices (MT515) by sFTP' | translate}}
                     </label>
-                    <ng-select [items]="custodianAccountItems" formControlName="custodianTransactionNotices"
+                    <ng-select [items]="custodianTransactionNoticesItems" formControlName="custodianTransactionNotices"
                         placeholder="{{' Please select a Custodian' | translate}}">
                     </ng-select>
                 </div>
