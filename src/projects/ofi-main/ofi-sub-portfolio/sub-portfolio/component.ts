@@ -1,5 +1,5 @@
 // Vendor
-import { Component, OnDestroy, ChangeDetectorRef, ViewChild } from '@angular/core';
+import { Component, OnDestroy, ChangeDetectorRef, ViewChild, Inject } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { select, NgRedux } from '@angular-redux/store';
 import { Subject } from 'rxjs/Subject';
@@ -36,6 +36,21 @@ export class OfiSubPortfolioComponent implements OnDestroy {
     public editForm: boolean = false;
     public countries: any[] = this.translate.translate(fundItems.domicileItems);
     currenciesItems = [];
+    custodianPaymentItems = [
+        { id: 0, text: 'None / Aucun' },
+        { id: 1, text: 'SGSS' },
+        { id: 5, text: 'CACEIS Bank France' }
+    ];
+    custodianPositionItems = [
+        { id: 0, text: 'None / Aucun' },
+        { id: 1, text: 'SGSS' },
+        { id: 5, text: 'CACEIS Bank France' },
+        { id: 10, text: 'Generali' }
+    ];
+    custodianTransactionNoticesItems = [
+        { id: 0, text: 'None / Aucun' },
+        { id: 5, text: 'CACEIS' }
+    ];
     file = {
         control: null,
         fileData: {
@@ -131,6 +146,9 @@ export class OfiSubPortfolioComponent implements OnDestroy {
                 investorReference: new FormControl('', [Validators.maxLength(255)]),
                 accountLabel: new FormControl('', [Validators.required, CustomValidators.swiftNameAddressValidator]),
                 accountCurrency: new FormControl('', [Validators.required]),
+                custodianPayment: new FormControl(''),
+                custodianPosition: new FormControl(''),
+                custodianTransactionNotices: new FormControl(''),
                 label: new FormControl('', [Validators.required, this.duplicatedLabel.bind(this), Validators.maxLength(200)]),
                 establishmentName: new FormControl('', [Validators.required, Validators.maxLength(45)]),
                 addressLine1: new FormControl('', [Validators.required, Validators.maxLength(255)]),
@@ -173,6 +191,9 @@ export class OfiSubPortfolioComponent implements OnDestroy {
         });
         this.tabDetail[0]['formControl'].controls.hashIdentifierCode.patchValue(address);
         this.tabDetail[0]['formControl'].controls.accountCurrency.patchValue([_.find(this.currenciesItems, { id: subPortfolio.accountCurrency })]);
+        this.tabDetail[0]['formControl'].controls.custodianPayment.patchValue([_.find(this.custodianPaymentItems, { id: subPortfolio.custodianPaymentID })]);
+        this.tabDetail[0]['formControl'].controls.custodianPosition.patchValue([_.find(this.custodianPositionItems, { id: subPortfolio.custodianPositionID })]);
+        this.tabDetail[0]['formControl'].controls.custodianTransactionNotices.patchValue([_.find(this.custodianTransactionNoticesItems, { id: subPortfolio.custodianTransactionNoticesID })]);
         this.file.fileData = subPortfolio.bankIdentificationStatement;
         this.file.control.patchValue(subPortfolio.bankIdentificationStatement.fileID);
 
@@ -332,9 +353,9 @@ export class OfiSubPortfolioComponent implements OnDestroy {
             default:
                 this.alertsService.generate('success', this.translate.translate(
                     'Your sub-portfolio @subPortfolioName@ has been successfully @actionType@. This may take a moment to update.', {
-                        subPortfolioName: this.tabDetail[0]['formControl'].value.label,
-                        actionType: type,
-                    }));
+                    subPortfolioName: this.tabDetail[0]['formControl'].value.label,
+                    actionType: type,
+                }));
                 break;
         }
     }
