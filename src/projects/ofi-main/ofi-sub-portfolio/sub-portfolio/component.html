@@ -96,15 +96,34 @@
                     </label>
                     <input type="text" formControlName="hashIdentifierCode" class="form-control">
                 </div>
+            </div>
 
-                <div class="form-group col-sm-6">
+            <div class="row">
+                <div class="form-group col-sm-4">
                     <label class="control-label">
-                        {{ 'Custodian Account Holder' | translate}}
+                        {{ 'Entity to receive subscription payment instructions by sFTP' | translate}}
                     </label>
-                    <ng-select [items]="custodianAccountItems" formControlName="custodianAccountHolder"
-                        placeholder="{{' Please select a Custodian Account' | translate}}">
+                    <ng-select [items]="custodianAccountItems" formControlName="custodianPayment"
+                        placeholder="{{' Please select a Custodian' | translate}}">
                     </ng-select>
-                    <span class="field-error">{{ getFormError('custodianAccountHolder') }}</span>
+                </div>
+
+                <div class="form-group col-sm-4">
+                    <label class="control-label">
+                        {{ 'Entity to Receive Position Certificates (AIC/MT535) by sFTP' | translate}}
+                    </label>
+                    <ng-select [items]="custodianAccountItems" formControlName="custodianPosition"
+                        placeholder="{{' Please select a Custodian' | translate}}">
+                    </ng-select>
+                </div>
+
+                <div class="form-group col-sm-4">
+                    <label class="control-label">
+                        {{ 'Entity to Receive Transaction Notices (MT515) by sFTP' | translate}}
+                    </label>
+                    <ng-select [items]="custodianAccountItems" formControlName="custodianTransactionNotices"
+                        placeholder="{{' Please select a Custodian' | translate}}">
+                    </ng-select>
                 </div>
             </div>
 
@@ -140,10 +159,8 @@
                     <label class="control-label required-field">
                         {{ 'Account Currency' | translate}}
                     </label>
-                    <ng-select [items]="currenciesItems" formControlName="accountCurrency"
-                        placeholder="{{' Please select a currency' | translate}}">
+                    <ng-select [items]="currenciesItems" formControlName="accountCurrency" placeholder="{{' Please select a currency' | translate}}">
                     </ng-select>
-                    <span class="field-error">{{ getFormError('accountCurrency') }}</span>
                 </div>
             </div>
 

@@ -1,5 +1,5 @@
 // Vendor
-import { Component, OnDestroy, ChangeDetectorRef, ViewChild } from '@angular/core';
+import { Component, OnDestroy, ChangeDetectorRef, ViewChild, Inject } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { select, NgRedux } from '@angular-redux/store';
 import { Subject } from 'rxjs/Subject';
@@ -36,10 +36,7 @@ export class OfiSubPortfolioComponent implements OnDestroy {
     public editForm: boolean = false;
     public countries: any[] = this.translate.translate(fundItems.domicileItems);
     currenciesItems = [];
-    custodianAccountItems = [
-        { id: 1, text: "SGSS Test" },
-        { id: 2, text: "BPSS Test" }
-    ];
+    custodianAccountItems = [];
     file = {
         control: null,
         fileData: {
@@ -58,6 +55,7 @@ export class OfiSubPortfolioComponent implements OnDestroy {
     @select(['ofi', 'ofiCurrencies', 'currencies']) currencyList$;
 
     constructor(
+        @Inject('product-config') productConfig,
         private ngRedux: NgRedux<any>,
         private alertsService: AlertsService,
         private ofiSubPortfolioReqService: OfiSubPortfolioReqService,
@@ -68,6 +66,7 @@ export class OfiSubPortfolioComponent implements OnDestroy {
         private ofiCurrenciesService: OfiCurrenciesService,
         private changeDetectorRef: ChangeDetectorRef,
     ) {
+        this.custodianAccountItems = productConfig.fundItems.custodianBankItems;
         this.ofiCurrenciesService.getCurrencyList();
         this.tabDetail = [{
             title: {
@@ -135,7 +134,9 @@ export class OfiSubPortfolioComponent implements OnDestroy {
                 investorReference: new FormControl('', [Validators.maxLength(255)]),
                 accountLabel: new FormControl('', [Validators.required, CustomValidators.swiftNameAddressValidator]),
                 accountCurrency: new FormControl('', [Validators.required]),
-                custodianAccountHolder: new FormControl(''),
+                custodianPayment: new FormControl(''),
+                custodianPosition: new FormControl(''),
+                custodianTransactionNotices: new FormControl(''),
                 label: new FormControl('', [Validators.required, this.duplicatedLabel.bind(this), Validators.maxLength(200)]),
                 establishmentName: new FormControl('', [Validators.required, Validators.maxLength(45)]),
                 addressLine1: new FormControl('', [Validators.required, Validators.maxLength(255)]),
@@ -178,6 +179,9 @@ export class OfiSubPortfolioComponent implements OnDestroy {
         });
         this.tabDetail[0]['formControl'].controls.hashIdentifierCode.patchValue(address);
         this.tabDetail[0]['formControl'].controls.accountCurrency.patchValue([_.find(this.currenciesItems, { id: subPortfolio.accountCurrency })]);
+        this.tabDetail[0]['formControl'].controls.custodianPayment.patchValue([_.find(this.custodianAccountItems, { id: subPortfolio.custodianPaymentID })]);
+        this.tabDetail[0]['formControl'].controls.custodianPosition.patchValue([_.find(this.custodianAccountItems, { id: subPortfolio.custodianPositionID })]);
+        this.tabDetail[0]['formControl'].controls.custodianTransactionNotices.patchValue([_.find(this.custodianAccountItems, { id: subPortfolio.custodianTransactionNoticesID })]);
         this.file.fileData = subPortfolio.bankIdentificationStatement;
         this.file.control.patchValue(subPortfolio.bankIdentificationStatement.fileID);
 
@@ -337,9 +341,9 @@ export class OfiSubPortfolioComponent implements OnDestroy {
             default:
                 this.alertsService.generate('success', this.translate.translate(
                     'Your sub-portfolio @subPortfolioName@ has been successfully @actionType@. This may take a moment to update.', {
-                        subPortfolioName: this.tabDetail[0]['formControl'].value.label,
-                        actionType: type,
-                    }));
+                    subPortfolioName: this.tabDetail[0]['formControl'].value.label,
+                    actionType: type,
+                }));
                 break;
         }
     }
