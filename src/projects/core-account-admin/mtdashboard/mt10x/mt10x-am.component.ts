@@ -2,6 +2,7 @@ import { ChangeDetectorRef, Component, OnDestroy, OnInit, Inject } from '@angula
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { MultilingualService } from '@setl/multilingual';
 import { MtdashboardService } from '../service';
+import { ToasterService, Toast } from 'angular2-toaster';
 import * as moment from 'moment';
 
 /* Low dash. */
@@ -9,15 +10,21 @@ import * as _ from 'lodash';
 import { Subscription } from 'rxjs';
 import { select } from '@angular-redux/store';
 import { OfiFundShareService } from '@ofi/ofi-main/ofi-req-services/ofi-product/fund-share/service';
-import { ControlClassService } from '@clr/angular/forms/common/providers/control-class.service';
+
 @Component({
   selector: 'app-mt10x-am',
   templateUrl: './mt10x-am.component.html',
   styleUrls: ['./mt10x-am.component.scss']
 })
 export class Mt10xAmComponent implements OnInit, OnDestroy {
-
-
+  toastTimer;
+  timerToast: Toast;
+  toasterConfig: any = {
+      type: 'warning',
+      title: '',
+      timeout: 0,
+      tapToDismiss: false,
+  };
   shareList: any[] = [];
   filteredShareList: any[] = [];
   subscriptions: Array<Subscription> = [];
@@ -27,7 +34,6 @@ export class Mt10xAmComponent implements OnInit, OnDestroy {
   centralizingAgentList = [];
   shareNameList = [];
   depositoryList = [];
-  clientNameList = [];
   language = 'en';
   isPeriod = true;
   selectedCentralizingAgent: number = null;
@@ -80,14 +86,13 @@ export class Mt10xAmComponent implements OnInit, OnDestroy {
     private changeDetectorRef: ChangeDetectorRef,
     private mtDashboardService: MtdashboardService,
     private ofiFundShareService: OfiFundShareService,
+    private toaster: ToasterService,
     @Inject('product-config') productConfig,
   ) {
     this.ofiFundShareService.fetchIznesShareList();
     this.fundItems = productConfig.fundItems;
     this.centralizingAgentList = this.fundItems.centralizingAgentItems;
-    // this.shareNameList = this.fundItems.shareNameItems;
     this.depositoryList = this.fundItems.custodianBankItems;
-    this.clientNameList = this.fundItems.clientNameItems;
   }
 
   ngOnInit() {
@@ -175,11 +180,6 @@ export class Mt10xAmComponent implements OnInit, OnDestroy {
         dataSource: 'fundProvider',
         sortable: true,
       },
-      // sendToProvider: {
-      //   label: this.translate.translate('Send To Provider'),
-      //   dataSource: 'sendToProvider',
-      //   sortable: true,
-      // },
       acknowledged: {
         label: this.translate.translate('Acknowledged'),
         dataSource: 'acknowledged',
@@ -204,8 +204,6 @@ export class Mt10xAmComponent implements OnInit, OnDestroy {
       isinCode: [''],
       shareName: [''],
       depositary: [''],
-      clientName: [''],
-      // centralizingAgent: [0],
       fromDate: [moment().add('-3', 'year').format('YYYY-MM-DD')],
       toDate: [moment()],
     });
@@ -215,24 +213,17 @@ export class Mt10xAmComponent implements OnInit, OnDestroy {
     this.selectedCentralizingAgent = this.centralizingAgentList[event.id].id;
   }
   handleDropdownshareNameSelect(event) {
-    console.log(event)
-    // this.selectedShare = this.shareNameList[event.id].id;
     this.selectedShare = event.text;
   }
   handleDropdownDepositorySelect(event) {
-    // this.selectedClient = this.depositoryList[event.id].id;
     this.selectedDepsoitory = event.id;
     
-  }
-  handleDropdownClientnameSelect(event) {
-    // this.selectedDepsoitory = this.clientNameList[event.id].id;
-    this.selectedClient = event.text;
   }
 
   getMTDashboardList(isSearch: Boolean) {
     let shareName = this.placeFiltersFormGroup.controls['shareName'].value;
-    let clientName = this.placeFiltersFormGroup.controls['clientName'].value;
     let depositaryValue = this.placeFiltersFormGroup.controls['depositary'].value;
+
     const request = {
       itemPerPage: this.itemPerPage,
       rowOffset: this.rowOffset,
@@ -240,16 +231,15 @@ export class Mt10xAmComponent implements OnInit, OnDestroy {
       isinCode: this.placeFiltersFormGroup.controls['isinCode'].value,
       fundShareName: shareName[0] ? shareName[0].text : "",
       depositary: depositaryValue[0] ? depositaryValue[0].id : "",
-      clientName: clientName[0] ? clientName[0].text : "",
-      // centralizingAgentId: this.placeFiltersFormGroup.controls['centralizingAgent'].value.length ? this.selectedCentralizingAgent : null,
+      clientName: "", // TODO: investor name search filter
       fromDate: moment(this.placeFiltersFormGroup.controls['fromDate'].value).format('YYYY-MM-DD 00:00:00'),
-      toDate: moment(this.placeFiltersFormGroup.controls['toDate'].value).format('YYYY-MM-DD 23:59:59'),
+      toDate: moment(this.placeFiltersFormGroup.controls['toDate'].value).format('YYYY-MM-DD 23:55:00'),
     };
-    console.log(request)
+
     this.mtDashboardService.requestAssetManagerDashboardList(request).then((result) => {
       const data = result[1].Data;
       if (data.error) {
-        //this.showAlert(this.translate.translate('Unable to view file'), 'error');
+        return this.toaster.pop('error', this.translate.translate('There is a problem with the request.'));
       } else {
         const items = data.map((item) => {
           return {
@@ -293,7 +283,6 @@ export class Mt10xAmComponent implements OnInit, OnDestroy {
         this.panelColumns['messageReference'],
         this.panelColumns['generationIznes'],
         this.panelColumns['fundProvider'],
-        // this.panelColumns['sendToProvider'],
         this.panelColumns['acknowledged'],
         this.panelColumns['providerTreatment'],
         this.panelColumns['comments'],
