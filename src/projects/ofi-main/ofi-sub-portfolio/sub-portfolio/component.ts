@@ -168,6 +168,7 @@ export class OfiSubPortfolioComponent implements OnDestroy {
                 cashAccount: new FormControl('', [Validators.maxLength(16)]),
                 useCBDC: new FormControl(''),
                 notes: new FormControl('', [Validators.maxLength(500)]),
+                bicInvestorCode: new FormControl(''),
                 bankIdentificationStatement,
             },
         );
