@@ -96,7 +96,44 @@
                     </label>
                     <input type="text" formControlName="hashIdentifierCode" class="form-control">
                 </div>
+
+                <div class="form-group col-sm-6">
+                    <label class="control-label">
+                        {{ 'BIC Investor with branch code (8 characters) - Mandatory if orders are placed via MT files' | translate}}
+                    </label>
+                    <input type="text" formControlName="bicInvestorCode" class="form-control">
+                </div>
             </div>
+
+            <div class="row">
+                <div class="form-group col-sm-4">
+                    <label class="control-label">
+                        {{ 'Entity to receive subscription payment instructions by sFTP' | translate}}
+                    </label>
+                    <ng-select [items]="custodianPaymentItems" formControlName="custodianPayment"
+                        placeholder="{{' Please select a Custodian' | translate}}">
+                    </ng-select>
+                </div>
+
+                <div class="form-group col-sm-4">
+                    <label class="control-label">
+                        {{ 'Entity to Receive Position Certificates (AIC/MT535) by sFTP' | translate}}
+                    </label>
+                    <ng-select [items]="custodianPositionItems" formControlName="custodianPosition"
+                        placeholder="{{' Please select a Custodian' | translate}}">
+                    </ng-select>
+                </div>
+
+                <div class="form-group col-sm-4">
+                    <label class="control-label">
+                        {{ 'Entity to Receive Transaction Notices (MT515) by sFTP' | translate}}
+                    </label>
+                    <ng-select [items]="custodianTransactionNoticesItems" formControlName="custodianTransactionNotices"
+                        placeholder="{{' Please select a Custodian' | translate}}">
+                    </ng-select>
+                </div>
+            </div>
+
             <div class="row">
                 <div class="form-group col-sm-6">
                     <label class="control-label">
@@ -129,10 +166,8 @@
                     <label class="control-label required-field">
                         {{ 'Account Currency' | translate}}
                     </label>
-                    <ng-select [items]="currenciesItems" formControlName="accountCurrency"
-                        placeholder="{{' Please select a currency' | translate}}">
+                    <ng-select [items]="currenciesItems" formControlName="accountCurrency" placeholder="{{' Please select a currency' | translate}}">
                     </ng-select>
-                    <span class="field-error">{{ getFormError('accountCurrency') }}</span>
                 </div>
             </div>
 
