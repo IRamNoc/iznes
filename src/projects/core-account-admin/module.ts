@@ -51,6 +51,13 @@ import {
     AccountSignupService,
 } from './signup';
 
+import {
+    Mt10xAmComponent,
+    Mt502Component,
+    MtdashboardBaseComponent,
+    MtdashboardService,
+} from './mtdashboard';
+
 @NgModule({
     imports: [
         RouterModule,
@@ -87,6 +94,9 @@ import {
         UsersStatusComponent,
         AccountSignUpComponent,
         AccountSignUpRedirectComponent,
+        Mt10xAmComponent,
+        Mt502Component,
+        MtdashboardBaseComponent,
     ],
     providers: [
         UserTeamsService,
@@ -95,6 +105,7 @@ import {
         AccountAdminPermissionsServiceBase,
         AccountAdminBaseService,
         AccountSignupService,
+        MtdashboardService,
     ],
     exports: [],
 })

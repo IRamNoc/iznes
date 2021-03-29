@@ -1,8 +1,15 @@
 <!-- callback.html -->
 <script src="https://global.oktacdn.com/okta-auth-js/4.0.0/okta-auth-js.min.js" type="text/javascript"></script>
 
+<html>
+  <body>
+    <h5 id="errorMessage"></h5>
+  </body>
+</html>
+
 <script>
   // OIDC variables
+  const errorMessage = 'An authentication error has occurred, please contact your administrator. You will be redirected in 5 seconds.';
   const baseURL = location.origin;
   const redirectUri = `${baseURL}/engie-callback`;
   const redirectAfterSuccess = baseURL;
@@ -20,8 +27,12 @@
   } else if (baseURL.includes('localhost') === true) {
     console.log('Development mode')
   } else {
+    document.getElementById('errorMessage').innerHTML = errorMessage;
     console.log('No good configuration provided, redirecting into IZNES platform.');
-    window.location = baseURL + '/#/login';
+
+    setTimeout(() => {
+      window.location = baseURL + '/#/login';
+    }, 5000)
   }
 
   // build an auth client
@@ -42,7 +53,11 @@
       window.location = redirectAfterSuccess;
     })
       .catch(function (err) {
-        console.error(err)
+        document.getElementById('errorMessage').innerHTML = errorMessage;
+
+        setTimeout(() => {
+          window.location = baseURL + '/#/login';
+        }, 5000)
       });
   }
 </script>
