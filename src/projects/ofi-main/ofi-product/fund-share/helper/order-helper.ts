@@ -774,6 +774,30 @@ export class OrderHelper {
                 settlement = this.calendarHelper.getSettlementDateFromCutoff(cutoff, this.orderType);
 
                 break;
+                
+            case 'automatic':
+                var currentDate = moment.utc(new Date(), 'YYYY-MM-DD HH:mm');
+                var currentRetry = 0;
+                var maxRetries = 30;
+
+                for (currentRetry; currentRetry < maxRetries; currentRetry++) {
+                    dateValid = this.calendarHelper.isValidCutoffDateTime(currentDate, this.orderType);
+                    if (dateValid) {
+                        cutoff = this.calendarHelper.getCutoffTimeForSpecificDate(currentDate, this.orderType);
+                        valuation = this.calendarHelper.getValuationDateFromCutoff(cutoff, this.orderType);
+                        settlement = this.calendarHelper.getSettlementDateFromCutoff(cutoff, this.orderType);
+                        currentRetry = maxRetries;
+                    } 
+                    currentDate = currentDate.add(1, 'days');
+                }
+
+                if (currentRetry >= maxRetries && !dateValid) {
+                    return {
+                        orderValid: false,
+                        errorMessage: 'Invalid date',
+                    };
+                }
+                break;
 
             case 'valuation':
                 dateValid = this.calendarHelper.isValidValuationDateTime(this.dateValue, this.orderType);
