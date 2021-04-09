@@ -204,7 +204,7 @@ export class Mt10xAmComponent implements OnInit, OnDestroy {
       isinCode: [''],
       shareName: [''],
       depositary: [''],
-      fromDate: [moment().add('-3', 'year').format('YYYY-MM-DD')],
+      fromDate: [moment()],
       toDate: [moment()],
     });
   }
