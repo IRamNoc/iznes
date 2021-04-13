@@ -13,6 +13,7 @@ export class FundShareTestData {
             [{ id: E.FrequencyOfDistributionDeclarationEnum.Daily, text: 'Daily' }];
         model.keyFacts.mandatory.fundShareName.preset = `Test Fund Share - ${moment().unix().toString()}`;
         model.keyFacts.mandatory.iban.preset = `iban${moment().unix().toString()}`;
+        model.keyFacts.mandatory.mainIban.preset = `mainIban${moment().unix().toString()}`;
         model.keyFacts.mandatory.hasCoupon.preset = true;
         (model.keyFacts.mandatory.historicOrForwardPricing.preset as any) =
             [{ id: E.PricingTypeEnum.Historic, text: 'Historic' }];

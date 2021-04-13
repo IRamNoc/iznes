@@ -126,6 +126,7 @@ function handleGetIznesShareList(state: OfiFundShareListState, action: Action) {
             shareClassInvestmentStatus: share.shareClassInvestmentStatus,
             shareClassCurrency: share.shareClassCurrency,
             iban: share.iban,
+            mainIban: share.mainIban,
             valuationFrequency: share.valuationFrequency,
             historicOrForwardPricing: share.historicOrForwardPricing,
             hasCoupon: share.hasCoupon,

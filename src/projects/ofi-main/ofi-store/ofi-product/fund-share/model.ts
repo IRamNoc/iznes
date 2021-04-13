@@ -11,6 +11,7 @@ export interface OfiFundShare {
     launchDate: string;
     shareClassCurrency: number;
     iban: string;
+    mainIban: string;
     valuationFrequency: number;
     historicOrForwardPricing: number;
     status: number;
