@@ -370,6 +370,7 @@ export class FundShareComponent implements OnInit, OnDestroy {
             if (!fundShare) {
                 return;
             }
+
             this.updateFundShare(fundShare);
             this.model.setFundShare(fundShare, !!this.prefill);
 
@@ -738,7 +739,6 @@ export class FundShareComponent implements OnInit, OnDestroy {
      */
     saveFundShare(): void {
         const request = this.model.getRequest(0);
-
         if (this.isCreate() || this.currDraft === 1) {
 
             if (this.isCreate()) request.fundShareID = null;
