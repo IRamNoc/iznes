@@ -97,8 +97,7 @@ export class FundShare {
                 this.documents.mandatory.isValid();
     }
 
-    getRequest(draft): OfiFundShare { 
-        console.log(this.keyFacts,"this.keyFacts")       
+    getRequest(draft): OfiFundShare {    
         return {
             accountId: this.accountId,
             draft,
@@ -187,7 +186,7 @@ export class FundShare {
             listingOptionalData: this.generateJSONString(this.listing.optional),
             taxationOptionalData: this.generateJSONString(this.taxation.optional),
             solvencyIIOptionalData: this.generateJSONString(this.solvency.optional),
-        representationOptionalData: this.generateJSONString(this.representation.optional),
+            representationOptionalData: this.generateJSONString(this.representation.optional),
             ktpCode: this.keyFacts.mandatory.ktpCode.value(),
         };
     }
@@ -331,7 +330,6 @@ export class FundShare {
     }
 
     updateFundShare(fundShare: OfiFundShare, isPrefill = false): void {
-        // console.log(fundShare,"myfundshare")
         this.fundShareId = fundShare.fundShareID;
         this.fundID = fundShare.fundID;
 
