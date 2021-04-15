@@ -189,7 +189,8 @@ export class ShareKeyFactsMandatory extends DynamicFormsValidator {
             return this.allowSellBuy.value() === false || this.allowSellBuy.value() === 0;
         },
     };
-    
+
+    // ktp code
     ktpCode: FormItem = {
         type: FormItemType.text,
         label: 'KTP Code',
