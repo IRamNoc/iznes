@@ -26,6 +26,7 @@ export interface Subportfolio {
     ownerCountry: string;
     iban: string;
     bic: string;
+    bicInvestorCode: string;
     notes: string;
     bankIdentificationStatement: string;
     securityAccount: string;

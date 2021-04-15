@@ -1,7 +1,7 @@
 import { FormControl, Validators } from '@angular/forms';
 import { FormItem, FormItemType, FormItemStyle, DynamicFormsValidator } from '@setl/utils';
 import * as E from '../FundShareEnum';
-import {ibanValidator} from "@setl/utils/helper/validators";
+import {ibanValidator, mainIbanValidator } from "@setl/utils/helper/validators";
 
 export class ShareKeyFactsStatus extends DynamicFormsValidator {
     shareClassInvestmentStatus: FormItem = {
@@ -92,6 +92,15 @@ export class ShareKeyFactsMandatory extends DynamicFormsValidator {
             { id: E.CurrencyHedgeEnum.PartialHedge, text: 'Partial Hedge' },
         ],
         style: [FormItemStyle.BreakOnBefore],
+    };
+    mainIban: FormItem = {
+        placeholder: '',
+        type: FormItemType.text,
+        label: 'IBAN of the Fund on the assets side (required if mandatory for funds whose collection is not aggregated by the custodian)',
+        required: false,
+        validator: Validators.compose([
+            validateMainIBAN,
+        ]), 
     };
     valuationFrequency: FormItem = {
         type: FormItemType.list,
@@ -496,6 +505,13 @@ function validateISIN(c: FormControl) {
 function validateIBAN(c: FormControl) {
 
     return ibanValidator(c) === null ? null : {
+        'IBAN must be 14 to 34 characters long with 2 letters at the beginning': c.value,
+    };
+}
+
+function validateMainIBAN(c: FormControl) {
+
+    return mainIbanValidator(c) === null ? null : {
         'IBAN must be 14 to 34 characters long with 2 letters at the beginning': c.value,
     };
 }

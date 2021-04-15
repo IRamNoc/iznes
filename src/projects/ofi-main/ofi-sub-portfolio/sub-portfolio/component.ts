@@ -39,13 +39,16 @@ export class OfiSubPortfolioComponent implements OnDestroy {
     custodianPaymentItems = [
         { id: 0, text: 'None / Aucun' },
         { id: 1, text: 'SGSS' },
-        { id: 5, text: 'CACEIS Bank France' }
+        { id: 3, text: 'BPSS' },
+        { id: 5, text: 'CACEIS Bank France' },
+        { id: 11, text: 'OFI AM' }
     ];
     custodianPositionItems = [
         { id: 0, text: 'None / Aucun' },
         { id: 1, text: 'SGSS' },
         { id: 5, text: 'CACEIS Bank France' },
-        { id: 10, text: 'Generali' }
+        { id: 10, text: 'Generali' },
+        { id: 11, text: 'OFI AM' }
     ];
     custodianTransactionNoticesItems = [
         { id: 0, text: 'None / Aucun' },
@@ -146,9 +149,9 @@ export class OfiSubPortfolioComponent implements OnDestroy {
                 investorReference: new FormControl('', [Validators.maxLength(255)]),
                 accountLabel: new FormControl('', [Validators.required, CustomValidators.swiftNameAddressValidator]),
                 accountCurrency: new FormControl('', [Validators.required]),
-                custodianPayment: new FormControl(''),
-                custodianPosition: new FormControl(''),
-                custodianTransactionNotices: new FormControl(''),
+                custodianPayment: new FormControl(0),
+                custodianPosition: new FormControl(0),
+                custodianTransactionNotices: new FormControl(0),
                 label: new FormControl('', [Validators.required, this.duplicatedLabel.bind(this), Validators.maxLength(200)]),
                 establishmentName: new FormControl('', [Validators.required, Validators.maxLength(45)]),
                 addressLine1: new FormControl('', [Validators.required, Validators.maxLength(255)]),
@@ -168,6 +171,7 @@ export class OfiSubPortfolioComponent implements OnDestroy {
                 cashAccount: new FormControl('', [Validators.maxLength(16)]),
                 useCBDC: new FormControl(''),
                 notes: new FormControl('', [Validators.maxLength(500)]),
+                bicInvestorCode: new FormControl(''),
                 bankIdentificationStatement,
             },
         );

@@ -190,7 +190,7 @@ export class Mt502Component implements OnInit, OnDestroy {
       isinCode: [''],
       shareName: [''],
       centralizingAgent: [0],
-      fromDate: [moment().add('-3', 'year').format('YYYY-MM-DD')],
+      fromDate: [moment()],
       toDate: [moment()],
     });
   }
