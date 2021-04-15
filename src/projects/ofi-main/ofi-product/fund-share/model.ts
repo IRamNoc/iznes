@@ -97,7 +97,7 @@ export class FundShare {
                 this.documents.mandatory.isValid();
     }
 
-    getRequest(draft): OfiFundShare {    
+    getRequest(draft): OfiFundShare {
         return {
             accountId: this.accountId,
             draft,
