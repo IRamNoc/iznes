@@ -5,7 +5,7 @@
   </h1>
 </div>
 
-<!-- Subscripn tab -->
+<!-- Subscription/Redemption tab -->
 <div class="well">
   <!-- Panel header -->
   <div class="row panel-header">
@@ -48,11 +48,10 @@
               </ng-select>
             </div>
 
-
             <!-- Amount -->
             <div class="col-md-6">
               <label class="clr-col-12 clr-col-md-12" for="amShareFundISIN">{{ 'ISIN' | translate }}</label>
-              <input id="amShareFundISIN" formCShare NameontrolName="amShareFundISIN" class="form-control" type="text"
+              <input id="amShareFundISIN" formControlName="amShareFundISIN" class="form-control" type="text"
                 value="{{ shareSelected.isin }}">
             </div>
           </div>
