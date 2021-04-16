@@ -133,7 +133,12 @@ export class Mt502Component implements OnInit, OnDestroy {
       },
       quantity: {
         label: this.translate.translate('Quantity'),
-        dataSource: 'quantity',
+        dataSource: 'pQuantity',
+        sortable: true,
+      },
+      amount: {
+        label: this.translate.translate('Amount'),
+        dataSource: 'pAmount',
         sortable: true,
       },
       messageType: {
@@ -228,15 +233,12 @@ export class Mt502Component implements OnInit, OnDestroy {
             cutoffDate: moment(new Date(item.cutoff)).format('HH[h]mm'),
             generationIznes: moment(new Date(item.dateentered)).format('HH[h]mm'),
             sendToCentralizer: _.get(item, 'sendToCentralizingAgent') ? moment(new Date(item.sendToCentralizingAgent)).format('HH[h]mm') : this.translate.translate("Unknown"),
-            quantity: item.estimatedQuantity / 100000, // BLOCKCHAIN NUMBER DIVISER
+            pQuantity: item.quantity / 100000, // BLOCKCHAIN NUMBER DIVISER,
+            pAmount: item.amount / 100000, // BLOCKCHAIN NUMBER DIVISER
             ...item
           }
         });
-        if (isSearch) {
-          this.mtMessagesList = items;
-        } else {
-          this.mtMessagesList = isSearch === true ? items : _.uniqBy([...this.mtMessagesList, ...items], 'mtid');
-        }
+        this.mtMessagesList = items;
         this.panelDef.data = this.mtMessagesList;
         this.total = _.get(data, '[0].totalResults', 0);
         this.lastPage = Math.ceil(this.total / this.itemPerPage);
@@ -254,6 +256,7 @@ export class Mt502Component implements OnInit, OnDestroy {
         this.panelColumns['isin'],
         this.panelColumns['orderType'],
         this.panelColumns['quantity'],
+        this.panelColumns['amount'],
         this.panelColumns['messageType'],
         this.panelColumns['messageReference'],
         this.panelColumns['cutoffDate'],
