@@ -41,10 +41,13 @@ export class Mt502Component implements OnInit, OnDestroy {
   mtMessagesList = [];
   placeFiltersFormGroup: FormGroup;
   total: number = 0;
+  currentPage: number = 1;
   lastPage: number = 0;
   readonly itemPerPage = 10;
   rowOffset = 0;
   firstInit: boolean = true;
+  isModalDisplayed = false;
+  mtModal: any = {};
 
    // Datepicker config
    fromConfigDate = {
@@ -133,7 +136,12 @@ export class Mt502Component implements OnInit, OnDestroy {
       },
       quantity: {
         label: this.translate.translate('Quantity'),
-        dataSource: 'quantity',
+        dataSource: 'pQuantity',
+        sortable: true,
+      },
+      amount: {
+        label: this.translate.translate('Amount'),
+        dataSource: 'pAmount',
         sortable: true,
       },
       messageType: {
@@ -180,6 +188,11 @@ export class Mt502Component implements OnInit, OnDestroy {
         label: this.translate.translate('Comments'),
         dataSource: 'comments',
         sortable: true,
+      },
+      action: {
+        label: this.translate.translate('Action'),
+        dataSource: 'mtid',
+        type: 'button',
       }
 
     };
@@ -190,7 +203,7 @@ export class Mt502Component implements OnInit, OnDestroy {
       isinCode: [''],
       shareName: [''],
       centralizingAgent: [0],
-      fromDate: [moment().add('-3', 'year').format('YYYY-MM-DD')],
+      fromDate: [moment()],
       toDate: [moment()],
     });
   }
@@ -200,6 +213,10 @@ export class Mt502Component implements OnInit, OnDestroy {
   }
 
   getMTDashboardList(isSearch: Boolean) {
+    if (isSearch) {
+      this.rowOffset = 0;
+    }
+
     let shareName = this.placeFiltersFormGroup.controls['shareName'].value;
     let centralizingAgentId=this.placeFiltersFormGroup.controls['centralizingAgent'].value;
 
@@ -220,23 +237,29 @@ export class Mt502Component implements OnInit, OnDestroy {
         return this.toaster.pop('error', this.translate.translate('There is a problem with the request.'));
       } else {
         const items = data.map((item) => {
+          const mtMetadata = JSON.parse(item.mtMsgPayload);
+
           return {
             date: moment(new Date(item.orderDate)).format('YYYY-MM-DD'),
             centralizingAgent: _.get(_.find(this.centralizingAgentList, { id: item.centralizingAgentId }), 'text', this.translate.translate('none')),
-            typeOrder: item.orderType === 3 ? this.translate.translate("Subscription") : this.translate.translate("Redemption"),
-            messageType: `MT502 (${item.byAmountOrQuantity === 1 ? this.translate.translate("Quantity") : this.translate.translate("Amount")})`,
-            cutoffDate: moment(new Date(item.cutoff)).format('HH[h]mm'),
-            generationIznes: moment(new Date(item.dateentered)).format('HH[h]mm'),
+            typeOrder: mtMetadata.metadata.ordertype === 's' ? this.translate.translate("Subscription") : this.translate.translate("Redemption"),
+            messageType: `MT502 (${mtMetadata.metadata.msgtype === "quantity" ? this.translate.translate("Quantity") : this.translate.translate("Amount")})`,
+            cutoffDate: mtMetadata.metadata.cutoffDate,
+            generationIznes: moment(item.orderDate).format('HH[h]mm'),
             sendToCentralizer: _.get(item, 'sendToCentralizingAgent') ? moment(new Date(item.sendToCentralizingAgent)).format('HH[h]mm') : this.translate.translate("Unknown"),
-            quantity: item.estimatedQuantity / 100000, // BLOCKCHAIN NUMBER DIVISER
+            pQuantity: _.get(mtMetadata, 'mtMsg.orderedQuantity.value', '/'),
+            pAmount: _.get(mtMetadata, 'mtMsg.orderedAmount.value', '/'),
+            messageReference: mtMetadata.mtMsg.sendersMessageReference,
             ...item
           }
         });
+
         if (isSearch) {
           this.mtMessagesList = items;
         } else {
-          this.mtMessagesList = isSearch === true ? items : _.uniqBy([...this.mtMessagesList, ...items], 'mtid');
+          this.mtMessagesList = _.uniqBy([...this.mtMessagesList, ...items], 'mtid');
         }
+
         this.panelDef.data = this.mtMessagesList;
         this.total = _.get(data, '[0].totalResults', 0);
         this.lastPage = Math.ceil(this.total / this.itemPerPage);
@@ -244,6 +267,22 @@ export class Mt502Component implements OnInit, OnDestroy {
         this.firstInit = false;
       };
     })
+  }
+
+  viewMTMessage(mtid): void {
+    this.isModalDisplayed = true;
+    
+    const mtMessage = _.find(this.mtMessagesList, { mtid });
+
+    this.mtModal = {
+        title: (mtMessage.mtFilename).substring(0, mtMessage.mtFilename.length - 4),
+        body: (mtMessage.mtRawmsg).replace(` :`, '<br/>:'),
+    };
+}
+
+  closeModal(): void {
+    this.mtModal = {};
+    this.isModalDisplayed = false;
   }
 
   initPanelDefinition() {
@@ -254,6 +293,7 @@ export class Mt502Component implements OnInit, OnDestroy {
         this.panelColumns['isin'],
         this.panelColumns['orderType'],
         this.panelColumns['quantity'],
+        this.panelColumns['amount'],
         this.panelColumns['messageType'],
         this.panelColumns['messageReference'],
         this.panelColumns['cutoffDate'],
@@ -263,6 +303,7 @@ export class Mt502Component implements OnInit, OnDestroy {
         this.panelColumns['acknowledged'],
         this.panelColumns['providerTreatment'],
         this.panelColumns['comments'],
+        this.panelColumns['action']
       ],
       open: true,
     };
@@ -276,13 +317,14 @@ export class Mt502Component implements OnInit, OnDestroy {
   }
 
   refresh(state) {
+    this.rowOffset = this.currentPage - 1;
     if (!state.page || this.firstInit) {
       return;
     }
 
-    this.rowOffset = state.page.to - 1;
     this.getMTDashboardList(false);
   }
+
 
   ngOnDestroy(): void {
     this.cdr.detach();

@@ -11,6 +11,7 @@ export interface OfiFundShare {
     launchDate: string;
     shareClassCurrency: number;
     iban: string;
+    mainIban: string;
     valuationFrequency: number;
     historicOrForwardPricing: number;
     status: number;
@@ -70,6 +71,7 @@ export interface OfiFundShare {
     taxationOptionalData: string;
     solvencyIIOptionalData: string;
     representationOptionalData: string;
+    ktpCode: string;
 }
 
 export interface CurrentRequest {
