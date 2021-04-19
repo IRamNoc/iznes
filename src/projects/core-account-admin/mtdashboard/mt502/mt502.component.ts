@@ -247,8 +247,8 @@ export class Mt502Component implements OnInit, OnDestroy {
             cutoffDate: mtMetadata.metadata.cutoffDate,
             generationIznes: moment(item.orderDate).format('HH[h]mm'),
             sendToCentralizer: _.get(item, 'sendToCentralizingAgent') ? moment(new Date(item.sendToCentralizingAgent)).format('HH[h]mm') : this.translate.translate("Unknown"),
-            pQuantity: mtMetadata.mtMsg.orderedQuantity.value,
-            pAmount: item.amount / 100000, // BLOCKCHAIN NUMBER DIVISER
+            pQuantity: _.get(mtMetadata, 'mtMsg.orderedQuantity.value', '/'),
+            pAmount: _.get(mtMetadata, 'mtMsg.orderedAmount.value', '/'),
             messageReference: mtMetadata.mtMsg.sendersMessageReference,
             ...item
           }
@@ -293,6 +293,7 @@ export class Mt502Component implements OnInit, OnDestroy {
         this.panelColumns['isin'],
         this.panelColumns['orderType'],
         this.panelColumns['quantity'],
+        this.panelColumns['amount'],
         this.panelColumns['messageType'],
         this.panelColumns['messageReference'],
         this.panelColumns['cutoffDate'],
