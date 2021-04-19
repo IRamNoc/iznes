@@ -39,13 +39,16 @@ export class OfiSubPortfolioComponent implements OnDestroy {
     custodianPaymentItems = [
         { id: 0, text: 'None / Aucun' },
         { id: 1, text: 'SGSS' },
-        { id: 5, text: 'CACEIS Bank France' }
+        { id: 3, text: 'BPSS' },
+        { id: 5, text: 'CACEIS Bank France' },
+        { id: 11, text: 'OFI AM' }
     ];
     custodianPositionItems = [
         { id: 0, text: 'None / Aucun' },
         { id: 1, text: 'SGSS' },
         { id: 5, text: 'CACEIS Bank France' },
-        { id: 10, text: 'Generali' }
+        { id: 10, text: 'Generali' },
+        { id: 11, text: 'OFI AM' }
     ];
     custodianTransactionNoticesItems = [
         { id: 0, text: 'None / Aucun' },

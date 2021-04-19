@@ -111,6 +111,7 @@ export class FundShare {
             launchDate: this.keyFacts.mandatory.shareLaunchDate.value(),
             shareClassCurrency: this.getSelectValue(this.keyFacts.mandatory.shareClassCurrency),
             iban: this.keyFacts.mandatory.iban.value(),
+            mainIban: this.keyFacts.mandatory.mainIban.value(),
             valuationFrequency: this.getSelectValue(this.keyFacts.mandatory.valuationFrequency),
             historicOrForwardPricing: this.getSelectValue(this.keyFacts.mandatory.historicOrForwardPricing),
             hasCoupon: this.keyFacts.mandatory.hasCoupon.value(),
@@ -186,6 +187,7 @@ export class FundShare {
             taxationOptionalData: this.generateJSONString(this.taxation.optional),
             solvencyIIOptionalData: this.generateJSONString(this.solvency.optional),
             representationOptionalData: this.generateJSONString(this.representation.optional),
+            ktpCode: this.keyFacts.mandatory.ktpCode.value(),
         };
     }
 
@@ -242,6 +244,7 @@ export class FundShare {
     setFundShare(fundShare: OfiFundShare, isPrefill = false): void {
         this.fundID = fundShare.fundID;
         this.keyFacts.mandatory.fundShareName.preset = isPrefill ? null : fundShare.fundShareName;
+        this.keyFacts.mandatory.ktpCode.preset=isPrefill ? null : fundShare.ktpCode;
         this.keyFacts.mandatory.isin.preset = isPrefill ? null : fundShare.isin;
         this.keyFacts.mandatory.shareClassCode.preset = fundShare.shareClassCode;
         this.setListItemPreset(this.keyFacts.status.shareClassInvestmentStatus, fundShare.shareClassInvestmentStatus);
@@ -249,6 +252,7 @@ export class FundShare {
         this.keyFacts.mandatory.shareLaunchDate.preset = fundShare.launchDate;
         this.setListItemPreset(this.keyFacts.mandatory.shareClassCurrency, fundShare.shareClassCurrency);
         this.keyFacts.mandatory.iban.preset = fundShare.iban;
+        this.keyFacts.mandatory.mainIban.preset = fundShare.mainIban;
         this.setListItemPreset(this.keyFacts.mandatory.valuationFrequency, fundShare.valuationFrequency);
         this.setListItemPreset(this.keyFacts.mandatory.historicOrForwardPricing, fundShare.historicOrForwardPricing);
         this.keyFacts.mandatory.hasCoupon.preset = fundShare.hasCoupon;
@@ -330,6 +334,7 @@ export class FundShare {
         this.fundID = fundShare.fundID;
 
         this.keyFacts.mandatory.fundShareName.control.setValue(isPrefill ? null : fundShare.fundShareName);
+        this.keyFacts.mandatory.ktpCode.control.setValue(isPrefill ? null : fundShare.ktpCode);
         this.keyFacts.mandatory.isin.control.setValue(isPrefill ? null : fundShare.isin);
         this.keyFacts.mandatory.shareClassCode.control.setValue(fundShare.shareClassCode);
         this.setListItemValue(this.keyFacts.status.shareClassInvestmentStatus, fundShare.shareClassInvestmentStatus);
@@ -337,6 +342,7 @@ export class FundShare {
         this.keyFacts.mandatory.shareLaunchDate.control.setValue(fundShare.launchDate);
         this.setListItemValue(this.keyFacts.mandatory.shareClassCurrency, fundShare.shareClassCurrency);
         this.keyFacts.mandatory.iban.control.setValue(fundShare.iban);
+        this.keyFacts.mandatory.mainIban.control.setValue(fundShare.mainIban);
         this.setListItemValue(this.keyFacts.mandatory.valuationFrequency, fundShare.valuationFrequency);
         this.setListItemValue(this.keyFacts.mandatory.historicOrForwardPricing, fundShare.historicOrForwardPricing);
         this.keyFacts.mandatory.hasCoupon.control.setValue(fundShare.hasCoupon);
