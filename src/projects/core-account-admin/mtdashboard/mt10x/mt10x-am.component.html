@@ -69,6 +69,20 @@
   </div>
 </form>
 
+<clr-modal [(clrModalOpen)]="isModalDisplayed" [clrModalSize]="xl" [clrModalClosable]="true">
+  <h5 class="modal-title">{{ mtModal.title }}</h5>
+
+  <div class="modal-body">
+      <div class="jaspero__dialog-content" [innerHTML]="mtModal.body"></div>
+  </div>
+
+  <div class="modal-footer">
+      <button id='cancelModalBackButton' type="button" class="btn btn-outline" (click)="closeModal()">
+          {{ 'Close' | translate }}
+      </button>
+  </div>
+</clr-modal>
+
 <div class="well">
   <!-- Panel body -->
   <div class="col-xs-12">
@@ -80,16 +94,19 @@
       <ng-container *ngIf="!panelDef.buttons">
         <clr-dg-row *clrDgItems="let row of panelDef.data; index as i" id="{{'row[panelDef.linkIdent]'}}">
           <clr-dg-cell *ngFor="let dataCol of panelDef.columns" data-id="{{row.id}}" id="{{'dataCol.dataSource'}}">
-            <span *ngIf="dataCol.dataSource == panelDef.columnLink" id="{{panelDef.linkIdent}}">
+            <span *ngIf="dataCol.dataSource == panelDef.columnLink && dataCol.type !== 'button'" id="{{panelDef.linkIdent}}">
               {{row[dataCol.dataSource]}}
             </span>
-            <span *ngIf="dataCol.dataSource != panelDef.columnLink">{{row[dataCol.dataSource]}}</span>
+            <span *ngIf="dataCol.dataSource != panelDef.columnLink && dataCol.type !== 'button'">{{row[dataCol.dataSource]}}</span>
+            <button *ngIf="dataCol.type === 'button'" class="btn btn-sm btn-primary nomargin" (click)="viewMTMessage(row[dataCol.dataSource])">
+              <i class="fa fa-download"></i> {{ 'View' | translate }}
+          </button>
           </clr-dg-cell>
         </clr-dg-row>
       </ng-container>
 
       <clr-dg-footer>Total {{ total }} MT Messages
-        <clr-dg-pagination #pagination [clrDgPageSize]="itemPerPage" [clrDgLastPage]="lastPage"></clr-dg-pagination>
+        <clr-dg-pagination #pagination [clrDgPageSize]="itemPerPage" [clrDgTotalItems]="total" [(clrDgPage)]="currentPage" [clrDgLastPage]="lastPage"></clr-dg-pagination>
       </clr-dg-footer>
     </clr-datagrid>
   </div>

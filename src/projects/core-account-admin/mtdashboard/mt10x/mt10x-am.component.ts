@@ -44,10 +44,13 @@ export class Mt10xAmComponent implements OnInit, OnDestroy {
   mtMessagesList = [];
   placeFiltersFormGroup: FormGroup;
   total: number = 0;
+  currentPage: number = 1;
   lastPage: number = 0;
   readonly itemPerPage = 10;
   rowOffset = 0;
   firstInit: boolean = true;
+  isModalDisplayed = false;
+  mtModal: any = {};
 
   // Datepicker config
   fromConfigDate = {
@@ -194,8 +197,12 @@ export class Mt10xAmComponent implements OnInit, OnDestroy {
         label: this.translate.translate('Comments'),
         dataSource: 'comments',
         sortable: true,
+      },
+      action: {
+        label: this.translate.translate('Action'),
+        dataSource: 'mtid',
+        type: 'button',
       }
-
     };
   }
 
@@ -221,6 +228,10 @@ export class Mt10xAmComponent implements OnInit, OnDestroy {
   }
 
   getMTDashboardList(isSearch: Boolean) {
+    if (isSearch) {
+      this.rowOffset = 0;
+    }
+
     let shareName = this.placeFiltersFormGroup.controls['shareName'].value;
     let depositaryValue = this.placeFiltersFormGroup.controls['depositary'].value;
 
@@ -236,18 +247,34 @@ export class Mt10xAmComponent implements OnInit, OnDestroy {
       toDate: moment(this.placeFiltersFormGroup.controls['toDate'].value).format('YYYY-MM-DD 23:55:00'),
     };
 
+
     this.mtDashboardService.requestAssetManagerDashboardList(request).then((result) => {
       const data = result[1].Data;
       if (data.error) {
         return this.toaster.pop('error', this.translate.translate('There is a problem with the request.'));
       } else {
-        const items = data.map((item) => {
+        const items = data.map((item) => {        
+          const mtMetadata = _.attempt(JSON.parse.bind(null, item.mtMsgPayload));
+
+          const messageType = _.get(mtMetadata, 'mtMsg.type', 'N/A');
+          const typeOrder = _.get(mtMetadata, 'metadata.ordertype', 'N/A');
+          const  amount = (messageType == "MT103") ?
+            _.get(mtMetadata, 'mtMsg.instructedAmount.amount', 'N/A') :
+            _.get(mtMetadata, 'mtMsg.transactionAmount.amount', 'N/A')
+          ;
+
           return {
             date: moment(new Date(item.orderDate)).format('YYYY-MM-DD'),
+            settlementDate: moment(new Date(item.orderDate)).format('YYYY-MM-DD'),
             fundProvider: _.get(_.find(this.centralizingAgentList, { id: item.fundAdministratorID }), 'text', this.translate.translate('none')),
-            typeOrder: item.orderType === 3 ? this.translate.translate("Subscription") : this.translate.translate("Redemption"),
-            generationIznes: moment(new Date(item.dateentered)).format('HH[h]mm'),
-            amount: ((item.estimatedAmount / 100000).toFixed(2)).toLocaleString(), // BLOCKCHAIN NUMBER DIVISER
+            typeOrder:  typeOrder === 's' ? this.translate.translate("Subscription") : this.translate.translate("Redemption"),
+            investorName: _.get(mtMetadata, 'mtMsg.beneficiaryCustomer.details[0]', 'N/A'),
+            generationIznes: moment(item.orderDate).format('HH[h]mm'),
+            amount:  amount,
+            investorPortfolioLabel: _.get(mtMetadata, 'metadata.subPortfolioName', 'N/A'),
+            messageType: messageType,
+            beneficiaryIban: _.get(mtMetadata, 'mtMsg.beneficiaryCustomer.isin', 'N/A'),
+            messageReference: _.get(mtMetadata, 'metadata.orderRef', 'N/A'),
             ...item
           }
         });
@@ -255,7 +282,7 @@ export class Mt10xAmComponent implements OnInit, OnDestroy {
         if (isSearch) {
           this.mtMessagesList = items;
         } else {
-          this.mtMessagesList = isSearch === true ? items : _.uniqBy([...this.mtMessagesList, ...items], 'mtid');
+          this.mtMessagesList = _.uniqBy([...this.mtMessagesList, ...items], 'mtid');
         }
 
         this.panelDef.data = this.mtMessagesList;
@@ -267,11 +294,27 @@ export class Mt10xAmComponent implements OnInit, OnDestroy {
     })
   }
 
+  viewMTMessage(mtid): void {
+    this.isModalDisplayed = true;
+    
+    const mtMessage = _.find(this.mtMessagesList, { mtid });
+
+    this.mtModal = {
+        title: (mtMessage.mtFilename).substring(0, mtMessage.mtFilename.length - 4),
+        body: (mtMessage.mtRawmsg).replace(` :`, '<br/>:'),
+    };
+  }
+
+  closeModal(): void {
+    this.mtModal = {};
+    this.isModalDisplayed = false;
+  }
+
   initPanelDefinition() {
     this.panelDef = {
       columns: [
         this.panelColumns['date'],
-        this.panelColumns['investorName'],
+        // this.panelColumns['investorName'],
         this.panelColumns['investorPortfolioLabel'],
         this.panelColumns['fundShareName'],
         this.panelColumns['isin'],
@@ -286,6 +329,7 @@ export class Mt10xAmComponent implements OnInit, OnDestroy {
         this.panelColumns['acknowledged'],
         this.panelColumns['providerTreatment'],
         this.panelColumns['comments'],
+        this.panelColumns['action']
       ],
       open: true,
     };
@@ -299,11 +343,11 @@ export class Mt10xAmComponent implements OnInit, OnDestroy {
   }
 
   refresh(state) {
+    this.rowOffset = this.currentPage - 1;
     if (!state.page || this.firstInit) {
       return;
     }
 
-    this.rowOffset = state.page.to - 1;
     this.getMTDashboardList(false);
   }
 
