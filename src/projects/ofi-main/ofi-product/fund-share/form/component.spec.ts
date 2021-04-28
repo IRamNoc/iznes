@@ -111,6 +111,7 @@ const fakeShare = {
         launchDate: '2018-04-01',
         shareClassCurrency: 0,
         iban: 'testtesttesttest',
+        mainIban: 'testtesttesttest',
         valuationFrequency: 0,
         historicOrForwardPricing: 0,
         hasCoupon: 1,

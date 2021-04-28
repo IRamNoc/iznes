@@ -9,6 +9,9 @@ export interface Subportfolio {
     investorReference: string;
     accountLabel: string;
     accountCurrency: number;
+    custodianPayment: number;
+    custodianPosition: number;
+    custodianTransactionNotices: number;
     label: string;
     addressLine1: string;
     addressLine2: string;
@@ -23,6 +26,7 @@ export interface Subportfolio {
     ownerCountry: string;
     iban: string;
     bic: string;
+    bicInvestorCode: string;
     notes: string;
     bankIdentificationStatement: string;
     securityAccount: string;

@@ -1,0 +1,23 @@
+<div class="header-breadcrumbs">
+    <h1><i class="fa fa-sticky-note"></i> {{ 'MT Dashboard' | translate }}</h1>
+</div>
+
+<clr-tabs>
+    <clr-tab>
+        <button clrTabLink id="mt502Button" [routerLink]="[mt502Url]">{{ 'MT502' | translate}}</button>
+        <clr-tab-content *clrIfActive="isMT502">
+            <ng-container>
+                <router-outlet></router-outlet>
+            </ng-container>
+        </clr-tab-content>
+    </clr-tab>
+
+    <clr-tab>
+        <button clrTabLink id="mt10xamButton" [routerLink]="[mt10xamUrl]">{{ 'MT10X' | translate }}</button>
+        <clr-tab-content *clrIfActive="isMT10XAM">
+            <ng-container>
+                <router-outlet></router-outlet>
+            </ng-container>
+        </clr-tab-content>
+    </clr-tab>
+</clr-tabs>

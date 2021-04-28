@@ -52,6 +52,12 @@ import {
 } from './signup';
 
 import { AccountGodmodeComponent } from './godmode/component';
+import {
+    Mt10xAmComponent,
+    Mt502Component,
+    MtdashboardBaseComponent,
+    MtdashboardService,
+} from './mtdashboard';
 
 @NgModule({
     imports: [
@@ -90,6 +96,9 @@ import { AccountGodmodeComponent } from './godmode/component';
         AccountSignUpComponent,
         AccountSignUpRedirectComponent,
         AccountGodmodeComponent,
+        Mt10xAmComponent,
+        Mt502Component,
+        MtdashboardBaseComponent,
     ],
     providers: [
         UserTeamsService,
@@ -98,6 +107,7 @@ import { AccountGodmodeComponent } from './godmode/component';
         AccountAdminPermissionsServiceBase,
         AccountAdminBaseService,
         AccountSignupService,
+        MtdashboardService,
     ],
     exports: [],
 })

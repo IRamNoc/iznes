@@ -64,6 +64,9 @@ import {
     AccountSignUpComponent,
     AccountSignUpRedirectComponent,
     AccountGodmodeComponent,
+    MtdashboardBaseComponent,
+    Mt10xAmComponent,
+    Mt502Component,
 } from '@setl/core-account-admin';
 import {
     ProductHomeComponent,
@@ -788,6 +791,21 @@ export const ROUTES: Routes = [
                         path: 'god-mode',
                         canActivate: [LoginGuardService],
                         component: AccountGodmodeComponent,
+                    },
+                    {
+                        path: 'mtdashboard',
+                        canActivate: [LoginGuardService],
+                        component: MtdashboardBaseComponent,
+                        children: [
+                            {
+                                path: 'mt502',
+                                component: Mt502Component
+                            },
+                            {
+                                path: 'mt10x',
+                                component: Mt10xAmComponent
+                            }
+                        ]
                     }
                 ],
             },
