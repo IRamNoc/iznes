@@ -1,0 +1,45 @@
+<div class="header-breadcrumbs">
+  <h1><i class="fa fa-exclamation-triangle"></i> {{ 'God Mode' | translate }}</h1>
+</div>
+
+<div class="well">
+  <div class="alert alert-app-level alert-danger" role="alert">
+    <div class="alert-items">
+      <div class="alert-item static">
+        <div class="alert-icon-wrapper">
+          <clr-icon class="alert-icon" shape="exclamation-circle"></clr-icon>
+        </div>
+        <div class="alert-text">
+          Caution - You are responsible for the action you are going to launch. You know the risks.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row panel-header">
+    <div class="col-xs-6">
+      <h2>{{ 'Give me access' | translate }}</h2>
+    </div>
+  </div>
+
+  <div class="panel-body">
+    <div class="clr-row clr-align-items-center">
+      <div class="clr-col-sm-6 clr-offset-sm-2">
+        <form class="clr-form clr-form-vertical" [formGroup]="godModeFormGroup" (ngSubmit)="handleSubmitButtonClick()">
+          <p *ngIf="giveMeAccessTriggered">You have <b>{{ secondsLeft }}</b> seconds to connect to <b>{{ godModeFormGroup.controls['username'].value }}</b></p>
+          <div class="clr-form-control">
+            <label class="clr-control-label">{{ 'Please enter an existing username' | translate }}</label>
+            <div class="col-md-6">
+              <input id="amBic" class="form-control" formControlName="username" type="text">
+            </div>
+
+            <div class="clr-col-2">
+              <button id="saveButton" type="submit" [disabled]="!disableBtn" class="btn btn-primary">{{ 'Request access' |
+                translate }} <i class="fa fa-exclamation-triangle"></i></button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
