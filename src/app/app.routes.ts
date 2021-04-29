@@ -63,6 +63,7 @@ import {
     UserTeamsListComponent,
     AccountSignUpComponent,
     AccountSignUpRedirectComponent,
+    AccountGodmodeComponent,
     MtdashboardBaseComponent,
     Mt10xAmComponent,
     Mt502Component,
@@ -785,6 +786,11 @@ export const ROUTES: Routes = [
                         path: 'teams/:id',
                         canActivate: [LoginGuardService],
                         component: UserTeamsCreateUpdateComponent,
+                    },
+                    {
+                        path: 'god-mode',
+                        canActivate: [LoginGuardService],
+                        component: AccountGodmodeComponent,
                     },
                     {
                         path: 'mtdashboard',

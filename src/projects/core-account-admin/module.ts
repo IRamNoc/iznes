@@ -51,6 +51,7 @@ import {
     AccountSignupService,
 } from './signup';
 
+import { AccountGodmodeComponent } from './godmode/component';
 import {
     Mt10xAmComponent,
     Mt502Component,
@@ -94,6 +95,7 @@ import {
         UsersStatusComponent,
         AccountSignUpComponent,
         AccountSignUpRedirectComponent,
+        AccountGodmodeComponent,
         Mt10xAmComponent,
         Mt502Component,
         MtdashboardBaseComponent,

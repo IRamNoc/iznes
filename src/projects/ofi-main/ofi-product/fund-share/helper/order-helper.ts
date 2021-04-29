@@ -972,7 +972,7 @@ export class OrderHelper {
         let orderValid = true;
         let errorMessage = '';
 
-        if ((Number(this.fundShare.investorTotalHolding) - Number(this.fundShare.investorRedemptionEncumber)) < Math.floor(orderFigures.quantity)) {
+        if (Number(this.fundShare.investorHoling) < Math.floor(orderFigures.quantity)) {
             orderValid = false;
             errorMessage = 'Insufficient number of share to redeem.';
         }

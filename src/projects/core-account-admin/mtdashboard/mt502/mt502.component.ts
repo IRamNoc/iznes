@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { MultilingualService } from '@setl/multilingual';
 import { MtdashboardService } from '../service';
 import { ToasterService, Toast } from 'angular2-toaster';
-import * as moment from 'moment';
+import * as moment from 'moment-timezone';
 
 /* Low dash. */
 import * as _ from 'lodash';
@@ -238,6 +238,7 @@ export class Mt502Component implements OnInit, OnDestroy {
       } else {
         const items = data.map((item) => {
           const mtMetadata = JSON.parse(item.mtMsgPayload);
+          const timezone = mtMetadata.metadata.ordertype === 's' ? item.subscriptionTimezone : item.redemptionTimezone;
 
           return {
             date: moment(new Date(item.orderDate)).format('YYYY-MM-DD'),
@@ -245,8 +246,8 @@ export class Mt502Component implements OnInit, OnDestroy {
             typeOrder: mtMetadata.metadata.ordertype === 's' ? this.translate.translate("Subscription") : this.translate.translate("Redemption"),
             messageType: `MT502 (${mtMetadata.metadata.msgtype === "quantity" ? this.translate.translate("Quantity") : this.translate.translate("Amount")})`,
             cutoffDate: mtMetadata.metadata.cutoffDate,
-            generationIznes: moment(item.orderDate).format('HH[h]mm'),
-            sendToCentralizer: _.get(item, 'sendToCentralizingAgent') ? moment(new Date(item.sendToCentralizingAgent)).format('HH[h]mm') : this.translate.translate("Unknown"),
+            generationIznes: moment(item.orderDate).tz(timezone).format('HH[h]mm'),
+            sendToCentralizer: _.get(item, 'sendToCentralizingAgent') ? moment(new Date(item.sendToCentralizingAgent)).tz(timezone).format('HH[h]mm') : this.translate.translate("Unknown"),
             pQuantity: _.get(mtMetadata, 'mtMsg.orderedQuantity.value', '/'),
             pAmount: _.get(mtMetadata, 'mtMsg.orderedAmount.value', '/'),
             messageReference: mtMetadata.mtMsg.sendersMessageReference,
