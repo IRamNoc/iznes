@@ -52,7 +52,8 @@ export class OfiSubPortfolioComponent implements OnDestroy {
     ];
     custodianTransactionNoticesItems = [
         { id: 0, text: 'None / Aucun' },
-        { id: 5, text: 'CACEIS' }
+        { id: 5, text: 'CACEIS' },
+        { id: 10, text: 'Generali' }
     ];
     file = {
         control: null,

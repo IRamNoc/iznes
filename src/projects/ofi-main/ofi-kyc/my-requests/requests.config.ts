@@ -974,8 +974,7 @@ export const sectorActivityList = [
     {
         id: 'Windturbinemanufacturers',
         text: 'Wind turbine manufacturers',
-    },
-   
+    }   
     
 ];
 
