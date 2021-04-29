@@ -19,3 +19,5 @@ export {
 } from './mtdashboard';
 
 export { AccountSignUpComponent, AccountSignUpRedirectComponent } from './signup';
+
+export { AccountGodmodeComponent } from './godmode/component';
