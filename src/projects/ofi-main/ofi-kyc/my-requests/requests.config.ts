@@ -887,6 +887,96 @@ export const sectorActivityList = [
         id: 'Other',
         text: 'Other',
     },
+    {
+        id: 'Agribusiness',
+        text: 'Agribusiness',
+    },
+    {
+        id: 'Agriculture',
+        text: 'Agriculture',
+    },
+    {
+        id: 'Bank',
+        text: 'Bank',
+    },
+    {
+        id: 'Brewery',
+        text: 'Brewery',
+    },
+    {
+        id: 'Confectionery',
+        text: 'Confectionery',
+    },
+    {
+        id: 'Consumerconsumption',
+        text: 'Consumer Consumption',
+    },
+    {
+        id: 'Dairyproducts',
+        text: 'Dairy products',
+    },
+    {
+        id: 'Distribution',
+        text: 'Distribution',
+    },
+    {
+        id: 'Diy',
+        text: 'DIY',
+    },
+    {
+        id: 'Drink',
+        text: 'Drink',
+    },
+    {
+        id: 'Electricitycompanies',
+        text: 'Electricity companies',
+    },
+    {
+        id: 'Energy',
+        text: 'Energy',
+    },
+    {
+        id: 'Entertainment',
+        text: 'Entertainment',
+    },
+    {
+        id: 'Entertainmentmedia',
+        text: 'Entertainment & Media',
+    },
+    {
+        id: 'Finance',
+        text: 'Finance',
+    },
+    {
+        id: 'Insurance',
+        text: 'Insurance',
+    },
+    {
+        id: 'Largedistribution',
+        text: 'Large distribution',
+    },
+    {
+        id: 'Musicproductionmajors',
+        text: 'Music Production (Majors)',
+    },
+    {
+        id: 'Oilcompanies',
+        text: 'Oil companies',
+    },
+    {
+        id: 'Seeds',
+        text: 'Seeds',
+    },
+    {
+        id: 'Traders',
+        text: 'Traders',
+    },
+    {
+        id: 'Windturbinemanufacturers',
+        text: 'Wind turbine manufacturers',
+    },
+   
+    
 ];
 
 export const otherSectorActivityList = [
@@ -1033,6 +1123,94 @@ export const otherSectorActivityList = [
     {
         id: 'Other',
         text: 'Other',
+    },
+    {
+        id: 'Agribusiness',
+        text: 'Agribusiness',
+    },
+    {
+        id: 'Agriculture',
+        text: 'Agriculture',
+    },
+    {
+        id: 'Bank',
+        text: 'Bank',
+    },
+    {
+        id: 'Brewery',
+        text: 'Brewery',
+    },
+    {
+        id: 'Confectionery',
+        text: 'Confectionery',
+    },
+    {
+        id: 'Consumerconsumption',
+        text: 'Consumer Consumption',
+    },
+    {
+        id: 'Dairyproducts',
+        text: 'Dairy products',
+    },
+    {
+        id: 'Distribution',
+        text: 'Distribution',
+    },
+    {
+        id: 'Diy',
+        text: 'DIY',
+    },
+    {
+        id: 'Drink',
+        text: 'Drink',
+    },
+    {
+        id: 'Electricitycompanies',
+        text: 'Electricity companies',
+    },
+    {
+        id: 'Energy',
+        text: 'Energy',
+    },
+    {
+        id: 'Entertainment',
+        text: 'Entertainment',
+    },
+    {
+        id: 'Entertainmentmedia',
+        text: 'Entertainment & Media',
+    },
+    {
+        id: 'Finance',
+        text: 'Finance',
+    },
+    {
+        id: 'Insurance',
+        text: 'Insurance',
+    },
+    {
+        id: 'Largedistribution',
+        text: 'Large distribution',
+    },
+    {
+        id: 'Musicproductionmajors',
+        text: 'Music Production (Majors)',
+    },
+    {
+        id: 'Oilcompanies',
+        text: 'Oil companies',
+    },
+    {
+        id: 'Seeds',
+        text: 'Seeds',
+    },
+    {
+        id: 'Traders',
+        text: 'Traders',
+    },
+    {
+        id: 'Windturbinemanufacturers',
+        text: 'Wind turbine manufacturers',
     },
 ];
 
@@ -2416,6 +2594,10 @@ export const geographicalAreaList = [
     {
         id: 'outsideOecd',
         text: 'Outside OECD / Outside European Union',
+    },
+    {
+        id: 'worldwide',
+        text: 'Worldwide',
     },
 ];
 
