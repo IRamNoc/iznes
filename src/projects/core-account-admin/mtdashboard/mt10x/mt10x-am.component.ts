@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { MultilingualService } from '@setl/multilingual';
 import { MtdashboardService } from '../service';
 import { ToasterService, Toast } from 'angular2-toaster';
-import * as moment from 'moment';
+import * as moment from 'moment-timezone';
 
 /* Low dash. */
 import * as _ from 'lodash';
@@ -255,9 +255,9 @@ export class Mt10xAmComponent implements OnInit, OnDestroy {
       } else {
         const items = data.map((item) => {        
           const mtMetadata = _.attempt(JSON.parse.bind(null, item.mtMsgPayload));
-
           const messageType = _.get(mtMetadata, 'mtMsg.type', 'N/A');
           const typeOrder = _.get(mtMetadata, 'metadata.ordertype', 'N/A');
+          const timezone = typeOrder === 's' ? item.subscriptionTimezone : item.redemptionTimezone;
           const  amount = (messageType == "MT103") ?
             _.get(mtMetadata, 'mtMsg.instructedAmount.amount', 'N/A') :
             _.get(mtMetadata, 'mtMsg.transactionAmount.amount', 'N/A')
@@ -269,7 +269,7 @@ export class Mt10xAmComponent implements OnInit, OnDestroy {
             fundProvider: _.get(_.find(this.centralizingAgentList, { id: item.fundAdministratorID }), 'text', this.translate.translate('none')),
             typeOrder:  typeOrder === 's' ? this.translate.translate("Subscription") : this.translate.translate("Redemption"),
             investorName: _.get(mtMetadata, 'mtMsg.beneficiaryCustomer.details[0]', 'N/A'),
-            generationIznes: moment(item.orderDate).format('HH[h]mm'),
+            generationIznes: moment(item.orderDate).tz(timezone).format('HH[h]mm'),
             amount:  amount,
             investorPortfolioLabel: _.get(mtMetadata, 'metadata.subPortfolioName', 'N/A'),
             messageType: messageType,
