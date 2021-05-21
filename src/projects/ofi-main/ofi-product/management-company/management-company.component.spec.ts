@@ -127,6 +127,7 @@ describe('OfiManagementCompanyComponent', () => {
         logoHash: 'logoHash',
         managementCompanyType: 'common',
         externalEmail: 'externalEmail',
+        emailValidation: 'emailValidation',
 
         
     };

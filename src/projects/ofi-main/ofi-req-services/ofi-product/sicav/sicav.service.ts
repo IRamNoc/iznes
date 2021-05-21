@@ -36,6 +36,7 @@ interface InsertSicavData {
     logoName: any;
     logoURL: any;
     externalEmail: string;
+    emailValidation: string;
 }
 
 interface UpdateSicavData {
@@ -63,6 +64,7 @@ interface UpdateSicavData {
     logoName: any;
     logoURL: any;
     externalEmail: string;
+    emailValidation: string;
 
 }
 
@@ -155,6 +157,7 @@ export class OfiSicavService {
             logoName: sicavData.logoName,
             logoURL: sicavData.logoURL,
             externalEmail: sicavData.externalEmail,
+            emailValidation: sicavData.emailValidation,
 
         };
 
@@ -189,6 +192,7 @@ export class OfiSicavService {
             logoName: sicavData.logoName,
             logoURL: sicavData.logoURL,
             externalEmail: sicavData.externalEmail,
+            emailValidation: sicavData.emailValidation,
 
         };
 

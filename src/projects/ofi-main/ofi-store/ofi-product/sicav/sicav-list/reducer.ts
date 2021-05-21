@@ -66,6 +66,7 @@ function formatSicavDataResponse(rawSicavData: Array<any>): Array<SicavDetail> {
                 logoName: item.get('logoName'),
                 logoURL: item.get('logoURL'),
                 externalEmail: item.get('externalEmail'),
+                emailValidation: item.get('emailValidation'),
 
             };
             
