@@ -63,6 +63,8 @@ export class OfiProfileMyInformationsComponent implements OnInit, OnDestroy {
     unSubscribe: Subject<any> = new Subject();
 
     language: string;
+    decimalSeparator: string;
+    dataSeparator: string;
 
     // first menu link in menu spec.
     firstMenuLink: string;
@@ -156,7 +158,9 @@ export class OfiProfileMyInformationsComponent implements OnInit, OnDestroy {
         });
 
         this.requestLanguageObj.pipe(takeUntil(this.unSubscribe)).subscribe(requested => this.language = requested);
+        this.decimalSeparator=this.translate.getDecimalSeperator();
 
+        this.dataSeparator=this.translate.getDataSeperator();
         this.menSpec$.pipe(takeUntil(this.unSubscribe)).subscribe(ms => this.firstMenuLink = getFirstMenuLink(ms));
     }
 
@@ -370,6 +374,51 @@ export class OfiProfileMyInformationsComponent implements OnInit, OnDestroy {
 
         /* Detect changes. */
         this.changeDetectorRef.detectChanges();
+    }
+    /**
+
+     * Changes decimalSeperator
+
+     *
+
+     * @param decimalSeperator
+
+     */
+
+     public changeDecimalSeparator(lang) {
+
+        // this.decimalSeparator=lang;
+
+        this.translate.setDecimalSeperator(lang);
+
+        /* Detect changes. */
+
+        this.changeDetectorRef.detectChanges();
+
+    }
+
+    /**
+
+     * Changes dataSeperator
+
+     *
+
+     * @param dataSeperator
+
+     */
+
+    public changeDataSeparator(lang) {
+
+        // this.dataSeparator=lang;
+
+        this.translate.setDataSeperator(lang);       
+
+
+
+        /* Detect changes. */
+
+        this.changeDetectorRef.detectChanges();
+
     }
 }
 

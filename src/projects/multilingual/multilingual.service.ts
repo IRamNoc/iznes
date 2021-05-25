@@ -10,6 +10,9 @@ import { Translations } from './translations';
 @Injectable()
 export class MultilingualService {
     language;
+    decimalSeparator;
+    dataSeparator;
+
 
     private translations = [];
     private apiUrl = 'http://si-babel01:8080';
@@ -34,6 +37,30 @@ export class MultilingualService {
     public updateLanguage(language: string): void {
         // set current language
         this.language = language;
+    }
+
+    public setDecimalSeperator(seperator: string): void {
+
+        this.decimalSeparator = seperator;
+    
+    }
+    
+    public getDecimalSeperator(){
+    
+        return this.decimalSeparator;
+    
+    }
+    
+    public setDataSeperator(seperator: string): void {
+    
+        this.dataSeparator = seperator;
+    
+    }
+    
+    public getDataSeperator(){
+    
+        return this.dataSeparator;
+    
     }
 
     /**
