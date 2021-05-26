@@ -30,6 +30,7 @@ export class OfiSubPortfolioComponent implements OnDestroy {
     private connectedWalletId: number = 0;
     public addressList: Array<any>;
     public tabDetail: Array<object>;
+    public oldsubProtifolioData: Array<object>;
     public showFormModal: boolean = false;
     public showAddress: boolean = false;
     public currentAddress: string;
@@ -184,10 +185,12 @@ export class OfiSubPortfolioComponent implements OnDestroy {
     }
 
     handleEdit(address): void {
+        this.oldsubProtifolioData=[];
         this.setupFormGroup();
         const subPortfolio = this.addressList.find((subPortfolio) => {
             return subPortfolio.addr === address;
         });
+        this.oldsubProtifolioData=subPortfolio;
 
         Object.keys(subPortfolio).forEach((item) => {
             if (this.tabDetail[0]['formControl'].controls[item]) {
@@ -269,10 +272,11 @@ export class OfiSubPortfolioComponent implements OnDestroy {
      * Update an existing Sub-portfolio
      * @return void
      */
-    updateSubPortfolio() {
+    updateSubPortfolio() { 
         const payload = {
             ...this.getSubPortfolioFormValue(),
             option: this.currentAddress,
+            oldSubportifolio:this.oldsubProtifolioData
         };
 
         const asyncTaskPipe = this.ofiSubPortfolioReqService.updateSubPortfolio(payload);
