@@ -25,7 +25,7 @@ import {
 } from '@setl/core-store';
 import { fromJS } from 'immutable';
 import { MultilingualService } from '@setl/multilingual/multilingual.service';
-import * as _ from 'lodash';
+import { get, clone } from 'lodash';
 import {
     ChannelService,
     InitialisationService,
@@ -146,10 +146,9 @@ export class NavigationTopbarComponent implements OnInit, AfterViewInit, OnDestr
 
         this.subscriptionsArray.push(this.connectedWalletOb.subscribe(
             (walletId) => {
-                const listItems=_.min(_.map(this.walletSelectItems,'id'));
                 const selectedItem = this.walletSelectItems.find(
                     (walletItem) => {
-                        return walletItem.id === listItems;
+                        return walletItem.id === walletId;
                     },
                 );
                 if (typeof selectedItem !== 'undefined') {
@@ -214,9 +213,9 @@ export class NavigationTopbarComponent implements OnInit, AfterViewInit, OnDestr
             const { userId } = myDetail;
             const { apiKey } = myAuthenData;
             const protocol = this.appConfig.production ? 'wss' : 'ws';
-            const hostName = _.get(chainAccess, 'nodeAddress', '');
-            const port = _.get(chainAccess, 'nodePort', 0);
-            const nodePath = _.get(chainAccess, 'nodePath', '');
+            const hostName = get(chainAccess, 'nodeAddress', '');
+            const port = get(chainAccess, 'nodePort', 0);
+            const nodePath = get(chainAccess, 'nodePath', '');
 
             this.walletNodeSocketService.connectToNode(protocol, hostName, port, nodePath, userId, apiKey)
             .then((res) => {
@@ -233,7 +232,7 @@ export class NavigationTopbarComponent implements OnInit, AfterViewInit, OnDestr
                     this.selected(this.walletSelectItems[0]);
 
                     /* set the chain id as the connected one in redux store */
-                    const chainId = _.get(chainAccess, 'chainId', '');
+                    const chainId = get(chainAccess, 'chainId', '');
                     this.ngRedux.dispatch(setConnectedChain(chainId));
 
                     this.changeDetectorRef.markForCheck();
@@ -356,7 +355,7 @@ export class NavigationTopbarComponent implements OnInit, AfterViewInit, OnDestr
         // get translation
         const tr = this.translate.getTranslations();
         // clone
-        this.missingTranslations = _.clone(tr);
+        this.missingTranslations = clone(tr);
         this.showMissingTranslations = true;
 
         this.doHighlight();
