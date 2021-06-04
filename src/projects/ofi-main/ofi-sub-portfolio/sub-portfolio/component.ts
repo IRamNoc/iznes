@@ -272,7 +272,7 @@ export class OfiSubPortfolioComponent implements OnDestroy {
      * Update an existing Sub-portfolio
      * @return void
      */
-    updateSubPortfolio() { 
+    updateSubPortfolio() {
         const payload = {
             ...this.getSubPortfolioFormValue(),
             option: this.currentAddress,
