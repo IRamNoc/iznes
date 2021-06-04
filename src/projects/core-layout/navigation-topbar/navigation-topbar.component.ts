@@ -222,7 +222,9 @@ export class NavigationTopbarComponent implements OnInit, AfterViewInit, OnDestr
                 // Set connected wallet, if we got the wallet list and
                 // there is not wallet is chosen.
                 if (this.walletSelectItems.length > 0 && !this.selectedWalletId.value) {
-                    this.selectedWalletId.setValue([this.walletSelectItems[0]], {
+                    const defaultWalletId = _.min(_.map(this.walletSelectItems,'id'));
+                    const selectedItem = _.find(this.walletSelectItems, { id: defaultWalletId });
+                    this.selectedWalletId.setValue([selectedItem], {
                         onlySelf: true,
                         emitEvent: true,
                         emitModelToViewChange: true,
