@@ -231,7 +231,7 @@ export class NavigationTopbarComponent implements OnInit, AfterViewInit, OnDestr
                         emitViewToModelChange: true,
                     });
 
-                    this.selected(this.walletSelectItems[0]);
+                    this.selected(selectedItem);
 
                     /* set the chain id as the connected one in redux store */
                     const chainId = get(chainAccess, 'chainId', '');
