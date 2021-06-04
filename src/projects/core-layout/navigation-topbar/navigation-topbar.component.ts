@@ -25,7 +25,7 @@ import {
 } from '@setl/core-store';
 import { fromJS } from 'immutable';
 import { MultilingualService } from '@setl/multilingual/multilingual.service';
-import { get, clone } from 'lodash';
+import { get, clone, min, map, find } from 'lodash';
 import {
     ChannelService,
     InitialisationService,
@@ -222,8 +222,8 @@ export class NavigationTopbarComponent implements OnInit, AfterViewInit, OnDestr
                 // Set connected wallet, if we got the wallet list and
                 // there is not wallet is chosen.
                 if (this.walletSelectItems.length > 0 && !this.selectedWalletId.value) {
-                    const defaultWalletId = _.min(_.map(this.walletSelectItems,'id'));
-                    const selectedItem = _.find(this.walletSelectItems, { id: defaultWalletId });
+                    const defaultWalletId = min(map(this.walletSelectItems,'id'));
+                    const selectedItem = find(this.walletSelectItems, { id: defaultWalletId });
                     this.selectedWalletId.setValue([selectedItem], {
                         onlySelf: true,
                         emitEvent: true,
