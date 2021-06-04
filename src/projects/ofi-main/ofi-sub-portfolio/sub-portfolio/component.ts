@@ -185,7 +185,7 @@ export class OfiSubPortfolioComponent implements OnDestroy {
     }
 
     handleEdit(address): void {
-        this.oldsubProtifolioData=[];
+        this.oldsubProtifolioData = [];
         this.setupFormGroup();
         const subPortfolio = this.addressList.find((subPortfolio) => {
             return subPortfolio.addr === address;
