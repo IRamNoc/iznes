@@ -276,7 +276,7 @@ export class OfiSubPortfolioComponent implements OnDestroy {
         const payload = {
             ...this.getSubPortfolioFormValue(),
             option: this.currentAddress,
-            oldSubportifolio:this.oldsubProtifolioData
+            oldSubportifolio: this.oldsubProtifolioData,
         };
 
         const asyncTaskPipe = this.ofiSubPortfolioReqService.updateSubPortfolio(payload);
