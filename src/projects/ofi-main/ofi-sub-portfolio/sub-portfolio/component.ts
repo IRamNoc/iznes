@@ -190,7 +190,7 @@ export class OfiSubPortfolioComponent implements OnDestroy {
         const subPortfolio = this.addressList.find((subPortfolio) => {
             return subPortfolio.addr === address;
         });
-        this.oldsubProtifolioData=subPortfolio;
+        this.oldsubProtifolioData = subPortfolio;
 
         Object.keys(subPortfolio).forEach((item) => {
             if (this.tabDetail[0]['formControl'].controls[item]) {
