@@ -101,6 +101,16 @@ export interface SetLanguageRequestBody extends MemberNodeMessageBody {
     lang: any;
 }
 
+export interface SetDecimalOperatorRequestBody extends MemberNodeMessageBody {
+    token: string;
+    decimalseparator : any;
+}
+
+export interface SetDataOperatorRequestBody extends MemberNodeMessageBody {
+    token: string;
+    dataseparator : any;
+}
+
 export interface GetLanguageRequestBody extends MemberNodeMessageBody {
     token: string;
     userID: string;

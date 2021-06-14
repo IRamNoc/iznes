@@ -20,6 +20,8 @@ import {
     ValidTokenRequestBody,
     SetNewPasswordFromTokenRequestBody,
     SetLanguageRequestBody,
+    SetDecimalOperatorRequestBody,
+    SetDataOperatorRequestBody,
     GetLanguageRequestBody,
     GetSiteMenuRequestBody,
     StatusNotificationsMessageBody,
@@ -114,9 +116,19 @@ interface SetLanguageTokenData {
     lang: any;
 }
 
+interface SetDecimalOperatorTokenData {
+    decimalseparator : any;
+}
+
+interface SetDataOperatorTokenData {
+    dataseparator : any;
+}
+
+
 interface GetLanguageTokenData {
     userID: string;
 }
+
 
 @Injectable()
 export class MyUserService implements OnDestroy {
@@ -372,6 +384,29 @@ export class MyUserService implements OnDestroy {
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
     }
 
+
+    setDecimalSeperator(data: SetDecimalOperatorTokenData): any {
+        const messageBody: SetDecimalOperatorRequestBody = {
+            RequestName: 'setdecimalseparator',
+            token: this.memberSocketService.token,
+            decimalseparator : data.decimalseparator,
+        };
+
+        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+    }
+
+
+    setDataSeperator(data: SetDataOperatorTokenData): any {
+        const messageBody: SetDataOperatorRequestBody = {
+            RequestName: 'setdataseperator',
+            token: this.memberSocketService.token,
+            dataseparator : data.dataseparator ,
+        };
+
+        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+    }
+
+
     getLanguage(data: GetLanguageTokenData): any {
         const messageBody: GetLanguageRequestBody = {
             RequestName: 'getlanguage',
@@ -381,6 +416,30 @@ export class MyUserService implements OnDestroy {
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
     }
+
+    getDecimalSeparator(data: GetLanguageTokenData): any {
+        const messageBody: GetLanguageRequestBody = {
+            RequestName: 'getdecimalseparator',
+            token: this.memberSocketService.token,
+            userID: data.userID,
+        };
+
+        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+    }
+
+    getDataSeparator(data: GetLanguageTokenData): any {
+        const messageBody: GetLanguageRequestBody = {
+            RequestName: 'getdataseparator',
+            token: this.memberSocketService.token,
+            userID: data.userID,
+        };
+
+        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+    }
+
+
+
+
 
     getSiteMenu(redux: NgRedux<any>): any {
         const token = redux.getState().user.authentication.token;

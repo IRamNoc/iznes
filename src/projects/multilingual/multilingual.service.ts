@@ -39,24 +39,32 @@ export class MultilingualService {
         this.language = language;
     }
 
-    public setDecimalSeperator(seperator: string): void {
+    public updateDecimalSeperator(seperator: string): void {
 
         this.decimalSeparator = seperator;
     
     }
-    
+
+    public updateDataSeperator(seperator: string): void {
+
+        this.decimalSeparator = seperator;
+    }
+
+
     public getDecimalSeperator(){
     
         return this.decimalSeparator;
     
     }
+
     
+
+
     public setDataSeperator(seperator: string): void {
     
         this.dataSeparator = seperator;
     
     }
-    
     public getDataSeperator(){
     
         return this.dataSeparator;

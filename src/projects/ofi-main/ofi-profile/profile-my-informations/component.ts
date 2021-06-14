@@ -157,8 +157,9 @@ export class OfiProfileMyInformationsComponent implements OnInit, OnDestroy {
             this.apiKey = auth.apiKey;
         });
 
+        console.log('requestLanguageObj');
         this.requestLanguageObj.pipe(takeUntil(this.unSubscribe)).subscribe(requested => this.language = requested);
-        this.decimalSeparator=this.translate.getDecimalSeperator();
+        this.decimalSeparator=this.translate.();
 
         this.dataSeparator=this.translate.getDataSeperator();
         this.menSpec$.pipe(takeUntil(this.unSubscribe)).subscribe(ms => this.firstMenuLink = getFirstMenuLink(ms));
@@ -375,6 +376,10 @@ export class OfiProfileMyInformationsComponent implements OnInit, OnDestroy {
         /* Detect changes. */
         this.changeDetectorRef.detectChanges();
     }
+    
+    
+    
+    
     /**
 
      * Changes decimalSeperator
@@ -385,17 +390,24 @@ export class OfiProfileMyInformationsComponent implements OnInit, OnDestroy {
 
      */
 
-     public changeDecimalSeparator(lang) {
+     public changeDecimalSeparator(decimalSeperator) {
+           this.translate.updateDecimalSeperator(decimalSeperator);
 
-        // this.decimalSeparator=lang;
-
-        this.translate.setDecimalSeperator(lang);
+           // save decimal values in db
+        const asyncTaskPipe = this.myUserService.setDecimalSeperator({ decimalSeperator});
+        this.ngRedux.dispatch(SagaHelper.runAsync(
+            [SET_LANGUAGE],
+            [],
+            asyncTaskPipe,
+            {},
+        ));
 
         /* Detect changes. */
 
         this.changeDetectorRef.detectChanges();
 
     }
+
 
     /**
 
@@ -407,13 +419,18 @@ export class OfiProfileMyInformationsComponent implements OnInit, OnDestroy {
 
      */
 
-    public changeDataSeparator(lang) {
+    public changeDataSeparator(dataSeperator) {
+        this.translate.updateDataSeperator(dataSeperator);       
 
-        // this.dataSeparator=lang;
-
-        this.translate.setDataSeperator(lang);       
-
-
+           // save data values in db
+           const asyncTaskPipe = this.myUserService.setDataSeperator({dataSeperator});
+           this.ngRedux.dispatch(SagaHelper.runAsync(
+               [SET_LANGUAGE],
+               [],
+               asyncTaskPipe,
+               {},
+           ));
+   
 
         /* Detect changes. */
 

@@ -93,6 +93,46 @@ function setLanguage(actionType, action, state) {
     return newState;
 }
 
+function setDecimalSeperator(actionType, action, state) {
+    let newState;
+    let decimalData;
+
+    if (_.get(action, 'payload[1].Data[0]', '') === '') {
+        decimalData = action;
+    } else {
+        decimalData = _.get(action, 'payload[1].Data[0]');
+    }
+
+    let deciSeparator = _.get(decimalData, 'deciSeparator', '');
+    deciSeparator = (deciSeparator !== '' && deciSeparator !== null ? deciSeparator : 'dot');
+
+    newState = Object.assign({}, state, {
+        deciSeparator,
+    });
+
+    return newState;
+}
+
+function setDataSeperator(actionType, action, state) {
+    let newState;
+    let dataseratepData;
+
+    if (_.get(action, 'payload[1].Data[0]', '') === '') {
+        dataseratepData = action;
+    } else {
+        dataseratepData = _.get(action, 'payload[1].Data[0]');
+    }
+
+    let dataSeparator = _.get(dataseratepData, 'dataSeparator', '');
+    dataSeparator = (dataSeparator !== '' && dataSeparator !== null ? dataSeparator : 'Semicolon');
+
+    newState = Object.assign({}, state, {
+        dataSeparator,
+    });
+
+    return newState;
+}
+
 function setMenuShown(actionType, action, state) {
     let newState;
     const menuShown = _.get(action, 'menuShown', []);
