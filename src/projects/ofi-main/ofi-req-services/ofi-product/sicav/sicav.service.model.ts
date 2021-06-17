@@ -30,7 +30,7 @@ export interface SaveSicavRequestBody extends MemberNodeMessageBody {
     logoName: any;
     logoURL: any;
     externalEmail: any;    
-    emailValidation: any,
+    emailValidation: any;
 }
 
 export interface UpdateSicavRequestBody extends MemberNodeMessageBody {
@@ -60,7 +60,6 @@ export interface UpdateSicavRequestBody extends MemberNodeMessageBody {
     logoURL: any;
     externalEmail: any;
     emailValidation:any;
-
 }
 
 export interface DeleteSicavRequestBody extends MemberNodeMessageBody {
