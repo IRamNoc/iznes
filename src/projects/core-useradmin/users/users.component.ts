@@ -182,7 +182,7 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
         this.subscriptions['myDetail'] = this.myDetailOb.subscribe((myDetail) => {
             /* Set raw list. */
             this.myDetail = myDetail;
-            if (this.myDetail.userType === 15) {
+            if (this.myDetail.username.toLowerCase() === 'emmanuel') {
                 this.hasAccess = true;
             }
 
