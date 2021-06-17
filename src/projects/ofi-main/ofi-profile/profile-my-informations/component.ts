@@ -159,7 +159,7 @@ export class OfiProfileMyInformationsComponent implements OnInit, OnDestroy {
 
         console.log('requestLanguageObj');
         this.requestLanguageObj.pipe(takeUntil(this.unSubscribe)).subscribe(requested => this.language = requested);
-        this.decimalSeparator=this.translate.();
+        // this.decimalSeparator=this.translate.getDecimalSeparator();
 
         this.dataSeparator=this.translate.getDataSeperator();
         this.menSpec$.pipe(takeUntil(this.unSubscribe)).subscribe(ms => this.firstMenuLink = getFirstMenuLink(ms));
@@ -394,7 +394,7 @@ export class OfiProfileMyInformationsComponent implements OnInit, OnDestroy {
            this.translate.updateDecimalSeperator(decimalSeperator);
 
            // save decimal values in db
-        const asyncTaskPipe = this.myUserService.setDecimalSeperator({ decimalSeperator});
+        const asyncTaskPipe = this.myUserService.setDecimalSeperator( decimalSeperator);
         this.ngRedux.dispatch(SagaHelper.runAsync(
             [SET_LANGUAGE],
             [],
@@ -423,7 +423,7 @@ export class OfiProfileMyInformationsComponent implements OnInit, OnDestroy {
         this.translate.updateDataSeperator(dataSeperator);       
 
            // save data values in db
-           const asyncTaskPipe = this.myUserService.setDataSeperator({dataSeperator});
+           const asyncTaskPipe = this.myUserService.setDataSeperator(dataSeperator);
            this.ngRedux.dispatch(SagaHelper.runAsync(
                [SET_LANGUAGE],
                [],

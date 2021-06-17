@@ -437,10 +437,6 @@ export class MyUserService implements OnDestroy {
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
     }
 
-
-
-
-
     getSiteMenu(redux: NgRedux<any>): any {
         const token = redux.getState().user.authentication.token;
         const messageBody: GetSiteMenuRequestBody = {
