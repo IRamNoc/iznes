@@ -151,7 +151,6 @@ export class NavigationTopbarComponent implements OnInit, AfterViewInit, OnDestr
                         return walletItem.id === walletId;
                     },
                 );
-                console.log(selectedItem,"selectedItem")
                 if (typeof selectedItem !== 'undefined') {
                     this.selectedWalletId.patchValue([selectedItem]);
                 }

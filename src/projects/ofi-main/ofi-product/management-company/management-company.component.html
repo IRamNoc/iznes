@@ -377,11 +377,11 @@
                         </div>
                         <div class="form-group  col-sm-6">
                             <label class="control-label" for="emailValidation">
-                                Email addresses to receive client files validation alerts - 
-                                <small>use the semicolon as a separator</small>
+                                {{ 'Email addresses to receive client files validation alerts' | translate }}
+                                <small>({{ 'use the semicolon as a separator' | translate }})</small>
                             </label>
                             <input type="text" id="emailValidation" class="form-control" formControlName="emailValidation"
-                                placeholder="Please fill in the emailValidation">
+                                placeholder="{{ 'Please fill in the validation alert email address ' | translate }}">
                         </div>
                     </div>
               
