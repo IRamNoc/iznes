@@ -24,7 +24,6 @@ export interface SicavDetail {
     logoURL: string;
     externalEmail: string;
     emailValidation: string;
-
 }
 
 export interface SicavListState {

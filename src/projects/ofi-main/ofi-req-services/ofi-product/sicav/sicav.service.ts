@@ -65,7 +65,6 @@ interface UpdateSicavData {
     logoURL: any;
     externalEmail: string;
     emailValidation: string;
-
 }
 
 interface DeleteSicavData {
@@ -158,7 +157,6 @@ export class OfiSicavService {
             logoURL: sicavData.logoURL,
             externalEmail: sicavData.externalEmail,
             emailValidation: sicavData.emailValidation,
-
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
@@ -193,7 +191,6 @@ export class OfiSicavService {
             logoURL: sicavData.logoURL,
             externalEmail: sicavData.externalEmail,
             emailValidation: sicavData.emailValidation,
-
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
