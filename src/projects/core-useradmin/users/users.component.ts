@@ -55,6 +55,8 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
     /* User types select. */
     public userTypes: any;
 
+    hasAccess: boolean = false;
+
     /* Subscriptions from service observables. */
     private subscriptions: { [key: string]: Subscription } = {};
 
@@ -135,7 +137,9 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
                     userId: -1,
                     active: true,
                 },
-                {
+            ];
+            if (this.hasAccess) {
+                this.tabsControl.push({
                     title: {
                         icon: 'fa-user',
                         text: this.translate.translate('Add User'),
@@ -150,8 +154,8 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
                     filteredWalletsByAccount: [], // filtered wallets by account.
                     oldChainAccess: {},
                     active: false,
-                },
-            ];
+                });
+            }
             return true;
         }
 
@@ -173,6 +177,18 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
 
         /* Get User Types. */
         this.userTypes = this.userAdminService.getUserTypes();
+
+        /* Subscribe to the my detail observable. */
+        this.subscriptions['myDetail'] = this.myDetailOb.subscribe((myDetail) => {
+            /* Set raw list. */
+            this.myDetail = myDetail;
+            if (this.myDetail.userType === 15) {
+                this.hasAccess = true;
+            }
+
+            /* Override the changes. */
+            this.changeDetectorRef.detectChanges();
+        });
 
         /* Subscribe to the admin user list observable. */
         this.subscriptions['userListSubscription'] = this.usersListOb.subscribe((list) => {
@@ -279,15 +295,6 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
             if (!requestedState) {
                 this.userAdminService.requestChainList();
             }
-        });
-
-        /* Subscribe to the my detail observable. */
-        this.subscriptions['myDetail'] = this.myDetailOb.subscribe((myDetail) => {
-            /* Set raw list. */
-            this.myDetail = myDetail;
-
-            /* Override the changes. */
-            this.changeDetectorRef.detectChanges();
         });
 
         /* Subscribe to the wallets list. */
