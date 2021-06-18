@@ -14,38 +14,22 @@ import { SiteSettingsState } from './model';
 import * as _ from 'lodash';
 
 let defaultLanguage;
+let defaultDecimalSeperator;
+let defaultDataSeperator;
 switch (window.navigator.language) {
     case 'en-GB':
         defaultLanguage = 'en-Latn';
+        defaultDecimalSeperator = 'dot';
+        defaultDataSeperator = 'comma';
         break;
     case 'fr-FR':
         defaultLanguage = 'fr-Latn';
-        break;
-    default:
-        defaultLanguage = 'fr-Latn';
-        break;
-}
-let defaultDecimalSeperator;
-switch (window.navigator.language) {
-    case 'dot':
-        defaultDecimalSeperator = 'dot';
-        break;
-    case 'comma':
         defaultDecimalSeperator = 'comma';
-        break;
-    default:
-        defaultDecimalSeperator = 'dot';
-        break;
-}
-let defaultDataSeperator;
-switch (window.navigator.language) {
-    case 'comma':
-        defaultDataSeperator = 'comma';
-        break;
-    case 'semicolon':
         defaultDataSeperator = 'semicolon';
         break;
     default:
+        defaultLanguage = 'fr-Latn';
+        defaultDecimalSeperator = 'dot';
         defaultDataSeperator = 'comma';
         break;
 }
@@ -141,7 +125,7 @@ function setDecimalSeperator(actionType, action, state) {
     newState = Object.assign({}, state, {
         decimalSeparator,
     });
-
+    console.log(newState,"newStateDecimal")
     return newState;
 }
 
@@ -161,7 +145,7 @@ function setDataSeperator(actionType, action, state) {
     newState = Object.assign({}, state, {
         dataSeperator,
     });
-
+console.log(newState,"newStateDAta")
     return newState;
 }
 
