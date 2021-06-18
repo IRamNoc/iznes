@@ -14,7 +14,7 @@ import { MultilingualService } from '@setl/multilingual';
 import { OfiKycService } from '@ofi/ofi-main/ofi-req-services/ofi-kyc/service';
 import { get as getValue } from 'lodash';
 import { Subject } from 'rxjs/Subject';
-import { SET_LANGUAGE } from '@setl/core-store/user/site-settings/actions';
+import { SET_LANGUAGE,SET_DECIMAL_SEPERATOR,SET_DATA_SEPERATOR } from '@setl/core-store/user/site-settings/actions';
 import { takeUntil } from 'rxjs/operators';
 
 @Component({
@@ -64,7 +64,7 @@ export class OfiProfileMyInformationsComponent implements OnInit, OnDestroy {
 
     language: string;
     decimalSeparator: string;
-    dataSeparator: string;
+    dataSeperator: string;
 
     // first menu link in menu spec.
     firstMenuLink: string;
@@ -74,6 +74,8 @@ export class OfiProfileMyInformationsComponent implements OnInit, OnDestroy {
     @select(['user', 'connected', 'connectedWallet']) connectedWalletId$;
     @select(['ofi', 'ofiKyc', 'myInformations']) myKyc: any;
     @select(['user', 'siteSettings', 'language']) requestLanguageObj;
+    @select(['user', 'siteSettings', 'decimalSeparator']) requestDecimalObj;
+    @select(['user', 'siteSettings', 'dataSeperator']) requestDataObj;
     @select(['user', 'siteSettings', 'siteMenu']) menSpec$;
 
     constructor(
@@ -159,9 +161,11 @@ export class OfiProfileMyInformationsComponent implements OnInit, OnDestroy {
 
         console.log('requestLanguageObj');
         this.requestLanguageObj.pipe(takeUntil(this.unSubscribe)).subscribe(requested => this.language = requested);
+        this.requestDecimalObj.pipe(takeUntil(this.unSubscribe)).subscribe(requested => this.decimalSeparator = requested);
+        this.requestDataObj.pipe(takeUntil(this.unSubscribe)).subscribe(requested => this.dataSeperator = requested);
         // this.decimalSeparator=this.translate.getDecimalSeparator();
 
-        this.dataSeparator=this.translate.getDataSeperator();
+        // this.dataSeparator=this.translate.getDataSeperator();
         this.menSpec$.pipe(takeUntil(this.unSubscribe)).subscribe(ms => this.firstMenuLink = getFirstMenuLink(ms));
     }
 
@@ -396,7 +400,7 @@ export class OfiProfileMyInformationsComponent implements OnInit, OnDestroy {
            // save decimal values in db
         const asyncTaskPipe = this.myUserService.setDecimalSeperator( decimalSeperator);
         this.ngRedux.dispatch(SagaHelper.runAsync(
-            [SET_LANGUAGE],
+            [SET_DECIMAL_SEPERATOR],
             [],
             asyncTaskPipe,
             {},
@@ -425,7 +429,7 @@ export class OfiProfileMyInformationsComponent implements OnInit, OnDestroy {
            // save data values in db
            const asyncTaskPipe = this.myUserService.setDataSeperator(dataSeperator);
            this.ngRedux.dispatch(SagaHelper.runAsync(
-               [SET_LANGUAGE],
+               [SET_DATA_SEPERATOR],
                [],
                asyncTaskPipe,
                {},
