@@ -32,6 +32,7 @@ export interface ManagementCompanyDetail {
     isThirdPartyKyc: boolean;
     managementCompanyType: 'nowcp' | 'common' | 'id2s';
     externalEmail: string;
+    emailValidation: string;
 }
 
 export interface ManagementCompanyListState {
