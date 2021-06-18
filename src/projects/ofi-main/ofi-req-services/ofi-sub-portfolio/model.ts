@@ -61,6 +61,7 @@ export interface OfiGetSubPortfolioBankingDetailsBody extends OfiMemberNodeBody 
 
 export interface OfiUpdateSubPortfolioData extends Subportfolio {
     option: string;
+    oldSubportifolio: any;
 }
 
 export interface OfiDeleteSubPortfolioData {

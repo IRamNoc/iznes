@@ -34,6 +34,7 @@ export const walletListActions: {}[] = [
         icon: 'fa-pencil-square-o',
         onClick: 'editWallet',
     }),
+    /*
     new DatagridListActionModel({
         label: 'Delete',
         id: { text: 'delete-', data: 'walletId' },
@@ -41,6 +42,7 @@ export const walletListActions: {}[] = [
         icon: 'fa-trash-o',
         onClick: 'deleteWallet',
     }),
+    */
 ];
 
 export const walletListFilters: {} = {
