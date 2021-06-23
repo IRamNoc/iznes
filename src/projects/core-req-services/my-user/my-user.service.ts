@@ -386,10 +386,10 @@ export class MyUserService implements OnDestroy {
 
 
     setDecimalSeperator(data: SetDecimalOperatorTokenData): any {
-        const messageBody: SetDecimalOperatorRequestBody = {
-            RequestName: 'setdecimalseparator',
+            const messageBody: SetDecimalOperatorRequestBody = {
+            RequestName: 'decimalseparator',
             token: this.memberSocketService.token,
-            decimalseparator : data.decimalseparator,
+            decimalseparator : data,
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
@@ -397,10 +397,10 @@ export class MyUserService implements OnDestroy {
 
 
     setDataSeperator(data: SetDataOperatorTokenData): any {
-        const messageBody: SetDataOperatorRequestBody = {
-            RequestName: 'setdataseperator',
+            const messageBody: SetDataOperatorRequestBody = {
+            RequestName: 'dataseparator',
             token: this.memberSocketService.token,
-            dataseparator : data.dataseparator ,
+            dataseparator : data,
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);

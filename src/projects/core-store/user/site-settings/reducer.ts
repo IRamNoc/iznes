@@ -112,40 +112,35 @@ function setLanguage(actionType, action, state) {
 function setDecimalSeperator(actionType, action, state) {
     let newState;
     let decimalData;
-
     if (_.get(action, 'payload[1].Data[0]', '') === '') {
         decimalData = action;
     } else {
         decimalData = _.get(action, 'payload[1].Data[0]');
     }
-
-    let decimalSeparator = _.get(decimalData, 'decimalSeparator', '');
+    let decimalSeparator = _.get(decimalData, 'decimalseparator', '');
     decimalSeparator = (decimalSeparator !== '' && decimalSeparator !== null ? decimalSeparator : 'dot');
 
     newState = Object.assign({}, state, {
         decimalSeparator,
     });
-    console.log(newState,"newStateDecimal")
     return newState;
 }
 
 function setDataSeperator(actionType, action, state) {
     let newState;
     let dataseratepData;
-
     if (_.get(action, 'payload[1].Data[0]', '') === '') {
         dataseratepData = action;
     } else {
         dataseratepData = _.get(action, 'payload[1].Data[0]');
     }
 
-    let dataSeperator = _.get(dataseratepData, 'dataSeperator', '');
+    let dataSeperator = _.get(dataseratepData, 'dataseparator', '');
     dataSeperator = (dataSeperator !== '' && dataSeperator !== null ? dataSeperator : 'comma');
 
     newState = Object.assign({}, state, {
         dataSeperator,
     });
-console.log(newState,"newStateDAta")
     return newState;
 }
 

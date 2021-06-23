@@ -105,6 +105,7 @@
             <section class="form-block">
                 <div class="form-group col-sm-12">
                     <section class="form-block">
+                        
                         <div class="form-group">
                             <h2>{{ 'Choose your language' | translate }}</h2>
                             <div class="radio" (click)="changeLanguage('fr-Latn')">
@@ -118,33 +119,35 @@
                         </div>
                         
                         <div class="form-group">
-
-                            <h2>Choose your decimal separator</h2>
-
+                            <h2>{{ 'Choose your decimal separator' | translate }}</h2>
+                            <!-- <h2>Choose your decimal separator</h2> -->
                             <div class="radio" (click)="changeDecimalSeparator('dot')">
                                 <input type="radio" name="gridRadios2" id="separator_dotDecimal" [checked]="decimalSeparator=== 'dot'">
-                                <label for="separator_dotDecimal">dot (.)</label>
+                                <label for="separator_dotDecimal">{{ 'dot (.)' | translate }}</label>
+                                <!-- <label for="separator_dotDecimal">dot (.)</label> -->
                             </div>
                             <div class="radio" (click)="changeDecimalSeparator('comma')">
                                 <input type="radio" name="gridRadios2" id="separator_commaDecimal" [checked]="decimalSeparator === 'comma'">
-                                <label for="separator_commaDecimal">comma (,)</label>
+                                <label for="separator_commaDecimal">{{ 'comma (,)' | translate }}</label>
+                               <!-- <label for="separator_commaDecimal">comma (,)</label> -->
                             </div>
                         </div>
-
+                        
                         <div class="form-group">
-
-                            <h2>Choose your data separator</h2>
-
-                            <div class="radio" (click)=" changeDataSeparator('comma')">
-                               <input type="radio" name="gridRadios3" id="separator_commaData" [checked]="dataSeparator === 'comma'">
-                                <label for="separator_commaData">comma (,)</label>
+                           <!-- <h2>Choose your data separator</h2> -->
+                            <h2>{{ 'Choose your data separator' | translate }}</h2>
+                            <div class="radio" (click)="changeDataSeparator('comma')">
+                               <input type="radio" name="gridRadios3" id="separator_commaData" [checked]="dataSeperatorData === 'comma'">
+                               <label for="separator_commaData">{{ 'comma (,)' | translate }}</label>
+                               <!-- <label for="separator_commaData">comma (,)</label> -->
                             </div>
-                            <div class="radio" (click)=" changeDataSeparator('semicolon')">
-                                <input type="radio" name="gridRadios3" id="separator_semicolonData" [checked]="dataSeparator === 'semicolon'">
-                                <label for="separator_semicolonData">semicolon (;)</label>
+                            <div class="radio" (click)="changeDataSeparator('semicolon')">
+                                <input type="radio" name="gridRadios3" id="separator_semicolonData" [checked]="dataSeperatorData === 'semicolon'">
+                                <label for="separator_semicolonData">{{ 'semicolon (;)' | translate }}</label>
+                                <!-- <label for="separator_semicolonData">semicolon (;)</label> -->
                            </div>
-
                         </div>
+
                     </section>
                 </div>
             </section>

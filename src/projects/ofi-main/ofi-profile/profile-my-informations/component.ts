@@ -64,7 +64,7 @@ export class OfiProfileMyInformationsComponent implements OnInit, OnDestroy {
 
     language: string;
     decimalSeparator: string;
-    dataSeperator: string;
+    dataSeperatorData: string;
 
     // first menu link in menu spec.
     firstMenuLink: string;
@@ -74,8 +74,8 @@ export class OfiProfileMyInformationsComponent implements OnInit, OnDestroy {
     @select(['user', 'connected', 'connectedWallet']) connectedWalletId$;
     @select(['ofi', 'ofiKyc', 'myInformations']) myKyc: any;
     @select(['user', 'siteSettings', 'language']) requestLanguageObj;
-    @select(['user', 'siteSettings', 'decimalSeparator']) requestDecimalObj;
-    @select(['user', 'siteSettings', 'dataSeperator']) requestDataObj;
+    @select(['user', 'siteSettings', 'decimalSeparator']) requestDecimalObj$;
+    @select(['user', 'siteSettings', 'dataSeperator']) requestDataObj$;
     @select(['user', 'siteSettings', 'siteMenu']) menSpec$;
 
     constructor(
@@ -158,14 +158,10 @@ export class OfiProfileMyInformationsComponent implements OnInit, OnDestroy {
         this.authentication$.pipe(takeUntil(this.unSubscribe)).subscribe((auth) => {
             this.apiKey = auth.apiKey;
         });
-
-        console.log('requestLanguageObj');
         this.requestLanguageObj.pipe(takeUntil(this.unSubscribe)).subscribe(requested => this.language = requested);
-        this.requestDecimalObj.pipe(takeUntil(this.unSubscribe)).subscribe(requested => this.decimalSeparator = requested);
-        this.requestDataObj.pipe(takeUntil(this.unSubscribe)).subscribe(requested => this.dataSeperator = requested);
-        // this.decimalSeparator=this.translate.getDecimalSeparator();
-
-        // this.dataSeparator=this.translate.getDataSeperator();
+        this.requestDecimalObj$.pipe(takeUntil(this.unSubscribe)).subscribe(requested => this.decimalSeparator = requested);
+        this.requestDataObj$.pipe(takeUntil(this.unSubscribe)).subscribe(requested => this.dataSeperatorData = requested);
+    
         this.menSpec$.pipe(takeUntil(this.unSubscribe)).subscribe(ms => this.firstMenuLink = getFirstMenuLink(ms));
     }
 
@@ -177,7 +173,7 @@ export class OfiProfileMyInformationsComponent implements OnInit, OnDestroy {
     /**
      * Check new password does not match existing password
      *
-     * @param {FormControl} g
+     * @param {FormControl} 
      * @return {object}
      */
     passwordValidator(g: FormGroup): object {
@@ -399,6 +395,7 @@ export class OfiProfileMyInformationsComponent implements OnInit, OnDestroy {
 
            // save decimal values in db
         const asyncTaskPipe = this.myUserService.setDecimalSeperator( decimalSeperator);
+        console.log(asyncTaskPipe,"asyncTaskPipe");
         this.ngRedux.dispatch(SagaHelper.runAsync(
             [SET_DECIMAL_SEPERATOR],
             [],
@@ -428,6 +425,7 @@ export class OfiProfileMyInformationsComponent implements OnInit, OnDestroy {
 
            // save data values in db
            const asyncTaskPipe = this.myUserService.setDataSeperator(dataSeperator);
+           console.log(asyncTaskPipe, "asyncTaskPipe")
            this.ngRedux.dispatch(SagaHelper.runAsync(
                [SET_DATA_SEPERATOR],
                [],
