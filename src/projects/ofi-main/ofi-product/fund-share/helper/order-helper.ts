@@ -750,7 +750,7 @@ export class OrderHelper {
 
     getOrderDates(): VerifyResponse | OrderDates {
         // the logic is for testing purpose, it will disable all the validation
-        if (this.disableValidation) {
+        if (this.disableValidation || this.orderRequest.isTransfer) {
             return this.getFakeDatesString();
         }
 
@@ -788,7 +788,7 @@ export class OrderHelper {
                         valuation = this.calendarHelper.getValuationDateFromCutoff(cutoff, this.orderType);
                         settlement = this.calendarHelper.getSettlementDateFromCutoff(cutoff, this.orderType);
                         currentRetry = maxRetries;
-                    } 
+                    }; 
                     currentDate = currentDate.add(1, 'days');
                 }
 
