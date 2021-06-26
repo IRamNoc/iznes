@@ -22,6 +22,7 @@ export interface OrderRequest {
     // redemption), but we also need a way to identify whether a order is sell buy order.
     // the flag isellbuy does not allow to pass in buy the frontend, the backend will append it to the request accordingly.
     issellbuy?: boolean;
+    isTransfer: boolean;
 }
 
 export interface IznShareDetailWithNav extends IznesShareDetail {
@@ -201,6 +202,11 @@ export const OrderByNumber = {
     q: 1,
     a: 2,
 };
+
+export const RoundedQuantityType = {
+    Commercial: 0,
+    Lower: 1,
+}
 
 export interface NavData {
     value: number;

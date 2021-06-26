@@ -47,7 +47,7 @@ import { ToasterService, Toast } from 'angular2-toaster';
 import { Router } from '@angular/router';
 import { MultilingualService } from '@setl/multilingual';
 import { MessagesService } from '@setl/core-messages';
-import { SellBuyCalendar } from '../../ofi-product/fund-share/FundShareEnum';
+import { SellBuyCalendar, SubscriptionRoundingRuleEnum } from '../../ofi-product/fund-share/FundShareEnum';
 import { OfiFundShareService } from '@ofi/ofi-main/ofi-req-services/ofi-product/fund-share/service';
 import { DomSanitizer } from '@angular/platform-browser';
 import { FileDownloader } from '@setl/utils/services/file-downloader/service';
@@ -916,6 +916,7 @@ export class InvestFundComponent implements OnInit, OnDestroy {
             orderValue: this.orderValue,
             comment: this.form.controls.comment.value,
             reference: this.form.controls.reference.value,
+            isTransfer: false,
         };
     }
 
@@ -932,6 +933,7 @@ export class InvestFundComponent implements OnInit, OnDestroy {
             ordervalue: this.orderValue, // (order value relate to orderby)
             comment: '',
             reference: '',
+            isTransfer: false,
         };
     }
 
@@ -1141,11 +1143,24 @@ export class InvestFundComponent implements OnInit, OnDestroy {
                 this.trueAmount = newValue;
 
                 const quantity = math.format(math.chain(newValue).divide(this.nav).done(), 14); // {notation: 'fixed', precision: this.shareData.maximumNumDecimal}
-                const newQuantity = this.round(quantity, this.shareData.maximumNumDecimal).toString();
+                let newQuantity;
+
+                if (this.orderType === 's') {
+                    newQuantity = (this.shareData.subscriptionQuantityRoundingRule === SubscriptionRoundingRuleEnum.Lower
+                        ? this.roundLower(quantity, this.shareData.maximumNumDecimal)
+                        : this.round(quantity, this.shareData.maximumNumDecimal)
+                    ).toString();
+                } else {
+                    newQuantity = (this.shareData.redemptionQuantityRoundingRule === SubscriptionRoundingRuleEnum.Lower
+                        ? this.roundLower(quantity, this.shareData.maximumNumDecimal)
+                        : this.round(quantity, this.shareData.maximumNumDecimal)
+                    ).toString();
+                }
+
                 const newQuantityStr = this.moneyValuePipe.transform(newQuantity, this.shareData.maximumNumDecimal);
                 beTriggered.patchValue(newQuantityStr, { onlySelf: true, emitEvent: false });
 
-                this.calcFeeNetAmount();
+                this.calcFeeNetAmount(); 
             },
         }[type];
 
@@ -1216,6 +1231,19 @@ export class InvestFundComponent implements OnInit, OnDestroy {
      */
     round(num: number, decimal: number = 0) {
         return math.format(math.round(num, decimal), 14);
+    }
+
+    /**
+     * Round Numbers to lower using exponential notation
+     * eg 0.159 becomes 0.15
+     * eg 0.1528 becomes 0.152
+     *
+     * @param num
+     * @param decimal
+     * @returns {number}
+     */
+    roundLower(num: number, decimal: number = 0) {
+        return math.format(Number(Math.floor(parseFloat(num + 'e' + decimal)) + 'e-' + decimal), 14);
     }
 
     isValidOrderValue() {

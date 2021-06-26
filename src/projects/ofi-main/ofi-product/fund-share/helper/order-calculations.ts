@@ -1,6 +1,6 @@
 import { OrderType, OrderByType } from '../../../ofi-orders/order.model';
-import { fixToDecimal } from '@setl/utils/helper/common/math-helper'; //notcompile
-// import { fixToDecimal } from '../../../../utils/helper/common/math-helper'; //compile
+import { fixToDecimal, lowerRoundedQuantity as lowerRoundedFct } from '@setl/utils/helper/common/math-helper'; //notcompile
+//import { fixToDecimal, lowerRoundedQuantity as lowerRoundedFct } from '../../../../utils/helper/common/math-helper'; //compile
 import { BlockchainNumberDecimal, NormalNumberDecimal, NumberMultiplier, ExpirySecond } from './config';
 import { OrderFigures } from './models';
 
@@ -19,6 +19,7 @@ export const calculateFigures = (
     },
     maxDecimalisation: number,
     knownNav: boolean,
+    lowerRoundedQuantity: boolean = false,
 ): OrderFigures => {
     let amount;
     let quantity;
@@ -72,12 +73,11 @@ export const calculateFigures = (
             BlockchainNumberDecimal,
             'floor',
         );
-
+        estimatedQuantity = lowerRoundedQuantity ? lowerRoundedFct(estimatedQuantity / NumberMultiplier, maxDecimalisation) : toNormalScale(estimatedQuantity, maxDecimalisation);
+        estimatedQuantity = convertToBlockChainNumber(estimatedQuantity);
         // make sure the quantity meet the share maximumNumberDecimal
         // 1. convert back to normal number scale. cap at fund maxNumDecimal
         // 2. convert back to blockchain number
-        estimatedQuantity = toNormalScale(estimatedQuantity, maxDecimalisation);
-        estimatedQuantity = convertToBlockChainNumber(estimatedQuantity);
 
         quantity = 0;
 

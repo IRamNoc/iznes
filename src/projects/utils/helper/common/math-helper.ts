@@ -30,3 +30,7 @@ export function fixToDecimal(num: number, numDecimal: number = 0, roundMethod: '
     }
 
 }
+
+export function lowerRoundedQuantity(num: number, decimal: number = 0) {
+    return math.format(Number(Math.floor(parseFloat(num + 'e' + decimal)) + 'e-' + decimal), 14);
+}
