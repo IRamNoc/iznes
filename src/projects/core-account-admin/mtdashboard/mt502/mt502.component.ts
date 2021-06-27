@@ -274,12 +274,17 @@ export class Mt502Component implements OnInit, OnDestroy {
     this.isModalDisplayed = true;
     
     const mtMessage = _.find(this.mtMessagesList, { mtid });
-    let splitMsg = mtMessage.mtRawmsg.split('{');
     let parsedMessage = '';
-    splitMsg.forEach((line, index) => {
-      if (index === 0) return;
-      parsedMessage += `<div><h6><b>Block ${line.charAt(0)}</b></h6><pre class="p6">{${line}</pre></div>`
-    });
+    try {
+      let splitMsg = mtMessage.mtRawmsg.split('{');
+      splitMsg.forEach((line, index) => {
+        if (index === 0) return;
+        parsedMessage += `<div><h6><b>Block ${line.charAt(0)}</b></h6><pre class="p6">{${line}</pre></div>`
+      });
+    } catch(e) {
+      parsedMessage = '<div><h6>Cannot parse this MT Message in detailed</h6></div>';
+      console.error('Enable to parse mt message');
+    };
 
     this.mtModal = {
         filename: (mtMessage.mtFilename).substring(0, mtMessage.mtFilename.length - 4),
