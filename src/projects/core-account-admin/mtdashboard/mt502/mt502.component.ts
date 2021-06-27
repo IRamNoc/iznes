@@ -287,7 +287,7 @@ export class Mt502Component implements OnInit, OnDestroy {
     };
 
     this.mtModal = {
-        filename: (mtMessage.mtFilename).substring(0, mtMessage.mtFilename.length - 4),
+        filename: (mtMessage.mtFilename).substring(0, mtMessage.mtFilename.length - 4) || 'untitled',
         body: (parsedMessage),
         bodyFull: (mtMessage.mtRawmsg),
     };
