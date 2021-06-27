@@ -86,6 +86,7 @@ function formatManagementCompanyDataResponse(rawCompanyData: Array<any>): Array<
                 signatureTitle: item.get('signatureTitle'),
                 signatureHash: item.get('signatureHash'),
                 externalEmail: item.get('externalEmail'),
+                emailValidation: item.get('emailValidation'),
             };
 
 
@@ -190,6 +191,7 @@ function handleGetInvestorManagementCompanyList(state: InvManagementCompanyListS
                 isThirdPartyKyc: !!it.isThirdPartyKyc,
                 managementCompanyType: it.managementCompanyType,
                 externalEmail: it.externalEmail,
+                emailValidation: it.emailValidation,
             });
 
             investorManagementCompanyList = investorManagementCompanyList.push(item);

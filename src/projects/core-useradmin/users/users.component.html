@@ -38,25 +38,35 @@
                 </div>
 
                 <!-- User list tab. -->
-                <ng-container *ngIf="id === 0">
-                    <ng-container *ngTemplateOutlet="staticUserListTab">
+                <ng-container *ngIf="hasAccess">
+                    <ng-container *ngIf="id === 0">
+                        <ng-container *ngTemplateOutlet="staticUserListTab">
 
+                        </ng-container>
+                    </ng-container>
+
+                    <!-- User add tab. -->
+                    <ng-container *ngIf="id === 1">
+                        <ng-container
+                            *ngTemplateOutlet="staticUserAddTab; context: {'formControl': tabdata.formControl, 'tabid': id}">
+
+                        </ng-container>
+                    </ng-container>
+
+                    <!-- User edit tabs. -->
+                    <ng-container *ngIf="id >= 2">
+                        <ng-container
+                            *ngTemplateOutlet="dynamicEditTab; context: {'formControl': tabdata.formControl, 'tabid': id}">
+
+                        </ng-container>
                     </ng-container>
                 </ng-container>
 
-                <!-- User add tab. -->
-                <ng-container *ngIf="id === 1">
-                    <ng-container
-                        *ngTemplateOutlet="staticUserAddTab; context: {'formControl': tabdata.formControl, 'tabid': id}">
-
-                    </ng-container>
-                </ng-container>
-
-                <!-- User edit tabs. -->
-                <ng-container *ngIf="id >= 2">
-                    <ng-container
-                        *ngTemplateOutlet="dynamicEditTab; context: {'formControl': tabdata.formControl, 'tabid': id}">
-
+                <ng-container *ngIf="!hasAccess">
+                    <ng-container>
+                        <ng-container *ngTemplateOutlet="staticUserListTabStandard">
+                        
+                        </ng-container>
                     </ng-container>
                 </ng-container>
             </clr-tab-content>
@@ -73,6 +83,22 @@
                 [(currentPage)]="currentPage"
                 [listData]="paginatedUsersList"
                 [listActions]="usersListActions"
+                [fieldsModel]="usersListModel"
+                [lazyLoaded]="true"
+                [totalItems]="dgTotalItems"
+                [showHideColumns]="true">
+            </datagrid-list>
+        </div>
+    </ng-template>
+
+     <!-- User Data Table non superadmin. -->
+     <ng-template #staticUserListTabStandard>
+        <div class="panel-body">
+            <datagrid-list
+                (refresh)="datagridRefresh($event)"
+                (rowsUpdate)="dgPageSize=$event; dgPageFrom=0; setPaginatedUsersList(); requestPaginatedUsersList(); currentPage=1;"
+                [(currentPage)]="currentPage"
+                [listData]="paginatedUsersList"
                 [fieldsModel]="usersListModel"
                 [lazyLoaded]="true"
                 [totalItems]="dgTotalItems"
