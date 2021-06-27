@@ -124,12 +124,14 @@ export class FundShare {
             sellBuyCalendar: this.getSelectValue(this.keyFacts.mandatory.sellBuyCalendar),
             maximumNumDecimal: this.characteristic.mandatory.maximumNumDecimal.value(),
             subscriptionCategory: this.getSelectValue(this.characteristic.mandatory.subscriptionCategory),
+            subscriptionQuantityRoundingRule: this.getSelectValue(this.characteristic.mandatory.subscriptionQuantityRoundingRule),
             subscriptionCurrency: this.getSelectValue(this.characteristic.mandatory.subscriptionCurrency),
             minInitialSubscriptionInShare: this.characteristic.mandatory.minInitialSubscriptionInShare.value(),
             minInitialSubscriptionInAmount: this.characteristic.mandatory.minInitialSubscriptionInAmount.value(),
             minSubsequentSubscriptionInShare: this.characteristic.mandatory.minSubsequentSubscriptionInShare.value(),
             minSubsequentSubscriptionInAmount: this.characteristic.mandatory.minSubsequentSubscriptionInAmount.value(),
             redemptionCategory: this.getSelectValue(this.characteristic.mandatory.redemptionCategory),
+            redemptionQuantityRoundingRule: this.getSelectValue(this.characteristic.mandatory.redemptionQuantityRoundingRule),
             redemptionCurrency: this.getSelectValue(this.characteristic.mandatory.redemptionCurrency),
             minSubsequentRedemptionInShare: this.characteristic.mandatory.minSubsequentRedemptionInShare.value(),
             minSubsequentRedemptionInAmount: this.characteristic.mandatory.minSubsequentRedemptionInAmount.value(),
@@ -267,6 +269,7 @@ export class FundShare {
         this.setListItemPreset(this.keyFacts.mandatory.sellBuyCalendar, fundShare.sellBuyCalendar);
         this.characteristic.mandatory.maximumNumDecimal.preset = fundShare.maximumNumDecimal;
         this.setListItemPreset(this.characteristic.mandatory.subscriptionCategory, fundShare.subscriptionCategory);
+        this.setListItemPreset(this.characteristic.mandatory.subscriptionQuantityRoundingRule, fundShare.subscriptionQuantityRoundingRule);
         this.setListItemPreset(this.characteristic.mandatory.subscriptionCurrency, fundShare.subscriptionCurrency);
         this.characteristic.mandatory.minInitialSubscriptionInShare.preset = this.numberConverter.toFrontEnd(fundShare.minInitialSubscriptionInShare);
         this.characteristic.mandatory.minInitialSubscriptionInAmount.preset = this.numberConverter.toFrontEnd(fundShare.minInitialSubscriptionInAmount);
@@ -275,6 +278,7 @@ export class FundShare {
         this.characteristic.mandatory.minSubsequentSubscriptionInAmount.preset =
             this.numberConverter.toFrontEnd(fundShare.minSubsequentSubscriptionInAmount);
         this.setListItemPreset(this.characteristic.mandatory.redemptionCategory, fundShare.redemptionCategory);
+        this.setListItemPreset(this.characteristic.mandatory.redemptionQuantityRoundingRule, fundShare.redemptionQuantityRoundingRule);
         this.setListItemPreset(this.characteristic.mandatory.redemptionCurrency, fundShare.redemptionCurrency);
         this.characteristic.mandatory.minSubsequentRedemptionInShare.preset = this.numberConverter.toFrontEnd(fundShare.minSubsequentRedemptionInShare);
         this.characteristic.mandatory.minSubsequentRedemptionInAmount.preset =
@@ -357,12 +361,14 @@ export class FundShare {
         this.setListItemValue(this.keyFacts.mandatory.sellBuyCalendar, fundShare.sellBuyCalendar);
         this.characteristic.mandatory.maximumNumDecimal.control.setValue(fundShare.maximumNumDecimal);
         this.setListItemValue(this.characteristic.mandatory.subscriptionCategory, fundShare.subscriptionCategory);
+        this.setListItemValue(this.characteristic.mandatory.subscriptionQuantityRoundingRule, fundShare.subscriptionQuantityRoundingRule);
         this.setListItemValue(this.characteristic.mandatory.subscriptionCurrency, fundShare.subscriptionCurrency);
         this.characteristic.mandatory.minInitialSubscriptionInShare.control.setValue(this.numberConverter.toFrontEnd(fundShare.minInitialSubscriptionInShare));
         this.characteristic.mandatory.minInitialSubscriptionInAmount.control.setValue(this.numberConverter.toFrontEnd(fundShare.minInitialSubscriptionInAmount));
         this.characteristic.mandatory.minSubsequentSubscriptionInShare.control.setValue(this.numberConverter.toFrontEnd(fundShare.minSubsequentSubscriptionInShare));
         this.characteristic.mandatory.minSubsequentSubscriptionInAmount.control.setValue(this.numberConverter.toFrontEnd(fundShare.minSubsequentSubscriptionInAmount));
         this.setListItemValue(this.characteristic.mandatory.redemptionCategory, fundShare.redemptionCategory);
+        this.setListItemValue(this.characteristic.mandatory.redemptionQuantityRoundingRule, fundShare.redemptionQuantityRoundingRule);
         this.setListItemValue(this.characteristic.mandatory.redemptionCurrency, fundShare.redemptionCurrency);
         this.characteristic.mandatory.minSubsequentRedemptionInShare.control.setValue(this.numberConverter.toFrontEnd(fundShare.minSubsequentRedemptionInShare));
         this.characteristic.mandatory.minSubsequentRedemptionInAmount.control.setValue(this.numberConverter.toFrontEnd(fundShare.minSubsequentRedemptionInAmount));
