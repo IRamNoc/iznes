@@ -1,5 +1,6 @@
 import { debounceTime, switchMap, filter, bufferTime } from 'rxjs/operators';
-import { Observable, combineLatest as observableCombineLatest, Subscription, zip } from 'rxjs';
+import { Observable, combineLatest as observableCombineLatest, Subscription, zip, Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 /* Core/Angular imports. */
 import {
     AfterViewInit,
@@ -86,6 +87,8 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
     loading = true;
     userType: number;
 
+    decimalSeparator: string;
+    dataSeperatorData: string;
     public orderTypes: any = [];
     public orderStatuses: any = [];
     public dateTypes: any = [];
@@ -99,6 +102,8 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
 
     public hasPermissionManageOrders: boolean = false;
     public hasPermissionActionOnOrders: boolean = false;
+
+    unSubscribe: Subject<any> = new Subject();
 
     // Locale
     language = 'en';
@@ -194,6 +199,9 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
     @select(['ofi', 'ofiProduct', 'ofiFundShareList', 'requestedIznesShare']) readonly requestedShareList$;
     @select(['ofi', 'ofiProduct', 'ofiFundShareList', 'iznShareList']) readonly shareList$;
     @select(['ofi', 'ofiCurrencies', 'currencies']) readonly currencies$;
+    
+    @select(['user', 'siteSettings', 'decimalSeparator']) requestDecimalObj$;
+    @select(['user', 'siteSettings', 'dataSeperator']) requestDataObj$;
 
     private myDetails: any = {};
     private walletDirectory: any = [];
@@ -384,6 +392,9 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
                 this.hasPermissionActionOnOrders = hasPermission;
             },
         );
+        this.requestDecimalObj$.pipe(takeUntil(this.unSubscribe)).subscribe(requested => this.decimalSeparator = requested);
+        this.requestDataObj$.pipe(takeUntil(this.unSubscribe)).subscribe(requested => this.dataSeperatorData = requested);
+    
 
         this.detectChanges();
     }
