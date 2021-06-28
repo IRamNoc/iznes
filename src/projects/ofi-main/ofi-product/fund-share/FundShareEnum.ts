@@ -185,6 +185,10 @@ export enum SubscriptionCategoryEnum {
     Amount,
     Both,
 }
+export enum SubscriptionRoundingRuleEnum {
+    Commercial,
+    Lower,
+}
 export enum CurrencyHedgeEnum {
     NoHedge,
     FullPortfolioHedge,

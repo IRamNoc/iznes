@@ -667,6 +667,8 @@ export const fundItems = {
         { id: 7, text: 'JPMORGAN Bank Luxembourg' },
         { id: 8, text: 'State Street Bank Luxembourg' },
         { id: 9, text: 'State Street Global Services France' },
+        { id: 10, text: 'Arkéa Investment Services' },
+        { id: 11, text: 'FI Partners' },
     ],
     custodianBankItems: [
         { id: 1, text: 'Société Générale Securities Services France' },
@@ -678,6 +680,9 @@ export const fundItems = {
         { id: 7, text: 'JPMORGAN Bank Luxembourg' },
         { id: 8, text: 'State Street Bank Luxembourg' },
         { id: 9, text: 'State Street Global Services France' },
+        // 10 => Generali
+        // 11 => OFI AM
+        { id: 12, text: 'CACEIS PERES' },
     ],
     investmentManagerItems: [
         { id: 1, text: 'Allianz Global Investors' },
@@ -745,6 +750,7 @@ export const fundItems = {
         { id: 7, text: 'JPMORGAN Bank Luxembourg' },
         { id: 8, text: 'State Street Bank Luxembourg' },
         { id: 9, text: 'State Street Global Services France' },
+        { id: 10, text: 'Arkéa Banque Entreprises et Institutionnels' },
     ],
     investmentAdvisorItems: [
         { id: 1, text: 'Investment Advisor 1' },
@@ -798,6 +804,8 @@ export const fundItems = {
         { id: 7, text: 'JPMORGAN Bank Luxembourg' },
         { id: 8, text: 'State Street Bank Luxembourg' },
         { id: 9, text: 'State Street Global Services France' },
+        { id: 10, text: 'Arkéa Investment Services' },
+        { id: 11, text: 'La Française Asset Management' },
     ],
 };
 

@@ -603,7 +603,9 @@
             <ng-container *ngIf=" orderType === 'redeem' ">
                 <p>{{ 'Please type below a quantity or an amount to redeem' | translate }}</p></ng-container>
 
-            <span class="text-warning" *ngIf="isKnownNav()">&nbsp;(Using known nav)</span><span class="text-warning" *ngIf="!isKnownNav()">&nbsp;(Using unknown nav)</span>
+                <span class="label label-success ml-1" *ngIf="isKnownNav()">Known NAV : {{navStr}} {{this.currency}}</span>
+                <span class="label label-warning ml-1" *ngIf="!isKnownNav()">Unknown NAV, latest : {{navStr}} {{this.currency}}</span>
+
         </div>
 
         <div class="row">

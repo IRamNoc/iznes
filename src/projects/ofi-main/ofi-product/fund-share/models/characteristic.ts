@@ -15,6 +15,9 @@ export class ShareCharacteristicMandatory extends DynamicFormsValidator {
         ]),
         style: [FormItemStyle.BreakOnAfter],
     };
+    subscriptionText = {
+        title: 'Subscriptions',
+    };
     subscriptionCategory: FormItem = {
         type: FormItemType.list,
         label: 'Subscription Category',
@@ -24,6 +27,20 @@ export class ShareCharacteristicMandatory extends DynamicFormsValidator {
             { id: E.SubscriptionCategoryEnum.Amount, text: 'Amount' },
             { id: E.SubscriptionCategoryEnum.Both, text: 'Shares and Amount' },
         ],
+        style: [FormItemStyle.BreakOnBefore],
+    };
+    subscriptionQuantityRoundingRule: FormItem = {
+        type: FormItemType.list,
+        label: 'Subscription Quantity Rounding Rule',
+        required: true,
+        listItems: [
+            { id: E.SubscriptionRoundingRuleEnum.Commercial, text: 'Commercial' },
+            { id: E.SubscriptionRoundingRuleEnum.Lower, text: 'Lower' },
+        ],
+        hidden: () => {
+            const val = (this.subscriptionCategory.value() as any);
+            return (val == undefined) || (val.length == 0) || [E.SubscriptionCategoryEnum.Amount, E.SubscriptionCategoryEnum.Both].indexOf(val[0].id) == -1;
+        },
         style: [FormItemStyle.BreakOnAfter],
     };
     subscriptionCurrency: FormItem = {
@@ -77,6 +94,9 @@ export class ShareCharacteristicMandatory extends DynamicFormsValidator {
         },
         isBlockchainValue: true,
     };
+    redemptionText = {
+        title: 'Redemptions',
+    };
     redemptionCategory: FormItem = {
         type: FormItemType.list,
         label: 'Redemption Category',
@@ -86,7 +106,21 @@ export class ShareCharacteristicMandatory extends DynamicFormsValidator {
             { id: E.SubscriptionCategoryEnum.Amount, text: 'Amount' },
             { id: E.SubscriptionCategoryEnum.Both, text: 'Shares and Amount' },
         ],
-        style: [FormItemStyle.BreakOnBefore, FormItemStyle.BreakOnAfter],
+        style: [FormItemStyle.BreakOnBefore],
+    };
+    redemptionQuantityRoundingRule: FormItem = {
+        type: FormItemType.list,
+        label: 'Redemption Quantity Rounding Rule',
+        required: true,
+        listItems: [
+            { id: E.SubscriptionRoundingRuleEnum.Commercial, text: 'Commercial' },
+            { id: E.SubscriptionRoundingRuleEnum.Lower, text: 'Lower' },
+        ],
+        style: [FormItemStyle.BreakOnAfter],
+        hidden: () => {
+            const val = (this.redemptionCategory.value() as any);
+            return (val == undefined) || (val.length == 0) || [E.SubscriptionCategoryEnum.Amount, E.SubscriptionCategoryEnum.Both].indexOf(val[0].id) == -1;
+        },
     };
     redemptionCurrency: FormItem = {
         type: FormItemType.list,

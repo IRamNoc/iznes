@@ -24,12 +24,14 @@ export interface OfiFundShare {
     sellBuyCalendar: number;
     maximumNumDecimal: number;
     subscriptionCategory: number;
+    subscriptionQuantityRoundingRule: number;
     subscriptionCurrency: number;
     minInitialSubscriptionInShare: number;
     minInitialSubscriptionInAmount: number;
     minSubsequentSubscriptionInShare: number;
     minSubsequentSubscriptionInAmount: number;
     redemptionCategory: number;
+    redemptionQuantityRoundingRule: number;
     redemptionCurrency: number;
     minSubsequentRedemptionInShare: number;
     minSubsequentRedemptionInAmount: number;

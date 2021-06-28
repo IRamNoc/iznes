@@ -160,6 +160,7 @@ export class AdminWalletsComponent implements OnInit, AfterViewInit, OnDestroy {
                     walletId: -1,
                     active: true,
                 },
+                /*
                 {
                     title: {
                         icon: 'fa-user',
@@ -169,13 +170,15 @@ export class AdminWalletsComponent implements OnInit, AfterViewInit, OnDestroy {
                     formControl: this.newWalletFormGroup(),
                     active: false,
                 },
+                */
             ];
 
+            /*
             this.tabsControl[1].formControl.controls['walletType'].valueChanges.subscribe((type) => {
                 const walletType = _.get(type, '[0].id', 0);
 
                 if (walletType === '1') {
-                    /* Set incorporation date to required and clear any errors if user switches wallet type */
+                    // Set incorporation date to required and clear any errors if user switches wallet type
                     this.tabsControl[1].formControl.controls['walletIncDate'].setValidators([
                         Validators.required,
                         Validators.pattern('^[0-9]{4}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$'),
@@ -184,13 +187,14 @@ export class AdminWalletsComponent implements OnInit, AfterViewInit, OnDestroy {
                     this.tabsControl[1].formControl.controls['walletIncDate'].setErrors(null);
                 }
             });
+            */
 
             return true;
         }
 
         this.tabsControl = openedTabs;
-        this.tabsControl[1].formControl =
-            this.persistService.watchForm('useradmin/newWallet', this.tabsControl[1].formControl);
+        //this.tabsControl[1].formControl =
+        //    this.persistService.watchForm('useradmin/newWallet', this.tabsControl[1].formControl);
     }
 
     /**
@@ -311,7 +315,7 @@ export class AdminWalletsComponent implements OnInit, AfterViewInit, OnDestroy {
      */
     onAction(action) {
         if (action.type === 'editWallet') this.handleEdit(action.data.index);
-        if (action.type === 'deleteWallet') this.handleDelete(action.data.index);
+        //if (action.type === 'deleteWallet') this.handleDelete(action.data.index);
     }
 
     /**
@@ -407,7 +411,7 @@ export class AdminWalletsComponent implements OnInit, AfterViewInit, OnDestroy {
 
         /* Send the Update request. */
         this.userAdminService.updateWallet(editWalletData).then((response) => {
-            let updatedWallet = '';
+            let updatedWallet: any = '';
             if (response[1].Data[0]) {
                 updatedWallet = response[1].Data[0];
             }
@@ -417,6 +421,9 @@ export class AdminWalletsComponent implements OnInit, AfterViewInit, OnDestroy {
                 'success',
                 this.translate.translate('Successfully updated this wallet.'),
             );
+            const currWalletIndex = _.findIndex(this.walletList, { walletId: updatedWallet.walletID });
+            this.walletList[currWalletIndex].walletName = updatedWallet.walletName;
+            this.walletList[currWalletIndex].walletLocked = updatedWallet.walletLocked;
         }).catch((error) => {
             /* Handle error. */
             this.alertsService.generate(
@@ -460,12 +467,13 @@ export class AdminWalletsComponent implements OnInit, AfterViewInit, OnDestroy {
      *
      * @return {void}
      */
+    /*
     public handleDelete(index): void {
-        /* Get the wallet's ID. */
+        // Get the wallet's ID.
         const dataToSend = {};
         dataToSend['walletId'] = this.walletList[index].walletId;
 
-        /* Let's now ask the user if they're sure... */
+        // Let's now ask the user if they're sure...
         this.confirmationService.create(
             `<span>${this.translate.translate('Deleting a Wallet')}</span>`,
             `<span class="text-warning">${this.translate.translate(
@@ -473,11 +481,11 @@ export class AdminWalletsComponent implements OnInit, AfterViewInit, OnDestroy {
                 { walletName: this.walletList[index].walletName },
             )}</span>`,
         ).subscribe((ans) => {
-            /* ...if they are... */
+            // ...if they are...
             if (ans.resolved) {
-                /* ...now send the request. */
+                // ...now send the request.
                 this.userAdminService.deleteWallet(dataToSend).then((response) => {
-                    /* Close a edit tab for this wallet if it's open. */
+                    // Close a edit tab for this wallet if it's open.
                     for (const i in this.tabsControl) {
                         if (this.tabsControl[i].walletId === dataToSend['walletId']) {
                             this.closeTab(i);
@@ -485,13 +493,13 @@ export class AdminWalletsComponent implements OnInit, AfterViewInit, OnDestroy {
                         }
                     }
 
-                    /* Handle success message. */
+                    // Handle success message.
                     this.alertsService.generate(
                         'success',
                         this.translate.translate('Successfully deleted wallet.'),
                     );
                 }).catch((error) => {
-                    /* Handle error message. */
+                    // Handle error message.
                     this.alertsService.generate(
                         'error',
                         this.translate.translate('Failed to delete wallet.'),
@@ -503,6 +511,7 @@ export class AdminWalletsComponent implements OnInit, AfterViewInit, OnDestroy {
 
         return;
     }
+    */
 
     /**
      * Handles the editting of a wallet.
@@ -653,7 +662,7 @@ export class AdminWalletsComponent implements OnInit, AfterViewInit, OnDestroy {
         this.router.navigateByUrl(`/user-administration/wallets/${newTabId}`);
 
         /* Clear the new wallet form */
-        this.clearNewWallet(1, false);
+        //this.clearNewWallet(1, false);
 
         return;
     }

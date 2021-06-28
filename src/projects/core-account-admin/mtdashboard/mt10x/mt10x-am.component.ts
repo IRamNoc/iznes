@@ -298,12 +298,34 @@ export class Mt10xAmComponent implements OnInit, OnDestroy {
     this.isModalDisplayed = true;
     
     const mtMessage = _.find(this.mtMessagesList, { mtid });
+    let parsedMessage = '';
+    try {
+      let splitMsg = mtMessage.mtRawmsg.split('{');
+      splitMsg.forEach((line, index) => {
+        if (index === 0) return;
+        parsedMessage += `<div><h6><b>Block ${line.charAt(0)}</b></h6><pre class="p6">{${line}</pre></div>`
+      });
+    } catch(e) {
+      parsedMessage = '<div><h6>Cannot parse this MT Message in detailed</h6></div>';
+      console.error('Enable to parse mt message');
+    };
 
     this.mtModal = {
-        title: (mtMessage.mtFilename).substring(0, mtMessage.mtFilename.length - 4),
-        body: (mtMessage.mtRawmsg).replace(` :`, '<br/>:'),
+        filename: (mtMessage.mtFilename).substring(0, mtMessage.mtFilename.length - 4) || 'untitled',
+        body: (parsedMessage),
+        bodyFull: (mtMessage.mtRawmsg),
     };
-  }
+}
+
+downloadFile(): void {
+  const element = document.createElement('a');
+  element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(this.mtModal.bodyFull));
+  element.setAttribute('download', this.mtModal.filename);
+  element.style.display = 'none'
+  document.body.appendChild(element);
+  element.click();
+  document.body.removeChild(element);
+}
 
   closeModal(): void {
     this.mtModal = {};
