@@ -1,7 +1,7 @@
 import { FormControl, Validators } from '@angular/forms';
 import { FormItem, FormItemType, FormItemStyle, DynamicFormsValidator } from '@setl/utils';
 import * as E from '../FundShareEnum';
-import {ibanValidator, mainIbanValidator } from "@setl/utils/helper/validators";
+import {ibanValidator, mainIbanValidator, bicValidator } from "@setl/utils/helper/validators";
 
 export class ShareKeyFactsStatus extends DynamicFormsValidator {
     shareClassInvestmentStatus: FormItem = {
@@ -60,15 +60,13 @@ export class ShareKeyFactsMandatory extends DynamicFormsValidator {
         label: 'Share Class Launch Date',
         required: true,
     };
-    status: FormItem = {
-        type: FormItemType.list,
-        label: 'Share Status',
+    cashAccountBic: FormItem = {
+        type: FormItemType.text,
+        label: `Fund's Bic of cash account`,
         required: true,
-        listItems: [
-            { id: E.StatusEnum.Master, text: 'Master' },
-            { id: E.StatusEnum.Feeder, text: 'Feeder' },
-            { id: E.StatusEnum.NA, text: 'N/A' },
-        ],
+        validator: Validators.compose([
+            bicValidator,
+        ]),
     };
     // conditional - status
     feeder: FormItem = {
@@ -133,7 +131,16 @@ export class ShareKeyFactsMandatory extends DynamicFormsValidator {
         type: FormItemType.boolean,
         label: 'Has Coupon',
         required: true,
-        style: [FormItemStyle.SingleRow],
+    };
+    status: FormItem = {
+        type: FormItemType.list,
+        label: 'Share Status',
+        required: true,
+        listItems: [
+            { id: E.StatusEnum.Master, text: 'Master' },
+            { id: E.StatusEnum.Feeder, text: 'Feeder' },
+            { id: E.StatusEnum.NA, text: 'N/A' },
+        ],
     };
     // conditional - hasCoupon
     couponType: FormItem = {
