@@ -74,6 +74,7 @@ export interface OfiFundShare {
     solvencyIIOptionalData: string;
     representationOptionalData: string;
     ktpCode: string;
+    cashAccountBic: string;
 }
 
 export interface CurrentRequest {
