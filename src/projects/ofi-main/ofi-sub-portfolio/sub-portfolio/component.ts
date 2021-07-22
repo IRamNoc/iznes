@@ -388,7 +388,6 @@ export class OfiSubPortfolioComponent implements OnDestroy {
             const formControl = this.tabDetail[0]['formControl'].controls[control];
 
             if (formControl.touched && !formControl.valid) {
-                console.log(formControl.errors);
                 switch (Object.keys(formControl.errors)[0]) {
                     case 'required':
                         return this.translate.translate('Field is required');
