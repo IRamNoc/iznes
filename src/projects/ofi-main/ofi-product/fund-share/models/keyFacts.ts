@@ -62,10 +62,10 @@ export class ShareKeyFactsMandatory extends DynamicFormsValidator {
     };
     cashAccountBic: FormItem = {
         type: FormItemType.text,
-        label: `Fund's Bic of cash account`,
+        label: `BIC of the Fund’s cash account dedicated to IZNES (11 characters)`,
         required: true,
         validator: Validators.compose([
-            bicValidator,
+            validateBic,
         ]),
     };
     // conditional - status
@@ -521,5 +521,11 @@ function validateMainIBAN(c: FormControl) {
 
     return mainIbanValidator(c) === null ? null : {
         'IBAN must be 14 to 34 characters long with 2 letters at the beginning': c.value,
+    };
+}
+
+function validateBic(c: FormControl) {
+    return bicValidator(c) === null ? null : {
+        'BIC must be 11 characters, ISO 9362, if 9 to 11 are empty then put "XXX"' : c.value,
     };
 }
