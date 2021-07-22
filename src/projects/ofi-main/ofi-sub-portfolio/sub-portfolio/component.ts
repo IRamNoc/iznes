@@ -149,7 +149,7 @@ export class OfiSubPortfolioComponent implements OnDestroy {
             {
                 hashIdentifierCode: new FormControl({ value: '', disabled: true }),
                 investorReference: new FormControl('', [Validators.maxLength(255)]),
-                accountLabel: new FormControl('', [Validators.required, CustomValidators.swiftNameAddressValidator]),
+                accountLabel: new FormControl('', [Validators.required, Validators.maxLength(35), CustomValidators.swiftNameAddressValidator]),
                 accountCurrency: new FormControl('', [Validators.required]),
                 custodianPayment: new FormControl(0),
                 custodianPosition: new FormControl(0),
@@ -388,6 +388,7 @@ export class OfiSubPortfolioComponent implements OnDestroy {
             const formControl = this.tabDetail[0]['formControl'].controls[control];
 
             if (formControl.touched && !formControl.valid) {
+                console.log(formControl.errors);
                 switch (Object.keys(formControl.errors)[0]) {
                     case 'required':
                         return this.translate.translate('Field is required');
@@ -398,7 +399,7 @@ export class OfiSubPortfolioComponent implements OnDestroy {
                     case 'duplicatedLabel':
                         return this.translate.translate('This sub-portfolio name is already used. Please choose another one');
                     case 'swiftNameAddress':
-                        return this.translate.translate('Should be within 35 characters: number, letter or -?:()');
+                        return this.translate.translate('Should be 35 characters max. and no special characters');
                     default:
                         return this.translate.translate('Invalid field');
                 }
