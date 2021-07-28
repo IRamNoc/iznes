@@ -24,6 +24,7 @@ export interface productCharacteristics {
     navPeriodForSubscription: number;
     subscriptionSettlementPeriod: number;
     subscriptionCategory: number;
+    subscriptionQuantityRoundingRule: number;
     minInitialSubscriptionInAmount: number;
     minInitialSubscriptionInShare: number;
     redemptionTradeCyclePeriod: number;
@@ -31,6 +32,7 @@ export interface productCharacteristics {
     navPeriodForRedemption: number;
     redemptionSettlementPeriod: number;
     redemptionCategory: number;
+    redemptionQuantityRoundingRule: number;
     minSubsequentRedemptionInAmount: number;
     minSubsequentRedemptionInShare: number;
     maximumNumDecimal: number;

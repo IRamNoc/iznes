@@ -161,6 +161,9 @@ export class ManagagementCompanyService {
             externalEmail: [
                 '',
             ],
+            emailValidation: [
+                '',
+            ],
             managementCompanyType: [[{id: 'common', 'text': 'Common'}]]
         });
     }

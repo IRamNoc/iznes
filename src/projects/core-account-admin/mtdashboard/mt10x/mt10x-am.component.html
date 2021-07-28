@@ -69,17 +69,34 @@
   </div>
 </form>
 
-<clr-modal [(clrModalOpen)]="isModalDisplayed" [clrModalSize]="'xl'" [clrModalClosable]="true">
-  <h5 class="modal-title">{{ mtModal.title }}</h5>
+<clr-modal [(clrModalOpen)]="isModalDisplayed" [clrModalSize]="'lg'" [clrModalClosable]="true">
+  <h5 class="modal-title">SWIFT Messages Viewer</h5>
 
-  <div class="modal-body">
-      <div class="jaspero__dialog-content" [innerHTML]="mtModal.body"></div>
+  <div class="modal-body" style="background-color: #f9f9f9;">
+    <h6 class="mb-1"><i class="fa fa-sticky-note"></i>Filename : {{ mtModal.filename }}</h6>
+    <clr-tabs>
+      <clr-tab>
+        <button clrTabLink>Detailled</button>
+        <clr-tab-content *clrIfActive="true">
+          <div class="jaspero__dialog-content" [innerHTML]="mtModal.body"></div>
+        </clr-tab-content>
+      </clr-tab>
+      <clr-tab>
+        <button clrTabLink>Full</button>
+        <clr-tab-content *clrIfActive>
+          <div class="jaspero__dialog-content p7" [innerText]="mtModal.bodyFull"></div>
+        </clr-tab-content>
+      </clr-tab>
+    </clr-tabs>
   </div>
 
   <div class="modal-footer">
-      <button id='cancelModalBackButton' type="button" class="btn btn-outline" (click)="closeModal()">
-          {{ 'Close' | translate }}
-      </button>
+    <button id='cancelModalBackButton' type="button" class="btn btn-outline btn-outline-danger" (click)="closeModal()">
+      {{ 'Close' | translate }}
+    </button>
+    <button type="button" class="btn btn-outline mr-2" (click)="downloadFile()">
+      {{ 'Download' | translate }}
+    </button>
   </div>
 </clr-modal>
 

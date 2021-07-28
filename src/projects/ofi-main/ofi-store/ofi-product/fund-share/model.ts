@@ -24,12 +24,14 @@ export interface OfiFundShare {
     sellBuyCalendar: number;
     maximumNumDecimal: number;
     subscriptionCategory: number;
+    subscriptionQuantityRoundingRule: number;
     subscriptionCurrency: number;
     minInitialSubscriptionInShare: number;
     minInitialSubscriptionInAmount: number;
     minSubsequentSubscriptionInShare: number;
     minSubsequentSubscriptionInAmount: number;
     redemptionCategory: number;
+    redemptionQuantityRoundingRule: number;
     redemptionCurrency: number;
     minSubsequentRedemptionInShare: number;
     minSubsequentRedemptionInAmount: number;
@@ -72,6 +74,7 @@ export interface OfiFundShare {
     solvencyIIOptionalData: string;
     representationOptionalData: string;
     ktpCode: string;
+    cashAccountBic: string;
 }
 
 export interface CurrentRequest {

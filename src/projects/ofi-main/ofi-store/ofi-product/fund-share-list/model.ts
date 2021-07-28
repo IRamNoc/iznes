@@ -38,12 +38,14 @@ export interface IznesShareDetail {
     sellBuyCalendar: number;
     maximumNumDecimal: string;
     subscriptionCategory: string;
+    subscriptionQuantityRoundingRule: number;
     subscriptionCurrency: string;
     minInitialSubscriptionInShare: number;
     minInitialSubscriptionInAmount: number;
     minSubsequentSubscriptionInShare: number;
     minSubsequentSubscriptionInAmount: number;
     redemptionCategory: string;
+    redemptionQuantityRoundingRule: number;
     redemptionCurrency: string;
     minSubsequentRedemptionInShare: number;
     minSubsequentRedemptionInAmount: number;

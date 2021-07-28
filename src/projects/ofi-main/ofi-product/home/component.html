@@ -103,7 +103,7 @@
     <!-- Panel body -->
     <div class="row panel-body" [class.hidden]="!panel.open">
         <div class="col-xs-12">
-            <div class="mb-1" *ngIf="panel.title === 'Shares'">{{ 'Display only active Shares' | translate }}
+            <div class="mb-1" *ngIf="panel.title === 'Shares' || panel.title === 'Parts'">{{ 'Display only active Shares' | translate }}
 
                 <label class="switch">
                     <input type="checkbox"

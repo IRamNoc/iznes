@@ -28,8 +28,8 @@ import {
 //} from '../../../../utils/services/blockchain-contract/model'; //compile
 } from '@setl/utils/services/blockchain-contract/model'; //notcompile
 
-//import { fixToDecimal } from '../../../../utils/helper/common/math-helper'; //compile
-import { fixToDecimal } from '@setl/utils/helper/common/math-helper'; //notcompile
+//import { fixToDecimal, lowerRoundedQuantity } from '../../../../utils/helper/common/math-helper'; //compile
+import { fixToDecimal, lowerRoundedQuantity } from '@setl/utils/helper/common/math-helper'; //notcompile
 
 import { Base64 } from './base64';
 import {
@@ -56,6 +56,7 @@ import {
     OrderByNumber,
     InvestorBalances,
     ShareRegistrationCertificateEmailPayload, NavData, fundClassifications,
+    RoundedQuantityType,
 } from './models';
 import {NavStatus} from "../../../ofi-req-services/ofi-product/nav/model";
 
@@ -749,7 +750,7 @@ export class OrderHelper {
 
     getOrderDates(): VerifyResponse | OrderDates {
         // the logic is for testing purpose, it will disable all the validation
-        if (this.disableValidation) {
+        if (this.disableValidation || this.orderRequest.isTransfer) {
             return this.getFakeDatesString();
         }
 
@@ -787,7 +788,7 @@ export class OrderHelper {
                         valuation = this.calendarHelper.getValuationDateFromCutoff(cutoff, this.orderType);
                         settlement = this.calendarHelper.getSettlementDateFromCutoff(cutoff, this.orderType);
                         currentRetry = maxRetries;
-                    } 
+                    }; 
                     currentDate = currentDate.add(1, 'days');
                 }
 
@@ -901,6 +902,12 @@ export class OrderHelper {
         }
 
         try {
+            let lowerRounded = false;
+            if (this.orderBy === OrderByType.Amount && this.orderType === OrderType.Subscription && this.fundShare.subscriptionQuantityRoundingRule === RoundedQuantityType.Lower ||
+                this.orderBy === OrderByType.Amount && this.orderType === OrderType.Redemption && this.fundShare.redemptionQuantityRoundingRule === RoundedQuantityType.Lower) {
+                    lowerRounded = true;
+                }
+
             const orderCalc = calculateFigures(
                 {
                     feePercentage: this.feePercentage,
@@ -911,6 +918,7 @@ export class OrderHelper {
                 },
                 +this.fundShare.maximumNumDecimal,
                 this.isKnownNav(),
+                lowerRounded,
             );
             
             if(this.orderBy === OrderByType.Amount) {

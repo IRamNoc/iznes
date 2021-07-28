@@ -30,6 +30,7 @@ export class OfiSubPortfolioComponent implements OnDestroy {
     private connectedWalletId: number = 0;
     public addressList: Array<any>;
     public tabDetail: Array<object>;
+    public oldsubProtifolioData: Array<object>;
     public showFormModal: boolean = false;
     public showAddress: boolean = false;
     public currentAddress: string;
@@ -148,7 +149,7 @@ export class OfiSubPortfolioComponent implements OnDestroy {
             {
                 hashIdentifierCode: new FormControl({ value: '', disabled: true }),
                 investorReference: new FormControl('', [Validators.maxLength(255)]),
-                accountLabel: new FormControl('', [Validators.required, CustomValidators.swiftNameAddressValidator]),
+                accountLabel: new FormControl('', [Validators.required, Validators.maxLength(35), CustomValidators.swiftNameAddressValidator]),
                 accountCurrency: new FormControl('', [Validators.required]),
                 custodianPayment: new FormControl(0),
                 custodianPosition: new FormControl(0),
@@ -184,10 +185,12 @@ export class OfiSubPortfolioComponent implements OnDestroy {
     }
 
     handleEdit(address): void {
+        this.oldsubProtifolioData = [];
         this.setupFormGroup();
         const subPortfolio = this.addressList.find((subPortfolio) => {
             return subPortfolio.addr === address;
         });
+        this.oldsubProtifolioData = subPortfolio;
 
         Object.keys(subPortfolio).forEach((item) => {
             if (this.tabDetail[0]['formControl'].controls[item]) {
@@ -273,6 +276,7 @@ export class OfiSubPortfolioComponent implements OnDestroy {
         const payload = {
             ...this.getSubPortfolioFormValue(),
             option: this.currentAddress,
+            oldSubportifolio: this.oldsubProtifolioData,
         };
 
         const asyncTaskPipe = this.ofiSubPortfolioReqService.updateSubPortfolio(payload);
@@ -394,7 +398,7 @@ export class OfiSubPortfolioComponent implements OnDestroy {
                     case 'duplicatedLabel':
                         return this.translate.translate('This sub-portfolio name is already used. Please choose another one');
                     case 'swiftNameAddress':
-                        return this.translate.translate('Should be within 35 characters: number, letter or -?:()');
+                        return this.translate.translate('Should be 35 characters max. and no special characters');
                     default:
                         return this.translate.translate('Invalid field');
                 }

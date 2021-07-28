@@ -165,6 +165,7 @@ export class OfiManagementCompanyService {
             logoHash: mcData.logoHash,
             managementCompanyType: get(mcData.managementCompanyType, '[0].id', 'common'),
             externalEmail: mcData.externalEmail,
+            emailValidation: mcData.emailValidation,
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
@@ -203,6 +204,7 @@ export class OfiManagementCompanyService {
             logoTitle: mcData.logoTitle,
             logoHash: mcData.logoHash,
             externalEmail: mcData.externalEmail,
+            emailValidation: mcData.emailValidation,
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);

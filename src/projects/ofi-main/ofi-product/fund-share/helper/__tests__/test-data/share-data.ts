@@ -30,6 +30,7 @@ export const FundShareTest = {
         'holidayManagement': ''
     },
     'redemptionCategory': 2,
+    'redemptionQuantityRoundingRule': 0,
     'price': 2500000,
     'shareClassCurrency': 0,
     'maximumNumDecimal': 2,
@@ -212,6 +213,7 @@ export const FundShareTest = {
     'shareId': 101,
     'valuationFrequency': 0,
     'subscriptionCategory': 2,
+    'subscriptionQuantityRoundingRule': 0,
     'redemptionCurrency': 0,
     'shareClassInvestmentStatus': 0,
     'maxManagementFee': 1,
