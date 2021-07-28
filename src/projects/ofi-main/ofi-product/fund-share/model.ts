@@ -190,6 +190,7 @@ export class FundShare {
             solvencyIIOptionalData: this.generateJSONString(this.solvency.optional),
             representationOptionalData: this.generateJSONString(this.representation.optional),
             ktpCode: this.keyFacts.mandatory.ktpCode.value(),
+            cashAccountBic: this.keyFacts.mandatory.cashAccountBic.value(),
         };
     }
 
@@ -247,6 +248,7 @@ export class FundShare {
         this.fundID = fundShare.fundID;
         this.keyFacts.mandatory.fundShareName.preset = isPrefill ? null : fundShare.fundShareName;
         this.keyFacts.mandatory.ktpCode.preset=isPrefill ? null : fundShare.ktpCode;
+        this.keyFacts.mandatory.cashAccountBic.preset=isPrefill ? null : fundShare.cashAccountBic;
         this.keyFacts.mandatory.isin.preset = isPrefill ? null : fundShare.isin;
         this.keyFacts.mandatory.shareClassCode.preset = fundShare.shareClassCode;
         this.setListItemPreset(this.keyFacts.status.shareClassInvestmentStatus, fundShare.shareClassInvestmentStatus);
@@ -339,6 +341,7 @@ export class FundShare {
 
         this.keyFacts.mandatory.fundShareName.control.setValue(isPrefill ? null : fundShare.fundShareName);
         this.keyFacts.mandatory.ktpCode.control.setValue(isPrefill ? null : fundShare.ktpCode);
+        this.keyFacts.mandatory.cashAccountBic.control.setValue(isPrefill ? null : fundShare.cashAccountBic);
         this.keyFacts.mandatory.isin.control.setValue(isPrefill ? null : fundShare.isin);
         this.keyFacts.mandatory.shareClassCode.control.setValue(fundShare.shareClassCode);
         this.setListItemValue(this.keyFacts.status.shareClassInvestmentStatus, fundShare.shareClassInvestmentStatus);
