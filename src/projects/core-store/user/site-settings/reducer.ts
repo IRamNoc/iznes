@@ -3,6 +3,8 @@ import {
     SET_VERSION,
     SET_LANGUAGE,
     SET_MENU_SHOWN,
+    SET_DECIMAL_SEPERATOR,
+    SET_DATA_SEPERATOR,
     SET_PRODUCTION,
     SET_SITE_MENU,
     SET_FORCE_TWO_FACTOR,
@@ -12,21 +14,31 @@ import { SiteSettingsState } from './model';
 import * as _ from 'lodash';
 
 let defaultLanguage;
+let defaultDecimalSeperator;
+let defaultDataSeperator;
 switch (window.navigator.language) {
     case 'en-GB':
         defaultLanguage = 'en-Latn';
+        defaultDecimalSeperator = 'dot';
+        defaultDataSeperator = 'comma';
         break;
     case 'fr-FR':
         defaultLanguage = 'fr-Latn';
+        defaultDecimalSeperator = 'comma';
+        defaultDataSeperator = 'semicolon';
         break;
     default:
         defaultLanguage = 'fr-Latn';
+        defaultDecimalSeperator = 'dot';
+        defaultDataSeperator = 'comma';
         break;
 }
 
 const initialState: SiteSettingsState = {
     version: '',
     language: defaultLanguage,
+    decimalSeparator:defaultDecimalSeperator,
+    dataSeperator:defaultDataSeperator,
     menuShown: true,
     production: true,
     siteMenu: {
@@ -44,6 +56,10 @@ export const SiteSettingsReducer = function (state: SiteSettingsState = initialS
             return setLanguage(SET_LANGUAGE, action, state);
         case SET_MENU_SHOWN:
             return setMenuShown(SET_MENU_SHOWN, action, state);
+        case SET_DECIMAL_SEPERATOR:
+            return setDecimalSeperator(SET_DECIMAL_SEPERATOR, action, state);
+        case SET_DATA_SEPERATOR:
+            return setDataSeperator(SET_DATA_SEPERATOR, action, state);
         case SET_PRODUCTION:
             return setProduction(state, action);
         case SET_FORCE_TWO_FACTOR:
@@ -90,6 +106,41 @@ function setLanguage(actionType, action, state) {
         language,
     });
 
+    return newState;
+}
+
+function setDecimalSeperator(actionType, action, state) {
+    let newState;
+    let decimalData;
+    if (_.get(action, 'payload[1].Data[0]', '') === '') {
+        decimalData = action;
+    } else {
+        decimalData = _.get(action, 'payload[1].Data[0]');
+    }
+    let decimalSeparator = _.get(decimalData, 'decimalseparator', '');
+    decimalSeparator = (decimalSeparator !== '' && decimalSeparator !== null ? decimalSeparator : 'dot');
+
+    newState = Object.assign({}, state, {
+        decimalSeparator,
+    });
+    return newState;
+}
+
+function setDataSeperator(actionType, action, state) {
+    let newState;
+    let dataseratepData;
+    if (_.get(action, 'payload[1].Data[0]', '') === '') {
+        dataseratepData = action;
+    } else {
+        dataseratepData = _.get(action, 'payload[1].Data[0]');
+    }
+
+    let dataSeperator = _.get(dataseratepData, 'dataseparator', '');
+    dataSeperator = (dataSeperator !== '' && dataSeperator !== null ? dataSeperator : 'comma');
+
+    newState = Object.assign({}, state, {
+        dataSeperator,
+    });
     return newState;
 }
 
