@@ -33,6 +33,8 @@ import {
     updateLastCreatedContractDetail,
     updateLastCreatedRegisterIssuerDetail,
     SET_LANGUAGE,
+    SET_DECIMAL_SEPERATOR,
+    SET_DATA_SEPERATOR,
     addWalletNodeSnapshot,
     updateWalletnodeTxStatus,
     SET_ALERTS,
@@ -256,6 +258,22 @@ export class InitialisationService {
 
         ngRedux.dispatch(SagaHelper.runAsync(
             [SET_LANGUAGE],
+            [],
+            asyncTaskPipes, {},
+            () => {
+                // console.log('language set!');
+            }));
+        
+        ngRedux.dispatch(SagaHelper.runAsync(
+            [SET_DECIMAL_SEPERATOR],
+            [],
+            asyncTaskPipes, {},
+            () => {
+                // console.log('language set!');
+            }));
+        
+        ngRedux.dispatch(SagaHelper.runAsync(
+            [SET_DATA_SEPERATOR],
             [],
             asyncTaskPipes, {},
             () => {

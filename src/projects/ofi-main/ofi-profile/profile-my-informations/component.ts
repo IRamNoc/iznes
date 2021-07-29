@@ -394,8 +394,7 @@ export class OfiProfileMyInformationsComponent implements OnInit, OnDestroy {
            this.translate.updateDecimalSeperator(decimalSeperator);
 
            // save decimal values in db
-        const asyncTaskPipe = this.myUserService.setDecimalSeperator( decimalSeperator);
-        console.log(asyncTaskPipe,"asyncTaskPipe");
+        const asyncTaskPipe = this.myUserService.setDecimalSeperator(decimalSeperator);
         this.ngRedux.dispatch(SagaHelper.runAsync(
             [SET_DECIMAL_SEPERATOR],
             [],
@@ -425,7 +424,6 @@ export class OfiProfileMyInformationsComponent implements OnInit, OnDestroy {
 
            // save data values in db
            const asyncTaskPipe = this.myUserService.setDataSeperator(dataSeperator);
-           console.log(asyncTaskPipe, "asyncTaskPipe")
            this.ngRedux.dispatch(SagaHelper.runAsync(
                [SET_DATA_SEPERATOR],
                [],
