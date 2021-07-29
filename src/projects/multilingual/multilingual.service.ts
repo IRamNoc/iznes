@@ -18,7 +18,7 @@ export class MultilingualService {
     private apiUrl = 'http://si-babel01:8080';
     private subscriptionsArray: Subscription[] = [];
 
-    @select(['user', 'siteSettings', 'language']) getLanguage;
+    @select(['user', 'siteSettings']) getLanguage;
 
     /* Constructor. */
     constructor(
@@ -27,7 +27,11 @@ export class MultilingualService {
         private http: HttpClient,
     ) {
         /* Stub. */
-        this.subscriptionsArray.push(this.getLanguage.subscribe(language => this.language = language));
+        this.subscriptionsArray.push(this.getLanguage.subscribe(params => {
+            this.language = params.language;
+            this.decimalSeparator = params.decimalSeparator;
+            this.dataSeparator = params.dataSeperator;
+        }));
     }
 
     public currentLanguage(): string {
