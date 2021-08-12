@@ -4,8 +4,9 @@ import {
     ChangeDetectionStrategy, ChangeDetectorRef,
 } from '@angular/core';
 import { NgRedux, select } from '@angular-redux/store';
-import { Observable ,  Subscription } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { ToasterService } from 'angular2-toaster';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ProductConfigTypes } from './Configuration';
 import {
     OfiProductConfigService,
@@ -35,20 +36,31 @@ export class ProductConfigurationComponent implements OnInit, OnDestroy {
 
     private subscriptionsArray: Subscription[] = [];
     config: ProductConfiguration;
+    panelDef: any = {};
+    panelColumns = {};
+    rowOffset =  0;
+    currentPage = 0;
+    firstInit = false;
+    itemPerPage = 0;
+    lastPage = 0;
+    total = 0;
+
 
     constructor(private service: OfiProductConfigService,
-                private redux: NgRedux<any>,
-                private changeDetectorRef: ChangeDetectorRef,
-                private toaster: ToasterService,
-                public translate: MultilingualService,
+        private redux: NgRedux<any>,
+        private changeDetectorRef: ChangeDetectorRef,
+        private toaster: ToasterService,
+        public translate: MultilingualService,
     ) {
     }
 
     ngOnInit() {
-        this.initSubscriptions();
-        this.redux.dispatch(clearRequestedConfiguration());
+        // this.initSubscriptions();
+        // this.redux.dispatch(clearRequestedConfiguration());
+        this.initPanelColumns();
     }
 
+    /*
     private initSubscriptions(): void {
         this.subscriptionsArray.push(this.configRequestedOb
             .subscribe((requested: boolean) => {
@@ -59,6 +71,66 @@ export class ProductConfigurationComponent implements OnInit, OnDestroy {
                 this.updateConfig(config);
             }));
     }
+    */
+
+    refresh(state) {
+        this.rowOffset = this.currentPage - 1;
+        if (!state.page || this.firstInit) {
+          return;
+        }
+      }
+
+    /**
+     * init panel columns of datagrid
+     * @return void
+     */
+    initPanelColumns(): void {
+        this.panelColumns = {
+            calendarName: {
+                label: 'Calendar name',
+                dataSource: 'name',
+                sortable: true,
+            },
+            createdAt: {
+                label: 'Created at',
+                dataSource: 'createdAt',
+                sortable: true,
+            },
+            isActive: {
+                label: 'Is active',
+                dataSource: 'isActive',
+                sortable: true,
+            },
+            action: {
+                label: 'Action',
+                dataSource: 'action',
+                type: 'action',
+            }
+        };
+
+        this.panelDef = {
+            columns: [
+                this.panelColumns['calendarName'],
+                this.panelColumns['createdAt'],
+                this.panelColumns['isActive'],
+                this.panelColumns['action']
+            ],
+            data: [
+                {
+                    name: 'Calendar 1',
+                    createdAt: '01/01/2000',
+                    isActive: 'Oui',
+                },
+                {
+                    name: 'Calendar 2',
+                    createdAt: '01/01/2000',
+                    isActive: 'Non',
+                }
+            ],
+            open: true,
+        };
+    }
+
 
     /**
      * request the product config
@@ -76,6 +148,7 @@ export class ProductConfigurationComponent implements OnInit, OnDestroy {
      * @param config ProductConfiguration
      * @return void
      */
+    /*
     private updateConfig(config: ProductConfiguration): void {
         if (!config.holidayManagement.dates) return;
 
@@ -108,6 +181,7 @@ export class ProductConfigurationComponent implements OnInit, OnDestroy {
     private onCreateError(e): void {
         this.toaster.pop('error', this.translate.translate('ERROR') + ': ' + e.Message);
     }
+    */
 
     ngOnDestroy() {
         for (const subscription of this.subscriptionsArray) {
