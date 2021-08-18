@@ -13,7 +13,8 @@
         </div>
 
         <div class="offset-md-3 col-md-3">
-            <button id="saveButton" type="button" class="btn btn-primary">{{ 'Create new model' | translate }}</button>
+            <button id="saveButton" type="button" class="btn btn-primary" (click)="displayCalendarModal('create')">{{
+                'Create new model' | translate }}</button>
         </div>
     </div>
 
@@ -31,15 +32,18 @@
                             <span *ngIf="dataCol.type !== 'action'">{{row[dataCol.dataSource]}}</span>
                             <span *ngIf="dataCol.type === 'action'">
                                 <div class="btn-group">
-                                    <button type="button" class="btn btn-sm btn-danger">{{ 'Delete' | translate }}</button>
-                                    <button type="button" class="btn btn-sm btn-success">{{ 'Edit' | translate }}</button>
+                                    <button type="button" class="btn btn-sm btn-danger">{{ 'Delete' | translate
+                                        }}</button>
+                                    <button type="button" class="btn btn-sm btn-success"
+                                        (click)="displayCalendarModal('edit', row.calendarID)">{{ 'Edit' | translate
+                                        }}</button>
                                 </div>
                             </span>
                         </clr-dg-cell>
                     </clr-dg-row>
                 </ng-container>
 
-                <clr-dg-footer>Total {{ total }} MT Messages
+                <clr-dg-footer>Total {{ total }} calendars
                     <clr-dg-pagination #pagination [clrDgPageSize]="itemPerPage" [clrDgTotalItems]="total"
                         [(clrDgPage)]="currentPage" [clrDgLastPage]="lastPage"></clr-dg-pagination>
                 </clr-dg-footer>
@@ -48,34 +52,45 @@
     </div>
 </div>
 
-<!--
-<clr-modal [(clrModalOpen)]="showCalendarData">
-    <h3 id="override_header" class="modal-title">'Edit'</h3>
+<clr-modal [(clrModalOpen)]="showCalendarModal">
+    <h3 *ngIf="isEditMode; else elseBlock" id="override_header" class="modal-title">Edit</h3>
+    <ng-template #elseBlock>Create</ng-template>
+
     <div class="modal-body">
-        test
-        <div class="row">
-                <div class="col-lg-4">
-                    <form [formGroup]="editForm">
-                        <div class="form-group">
-                            <label class="control-label" for="nameofCalender">
-                                {{ 'NameofCalender' | translate }}
-                            </label>
-                            <div>
-                                <input id="nameofCalender" formControlName="editCalendarName" type="text" class="form-control">
-                                <div *ngIf="editForm.controls.editCalendarName.hasError('required') && editForm.controls.editCalendarName.touched"
-                                class="field-error"> Field is Required
-                                </div>                                    
-                            </div>
+        <form [formGroup]="calendarFormGroup">
+            <section class="form-group">
+
+                <div class="row">
+                    <div class="col-md-8">
+                        <label class="clr-col-12 clr-col-md-12" for="calendarName">{{ 'Calendar Name' | translate
+                            }}</label>
+                        <input id="name" class="form-control" type="text" formControlName="name">
+                        <div *ngIf="calendarFormGroup.controls.name.hasError('required') && calendarFormGroup.controls.name.touched"
+                            class="field-error"> {{ 'Field is Required' | translate }}
                         </div>
-                    </form>
+                    </div>
+
+
+                    <div class="col-md-4 mt-1">
+                        <div class="toggle-switch">
+                            <input [formControl]="calendarFormGroup.controls['isActive']" id="isActive"
+                                type="checkbox" [checked]="calendarFormGroup.value.isActive">
+                            <label for="calendar-status-toggle">{{ 'Is Active ?' | translate }}</label>
+                        </div>
+                    </div>
                 </div>
-            </div>
-            <date-picker-extended *ngIf="config" [dates]="config.calendarModels.dates"
-                (datesEmitter)="getDates($event)"></date-picker-extended>
+
+                <div class="mt-1">
+                    <date-picker-extended
+                        *ngIf="showCalendarModal"
+                        [dates]="this.selectedCalendarModel.data"
+                        (datesEmitter)="setDates($event)"
+                    ></date-picker-extended>
+                </div>
+            </section>
             <button id="configurationSave" class="btn btn-primary" type="button" (click)="saveConfiguration()">
                 {{ 'Save' | translate }}
-            </button> 
+            </button>
+        </form>
     </div>
-
 </clr-modal>
--->

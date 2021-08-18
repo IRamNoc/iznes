@@ -203,6 +203,54 @@ export class ShareKeyFactsMandatory extends DynamicFormsValidator {
         label: 'KTP Code',
         required: false,
     };
+
+    // Calendar of public holidays for the centralization dates for subscriptions
+    buyCentralizationCalendar: FormItem = {
+        type: FormItemType.list,
+        label: 'Calendar of public holidays for the centralization dates for subscriptions',
+        required: true,
+        listItems: [],
+    };
+
+    // Calendar of public holidays for the NAV dates for subscriptions
+    buyNAVCalendar: FormItem = {
+        type: FormItemType.list,
+        label: 'Calendar of public holidays for the NAV dates for subscriptions',
+        required: true,
+        listItems: [],
+    };
+
+    // Calendar of bank holidays for the settlement dates for subscriptions
+    buySettlementCalendar: FormItem = {
+        type: FormItemType.list,
+        label: 'Calendar of bank holidays for the settlement dates for subscriptions',
+        required: true,
+        listItems: [],
+    };
+    
+    // Calendar of public holidays for centralization dates for redemptions
+    sellCentralizationCalendar: FormItem = {
+        type: FormItemType.list,
+        label: 'Calendar of public holidays for centralization dates for redemptions',
+        required: true,
+        listItems: [],
+    };
+
+    // Calendar of bank holidays for redemption NAV dates
+    sellNAVCalendar: FormItem = {
+        type: FormItemType.list,
+        label: 'Calendar of bank holidays for redemption NAV dates',
+        required: true,
+        listItems: [],
+    };
+
+    // Calendar of bank holidays for settlement dates for redemptions
+    sellSettlementCalendar: FormItem = {
+        type: FormItemType.list,
+        label: 'Calendar of bank holidays for settlement dates for redemptions',
+        required: true,
+        listItems: [],
+    };
   }
 
 export class ShareKeyFactsOptional {

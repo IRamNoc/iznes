@@ -1,12 +1,13 @@
+import _ from 'lodash';
 import {
     Component,
     OnInit, OnDestroy,
-    ChangeDetectionStrategy, ChangeDetectorRef,
+    ChangeDetectionStrategy, ChangeDetectorRef, Optional,
 } from '@angular/core';
 import { NgRedux, select } from '@angular-redux/store';
 import { Observable, Subscription } from 'rxjs';
 import { ToasterService } from 'angular2-toaster';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ProductConfigTypes } from './Configuration';
 import {
     OfiProductConfigService,
@@ -38,29 +39,39 @@ export class ProductConfigurationComponent implements OnInit, OnDestroy {
     config: ProductConfiguration;
     panelDef: any = {};
     panelColumns = {};
-    rowOffset =  0;
+    rowOffset = 0;
     currentPage = 0;
     firstInit = false;
     itemPerPage = 0;
     lastPage = 0;
     total = 0;
 
+    calendarDates: () => string[];
 
-    constructor(private service: OfiProductConfigService,
+    /* Calendar modal settings */
+    showCalendarModal: boolean = false;
+    isEditMode: boolean = false;
+    calendarFormGroup: FormGroup;
+    selectedCalendarModel: any = {};
+
+    constructor(
+        private service: OfiProductConfigService,
         private redux: NgRedux<any>,
         private changeDetectorRef: ChangeDetectorRef,
         private toaster: ToasterService,
         public translate: MultilingualService,
+        private fb: FormBuilder,
+        private cdr: ChangeDetectorRef,
     ) {
     }
 
     ngOnInit() {
-        // this.initSubscriptions();
-        // this.redux.dispatch(clearRequestedConfiguration());
         this.initPanelColumns();
+        this.initForm();
+        this.redux.dispatch(clearRequestedConfiguration());
+        this.initSubscriptions();
     }
 
-    /*
     private initSubscriptions(): void {
         this.subscriptionsArray.push(this.configRequestedOb
             .subscribe((requested: boolean) => {
@@ -71,14 +82,25 @@ export class ProductConfigurationComponent implements OnInit, OnDestroy {
                 this.updateConfig(config);
             }));
     }
-    */
 
     refresh(state) {
         this.rowOffset = this.currentPage - 1;
         if (!state.page || this.firstInit) {
-          return;
+            return;
         }
-      }
+    }
+
+    /**
+     * init calendar form
+     * @return void
+    */
+    private initForm() {
+        this.calendarFormGroup = this.fb.group({
+            name: [{ value: '' }, Validators.required],
+            data: [{ value: [null] }, Validators.required],
+            isActive: [{ value: '' }, Validators.required],
+        });
+    }
 
     /**
      * init panel columns of datagrid
@@ -115,18 +137,6 @@ export class ProductConfigurationComponent implements OnInit, OnDestroy {
                 this.panelColumns['isActive'],
                 this.panelColumns['action']
             ],
-            data: [
-                {
-                    name: 'Calendar 1',
-                    createdAt: '01/01/2000',
-                    isActive: 'Oui',
-                },
-                {
-                    name: 'Calendar 2',
-                    createdAt: '01/01/2000',
-                    isActive: 'Non',
-                }
-            ],
             open: true,
         };
     }
@@ -148,31 +158,55 @@ export class ProductConfigurationComponent implements OnInit, OnDestroy {
      * @param config ProductConfiguration
      * @return void
      */
-    /*
     private updateConfig(config: ProductConfiguration): void {
-        if (!config.holidayManagement.dates) return;
-
-        this.config = config;
+        if (!config.calendarModels) return;
+        this.config = config.calendarModels;
 
         this.redux.dispatch(setRequestedConfiguration());
-        this.changeDetectorRef.detectChanges();
+        this.panelDef.data = this.convertToJS(this.config);
+
+        this.total = this.panelDef.data.length;
+        this.itemPerPage = this.total;
+        this.detectChanges(true);
     }
 
-    getDates(dates: () => string[]): void {
-        this.dates = dates;
+    private convertToJS(config: ProductConfiguration): any {
+        return _.map(config, (k) => {
+            return {
+                calendarID: k.calendarID,
+                name: k.calendarName,
+                data: JSON.parse(k.calendarData),
+                isActive: k.calendarIsActive,
+                createdAt: k.dateEntered,
+            }
+        });
+    }
+
+    setDates(dates: () => string[]): void {
+        this.calendarDates = dates;
     }
 
     saveConfiguration(): void {
+        const requestData = {
+            type: this.isEditMode ? 'update' : 'create',
+            calendarName: this.calendarFormGroup.controls['name'].value,
+            calendarData: JSON.stringify(this.calendarDates()),
+            calendarID: this.isEditMode ? this.selectedCalendarModel.calendarID : 0,
+            calendarIsActive: this.calendarFormGroup.controls['isActive'].value,
+        };
+
         OfiProductConfigService.defaultUpdateProductConfig(
             this.service,
             this.redux,
-            ProductConfigTypes.HolidayManagement,
-            JSON.stringify(this.dates()),
+            requestData['type'],
+            requestData,
             (data: any) => this.onCreateSuccess(),
             (e: any) => this.onCreateError(e[1].Data[0]));
     }
 
     private onCreateSuccess(): void {
+        this.isEditMode = false;
+        this.showCalendarModal = false;
         this.redux.dispatch(clearRequestedConfiguration());
 
         this.toaster.pop('success', this.translate.translate('Product configuration saved successfully'));
@@ -181,11 +215,37 @@ export class ProductConfigurationComponent implements OnInit, OnDestroy {
     private onCreateError(e): void {
         this.toaster.pop('error', this.translate.translate('ERROR') + ': ' + e.Message);
     }
-    */
+
+    /**
+     * Diplay calendar modal for create / edit
+     * @param type
+     * @param calendarID
+     * @return void
+     */
+    displayCalendarModal(type: string, calendarID?: number): void {
+        this.isEditMode = type === 'edit' ? true : false;
+        this.showCalendarModal = true;
+        this.calendarFormGroup.reset();
+        this.calendarFormGroup.controls['isActive'].setValue(1); // set true by default
+        if (this.isEditMode) {
+            this.selectedCalendarModel = _.find(this.panelDef.data, { calendarID });
+            this.calendarFormGroup.controls['name'].setValue(this.selectedCalendarModel.name);
+            this.calendarFormGroup.controls['data'].setValue(this.selectedCalendarModel.data);
+            this.calendarFormGroup.controls['isActive'].setValue(this.selectedCalendarModel.isActive);
+        }
+    }
+
+    detectChanges(detect = false) {
+        this.cdr.markForCheck();
+        if (detect) {
+            this.cdr.detectChanges();
+        }
+    }
 
     ngOnDestroy() {
         for (const subscription of this.subscriptionsArray) {
             subscription.unsubscribe();
         }
+        this.cdr.detach();
     }
 }
