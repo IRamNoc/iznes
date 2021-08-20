@@ -46,6 +46,7 @@ import { FundShareTradeCycleModel } from './trade-cycle/model';
 import { PermissionsService } from '@setl/utils/services/permissions';
 import { OfiCurrenciesService } from '@ofi/ofi-main/ofi-req-services/ofi-currencies/service';
 import { MultilingualService } from '@setl/multilingual';
+import { OfiProductConfigService } from '@ofi/ofi-main/ofi-req-services/ofi-product/configuration/service';
 import {
     StepsHelper,
     ShareCreationStep,
@@ -66,6 +67,7 @@ export class FundShareComponent implements OnInit, OnDestroy {
     model: FundShare;
     mode: FundShareMode = FundShareMode.Create;
 
+    productConfig;
     // ID of the share to hydrate the model with
     prefill: number = null;
     userType: userTypeEnum;
@@ -108,6 +110,8 @@ export class FundShareComponent implements OnInit, OnDestroy {
     @select(['ofi', 'ofiProduct', 'ofiManagementCompany']) managementCompanyListOb;
     @select(['ofi', 'ofiCurrencies', 'currencies']) currenciesObs;
     @select(['user', 'siteSettings', 'production']) productionOb;
+    @select(['ofi', 'ofiProduct', 'ofiProductConfiguration', 'requested']) reqConfig$;
+    @select(['ofi', 'ofiProduct', 'ofiProductConfiguration', 'configuration']) config$;
 
     constructor(
         private router: Router,
@@ -120,6 +124,7 @@ export class FundShareComponent implements OnInit, OnDestroy {
         private ofiFundShareService: OfiFundShareService,
         private ofiUmbrellaFundService: OfiUmbrellaFundService,
         private ofiManagementCompanyService: OfiManagementCompanyService,
+        private ofiProductConfigService: OfiProductConfigService,
         private ofiFundService: OfiFundService,
         private ofiFundShareFormService: OfiFundShareFormService,
         private ofiCurrenciesService: OfiCurrenciesService,
@@ -185,6 +190,12 @@ export class FundShareComponent implements OnInit, OnDestroy {
         return _.get(this.fund, 'fundName', '');
     }
 
+    private requestConfig(requested: boolean): void {
+        if (requested) return;
+
+        OfiProductConfigService.defaultRequestProductConfig(this.ofiProductConfigService, this.redux);
+    }
+
     private initSubscriptions(): void {
         this.userDetailOb
         .pipe(
@@ -202,6 +213,32 @@ export class FundShareComponent implements OnInit, OnDestroy {
                 this.ofiManagementCompanyService.getManagementCompanyList();
                 this.ofiFundService.getFundList();
             }
+        });
+
+        this.reqConfig$.pipe(
+            takeUntil(this.unSubscribe))
+        .subscribe((requested) => {
+            this.requestConfig(requested);
+        });
+
+        this.config$.pipe(
+            takeUntil(this.unSubscribe))
+        .subscribe((config) => {
+            
+            const data = _.map(config.calendarModels, (k) => {
+                return {
+                    id: k.calendarID,
+                    text: k.calendarName
+                }
+            });
+
+            this.productConfig = [{ id: 0, text: 'None'}, ...data];
+            this.model.keyFacts.mandatory.buyCentralizationCalendar.listItems = this.productConfig;
+            this.model.keyFacts.mandatory.buyNAVCalendar.listItems = this.productConfig;
+            this.model.keyFacts.mandatory.buySettlementCalendar.listItems = this.productConfig;
+            this.model.keyFacts.mandatory.sellCentralizationCalendar.listItems = this.productConfig;
+            this.model.keyFacts.mandatory.sellNAVCalendar.listItems = this.productConfig;
+            this.model.keyFacts.mandatory.sellSettlementCalendar.listItems = this.productConfig;
         });
 
         this.route.queryParams

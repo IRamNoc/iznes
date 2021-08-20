@@ -54,7 +54,7 @@ export class OfiProductConfigService {
     static defaultUpdateProductConfig(ofiFundService: OfiProductConfigService,
                                       ngRedux: NgRedux<any>,
                                       name: string,
-                                      value: string,
+                                      value: any,
                                       successCallback: (data: any) => void,
                                       errorCallback: (e: any) => void) {
         const asyncTaskPipe = ofiFundService.updateProductConfig(name, value);

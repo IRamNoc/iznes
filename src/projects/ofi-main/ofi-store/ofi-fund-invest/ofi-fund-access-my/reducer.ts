@@ -171,6 +171,12 @@ function handleSetFundAccessMy(state: OfiFundAccessMyState, action: Action): Ofi
             prospectus: item.get('prospectus', ''),
             holidayMgmtConfig: item.get('holidayMgmtConfig', '[]'),
             hasValidatedKiid: item.get('hasValidatedKiid') === 1,
+            buyCentralizationCalendar: commonHelper.safeJsonParse(item.get('buyCentralizationCalendar', '[]')),
+            buyNAVCalendar: commonHelper.safeJsonParse(item.get('buyNAVCalendar', '[]')),
+            buySettlementCalendar: commonHelper.safeJsonParse(item.get('buySettlementCalendar', '[]')),
+            sellCentralizationCalendar: commonHelper.safeJsonParse(item.get('sellCentralizationCalendar', '[]')),
+            sellNAVCalendar: commonHelper.safeJsonParse(item.get('sellNAVCalendar', '[]')),
+            sellSettlementCalendar: commonHelper.safeJsonParse(item.get('sellSettlementCalendar', '[]')),
         };
 
         return result;

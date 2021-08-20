@@ -116,10 +116,13 @@ export class CalendarHelper {
         }
 
         // set holidays
+        // 20-08-2021 - Rule disabled by Charles Paris - Replaced by new calendar holiday rule TG-673
+        /*
         moment.updateLocale('fr', {
             holidays,
             holidayFormat: 'YYYY-MM-DD',
         });
+        */
     }
 
     getNextCutoffDate(orderType: OrderType) {
@@ -142,6 +145,8 @@ export class CalendarHelper {
 
         this.orderType = orderType;
 
+        const cutoffCalendar = this.orderType === OrderType.Subscription ? this.fundShare.buyCentralizationCalendar : this.fundShare.sellCentralizationCalendar;
+
         const dateTimeToCheckCopy = this.getSpecificDateCutOff(
             this.momentToMomentBusiness(dateTimeToChecks), this.cutoffTime, this.tradeTimeZoneOffset);
 
@@ -151,6 +156,12 @@ export class CalendarHelper {
 
         if (!isDateTimeToCheckInFuture) {
             return false;
+        }
+
+        // check the date is not in specific calendar
+        for (const date of cutoffCalendar) {
+            if (dateTimeToCheckCopy.isSame(date, 'day'))
+                return false;
         }
 
         // check the date is not holiday
@@ -356,6 +367,14 @@ export class CalendarHelper {
             return false;
         }
 
+        const settlementCalendar = this.orderType === OrderType.Subscription ? this.fundShare.buySettlementCalendar : this.fundShare.sellSettlementCalendar;
+
+        // check the date is not in specific calendar
+        for (const date of settlementCalendar) {
+            if (dateTimeToChecks.isSame(date, 'day'))
+                return false;
+        }
+
         // get cutoff date from settlement date.
         const cutoffDate = dateTimeToChecks.businessSubtract(this.settlementOffSet);
         return this.isValidCutoffDateTime(cutoffDate, orderType);
@@ -366,6 +385,14 @@ export class CalendarHelper {
         dateTimeToChecks = this.momentToMomentBusiness(dateTimeToChecks);
         if (!this.isWorkingDate(dateTimeToChecks) && !this.allowOutsideWorkingDay) {
             return false;
+        }
+
+        const valuationCalendar = this.orderType === OrderType.Subscription ? this.fundShare.buyNAVCalendar : this.fundShare.sellNAVCalendar;
+
+        // check the date is not in specific calendar
+        for (const date of valuationCalendar) {
+            if (dateTimeToChecks.isSame(date, 'day'))
+                return false;
         }
 
         // get cutoff date from valuation date.

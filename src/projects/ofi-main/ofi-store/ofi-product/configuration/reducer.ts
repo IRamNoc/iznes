@@ -9,9 +9,7 @@ import { OrderedMap } from 'immutable';
 
 const initialState: OfiProductConfigState = {
     configuration: {
-        holidayManagement: {
-            dates: [],
-        },
+        calendarModels: [],
     },
     requestedConfiguration: false,
 };
@@ -51,13 +49,11 @@ function handleSetOfiProductConfig(state: OfiProductConfigState,
                                    action: Action): OfiProductConfigState {
     const configData = _.get(action, 'payload[1].Data', []);
     const configuration: ProductConfiguration = {
-        holidayManagement: {
-            dates: [],
-        },
+        calendarModels: [],
     };
 
     if (configData[0]) {
-        configuration.holidayManagement.dates = JSON.parse(configData[0].value);
+        configuration.calendarModels = configData;
     }
 
     return Object.assign({}, state, {

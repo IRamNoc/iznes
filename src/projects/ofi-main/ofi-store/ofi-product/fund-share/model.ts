@@ -74,6 +74,12 @@ export interface OfiFundShare {
     solvencyIIOptionalData: string;
     representationOptionalData: string;
     ktpCode: string;
+    buyCentralizationCalendar: number;
+    buyNAVCalendar: number;
+    buySettlementCalendar: number;
+    sellCentralizationCalendar: number;
+    sellNAVCalendar: number;
+    sellSettlementCalendar: number;
     cashAccountBic: string;
 }
 
