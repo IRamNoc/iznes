@@ -7,8 +7,7 @@ import {
 import { NgRedux, select } from '@angular-redux/store';
 import { Observable, Subscription } from 'rxjs';
 import { ToasterService } from 'angular2-toaster';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { ProductConfigTypes } from './Configuration';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import {
     OfiProductConfigService,
 } from '@ofi/ofi-main/ofi-req-services/ofi-product/configuration/service';
@@ -40,7 +39,7 @@ export class ProductConfigurationComponent implements OnInit, OnDestroy {
     panelDef: any = {};
     panelColumns = {};
     rowOffset = 0;
-    currentPage = 0;
+    currentPage = 1;
     firstInit = false;
     itemPerPage = 0;
     lastPage = 0;
@@ -57,7 +56,6 @@ export class ProductConfigurationComponent implements OnInit, OnDestroy {
     constructor(
         private service: OfiProductConfigService,
         private redux: NgRedux<any>,
-        private changeDetectorRef: ChangeDetectorRef,
         private toaster: ToasterService,
         public translate: MultilingualService,
         private fb: FormBuilder,
@@ -84,10 +82,7 @@ export class ProductConfigurationComponent implements OnInit, OnDestroy {
     }
 
     refresh(state) {
-        this.rowOffset = this.currentPage - 1;
-        if (!state.page || this.firstInit) {
-            return;
-        }
+       return;
     }
 
     /**
@@ -98,7 +93,7 @@ export class ProductConfigurationComponent implements OnInit, OnDestroy {
         this.calendarFormGroup = this.fb.group({
             name: [{ value: '' }, Validators.required],
             data: [{ value: [null] }, Validators.required],
-            isActive: [{ value: '' }, Validators.required],
+            isActive: [{ value: 0 }, Validators.required],
         });
     }
 
@@ -140,7 +135,6 @@ export class ProductConfigurationComponent implements OnInit, OnDestroy {
             open: true,
         };
     }
-
 
     /**
      * request the product config
@@ -233,6 +227,11 @@ export class ProductConfigurationComponent implements OnInit, OnDestroy {
             this.calendarFormGroup.controls['data'].setValue(this.selectedCalendarModel.data);
             this.calendarFormGroup.controls['isActive'].setValue(this.selectedCalendarModel.isActive);
         }
+    }
+
+    handleActiveToggleClick() {
+        const currentValue = this.calendarFormGroup.controls['isActive'].value;
+        return this.calendarFormGroup.controls['isActive'].setValue(!currentValue);
     }
 
     detectChanges(detect = false) {

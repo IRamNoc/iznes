@@ -29,7 +29,19 @@
                     <clr-dg-row *clrDgItems="let row of panelDef.data; index as i" id="{{'row[panelDef.linkIdent]'}}">
                         <clr-dg-cell *ngFor="let dataCol of panelDef.columns" data-id="{{row.id}}"
                             id="{{'dataCol.dataSource'}}">
-                            <span *ngIf="dataCol.type !== 'action'">{{row[dataCol.dataSource]}}</span>
+                            <span *ngIf="dataCol.type !== 'action'">
+                                <span *ngIf="dataCol.dataSource !== 'isActive'">
+                                    {{row[dataCol.dataSource]}}
+                                </span>
+                                
+                                <span *ngIf="dataCol.dataSource === 'isActive' && row[dataCol.dataSource] === 1" class="label label-success">
+                                    {{ 'Active' | translate }}
+                                </span>
+
+                                <span *ngIf="dataCol.dataSource === 'isActive' && row[dataCol.dataSource] !== 1" class="label label-danger">
+                                    {{ 'Inactive' | translate }}
+                                </span>
+                            </span>
                             <span *ngIf="dataCol.type === 'action'">
                                 <div class="btn-group">
                                     <button type="button" class="btn btn-sm btn-danger">{{ 'Delete' | translate
@@ -71,12 +83,13 @@
                     </div>
 
 
-                    <div class="col-md-4 mt-1">
-                        <div class="toggle-switch">
-                            <input [formControl]="calendarFormGroup.controls['isActive']" id="isActive"
-                                type="checkbox" [checked]="calendarFormGroup.value.isActive">
-                            <label for="calendar-status-toggle">{{ 'Is Active ?' | translate }}</label>
-                        </div>
+                    <div class="col-md-4">
+                        <clr-checkbox-container class="text-left">
+                            <clr-checkbox-wrapper>
+                                <input formControlName="isActive" type="checkbox" clrCheckbox />
+                                <label><strong>{{ 'Is Active ?' | translate }}</strong></label>
+                            </clr-checkbox-wrapper>
+                        </clr-checkbox-container>
                     </div>
                 </div>
 
