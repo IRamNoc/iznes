@@ -39,6 +39,12 @@ export interface IznShareDetailWithNav extends IznesShareDetail {
     investorTotalHolding: number;
     investorTotalEncumber: number;
     investorRedemptionEncumber: number;
+    buyCentralizationCalendar: string [];
+    buyNAVCalendar: string [];
+    buySettlementCalendar: string [];
+    sellCentralizationCalendar: string [];
+    sellNAVCalendar: string [];
+    sellSettlementCalendar: string [];
 }
 
 export interface VerifyResponse {

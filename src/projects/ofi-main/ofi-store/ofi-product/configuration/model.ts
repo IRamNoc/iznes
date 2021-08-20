@@ -1,9 +1,5 @@
 export interface ProductConfiguration {
-    holidayManagement: HolidayManagement;
-}
-
-export interface HolidayManagement {
-    dates: string[];
+    calendarModels: any;
 }
 
 export interface OfiProductConfigState {

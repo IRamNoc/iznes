@@ -190,6 +190,12 @@ export class FundShare {
             solvencyIIOptionalData: this.generateJSONString(this.solvency.optional),
             representationOptionalData: this.generateJSONString(this.representation.optional),
             ktpCode: this.keyFacts.mandatory.ktpCode.value(),
+            buyCentralizationCalendar: this.getSelectValue(this.keyFacts.mandatory.buyCentralizationCalendar),
+            buyNAVCalendar: this.getSelectValue(this.keyFacts.mandatory.buyNAVCalendar),
+            buySettlementCalendar: this.getSelectValue(this.keyFacts.mandatory.buySettlementCalendar),
+            sellCentralizationCalendar: this.getSelectValue(this.keyFacts.mandatory.sellCentralizationCalendar),
+            sellNAVCalendar: this.getSelectValue(this.keyFacts.mandatory.sellNAVCalendar),
+            sellSettlementCalendar: this.getSelectValue(this.keyFacts.mandatory.sellSettlementCalendar),
             cashAccountBic: this.keyFacts.mandatory.cashAccountBic.value(),
         };
     }
@@ -414,6 +420,14 @@ export class FundShare {
         this.fees.mandatory.mifiidTransactionCosts.control.setValue(this.numberConverter.toFrontEnd(fundShare.mifiidTransactionCosts));
         this.fees.mandatory.mifiidServicesCosts.control.setValue(this.numberConverter.toFrontEnd(fundShare.mifiidServicesCosts));
         this.fees.mandatory.mifiidIncidentalCosts.control.setValue(this.numberConverter.toFrontEnd(fundShare.mifiidIncidentalCosts));
+
+        // calendar model implementation
+        this.setListItemValue(this.keyFacts.mandatory.buyCentralizationCalendar, fundShare.buyCentralizationCalendar);
+        this.setListItemValue(this.keyFacts.mandatory.buyNAVCalendar, fundShare.buyNAVCalendar);
+        this.setListItemValue(this.keyFacts.mandatory.buySettlementCalendar, fundShare.buySettlementCalendar);
+        this.setListItemValue(this.keyFacts.mandatory.sellCentralizationCalendar, fundShare.sellCentralizationCalendar);
+        this.setListItemValue(this.keyFacts.mandatory.sellNAVCalendar, fundShare.sellNAVCalendar);
+        this.setListItemValue(this.keyFacts.mandatory.sellSettlementCalendar, fundShare.sellSettlementCalendar);
 
         this.applyOptionalData((this.keyFacts.optional as any), JSON.parse(fundShare.keyFactOptionalData));
         this.applyOptionalData((this.profile.optional as any), JSON.parse(fundShare.profileOptionalData));
