@@ -208,15 +208,16 @@ export class ShareKeyFactsMandatory extends DynamicFormsValidator {
     buyCentralizationCalendar: FormItem = {
         type: FormItemType.list,
         label: 'Calendar of public holidays for the centralization dates for subscriptions',
-        required: true,
+        required: false,
         listItems: [],
+        style: [FormItemStyle.BreakOnBefore],
     };
 
     // Calendar of public holidays for the NAV dates for subscriptions
     buyNAVCalendar: FormItem = {
         type: FormItemType.list,
         label: 'Calendar of public holidays for the NAV dates for subscriptions',
-        required: true,
+        required: false,
         listItems: [],
     };
 
@@ -224,7 +225,7 @@ export class ShareKeyFactsMandatory extends DynamicFormsValidator {
     buySettlementCalendar: FormItem = {
         type: FormItemType.list,
         label: 'Calendar of bank holidays for the settlement dates for subscriptions',
-        required: true,
+        required: false,
         listItems: [],
     };
     
@@ -232,7 +233,7 @@ export class ShareKeyFactsMandatory extends DynamicFormsValidator {
     sellCentralizationCalendar: FormItem = {
         type: FormItemType.list,
         label: 'Calendar of public holidays for centralization dates for redemptions',
-        required: true,
+        required: false,
         listItems: [],
     };
 
@@ -240,7 +241,7 @@ export class ShareKeyFactsMandatory extends DynamicFormsValidator {
     sellNAVCalendar: FormItem = {
         type: FormItemType.list,
         label: 'Calendar of bank holidays for redemption NAV dates',
-        required: true,
+        required: false,
         listItems: [],
     };
 
@@ -248,7 +249,7 @@ export class ShareKeyFactsMandatory extends DynamicFormsValidator {
     sellSettlementCalendar: FormItem = {
         type: FormItemType.list,
         label: 'Calendar of bank holidays for settlement dates for redemptions',
-        required: true,
+        required: false,
         listItems: [],
     };
   }
