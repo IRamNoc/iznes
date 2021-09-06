@@ -196,7 +196,7 @@ export class SocketClusterWrapper {
 
                 // Log the request we sending out.
                 try {
-                    console.log('sendRequest(): ' + _.get(request, 'MessageBody.RequestName'));
+                    console.log('%csendRequest():%c ' + _.get(request, 'MessageBody.RequestName'), 'color: #229b9c', 'color: black');
                 } catch (error) {
                     this.showTryCatchError(error);
                 }
@@ -270,7 +270,8 @@ export class SocketClusterWrapper {
 
         /* Create the channel if it doesn't exist. */
         if (!this.channels[channelName]) {
-            console.log('Subscribing to ' + channelName + ': ', this.channels[channelName]);
+            console.log('%c[WS] Subscribing to a channel', 'color: #A70186');
+            // console.log('Subscribing to ' + channelName + ': ', this.channels[channelName]);
             this.channels[channelName] = this.webSocketConn.subscribe(channelName);
         }
 

@@ -91,7 +91,6 @@ function formatCentralisationFundsDetailsListDataResponse(rawData: Array<any>): 
 
     const fundsDetails = Map(rawDataList.reduce(
         function (result, item) {
-            console.log(item);
             result[i] = {
                 totals: item.get('totals'),
                 shares: item.get('shares'),
@@ -111,7 +110,6 @@ function formatCentralisationSharesDetailsListDataResponse(rawData: Array<any>):
 
     const sharesDetails = Map(rawDataList.reduce(
         function (result, item) {
-            console.log(item);
             result[i] = {
                 totals: item.get('totals'),
                 shares: item.get('shares'),

@@ -129,8 +129,10 @@ export class SetlWebSocket {
         // Only process callbacks if id is the initMessageID or encryption is in place
 
         try {
+            /* 06/09/21 - On Message Log removed by Charles Paris - Reason : Not required to display it.
             console.log('%cOn Message : %c' + _.defaultTo(_.get(message, 'Request.MessageBody.RequestName', undefined),
                 _.get(message, 'Request.MessageType', undefined)), 'color: green', 'color: black');
+            */
         } catch (e) {
             console.log('Fail to get message RequestName/MessageType');
         }
@@ -160,7 +162,8 @@ export class SetlWebSocket {
 
     sendRequest(request) {
         try {
-            console.log('%csendRequest() : %c' + _.get(request, 'MessageBody.RequestName'), 'color: #229b9c', 'color: black');
+            /* 06/09/21 Removed by Charles Paris - Reason : Not needed to be displayed */
+            //console.log('%csendRequest() : %c' + _.get(request, 'MessageBody.RequestName'), 'color: #229b9c', 'color: black');
         } catch (e) {
         }
 
@@ -230,8 +233,8 @@ export class SetlWebSocket {
                                     '/' + this.initialRoute;
                             }
                         }
-
-                        console.log('Socket : ' + this.url);
+                        /* 06/09/21 Removed by Charles Paris - Not needed to be displayed */
+                        // console.log('Socket : ' + this.url);
                         this.connectTries += 1;
                         this.webSocketConn = new WebSocket(this.url);
                     } catch (e) {
