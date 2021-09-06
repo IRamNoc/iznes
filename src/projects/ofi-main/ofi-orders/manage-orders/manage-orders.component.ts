@@ -292,7 +292,8 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
             this.menuSpec = menuSpec;
             this.myDetails = myDetails;
 
-            console.log('Datagrid filters changed - re-load data');
+            /* 06/09/21 Removed by Charles Paris - Not needed to be displayed */
+            // console.log('Datagrid filters changed - re-load data');
             this.loading = true;
             this.getOrdersList();
             this.detectChanges();
@@ -332,10 +333,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
 
             if (this.isInvestorUser) {
                 this.appSubscribe(this.requestedOfiInvestorFundList$, requested => this.requestMyFundAccess(requested));
-                this.appSubscribe(this.fundShareAccessList$, list => {
-                    this.fundShareList = list
-                    console.log(list);
-                });
+                this.appSubscribe(this.fundShareAccessList$, list => this.fundShareList = list);
             } else if (this.isIznesAdmin) {
                 this.appSubscribe(this.requestedShareList$, requested => this.requestAllShareList(requested));
                 this.appSubscribe(this.shareList$, shares => this.fundShareList = shares);

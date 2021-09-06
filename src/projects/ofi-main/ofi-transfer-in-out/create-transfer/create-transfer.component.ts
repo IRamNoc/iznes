@@ -235,7 +235,6 @@ export class CreateTransferComponent implements OnInit, OnDestroy {
             (error) => {
                 this.logService.log('Error: ', error);
                 this.toaster.pop('error', 'Cannot fetch Investor List');
-                console.log(error);
             });
     }
 
