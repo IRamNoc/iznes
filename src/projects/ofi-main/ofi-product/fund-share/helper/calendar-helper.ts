@@ -142,6 +142,7 @@ export class CalendarHelper {
     }
 
     isValidCutoffDateTime(dateTimeToChecks: any, orderType: OrderType): boolean {
+        console.log('cutoff check');
         this.orderType = orderType;
 
         const cutoffCalendar = this.orderType === OrderType.Subscription ? this.fundShare.buyCentralizationCalendar : this.fundShare.sellCentralizationCalendar;
@@ -158,9 +159,8 @@ export class CalendarHelper {
         }
 
         // check the date is not in specific calendar
-        for (const date of cutoffCalendar) {
-            if (dateTimeToCheckCopy.isSame(date, 'day'))
-                return false;
+        if (cutoffCalendar.includes(dateTimeToCheckCopy.format('YYYY-MM-DD'))) {
+            return false;
         }
 
         // check the date is not holiday
@@ -168,6 +168,7 @@ export class CalendarHelper {
             return false;
         }
 
+        /*
         // check settlement date
         const settlementDate = this.getSettlementDateFromCutoff(dateTimeToChecks, orderType);
         if (!this.isValidSettlementDateTimeWithoutCutoffCheck(settlementDate, orderType)) {
@@ -179,6 +180,7 @@ export class CalendarHelper {
         if (!this.isValidValuationDateTimeWithoutCutoff(valuationDate, orderType)) {
             return false;
         }
+        */
 
         // depend on the trade period, we will have different logic to check if provided dateTime
         // is valid cutoff.
@@ -372,6 +374,7 @@ export class CalendarHelper {
     }
 
     isValidSettlementDateTime(dateTimeToChecks: any, orderType: OrderType): boolean {
+        console.log('settlement check');
         // check if the date is working date
         dateTimeToChecks = this.momentToMomentBusiness(dateTimeToChecks);
         if (!this.isWorkingDate(dateTimeToChecks)) {
@@ -381,35 +384,18 @@ export class CalendarHelper {
         const settlementCalendar = this.orderType === OrderType.Subscription ? this.fundShare.buySettlementCalendar : this.fundShare.sellSettlementCalendar;
 
         // check the date is not in specific calendar
-        for (const date of settlementCalendar) {
-            if (dateTimeToChecks.isSame(date, 'day'))
-                return false;
+        if (settlementCalendar.includes(dateTimeToChecks.format('YYYY-MM-DD'))) {
+            return false;
         }
 
         // get cutoff date from settlement date.
         const cutoffDate = dateTimeToChecks.businessSubtract(this.settlementOffSet);
-        return this.isValidCutoffDateTime(cutoffDate, orderType);
-    }
-
-    isValidSettlementDateTimeWithoutCutoffCheck(dateTimeToChecks: any, orderType: OrderType): boolean {
-        // check if the date is working date
-        dateTimeToChecks = this.momentToMomentBusiness(dateTimeToChecks);
-        if (!this.isWorkingDate(dateTimeToChecks)) {
-            return false;
-        }
-
-        const settlementCalendar = this.orderType === OrderType.Subscription ? this.fundShare.buySettlementCalendar : this.fundShare.sellSettlementCalendar;
-
-        // check the date is not in specific calendar
-        for (const date of settlementCalendar) {
-            if (dateTimeToChecks.isSame(date, 'day'))
-                return false;
-        }
-
+        //return this.isValidCutoffDateTime(cutoffDate, orderType);
         return true;
     }
 
     isValidValuationDateTime(dateTimeToChecks: any, orderType: OrderType): boolean {
+        console.log('NAV check');
         // check if the date is working date
         dateTimeToChecks = this.momentToMomentBusiness(dateTimeToChecks);
         if (!this.isWorkingDate(dateTimeToChecks) && !this.allowOutsideWorkingDay) {
@@ -419,14 +405,14 @@ export class CalendarHelper {
         const valuationCalendar = this.orderType === OrderType.Subscription ? this.fundShare.buyNAVCalendar : this.fundShare.sellNAVCalendar;
 
         // check the date is not in specific calendar
-        for (const date of valuationCalendar) {
-            if (dateTimeToChecks.isSame(date, 'day'))
-                return false;
+        if (valuationCalendar.includes(dateTimeToChecks.format('YYYY-MM-DD'))) {
+            return false;
         }
 
+        return true;
         // get cutoff date from valuation date.
-        const cutoffDate = this.getCutoffDateFromValuation(dateTimeToChecks, orderType);
-        return this.isValidCutoffDateTime(cutoffDate, orderType);
+        // const cutoffDate = this.getCutoffDateFromValuation(dateTimeToChecks, orderType);
+        // return this.isValidCutoffDateTime(cutoffDate, orderType);
     }
 
     isValidValuationDateTimeWithoutCutoff(dateTimeToChecks: any, orderType: OrderType): boolean {
@@ -439,9 +425,8 @@ export class CalendarHelper {
         const valuationCalendar = this.orderType === OrderType.Subscription ? this.fundShare.buyNAVCalendar : this.fundShare.sellNAVCalendar;
 
         // check the date is not in specific calendar
-        for (const date of valuationCalendar) {
-            if (dateTimeToChecks.isSame(date, 'day'))
-                return false;
+        if (valuationCalendar.includes(dateTimeToChecks.format('YYYY-MM-DD'))) {
+            return false;
         }
 
         return true;
@@ -453,15 +438,24 @@ export class CalendarHelper {
     }
 
     getValuationDateFromCutoff(cutoffDate: moment.Moment, orderType: OrderType) {
+        const valuationCalendar = this.orderType === OrderType.Subscription ? this.fundShare.buyNAVCalendar : this.fundShare.sellNAVCalendar;
+
         cutoffDate = this.momentToMomentBusiness(cutoffDate);
         this.orderType = orderType;
 
         let valuationDateStr;
+
         // allow outside working day
         if (this.allowOutsideWorkingDay) {
             if (this.valuationOffSet === E.BusinessDaysEnum.MinusOne) {
                 // force the NAV Date to the previous day, whether or not this day is a working day
-                valuationDateStr = cutoffDate.clone().subtract(1, 'day').format('YYYY-MM-DD');
+                let newDate = cutoffDate.clone().subtract(1, 'day');
+
+                while (valuationCalendar.includes(newDate.format('YYYY-MM-DD'))) {
+                    newDate = newDate.clone().subtract(1, 'day');
+                }
+                
+                valuationDateStr = newDate.format('YYYY-MM-DD');
             }
             if (this.valuationOffSet >= E.BusinessDaysEnum.Zero && this.valuationOffSet <= E.BusinessDaysEnum.Five) {
                 // working day work offset
@@ -470,12 +464,23 @@ export class CalendarHelper {
                 // force the NAV Date to the day before the next offset + 1 business day, whether or not that day is a business day
                 // get offset + 1
                 const osp1 = cutoffDate.clone().businessAdd(wos, 'day');
-                valuationDateStr = osp1.clone().subtract(1, 'day').format('YYYY-MM-DD');
-            }
+                let newDate = osp1.clone().subtract(1, 'day');
 
+                while (valuationCalendar.includes(newDate.format('YYYY-MM-DD'))) {
+                    newDate = newDate.clone().subtract(1, 'day');
+                }
+
+                valuationDateStr = newDate.format('YYYY-MM-DD');
+            }            
         } else {
             // not allow outside working day
-            valuationDateStr = cutoffDate.clone().businessAdd(this.valuationOffSet, 'day').format('YYYY-MM-DD');
+            let newDate = cutoffDate.clone().businessAdd(this.valuationOffSet, 'day');
+            
+            while (valuationCalendar.includes(newDate.format('YYYY-MM-DD'))) {
+                newDate = newDate.clone().subtract(1, 'day');
+            }
+
+            valuationDateStr = newDate.format('YYYY-MM-DD');
         }
         return moment.utc(valuationDateStr).set({
             hour: 0,
@@ -485,6 +490,10 @@ export class CalendarHelper {
     }
 
     getSettlementDateFromCutoff(cutoffDate: moment.Moment, orderType: OrderType) {
+        console.log('get settlement date');
+        // get settlement holiday calendar
+        const settlementCalendar = this.orderType === OrderType.Subscription ? this.fundShare.buySettlementCalendar : this.fundShare.sellSettlementCalendar;
+
         cutoffDate = this.momentToMomentBusiness(cutoffDate);
         this.orderType = orderType;
 
@@ -495,6 +504,17 @@ export class CalendarHelper {
             minute: 0,
             second: 1,
         });
+
+        // check the date is not in specific calendar
+        if (settlementCalendar.includes(settlementDate.format('YYYY-MM-DD'))) {
+            let newSetDate = settlementDate.clone().add(1, 'days');
+
+            while(settlementCalendar.includes(newSetDate.format('YYYY-MM-DD')) || !this.isWorkingDate(newSetDate)) {
+                newSetDate = newSetDate.clone().add(1, 'days');
+            }
+
+            return newSetDate;
+        }
 
         if (settlementDate.isSame(moment(), 'day')) {
             return cutoffDate.clone().add(2, 'minutes');
@@ -533,15 +553,21 @@ export class CalendarHelper {
             }
             return p1c.clone().businessSubtract(wos, 'day');
         }
-
-
     }
 
     getCutoffDateFromSettlement(settlementDate: moment.Moment, orderType: OrderType) {
         settlementDate = this.momentToMomentBusiness(settlementDate);
         this.orderType = orderType;
 
-        return settlementDate.clone().businessSubtract(this.settlementOffSet as number);
+        const cutoffCalendar = this.orderType === OrderType.Subscription ? this.fundShare.buyCentralizationCalendar : this.fundShare.sellCentralizationCalendar;
+
+        let newDate = settlementDate.clone().businessSubtract(this.settlementOffSet as number);
+        // check the date is not in specific calendar
+        while (cutoffCalendar.includes(newDate.format('YYYY-MM-DD'))) {
+            newDate = newDate.clone().subtract(1, 'days');
+        }
+
+        return newDate;
     }
 
     /**
