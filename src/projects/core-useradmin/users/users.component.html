@@ -316,7 +316,7 @@
                     <div class="row">
                         <div class="form-group col-sm-6">
                             <label class="control-label required-field">{{ 'Account' | translate }}</label>
-                            <ng-select
+                            <ng-select disabled='true'
                                 id="edit-user{{tabid}}-account-select"
                                 [items]="accountTypes"
                                 [allowClear]="true"
@@ -353,7 +353,7 @@
                     <div class="row">
                         <div class="form-group col-sm-6">
                             <label class="control-label required-field">{{ 'User Type' | translate }}</label>
-                            <ng-select
+                            <ng-select disabled='true'
                                 id="edit-user{{tabid}}-usertype-select"
                                 [items]="userTypes"
                                 [allowClear]="true"
@@ -361,7 +361,7 @@
                                 [formControl]="formControl.controls['userType']">
                             </ng-select>
                         </div>
-                        <div *ngIf="!hasDefaultWallet" class="form-group col-sm-6">
+                        <!-- <div *ngIf="!hasDefaultWallet" class="form-group col-sm-6">
                             <label class="control-label">{{ 'Create Default Wallet' | translate }}</label>
                             <div class="locked-toggle">
                                 <span *ngIf="!formControl.value.createDefaultWallet"
@@ -379,7 +379,7 @@
                                     <label for="create-default-wallet-toggle"></label>
                                 </div>
                             </div>
-                        </div>
+                        </div> -->
                     </div>
 
                     <div class="row">
@@ -420,7 +420,7 @@
                 <clr-tab-content *clrIfActive="true">
                     <div class="panel-body">
                         {{ 'Administrative Groups' | translate }}
-                        <ng-select
+                        <ng-select disabled='true'
                             [items]="filteredAdminGroupsList"
                             [multiple]="true"
                             [allowClear]="true"
@@ -432,7 +432,7 @@
                 </clr-tab-content>
             </clr-tab>
 
-            <clr-tab>
+            <!-- <clr-tab>
                 <a clrTabLink><i class="fa fa-user"></i>
                     {{ 'Transactional' | translate }}
                 </a>
@@ -462,7 +462,7 @@
                         </div>
                     </div>
                 </clr-tab-content>
-            </clr-tab>
+            </clr-tab> -->
 
             <clr-tab>
                 <a clrTabLink><i class="fa fa-briefcase"></i> {{ 'Wallets' | translate }}</a>
@@ -470,7 +470,7 @@
                     <div class="panel-body">
                         <div class="m-b-10" id="wallet-permission-full">
                             {{ 'Full Access Wallets' | translate }}
-                            <ng-select
+                            <ng-select disabled='true'
                                 [items]="tabsControl[tabid].filteredWalletsByAccount"
                                 (selected)="addedWalletSelection(1, tabid, $event)"
                                 [multiple]="true"
@@ -483,7 +483,7 @@
 
                         <div class="m-b-10" id="wallet-permission-read">
                             {{ 'Read Only Wallets' | translate }}
-                            <ng-select
+                            <ng-select disabled='true'
                                 [items]="tabsControl[tabid].filteredWalletsByAccount"
                                 (selected)="addedWalletSelection(0, tabid, $event)"
                                 [multiple]="true"
@@ -496,7 +496,7 @@
 
                         <div class="m-b-10" id="group-wallet-permission-full">
                             {{ 'Group Wallet Permission (Full Access)' | translate }}
-                            <ng-select
+                            <ng-select disabled='true'
                                 [items]="accountTypes"
                                 (selected)="addedGroupWalletSelection(1, tabid, $event)"
                                 [multiple]="true"
@@ -509,7 +509,7 @@
 
                         <div id="group-wallet-permission-read">
                             {{ 'Group Wallet Permission (Read Only)' | translate }}
-                            <ng-select
+                            <ng-select disabled='true'
                                 [items]="accountTypes"
                                 (selected)="addedGroupWalletSelection(0, tabid, $event)"
                                 [multiple]="true"
@@ -523,7 +523,7 @@
                 </clr-tab-content>
             </clr-tab>
 
-            <clr-tab>
+            <!-- <clr-tab>
                 <a clrTabLink><i class="fa fa-chain"></i>
                     {{ 'Chains' | translate }}</a>
                 <clr-tab-content *clrIfActive>
@@ -539,9 +539,9 @@
                         </ng-select>
                     </div>
                 </clr-tab-content>
-            </clr-tab>
+            </clr-tab> -->
 
-            <clr-tab>
+            <!-- <clr-tab>
                 <a clrTabLink><i class="fa fa-bars"></i> {{ 'Menu' | translate }}</a>
                 <clr-tab-content *clrIfActive>
                     <div class="panel-body">
@@ -556,7 +556,7 @@
                         </ng-select>
                     </div>
                 </clr-tab-content>
-            </clr-tab>
+            </clr-tab> -->
 
             <clr-tab *ngIf="tabid !== 1">
                 <a clrTabLink><i class="fa fa-lock"></i> {{ 'Reset Access' | translate }}</a>
