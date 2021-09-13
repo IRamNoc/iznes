@@ -19,7 +19,7 @@ import { AdminUsersService } from '@setl/core-req-services';
 import { LogService } from '@setl/utils';
 import { ClrDatagridStateInterface } from '@clr/angular';
 import { MyUserService } from '@setl/core-req-services';
-import { usersListActions, usersListFields } from './users.model';
+import { usersListActions, usersListActionsNonsuperAdmin, usersListFields } from './users.model';
 import { actionChannel } from 'redux-saga/effects';
 
 /* Decorator. */
@@ -78,6 +78,7 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
     public currentPage: number = 1;
     public usersListModel: {} = usersListFields;
     public usersListActions: {}[] = usersListActions;
+    public usersListActionsNonsuperadmin: {}[] = usersListActionsNonsuperAdmin;
 
     /* User list cache */
     private totalRecords: number = 0;
