@@ -63,9 +63,16 @@
                 </ng-container>
 
                 <ng-container *ngIf="!hasAccess">
-                    <ng-container>
+                    <ng-container *ngIf="id === 0">
                         <ng-container *ngTemplateOutlet="staticUserListTabStandard">
                         
+                        </ng-container>
+                    </ng-container>
+                      <!-- User edit tabs. -->
+                      <ng-container *ngIf="id >= 1">
+                        <ng-container
+                            *ngTemplateOutlet="dynamicEditTab; context: {'formControl': tabdata.formControl, 'tabid': id}">
+
                         </ng-container>
                     </ng-container>
                 </ng-container>
@@ -95,6 +102,7 @@
      <ng-template #staticUserListTabStandard>
         <div class="panel-body">
             <datagrid-list
+                (action)="onAction($event)"
                 (refresh)="datagridRefresh($event)"
                 (rowsUpdate)="dgPageSize=$event; dgPageFrom=0; setPaginatedUsersList(); requestPaginatedUsersList(); currentPage=1;"
                 [(currentPage)]="currentPage"
@@ -559,7 +567,7 @@
                 </clr-tab-content>
             </clr-tab> -->
 
-            <clr-tab *ngIf="tabid !== 1">
+             <clr-tab *ngIf="tabid !== 1">
                 <a clrTabLink><i class="fa fa-lock"></i> {{ 'Reset Access' | translate }}</a>
                 <clr-tab-content *clrIfActive>
                     <div class="panel-body">
@@ -573,7 +581,7 @@
                         </button>
                     </div>
                 </clr-tab-content>
-            </clr-tab>
+            </clr-tab> 
         </clr-tabs>
     </ng-template>
 </div>
