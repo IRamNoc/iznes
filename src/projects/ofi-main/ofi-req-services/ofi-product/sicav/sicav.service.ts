@@ -37,6 +37,7 @@ interface InsertSicavData {
     logoURL: any;
     externalEmail: string;
     emailValidation: string;
+    mt502Email: string;
 }
 
 interface UpdateSicavData {
@@ -65,6 +66,7 @@ interface UpdateSicavData {
     logoURL: any;
     externalEmail: string;
     emailValidation: string;
+    mt502Email: string;
 }
 
 interface DeleteSicavData {
@@ -157,6 +159,7 @@ export class OfiSicavService {
             logoURL: sicavData.logoURL,
             externalEmail: sicavData.externalEmail,
             emailValidation: sicavData.emailValidation,
+            mt502Email: sicavData.mt502Email,
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
@@ -191,6 +194,7 @@ export class OfiSicavService {
             logoURL: sicavData.logoURL,
             externalEmail: sicavData.externalEmail,
             emailValidation: sicavData.emailValidation,
+            mt502Email: sicavData.mt502Email,
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
