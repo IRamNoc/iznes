@@ -1403,9 +1403,11 @@ export class FundComponent implements OnInit, OnDestroy {
      * @return {string}
      */
     getHolidayMgmtConfig(): string {
+        /*
         if (this.fundForm.value.useDefaultHolidayMgmt === '0') {
             return JSON.stringify(this.holidayMgmtConfigDates());
         }
+        */
 
         return JSON.stringify([]);
     }
