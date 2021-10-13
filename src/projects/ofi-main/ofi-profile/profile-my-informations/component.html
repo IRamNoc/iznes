@@ -14,6 +14,13 @@
             <p>{{ 'You can view/edit your profile information below:' | translate }}</p>
             <app-my-informations [userInfo]="userInfoExtended" [viewMode]="'POPUP'" [type]="userType" (onSubmit)="saveUserInformations($event)" (onClose)="closeUserInformations()"></app-my-informations>
 
+
+            <div class="group">
+                <input type="textbox" value="Some value" readonly="readonly"/>
+                <label>Textbox</label>
+              </div>
+
+              
             <div class="hr-line-dashed"></div>
 
             <h2>{{ 'Change your password' | translate }}</h2>
