@@ -26,17 +26,17 @@
                             <div *ngIf="additionnalForm.controls['lastName'].hasError('required') && additionnalForm.controls['lastName'].touched" class="field-error">{{ 'Field is required' | translate}}</div>
                         </div>
                     </div>
+                </div>
 
-                    <div class="form-group required-field col-sm-4">
-                        <label for="kyc_additionnal_lastName">{{ 'Team(s)' | translate }}</label>
-                        <div>
-                            <input type="text"
-                                    id="kyc_additionnal_lastName"
-                                    class="form-control"
-                                    formControlName="lastName"
-                                    readonly="readonly">
-                            <!-- <div *ngIf="additionnalForm.controls['lastName'].hasError('required') && additionnalForm.controls['lastName'].touched" class="field-error">{{ 'Field is required' | translate}}</div> -->
-                        </div>
+                <div class="form-group required-field col-sm-4">
+                    <label for="kyc_additionnal_lastName">{{ 'Team(s)' | translate }}</label>
+                    <div>
+                        <input type="text"
+                                id="kyc_additionnal_lastName"
+                                class="form-control"
+                                formControlName="lastName"
+                                readonly="readonly">
+                        <!-- <div *ngIf="additionnalForm.controls['lastName'].hasError('required') && additionnalForm.controls['lastName'].touched" class="field-error">{{ 'Field is required' | translate}}</div> -->
                     </div>
                 </div>
                 <div class="row col-sm-12">
@@ -52,6 +52,7 @@
                         <div *ngIf="!additionnalForm.controls['email'].hasError('required') && !additionnalForm.controls['email'].valid" class="field-error">{{ 'Email not valid' | translate }}</div>
                     </div>
                 </div>
+
                 <div class="row col-sm-12">
                     <div class="form-group col-sm-4">
                         <label for="kyc_additionnal_invitedBy">{{ 'Invited By' | translate }}</label>
