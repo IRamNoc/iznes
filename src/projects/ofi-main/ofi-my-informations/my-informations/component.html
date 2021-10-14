@@ -33,7 +33,9 @@
                             <input type="text"
                                     id="kyc_additionnal_lastName"
                                     class="form-control"
-                                    formControlName="lastName">
+                                    formControlName="lastName"
+                                    readonly="readonly">
+                                    
                             <div *ngIf="additionnalForm.controls['lastName'].hasError('required') && additionnalForm.controls['lastName'].touched" class="field-error">{{ 'Field is required' | translate}}</div>
                         </div>
                     </div>
