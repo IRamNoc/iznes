@@ -28,7 +28,7 @@ export class OfiProfileMyInformationsComponent implements OnInit, OnDestroy {
     userInfo = {
         firstName: '',
         lastName: '',
-        teams: '',
+        team: '',
 
     };
     userType: string;
@@ -38,7 +38,7 @@ export class OfiProfileMyInformationsComponent implements OnInit, OnDestroy {
         email: '',
         firstName: '',
         lastName: '',
-        teams: '',
+        team: '',
         amCompanyName: '',
         companyName: '',
         phoneCode: '',
@@ -133,14 +133,14 @@ export class OfiProfileMyInformationsComponent implements OnInit, OnDestroy {
             this.userInfo = {
                 firstName: d.firstName,
                 lastName: d.lastName,
-                teams: d.teams,
+                team: d.team,
             };
 
             this.userInfoExtended = {
                 email: d.emailAddress,
                 firstName: d.firstName,
                 lastName: d.lastName,
-                teams: d.teams,
+                team: d.team,
                 companyName: d.companyName,
                 phoneCode: d.phoneCode,
                 phoneNumber: d.phoneNumber,
@@ -253,7 +253,7 @@ export class OfiProfileMyInformationsComponent implements OnInit, OnDestroy {
         const user = {
             firstName: userInformations.firstName,
             lastName: userInformations.lastName,
-            teams: userInformations.teams,
+            team: userInformations.team,
             email: userInformations.email,
             phoneCode: userInformations.phoneCode,
             phoneNumber: userInformations.phoneNumber,

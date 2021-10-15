@@ -42,12 +42,12 @@
                         <div *ngIf="!additionnalForm.controls['email'].hasError('required') && !additionnalForm.controls['email'].valid" class="field-error">{{ 'Email not valid' | translate }}</div>
                     </div>
                     <div class="form-group required-field col-sm-4">
-                        <label for="kyc_additionnal_teams">{{ 'Team (s)' | translate }}</label> 
+                        <label for="kyc_additionnal_team">{{ 'Team (s)' | translate }}</label> 
                         <div>
                             <input type="text"
-                                    id="kyc_additionnal_teams"
+                                    id="kyc_additionnal_team"
                                     class="form-control"
-                                    formControlName="teams"
+                                    formControlName="team"
                                     readonly="readonly">
                         </div>
                     </div>
