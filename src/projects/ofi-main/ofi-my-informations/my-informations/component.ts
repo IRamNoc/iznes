@@ -14,6 +14,10 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgRedux, select } from '@angular-redux/store';
 import * as _ from 'lodash';
 import { KycMyInformations } from '../../ofi-store/ofi-kyc/my-informations';
+import { UserTeamsService } from '/home/iznes/iznes/frontend/src/projects/core-account-admin/teams/service';
+import * as Model from '/home/iznes/iznes/frontend/src/projects/core-account-admin/teams/model';
+
+
 
 // Services
 import {
@@ -22,6 +26,7 @@ import {
 import { fromJS } from 'immutable';
 
 import { MultilingualService } from '@setl/multilingual';
+import { forEach } from '@angular/router/src/utils/collection';
 
 export enum ViewMode {
     PAGE = 'PAGE',
@@ -48,19 +53,26 @@ export class OfiMyInformationsComponent implements OnInit, OnDestroy {
     private subscriptions = [];
 
     phoneNumbersCountryCodes = [];
+    teams: Model.AccountAdminTeam[];
+    teamNames: string= '';
+
 
     /* Observables. */
     @select(['user', 'siteSettings', 'language']) requestLanguageObj;
     @select(['ofi', 'ofiProduct', 'ofiManagementCompany', 'managementCompanyList', 'managementCompanyList']) managementCompanyAccessListOb;
+    @select(['accountAdmin', 'teams', 'requested']) teamsRequestedOb;
+    @select(['accountAdmin', 'teams', 'teams']) teamsOb;
 
     public managementCompanyList;
 
     constructor(
+        private service: UserTeamsService,
         private changeDetectorRef: ChangeDetectorRef,
         private ngRedux: NgRedux<any>,
         private fb: FormBuilder,
         public translate: MultilingualService,
         @Inject('phoneCodeList') phoneCodeList,
+        
     ) {
         this.phoneNumbersCountryCodes = phoneCodeList;
 
@@ -123,8 +135,33 @@ export class OfiMyInformationsComponent implements OnInit, OnDestroy {
     
 
 
-    ngOnInit() {
-    }
+    
+
+        ngOnInit() {
+
+    
+            this.subscriptions.push(this.teamsRequestedOb.subscribe((requested: boolean) => {
+                this.service.readUserTeams(null, null, () => {}, () => {});
+
+            }));
+    
+            this.subscriptions.push(this.teamsOb.subscribe((teams: Model.AccountAdminTeam[]) => {
+                this.teams = teams;
+                // this.teams.map(team => this.teamNames.concat(team.name))
+                for (const team of this.teams) { 
+                    this.teamNames = this.teamNames + team.name+ ', ';
+                   }
+
+            }));
+        console.log(this.teams);
+        console.log("teams");
+        //  this.teams.map(team => this.teamNames.concat(team.name));        
+         console.log(this.teamNames);
+            
+
+        };
+        
+    
 
     @Input() set userInfo(userInfo) {
         if (!this.additionnalForm.controls.phoneCode.value) {
@@ -205,6 +242,9 @@ export class OfiMyInformationsComponent implements OnInit, OnDestroy {
         this.changeDetectorRef.markForCheck();
     }
 
+  
+
+
     getManagementCompanyListFromRedux(managementCompanyList) {
         // if investor no need to run the code
         if (this.type === 46) {
@@ -226,6 +266,8 @@ export class OfiMyInformationsComponent implements OnInit, OnDestroy {
             },
             [],
         );
+
+       
 
         // get am company name
         const assetManagerValue = this.managementCompanyList && this.managementCompanyList[0].companyName;
