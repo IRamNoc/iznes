@@ -29,20 +29,6 @@ export class ShareCalendarSubscriptionMandatory extends DynamicFormsValidator {
         ],
         required: true,
     };
-    subscriptionEnableNonWorkingDay: FormItem = {
-        type: FormItemType.checkbox,
-        title: '',
-        label: '',
-        checkboxLabel: 'Enable NAV dates outside working days',
-        required: false,
-        style: [FormItemStyle.BreakOnAfter],
-        checkboxHint: () => {
-            return getNonWorkingDayHintMsg(this.navPeriodForSubscription.value(), this.subscriptionEnableNonWorkingDay.value());
-        },
-        hidden: () => {
-            return this.navPeriodForSubscription.value() === null;
-        },
-    };
     subscriptionSettlementPeriod: FormItem = {
         type: FormItemType.list,
         title: 'Settlement Date Settings',
@@ -93,20 +79,6 @@ export class ShareCalendarRedemptionMandatory extends DynamicFormsValidator {
         ],
         required: true,
     };
-    redemptionEnableNonWorkingDay: FormItem = {
-        type: FormItemType.checkbox,
-        title: '',
-        label: '',
-        checkboxLabel: 'Enable NAV dates outside working days',
-        required: false,
-        style: [FormItemStyle.BreakOnAfter],
-        checkboxHint: () => {
-            return getNonWorkingDayHintMsg(this.navPeriodForRedemption.value(), this.redemptionEnableNonWorkingDay.value());
-        },
-        hidden: () => {
-            return this.navPeriodForRedemption.value() === null;
-        },
-    };
     redemptionSettlementPeriod: FormItem = {
         type: FormItemType.list,
         title: 'Settlement Date Settings',
@@ -127,22 +99,4 @@ export class ShareCalendarRedemptionMandatory extends DynamicFormsValidator {
     //     label: 'Calendar of subscription/redemption',
     //     required: true,
     // };
-}
-
-function getNonWorkingDayHintMsg(periodValue: {id: number}[], enableNonWorkingDay: boolean): string {
-    if (!enableNonWorkingDay ||
-        !periodValue
-    ) {
-        return undefined;
-    }
-
-    return {
-        [E.BusinessDaysEnum.MinusOne]: 'The NAV date will correspond to the calendar day before the cutoff day',
-        [E.BusinessDaysEnum.Zero]: 'The NAV date will correspond to the calendar day before the next business day',
-        [E.BusinessDaysEnum.One]: 'The NAV date will correspond to the calendar day before the next 2 business day',
-        [E.BusinessDaysEnum.Two]: 'The NAV date will correspond to the calendar day before the next 3 business day',
-        [E.BusinessDaysEnum.Three]: 'The NAV date will correspond to the calendar day before the next 4 business day',
-        [E.BusinessDaysEnum.Four]: 'The NAV date will correspond to the calendar day before the next 5 business day',
-        [E.BusinessDaysEnum.Five]: 'The NAV date will correspond to the calendar day before the next 6 business day',
-    }[periodValue[0].id];
 }

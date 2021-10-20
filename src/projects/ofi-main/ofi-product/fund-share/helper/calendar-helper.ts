@@ -91,15 +91,6 @@ export class CalendarHelper {
         }[this.orderType];
     }
 
-    get allowOutsideWorkingDay(): boolean {
-        const v = {
-            [OrderType.Subscription]: this.fundShare.subscriptionEnableNonWorkingDay || 0,
-            [OrderType.Redemption]: this.fundShare.redemptionEnableNonWorkingDay || 0,
-        }[this.orderType];
-
-        return Number(v) === 1;
-    }
-
     constructor(fundShare: IznShareDetailWithNav) {
         this.fundShare = fundShare;
 
@@ -388,10 +379,6 @@ export class CalendarHelper {
             return false;
         }
 
-        if (!this.isWorkingDate(dateTimeToChecks) && !this.allowOutsideWorkingDay) {
-            return false;
-        }
-
         // get cutoff date from valuation date.
         const cutoffDate = this.getCutoffDateFromValuation(dateTimeToChecks, orderType);
         return this.isValidCutoffDateTime(cutoffDate, orderType);
@@ -411,40 +398,25 @@ export class CalendarHelper {
         let valuationDateStr;
 
         // allow outside working day
-        if (this.allowOutsideWorkingDay) {
-            if (this.valuationOffSet === E.BusinessDaysEnum.MinusOne) {
-                // force the NAV Date to the previous day, whether or not this day is a working day
-                let newDate = cutoffDate.clone().subtract(1, 'day');
-
-                while (valuationCalendar.includes(newDate.format('YYYY-MM-DD'))) {
-                    newDate = newDate.clone().subtract(1, 'day');
-                }
-                
-                valuationDateStr = newDate.format('YYYY-MM-DD');
+        if (this.valuationOffSet === E.BusinessDaysEnum.MinusOne) {
+            // force the NAV Date to the previous day, whether or not this day is a working day
+            let newDate = cutoffDate.clone().subtract(1, 'day');
+            while (valuationCalendar.includes(newDate.format('YYYY-MM-DD'))) {
+                newDate = newDate.clone().subtract(1, 'day');
             }
-            if (this.valuationOffSet >= E.BusinessDaysEnum.Zero && this.valuationOffSet <= E.BusinessDaysEnum.Five) {
-                // working day work offset
-                const wos = this.valuationOffSet + 1;
-
-                // force the NAV Date to the day before the next offset + 1 business day, whether or not that day is a business day
-                // get offset + 1
-                const osp1 = cutoffDate.clone().businessAdd(wos, 'day');
-                let newDate = osp1.clone().add(1, 'day');
-
-                while (valuationCalendar.includes(newDate.format('YYYY-MM-DD'))) {
-                    newDate = newDate.clone().add(1, 'day');
-                }
-
-                valuationDateStr = newDate.format('YYYY-MM-DD');
-            }
-        } else {
-            // not allow outside working day
-            let newDate = cutoffDate.clone().businessAdd(this.valuationOffSet, 'day');
             
+            valuationDateStr = newDate.format('YYYY-MM-DD');
+        }
+        if (this.valuationOffSet >= E.BusinessDaysEnum.Zero && this.valuationOffSet <= E.BusinessDaysEnum.Five) {
+            // working day work offset
+            const wos = this.valuationOffSet + 1;
+            // force the NAV Date to the day before the next offset + 1 business day, whether or not that day is a business day
+            // get offset + 1
+            const osp1 = cutoffDate.clone().businessAdd(wos, 'day');
+            let newDate = osp1.clone().add(1, 'day');
             while (valuationCalendar.includes(newDate.format('YYYY-MM-DD'))) {
                 newDate = newDate.clone().add(1, 'day');
             }
-
             valuationDateStr = newDate.format('YYYY-MM-DD');
         }
         return moment.utc(valuationDateStr).set({
@@ -492,15 +464,6 @@ export class CalendarHelper {
         this.orderType = orderType;
 
         const cutoffCalendar = this.orderType === OrderType.Subscription ? this.fundShare.buyCentralizationCalendar : this.fundShare.sellCentralizationCalendar;
-
-        // not allow outside working day
-        if (!this.allowOutsideWorkingDay) {
-            let newDate = valuationDate.clone().businessSubtract(this.valuationOffSet);
-            while (cutoffCalendar.includes(newDate.format('YYYY-MM-DD'))) {
-                newDate = newDate.clone().subtract(1, 'day');
-            }
-            return newDate;
-        }
 
         // allow outside working day
         if (this.valuationOffSet === E.BusinessDaysEnum.MinusOne) {
