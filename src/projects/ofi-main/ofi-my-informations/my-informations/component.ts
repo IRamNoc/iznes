@@ -135,7 +135,7 @@ export class OfiMyInformationsComponent implements OnInit, OnDestroy {
     
 
 
-    
+    //Displaying Teams on My information section
 
         ngOnInit() {
 
@@ -147,14 +147,18 @@ export class OfiMyInformationsComponent implements OnInit, OnDestroy {
     
             this.subscriptions.push(this.teamsOb.subscribe((teams: Model.AccountAdminTeam[]) => {
                 this.teams = teams;
+                
                 // this.teams.map(team => this.teamNames.concat(team.name))
-                for (const team of this.teams) { 
-                    this.teamNames = this.teamNames + team.name+ ', ';
-                   }
+               
 
             }));
         console.log(this.teams);
         console.log("teams");
+        for (const team of this.teams) { 
+            this.teamNames = this.teamNames + team.name + ', ';                    
+            
+            
+           }
         //  this.teams.map(team => this.teamNames.concat(team.name));        
          console.log(this.teamNames);
             
