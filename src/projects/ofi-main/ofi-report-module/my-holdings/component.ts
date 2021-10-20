@@ -11,7 +11,7 @@ import { OfiManagementCompanyService } from '../../ofi-req-services/ofi-product/
 import { OfiReportsService } from '../../ofi-req-services/ofi-reports/service';
 import { OfiCurrenciesService } from '../../ofi-req-services/ofi-currencies/service';
 import { InvestorHoldingRequestData } from '@ofi/ofi-main/ofi-req-services/ofi-reports/model';
-
+import { OfiSubPortfolioService } from './../../../ofi-main/ofi-sub-portfolio/sub-portfolio/service'
 @Component({
     styleUrls: ['./component.scss'],
     templateUrl: './component.html',
@@ -25,6 +25,16 @@ export class MyHoldingsComponent implements OnInit, OnDestroy {
     language = 'en';
     managementCompanyList: any[] = [];
     allCompaniesList: any[] = [];
+
+    subportfolio: any[] = [];  
+    subportfolioList = [];
+    public subportfolioListData: Array<any>;
+    public sharesList: Array<any>;
+    shareISIN="";
+
+    fundShareName: any[] = [];  
+    fundShareNameList = [];
+    public fundShareNameListData: Array<any>;
 
     @select(['user', 'connected', 'connectedWallet']) connectedWallet$;
     @select(['user', 'siteSettings', 'language']) language$;
@@ -48,6 +58,8 @@ export class MyHoldingsComponent implements OnInit, OnDestroy {
         private managementCompanyService: OfiManagementCompanyService,
         private ofiReportsService: OfiReportsService,
         private translate: MultilingualService,
+        private ofiSubPortfolioService: OfiSubPortfolioService,                
+
     ) {
     }
 
@@ -94,6 +106,22 @@ export class MyHoldingsComponent implements OnInit, OnDestroy {
             this.initCompanies();
             this.formatManagementCompanyList();
         });
+        this.ofiSubPortfolioService.getSubPortfolioData()
+            .pipe(
+                takeUntil(this.unSubscribe),
+            )
+            .subscribe((data) => {
+                this.subportfolioListData = data;                
+                this.subportfolioListData.forEach((e,i) => {
+                    e.id=i;
+                    e.text=e.label;                    
+                }); 
+                console.log(this.subportfolioListData,"subdata")
+            }); 
+
+          
+          
+           
 
         this.currencyList$
         .pipe(
@@ -149,6 +177,9 @@ export class MyHoldingsComponent implements OnInit, OnDestroy {
             takeUntil(this.unSubscribe),
         )
         .subscribe(([requested, d]) => this.formatInvestorHoldingList(d));
+
+
+        
     }
 
     /**
@@ -176,7 +207,7 @@ export class MyHoldingsComponent implements OnInit, OnDestroy {
     formatInvestorHoldingList(d) {
         const data = d.toJS();
 
-        this.holdingList = data.map(it => ({
+        this.holdingList = data.map((it,i) => ({
             amManagementCompanyID: it.amManagementCompanyID,
             companyName: it.companyName,
             shareID: it.shareID,
@@ -190,7 +221,15 @@ export class MyHoldingsComponent implements OnInit, OnDestroy {
             amount: it.amount,
             ratio: it.ratio,
         }));
-    }
+        this.sharesList=data.map((it,i)=>({
+id:i,
+text:it.fundShareName,
+shareIsin:it.isin,
+
+        }));
+  }
+
+    
 
      /**
      * Get the code of the currency by its id
@@ -204,5 +243,11 @@ export class MyHoldingsComponent implements OnInit, OnDestroy {
         } catch (e) {
             return '';
         }
+    }
+
+    onChange(event){
+        
+        console.log(this.sharesList.filter(e=>e.id==event.id)[0].shareIsin,"isin")
+this.shareISIN=this.sharesList.filter(e=>e.id==event.id)[0].shareIsin;
     }
 }

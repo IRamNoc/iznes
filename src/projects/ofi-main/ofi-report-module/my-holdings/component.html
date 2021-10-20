@@ -24,9 +24,85 @@
                                     </ng-select>
                                 </div>
                             </div>
+                            <div class="col-xs-4 text-right">
+                                <button 
+                                id="aic"
+                                class="btn btn-primary action-button"
+                                (click)=" showGenerateAIC = true"
+                                >{{ 'Generate AIC' | translate }}
+                                </button>
+                            </div>
                         </div>
+                        <clr-modal [(clrModalOpen)]="showGenerateAIC" [clrModalSize]="'l'">
+                            <h3 id="override_header" class="modal-title">{{ 'Generate AIC' | translate }}</h3>
+                        <div class="modal-body">
+                            <section class="form-block">
+                                <div class="row">
+                        
+                                <div class="form-group col-lg-5">
+                                    <label>
+                                        <b>{{ 'Share Name' | translate }}</b>
+                                    </label>
+                                 <div class="input-button-group col-lg-3">
+                                    <ng-select id="holders-list-shares-search-field"
+                                    [items]="sharesList"
+                                    [allowClear]="true"
+                                    (selected)="onChange($event)"
+                                    [placeholder]="translate.translate('Type a Share name or an ISIN code')"
+                                    [formControl]="searchForm.controls['searchShares']">
+                        </ng-select>
+                                </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-4">
+                                <div class="form-group">
+                                  <label class="control-label">
+                                    {{ 'ISIN' | translate }}
+                                  </label>
+                                  <div>
+                                    <input id="isinCode" type="text" class="form-control"  placeholder="{{shareISIN}}" readonly>
+                                  </div>
+                                </div>
+                              </div>
+
+                            
+
+                            <div class="form-group col-sm-6">
+                                <label>
+                                    <b>{{ 'client subportfolio' | translate }}</b>
+                                </label>
+                             <div class="input-button-group col-rg-7">
+                                <ng-select id="holders-list-shares-search-field"
+                            [items]="subportfolioListData"
+                            [allowClear]="true"
+                            [placeholder]="translate.translate('Type a subportfolio ')"
+                            [formControl]="searchForm.controls['searchPortfolio']">
+                </ng-select>
+                            </div>
+                            </div>
+                            <div class="col-lg-7">
+                                <label class="control-label" for="From Date">
+                                  {{ 'From Date' | translate }}
+                                </label>
+                                <div class="input-group date-pick-wrapper">
+                                  <span class="fa fa-calendar" aria-hidden="true"></span>
+                                  <input id="fromDate" [dpDayPicker]="fromConfigDate"
+                                    [placeholder]="(!isPeriod) ? translate.translate('Choose a date') : translate.translate('Date From')"
+                                    mode="day" theme="dp-material">
+                                </div>
+                              </div>
+
+                                    </section>
+                        </div>
+                        </clr-modal>
+                        
                     </div>
+
+                    
                 </form>
+         
+
+                
 
                 <div class="hr-line-dashed"></div>
 
