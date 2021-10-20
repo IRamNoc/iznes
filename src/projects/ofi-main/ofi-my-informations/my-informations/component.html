@@ -29,6 +29,8 @@
                 </div>
 
 
+
+
                 <div class="row col-sm-12">
                     <div class="form-group required-field col-sm-4">
                         <label for="kyc_additionnal_email">{{ 'Email Address' | translate }}</label>
@@ -41,19 +43,19 @@
                         <div *ngIf="additionnalForm.controls['email'].hasError('required') && additionnalForm.controls['email'].dirty" class="field-error">{{ 'Field is required' | translate }}</div>
                         <div *ngIf="!additionnalForm.controls['email'].hasError('required') && !additionnalForm.controls['email'].valid" class="field-error">{{ 'Email not valid' | translate }}</div>
                     </div>
-                </div>
-                <div class="row col-sm-12">
-                    <div class="form-group required-field col-sm-4">
-                        <label for="kyc_additionnal_team">{{ 'Team(s)' | translate }}</label>
-                        <div>
-                            <input type="text"
-                                    id="kyc_additionnal_team"
-                                    class="form-control"
-                                    value={{teamNames}}
-                                    readonly>
+                    
+                        <div class="form-group col-sm-4">
+                            <label for="kyc_additionnal_team">{{ 'Team(s)' | translate }}</label>
+                            <div>
+                                <input type="text"
+                                        id="kyc_additionnal_team"
+                                        class="form-control"
+                                        value={{teamNames}}
+                                        readonly>
+                            </div>
                         </div>
-                    </div>
                 </div>
+               
 
                 <div class="row col-sm-12">
                     <div class="form-group col-sm-4">
