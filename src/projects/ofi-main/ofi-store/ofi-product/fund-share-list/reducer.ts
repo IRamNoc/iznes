@@ -192,9 +192,7 @@ function handleGetIznesShareList(state: OfiFundShareListState, action: Action) {
             monthlyRedemptionDealingDays: share.monthlyRedemptionDealingDays,
             yearlyRedemptionDealingDays: share.yearlyRedemptionDealingDays,
             navPeriodForSubscription: share.navPeriodForSubscription,
-            subscriptionEnableNonWorkingDay: share.subscriptionEnableNonWorkingDay,
             navPeriodForRedemption: share.navPeriodForRedemption,
-            redemptionEnableNonWorkingDay: share.redemptionEnableNonWorkingDay,
             classification: share.classification,
         };
 

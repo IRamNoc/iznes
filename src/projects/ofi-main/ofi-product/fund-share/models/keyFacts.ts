@@ -207,33 +207,25 @@ export class ShareKeyFactsMandatory extends DynamicFormsValidator {
     // Calendar of public holidays for the centralization dates for subscriptions
     buyCentralizationCalendar: FormItem = {
         type: FormItemType.list,
-        label: 'Calendar of public holidays for the centralization dates for subscriptions',
-        required: false,
+        label: 'Calendar of bank holidays for the centralization dates for subscriptions',
+        required: true,
         listItems: [],
         style: [FormItemStyle.BreakOnBefore],
+    };
+
+    // Calendar of public holidays for centralization dates for redemptions
+    sellCentralizationCalendar: FormItem = {
+        type: FormItemType.list,
+        label: 'Calendar of bank holidays for centralization dates for redemptions',
+        required: true,
+        listItems: [],
     };
 
     // Calendar of public holidays for the NAV dates for subscriptions
     buyNAVCalendar: FormItem = {
         type: FormItemType.list,
-        label: 'Calendar of public holidays for the NAV dates for subscriptions',
-        required: false,
-        listItems: [],
-    };
-
-    // Calendar of bank holidays for the settlement dates for subscriptions
-    buySettlementCalendar: FormItem = {
-        type: FormItemType.list,
-        label: 'Calendar of bank holidays for the settlement dates for subscriptions',
-        required: false,
-        listItems: [],
-    };
-    
-    // Calendar of public holidays for centralization dates for redemptions
-    sellCentralizationCalendar: FormItem = {
-        type: FormItemType.list,
-        label: 'Calendar of public holidays for centralization dates for redemptions',
-        required: false,
+        label: 'Calendar of bank holidays for the NAV dates for subscriptions',
+        required: true,
         listItems: [],
     };
 
@@ -241,7 +233,15 @@ export class ShareKeyFactsMandatory extends DynamicFormsValidator {
     sellNAVCalendar: FormItem = {
         type: FormItemType.list,
         label: 'Calendar of bank holidays for redemption NAV dates',
-        required: false,
+        required: true,
+        listItems: [],
+    };
+
+    // Calendar of bank holidays for the settlement dates for subscriptions
+    buySettlementCalendar: FormItem = {
+        type: FormItemType.list,
+        label: 'Calendar of bank holidays for the settlement dates for subscriptions',
+        required: true,
         listItems: [],
     };
 
@@ -249,7 +249,7 @@ export class ShareKeyFactsMandatory extends DynamicFormsValidator {
     sellSettlementCalendar: FormItem = {
         type: FormItemType.list,
         label: 'Calendar of bank holidays for settlement dates for redemptions',
-        required: false,
+        required: true,
         listItems: [],
     };
   }
@@ -552,7 +552,7 @@ export class ShareKeyFactsOptional {
 }
 
 function validateISIN(c: FormControl) {
-    const ISIN_REGEXP = new RegExp(/\b^[A-Z]{2}[0-9]{10}\b/);
+    const ISIN_REGEXP = new RegExp(/\b^[A-Z]{2}[A-Z0-9]{10}\b/);
 
     return ISIN_REGEXP.test(c.value) && c.value.length === 12 ? null : {
         'ISIN must meet ISO 6166 format (12 capitalised characters).': c.value,
