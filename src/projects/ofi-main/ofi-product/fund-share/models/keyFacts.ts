@@ -552,7 +552,7 @@ export class ShareKeyFactsOptional {
 }
 
 function validateISIN(c: FormControl) {
-    const ISIN_REGEXP = new RegExp(/\b^[A-Z]{2}[A-Z0-9]{10}\b/);
+    const ISIN_REGEXP = new RegExp(/\b^[A-Z0-9]{12}\b/);
 
     return ISIN_REGEXP.test(c.value) && c.value.length === 12 ? null : {
         'ISIN must meet ISO 6166 format (12 capitalised characters).': c.value,
