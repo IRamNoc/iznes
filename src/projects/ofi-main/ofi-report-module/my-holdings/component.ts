@@ -1,9 +1,9 @@
 import { OnInit, ChangeDetectorRef, Component, OnDestroy } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms';
 import { select } from '@angular-redux/store';
 import { MultilingualService } from '@setl/multilingual';
 import { List } from 'immutable';
-import { combineLatest } from 'rxjs';
+import { combineLatest } from 'rxjs'
 import { Subject } from 'rxjs/Subject';
 import { filter, takeUntil, switchMap } from 'rxjs/operators';
 import * as _ from 'lodash';
@@ -21,20 +21,15 @@ export class MyHoldingsComponent implements OnInit, OnDestroy {
     investorManagementCompanyList = [];
     holdingList: Array<any>;
     searchForm: FormGroup;
+    aicForm: FormGroup
     unSubscribe: Subject<any> = new Subject();
     language = 'en';
     managementCompanyList: any[] = [];
     allCompaniesList: any[] = [];
 
-    subportfolio: any[] = [];  
-    subportfolioList = [];
     public subportfolioListData: Array<any>;
     public sharesList: Array<any>;
-    shareISIN="";
-
-    fundShareName: any[] = [];  
-    fundShareNameList = [];
-    public fundShareNameListData: Array<any>;
+    shareISIN = "";
 
     @select(['user', 'connected', 'connectedWallet']) connectedWallet$;
     @select(['user', 'siteSettings', 'language']) language$;
@@ -58,7 +53,7 @@ export class MyHoldingsComponent implements OnInit, OnDestroy {
         private managementCompanyService: OfiManagementCompanyService,
         private ofiReportsService: OfiReportsService,
         private translate: MultilingualService,
-        private ofiSubPortfolioService: OfiSubPortfolioService,                
+        private ofiSubPortfolioService: OfiSubPortfolioService,
 
     ) {
     }
@@ -86,61 +81,83 @@ export class MyHoldingsComponent implements OnInit, OnDestroy {
             text: this.translate.translate('All Asset Management Companies'),
         }];
     }
+    // Datepicker config
+    fromConfigDate = {
+        firstDayOfWeek: 'mo',
+        format: 'YYYY-MM-DD',
+        closeOnSelect: true,
+        disableKeypress: true,
+        locale: this.language,
+
+    };
+
+
+
 
     initForm() {
         this.holdingList = [];
         this.searchForm = this.fb.group({
-            search: [''],
+            search: ['', Validators.required],
+
+
         });
+
+        this.aicForm = new FormGroup({
+            sharesList: new FormControl(null, Validators.required),
+            fromDate: new FormControl(null, Validators.required),
+            subportfolioListData: new FormControl(null, Validators.required),
+        });
+
+
+
 
         this.changeDetectorRef.detectChanges();
     }
 
     initSubscriptions() {
         this.language$
-        .pipe(
-            takeUntil(this.unSubscribe),
-        )
-        .subscribe((language) => {
-            this.language = language;
-            this.initCompanies();
-            this.formatManagementCompanyList();
-        });
+            .pipe(
+                takeUntil(this.unSubscribe),
+            )
+            .subscribe((language) => {
+                this.language = language;
+                this.initCompanies();
+                this.formatManagementCompanyList();
+            });
         this.ofiSubPortfolioService.getSubPortfolioData()
             .pipe(
                 takeUntil(this.unSubscribe),
             )
             .subscribe((data) => {
-                this.subportfolioListData = data;                
-                this.subportfolioListData.forEach((e,i) => {
-                    e.id=i;
-                    e.text=e.label;                    
-                }); 
-                console.log(this.subportfolioListData,"subdata")
-            }); 
+                this.subportfolioListData = data;
+                this.subportfolioListData.forEach((e, i) => {
+                    e.id = i;
+                    e.text = e.label;
+                });
+            });
 
-          
-          
-           
 
-        this.currencyList$
-        .pipe(
-            switchMap(() => this.loaded$),
-            filter((loaded) => !loaded),
-            takeUntil(this.unSubscribe),
-        )
-        .subscribe(() => this.currenciesService.getCurrencyList());
+
+
 
         this.currencyList$
-        .pipe(filter((v: List<any>) => v && v.size > 0), takeUntil(this.unSubscribe))
-        .subscribe((d) => this.currencyList = d.toJS());
+            .pipe(
+                switchMap(() => this.loaded$),
+                filter((loaded) => !loaded),
+                takeUntil(this.unSubscribe),
+            )
+            .subscribe(() => this.currenciesService.getCurrencyList());
+
+        this.currencyList$
+            .pipe(filter((v: List<any>) => v && v.size > 0), takeUntil(this.unSubscribe))
+            .subscribe((d) => this.currencyList = d.toJS());
 
         this.accountId$
-        .pipe(
-            filter(accountId => accountId && accountId !== 0),
-            takeUntil(this.unSubscribe),
-        )
-        .subscribe(accountId => this.managementCompanyService.setAccountId(accountId));
+            .pipe(
+                filter(accountId => accountId && accountId !== 0),
+                takeUntil(this.unSubscribe),
+            )
+            .subscribe(accountId => this.managementCompanyService.setAccountId(accountId));
 
         combineLatest(
             this.accountId$,
@@ -150,25 +167,25 @@ export class MyHoldingsComponent implements OnInit, OnDestroy {
             filter(([accountId, walletId, selectedItem]) => accountId && accountId !== 0 && walletId && selectedItem.search.length),
             takeUntil(this.unSubscribe),
         )
-        .subscribe(([accountId, selectedWalletId, selectedItem]) => {
-            const payload: InvestorHoldingRequestData = {
-                amCompanyID: selectedItem.search[0].id,
-                walletID: Number(selectedWalletId),
-                accountID: Number(accountId),
-            };
+            .subscribe(([accountId, selectedWalletId, selectedItem]) => {
+                const payload: InvestorHoldingRequestData = {
+                    amCompanyID: selectedItem.search[0].id,
+                    walletID: Number(selectedWalletId),
+                    accountID: Number(accountId),
+                };
 
-            this.ofiReportsService.fetchInvestorHoldingList(payload);
-        });
+                this.ofiReportsService.fetchInvestorHoldingList(payload);
+            });
 
         this.investorManagementCompany$
-        .pipe(
-            filter((v: List<any>) => v && v.size > 0),
-            takeUntil(this.unSubscribe),
-        )
-        .subscribe(d => {
-            this.managementCompanyList = d.toJS();
-            this.formatManagementCompanyList();
-        });
+            .pipe(
+                filter((v: List<any>) => v && v.size > 0),
+                takeUntil(this.unSubscribe),
+            )
+            .subscribe(d => {
+                this.managementCompanyList = d.toJS();
+                this.formatManagementCompanyList();
+            });
 
         combineLatest(
             this.investorHoldingRequested,
@@ -176,10 +193,10 @@ export class MyHoldingsComponent implements OnInit, OnDestroy {
         ).pipe(
             takeUntil(this.unSubscribe),
         )
-        .subscribe(([requested, d]) => this.formatInvestorHoldingList(d));
+            .subscribe(([requested, d]) => this.formatInvestorHoldingList(d));
 
 
-        
+
     }
 
     /**
@@ -207,7 +224,7 @@ export class MyHoldingsComponent implements OnInit, OnDestroy {
     formatInvestorHoldingList(d) {
         const data = d.toJS();
 
-        this.holdingList = data.map((it,i) => ({
+        this.holdingList = data.map((it, i) => ({
             amManagementCompanyID: it.amManagementCompanyID,
             companyName: it.companyName,
             shareID: it.shareID,
@@ -221,22 +238,25 @@ export class MyHoldingsComponent implements OnInit, OnDestroy {
             amount: it.amount,
             ratio: it.ratio,
         }));
-        this.sharesList=data.map((it,i)=>({
-id:i,
-text:it.fundShareName,
-shareIsin:it.isin,
+        this.sharesList = data.map((it, i) => ({
+            id: i,
+            text: it.fundShareName,
+            shareIsin: it.isin,
 
         }));
-  }
+    }
 
-    
+    onSubmit(): void {
 
-     /**
-     * Get the code of the currency by its id
-     *
-     * @param {number} currencyId
-     * @returns {string}
-     */
+    }
+
+
+    /**
+    * Get the code of the currency by its id
+    *
+    * @param {number} currencyId
+    * @returns {string}
+    */
     getCurrencyString(currencyId: number): string {
         try {
             return this.currencyList.find(v => v.id === currencyId).text || '';
@@ -245,9 +265,12 @@ shareIsin:it.isin,
         }
     }
 
-    onChange(event){
-        
-        console.log(this.sharesList.filter(e=>e.id==event.id)[0].shareIsin,"isin")
-this.shareISIN=this.sharesList.filter(e=>e.id==event.id)[0].shareIsin;
+    clickReset() {
+        this.aicForm.reset();
+    }
+
+    onChange(event) {
+
+        this.shareISIN = this.sharesList.filter(e => e.id == event.id)[0].shareIsin;
     }
 }
