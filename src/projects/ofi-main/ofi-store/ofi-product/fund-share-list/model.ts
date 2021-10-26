@@ -91,9 +91,7 @@ export interface IznesShareDetail {
     monthlyRedemptionDealingDays: number;
     yearlyRedemptionDealingDays: number;
     navPeriodForSubscription: number;
-    subscriptionEnableNonWorkingDay: number;
     navPeriodForRedemption: number;
-    redemptionEnableNonWorkingDay: number;
     isProduction?: string;
     amUserId?: number;
     classification: number;
