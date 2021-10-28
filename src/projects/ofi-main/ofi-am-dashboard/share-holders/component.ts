@@ -9,7 +9,12 @@ import { MemberSocketService } from '@setl/websocket-service';
 import { OfiAmDashboardService } from '../../ofi-req-services/ofi-am-dashboard/service';
 import { OfiReportsService } from '../../ofi-req-services/ofi-reports/service';
 import { MultilingualService } from '@setl/multilingual';
-
+import { OfiSubPortfolioService } from './../../../ofi-main/ofi-sub-portfolio/sub-portfolio/service'
+import { takeUntil } from 'rxjs/operators';
+import { Subject } from 'rxjs';
+import { OfiKycService } from '../../ofi-req-services/ofi-kyc/service';
+import { Observable, combineLatest as observableCombineLatest } from 'rxjs';
+import { PermissionsService } from '../../../utils';
 interface SelectedItem {
     id: number;
     text: string;
@@ -83,12 +88,21 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
     sharesCCY = '';
 
     allList: any = [];
+    allClientNameList: any = [];
     fundList: any = [];
     sharesList: any = [];
+    clientNameList: any = [];
     fundsData: any = [];
     sharesData: any = [];
     holdersFundData: any = [];
     holdersShareData: any = [];
+    shareISIN = "";
+    walletNameList: any = [];
+
+
+    subportfolio: any[] = [];
+    subportfolioList = [];
+    public subportfolioListData: Array<any>;
 
     loadingDatagrid: boolean = false;
     setLoadingDatagrid: boolean = false;
@@ -96,6 +110,14 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
     /* Private Properties. */
     private myDetails: any = {};
     private subscriptions: Array<any> = [];
+    unSubscribe: Subject<any> = new Subject();
+    hasPermissionCanManageAllClientFile$: Observable<boolean>;
+    hasPermissionCanManageAllClientFile = false;
+
+    hasNowCpAMPermission$: Observable<boolean>;
+    public isNowCpAm: boolean = false;
+    hasID2SAMPermission$: Observable<boolean>;
+    public isID2SAm: boolean = false;
 
     @select(['user', 'siteSettings', 'language']) requestLanguageObj;
     @select(['user', 'myDetail']) myDetailOb: any;
@@ -114,17 +136,26 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
     // shares details
     @select(['ofi', 'ofiReports', 'amHolders', 'shareHolderDetail']) shareHolderDetailObs;
 
+    /* Observables. */
+    @select(['user', 'siteSettings', 'language']) requestLanguageOb;
+    @select(['ofi', 'ofiKyc', 'amKycList', 'requested']) requestedOfiKycListOb;
+    @select(['ofi', 'ofiKyc', 'amKycList', 'amKycList']) kycListOb;
+
     constructor(private ngRedux: NgRedux<any>,
-                private changeDetectorRef: ChangeDetectorRef,
-                private route: ActivatedRoute,
-                private router: Router,
-                private fb: FormBuilder,
-                private memberSocketService: MemberSocketService,
-                private ofiReportsService: OfiReportsService,
-                private ofiAmDashboardService: OfiAmDashboardService,
-                private fileDownloader: FileDownloader,
-                private activatedRoute: ActivatedRoute,
-                public translate: MultilingualService,
+        private changeDetectorRef: ChangeDetectorRef,
+        private route: ActivatedRoute,
+        private router: Router,
+        private fb: FormBuilder,
+        private memberSocketService: MemberSocketService,
+        private ofiReportsService: OfiReportsService,
+        private ofiAmDashboardService: OfiAmDashboardService,
+        private fileDownloader: FileDownloader,
+        private activatedRoute: ActivatedRoute,
+        public translate: MultilingualService,
+        private ofiSubPortfolioService: OfiSubPortfolioService,
+        private ofiKycService: OfiKycService,
+        private permissionsService: PermissionsService,
+
     ) {
         this.loadingDatagrid = false;
 
@@ -149,6 +180,9 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
             searchShares: [
                 '',
             ],
+            searchPortfolio: [
+                ''
+            ]
         });
 
         this.searchForm = this.fb.group({
@@ -162,6 +196,7 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
                 '',
             ],
         });
+
 
         // all list
         this.subscriptions.push(this.requestedOfiAmHoldersObj.subscribe(requested => this.getAmHoldersRequested(requested)));
@@ -180,6 +215,7 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
         this.subscriptions.push(this.filtersForm.valueChanges.subscribe(() => this.requestSearch()));
 
         this.setInitialTabs();
+        this.initSubscriptions();
 
         this.subscriptions.push(this.route.params.subscribe((params) => {
             const tabId = Number(params['tabid']);
@@ -275,6 +311,53 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
         this.loadingDatagrid = false;
     }
 
+    initSubscriptions() {
+        console.log("enter Sub")
+        this.ofiSubPortfolioService.getSubPortfolioData()
+            .pipe(
+                takeUntil(this.unSubscribe),
+            )
+            .subscribe((data) => {
+                this.subportfolioListData = data;
+                this.subportfolioListData.forEach((e, i) => {
+                    e.id = i;
+                    e.text = e.accountLabel;
+                });
+                console.log(this.subportfolioListData, "subdata")
+            });
+
+        this.hasPermissionCanManageAllClientFile$ = Observable.fromPromise(this.permissionsService.hasPermission('manageAllClientFile', 'canUpdate'));
+        this.hasNowCpAMPermission$ = Observable.fromPromise(this.permissionsService.hasPermission('nowCpAM', 'canRead'));
+        this.hasID2SAMPermission$ = Observable.fromPromise(this.permissionsService.hasPermission('id2sAM', 'canRead'));
+        this.subscriptions.push(this.requestedOfiKycListOb.subscribe(
+            requested => this.requestKycList(requested)));
+        this.subscriptions.push(
+            observableCombineLatest(this.kycListOb, this.requestLanguageOb, this.hasPermissionCanManageAllClientFile$,
+                this.hasNowCpAMPermission$, this.hasID2SAMPermission$)
+                .subscribe(async ([
+                    amKycListData, _, hasClientFilePermission, hasNowCpAMPermission, hasID2SAMPermission
+                ]) => {
+                    this.hasPermissionCanManageAllClientFile = hasClientFilePermission;
+                    this.isNowCpAm = hasNowCpAMPermission;
+                    this.isID2SAm = hasID2SAMPermission;
+                    console.log(amKycListData, "amKycListData");
+
+                    this.getAmClientListFromRedux(amKycListData);
+                    this.getAmWalletNameFromRedux(amKycListData)
+                    // this.updateTable(amKycListData);
+                },
+                ));
+    }
+    /**
+ * Request my fund access base of the requested state.
+ * @param requested
+ * @return void
+ */
+    requestKycList(requested): void {
+        if (!requested) {
+            OfiKycService.defaultRequestAmKycList(this.ofiKycService, this.ngRedux);
+        }
+    }
     getLanguage(requested): void {
         if (requested) {
             switch (requested) {
@@ -410,6 +493,7 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
      * @param holderList
      */
     getAmHoldersListFromRedux(holderList) {
+        console.log(holderList, "holderList")
         if (holderList) {
             this.allList = holderList.toJS() || [];
 
@@ -417,11 +501,63 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
                 return {
                     id: holder.shareId,
                     text: holder.fundName + ' - ' + holder.shareName + ' (' + holder.shareIsin + ')',
+                    shareIsin: holder.shareIsin,
                 };
             });
+
         }
         this.changeDetectorRef.markForCheck();
         this.loadingDatagrid = false;
+    }
+    /**
+     * Get the actual list of holders from redux
+     *
+     * @param holderList
+     */
+    getAmClientListFromRedux(clientList) {
+
+        if (clientList) {
+            this.allClientNameList = [...clientList];
+            this.allClientNameList.forEach(e => {
+                if (e.investorCompanyName) {
+                    e.id = e.investorWalletID;
+                    e.text = e.investorCompanyName;
+                }
+            });
+            this.changeDetectorRef.markForCheck();
+            this.loadingDatagrid = false;
+        }
+    }
+
+
+
+    onChange(event) {
+
+        console.log(this.sharesList.filter(e => e.id == event.id)[0].shareIsin, "isin")
+        this.shareISIN = this.sharesList.filter(e => e.id == event.id)[0].shareIsin;
+    }
+    /**
+       * Get the actual list of holders from redux
+       *
+       * @param holderList
+       */
+
+    getAmWalletNameFromRedux(walletName) {
+        if (walletName) {
+            this.walletNameList = [];
+            let walletNameListData = [...walletName];
+
+            walletNameListData.forEach(d => {
+                let obj = {};
+                if (d.investorUserID) {
+                    obj['id'] = d.kycID;
+                    obj['text'] = d.walletName;
+                    this.walletNameList.push(obj)
+                }
+            });
+            this.changeDetectorRef.markForCheck();
+            this.loadingDatagrid = false;
+        }
     }
 
     /**
@@ -611,5 +747,8 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
         for (const subscription of this.subscriptions) {
             subscription.unsubscribe();
         }
+        this.unSubscribe.next();
+        this.unSubscribe.complete();
+
     }
 }
