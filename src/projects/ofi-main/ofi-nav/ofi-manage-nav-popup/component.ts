@@ -154,7 +154,7 @@ export class OfiManageNavPopup implements OnInit {
             price: new FormControl('', Validators.compose([
                 Validators.required,
                 Validators.max(10000000),
-                numberValidator,
+                numberValidatorNAV,
             ])),
             navDate: new FormControl(
                 moment(share.navDate).format('YYYY-MM-DD'),
@@ -374,6 +374,7 @@ export class OfiManageNavPopup implements OnInit {
 
 const regex = {
     floatMaxTwoDecimals: /^\d+(\.\d{1,2})?$/,
+    floatMaxFourDecimals: /^\d+(\.\d{1,4})?$/,
 };
 
 /**
@@ -391,6 +392,27 @@ function numberValidator(control: FormControl): { [s: string]: boolean } {
     const testString = control.value.replace(/\s+/g, '');
 
     if (!regex.floatMaxTwoDecimals.test(testString)) {
+        return {
+            invalidNumber: true,
+        };
+    }
+}
+
+/**
+ * Number validator NAV:
+ *
+ * - Takes a `Control` as it's input and
+ *   checks for 4 max decimal float number
+ * - Returns a `StringMap<string, boolean>` where the key is "error code" and
+ *   the value is `true` if it fails
+ */
+ function numberValidatorNAV(control: FormControl): { [s: string]: boolean } {
+    // todo
+    // check if number is none zero as well
+
+    const testString = control.value.replace(/\s+/g, '');
+
+    if (!regex.floatMaxFourDecimals.test(testString)) {
         return {
             invalidNumber: true,
         };

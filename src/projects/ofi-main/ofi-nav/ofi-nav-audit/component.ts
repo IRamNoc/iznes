@@ -144,7 +144,7 @@ export class OfiNavAuditComponent implements OnInit, OnDestroy {
     }
 
     navToFrontEndString(nav: number): string {
-        return this.moneyPipe.transform(this.numberConverterService.toFrontEnd(nav));
+        return this.moneyPipe.transform(this.numberConverterService.toFrontEnd(nav), 4);
     }
 
     isPriceHigherThanPrevious(item: NavAuditDetail): boolean {

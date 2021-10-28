@@ -46,7 +46,7 @@
                             type="text" 
                             name="nav" 
                             formControlName="price" 
-                            appNumberFormatter="2">
+                            appNumberFormatter="4">
                     <div class="field-error" *ngIf="navForm.controls['price'].dirty && navForm.controls['price'].hasError('invalidNumber')">
                         <span>{{ 'Incorrect Value' | translate }}</span>
                     </div>
