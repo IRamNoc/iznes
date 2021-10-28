@@ -193,7 +193,7 @@
                     </ng-container>
 
                     <ng-container *ngIf="data.shareId !== 0" ngProjectAs="clr-dg-cell">
-                        <clr-dg-cell class="right">{{data.shareNav | moneyValue: 2}}</clr-dg-cell>
+                        <clr-dg-cell class="right">{{data.shareNav | moneyValue: 4}}</clr-dg-cell>
                     </ng-container>
 
                     <ng-container *ngIf="data.shareId === 0" ngProjectAs="clr-dg-cell">
@@ -390,7 +390,7 @@
                                 <b>{{ 'Latest NAV' | translate }}</b>
                             </label>
                             <div>
-                                <span class="readonly-field">{{sharesLatestNAV | moneyValue:2}}</span>
+                                <span class="readonly-field">{{sharesLatestNAV | moneyValue:4}}</span>
                             </div>
                         </div>
                         <div class="form-group col-lg-2">
