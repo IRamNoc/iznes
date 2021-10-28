@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup,Validators,FormControl } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgRedux, select } from '@angular-redux/store';
 import { fromJS } from 'immutable';
@@ -29,6 +29,9 @@ interface SelectedItem {
 export class ShareHoldersComponent implements OnInit, OnDestroy {
     // list forms
     listSearchForm: FormGroup;
+
+    //aic Form
+    aicForm:FormGroup;
 
     // funds forms
     searchForm: FormGroup;
@@ -303,12 +306,32 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
         });
     }
 
+     // Datepicker config
+   fromConfigDate = {
+    firstDayOfWeek: 'mo',
+    format: 'YYYY-MM-DD',
+    closeOnSelect: true,
+    disableKeypress: true,
+    locale: this.language,
+  };
+
     ngOnInit() {
         if (this.setLoadingDatagrid) {
             this.loadingDatagrid = true;
             return;
         }
         this.loadingDatagrid = false;
+
+        this.aicForm = new FormGroup({
+            'sharesList' : new FormControl(null, Validators.required),
+            'allClientNameList' : new FormControl(null, Validators.required),
+            'walletNameList' : new FormControl(null, Validators.required),
+            'fromDate' : new FormControl(null, Validators.required),
+
+
+        })
+
+
     }
 
     initSubscriptions() {
@@ -383,6 +406,10 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
             OfiAmDashboardService.defaultRequestGetUserManagementCompanyFunds(this.ofiAmDashboardService, this.ngRedux);
         }
     }
+
+    clicksub() {
+        this.aicForm.reset();
+      }
 
     fundsByUserList(list) {
         const listImu = fromJS(list);

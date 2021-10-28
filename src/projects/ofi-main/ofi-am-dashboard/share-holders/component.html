@@ -61,8 +61,8 @@
                 <clr-modal [(clrModalOpen)]="showGenerateAIC" [clrModalSize]="'l'">
                     <h3 id="override_header" class="modal-title">{{ 'Generate AIC' | translate }}</h3>
                     <div class="modal-body">
-                        <!-- <form> -->
-                        <section class="form-block">
+                        <form [formGroup]="aicForm">
+                            <section class="form-block">
                             <div class="row">
 
                                 <div class="form-group col-lg-4">
@@ -71,13 +71,13 @@
                                     </label>
                                     <div class="input-button-group col-lg-3">
                                         <ng-select id="holders-list-shares-search-field" [items]="sharesList"
-                                            [allowClear]="true" (selected)="onChange($event)"
+                                            [allowClear]="true"
+                                             (selected)="onChange($event)"
+                                            formControlName="sharesList"
+                                            class="form-control"
                                             [placeholder]="translate.translate('Type a Share name')">
                                         </ng-select>
-                                        <div class="col-lg-4">
-                                            <div class="form-group">
-                                            </div>
-                                        </div>
+                                       
                                     </div>
 
 
@@ -88,8 +88,8 @@
                                     </div>
 
                                     <div>
-                                        <input id="isinCode" type="text" class="form-control" [(ngModel)]="isinCode"
-                                            placeholder="{{shareISIN}}">
+                                        <input id="isinCode" type="text"
+                                            placeholder="{{shareISIN}}" readonly>
                                     </div>
                                     <div class="row mt-1">
 
@@ -98,8 +98,12 @@
                                         </label>
 
                                         <div class="input-button-group">
-                                            <ng-select id="add-subportfolio-select" [items]="allClientNameList"
-                                                [allowClear]=true placeholder="{{ 'Select address' | translate }}">
+                                            <ng-select id="add-subportfolio-select"
+                                             [items]="allClientNameList"
+                                             formControlName="allClientNameList"
+                                             class="form-control"
+                                                [allowClear]=true
+                                                 placeholder="{{ 'Select address' | translate }}">
                                             </ng-select>
                                         </div>
                                     </div>
@@ -108,19 +112,42 @@
                                         <label>
                                             <b>{{ 'Wallet Name ' | translate }}</b>
                                         </label>
-
+                                        <div class=form-group>
                                         <div class="input-button-group">
-                                            <ng-select id="holders-list-shares-search-field" [items]="walletNameList"
+                                            <ng-select id="holders-list-shares-search-field" 
+                                                [items]="walletNameList"
                                                 [allowClear]="true"
-                                                [placeholder]="translate.translate('Type a subportfolio ')"
-                                                [formControl]="listSearchForm.controls['searchPortfolio']">
+                                                formControlName="walletNameList"
+                                                [placeholder]="translate.translate('Type a Wallet Name ')"
+                                                [formControl]="listSearchForm.controls['Search Wallet']">
                                             </ng-select>
                                         </div>
+                                    </div>
+
+                                        <div class="row mt-2">
+                                        <label class="control-label" for="From Date">
+                                          {{ ' Date' | translate }}
+                                        </label>
+                                        <div class="form-group col-lg-20">
+                                        <div class="input-group date-pick-wrapper">
+                                          <span class="fa fa-calendar" aria-hidden="true"></span>
+                                          <input id="fromDate" formControlName="fromDate"
+                                          class="form-control"
+
+                                          [dpDayPicker]="fromConfigDate"
+                                            [placeholder]="(!isPeriod) ? translate.translate('Select Date') : translate.translate('Date From')"
+                                            mode="day" theme="dp-material">
+                                        </div>
+                                      </div>
+                                    </div>
 
                                         <div class="col-xs-4 text-right">
-                                            <button id="aic" class="btn btn-primary action-button"
-                                                (click)=" showGenerateAIC = true" [disabled]="true">{{ 'Generate AIC' |
-                                                translate }}
+                                            <button id="aic" 
+                                            class="btn btn-primary action-button"
+                                            (click)="clicksub()" 
+                                            [disabled]="aicForm.invalid" 
+                                            type="button">
+                                            {{ 'Generate AIC' | translate }}
                                             </button>
                                         </div>
                                     </div>
@@ -130,7 +157,8 @@
                         </section>
 
 
-                        <!-- </form> -->
+
+                        </form>
                     </div>
 
                 </clr-modal>
