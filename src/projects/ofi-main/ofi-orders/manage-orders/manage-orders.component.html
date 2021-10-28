@@ -546,7 +546,7 @@
                                                 <td>
                                                     <b>{{ 'Latest NAV' | translate }}</b>
                                                 </td>
-                                                <td [class]="getPriceStatusCss(order)">{{order.price | moneyValue: 2}}</td>
+                                                <td [class]="getPriceStatusCss(order)">{{order.price | moneyValue: 4}}</td>
                                             </tr>
                                             </tbody>
                                         </table>
@@ -841,7 +841,7 @@
                         <div class="form-group col-sm-6">
                             <label>{{ 'NAV' | translate }}</label>
                             <div>
-                                <span class="readonly-field {{getPriceStatusCss(orderData)}}">{{ orderData.price | moneyValue: 2 }}</span>
+                                <span class="readonly-field {{getPriceStatusCss(orderData)}}">{{ orderData.price | moneyValue: 4 }}</span>
                             </div>
                         </div>
 
