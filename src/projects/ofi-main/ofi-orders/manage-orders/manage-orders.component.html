@@ -546,7 +546,8 @@
                                                 <td>
                                                     <b>{{ 'Latest NAV' | translate }}</b>
                                                 </td>
-                                                <td [class]="getPriceStatusCss(order)">{{order.price | moneyValue: 4}}</td>
+                                                <td>{{getOnlyDate(order.latestNav)}}</td>
+                                                <!-- <td [class]="getPriceStatusCss(order)">{{order.price | moneyValue: 4}}</td> -->
                                             </tr>
                                             </tbody>
                                         </table>
