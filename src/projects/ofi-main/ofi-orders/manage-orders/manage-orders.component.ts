@@ -545,7 +545,6 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
 
     getAmOrdersListFromRedux(list, listOrder: number[]) {
         this.ordersList = this.ordersObjectToList(list, listOrder);
-        console.log(this.ordersList,"ordersList111")
         const totalResults = get(this.ordersList, '0.totalResult', false);
         if (totalResults) {
             this.manageOrdersService.setTotalResults(totalResults);
@@ -1081,7 +1080,6 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         }).then(() => {
             this.toasterService.pop('success', this.translate.translate('Successfully sent payment messages'));
             this.ordersList.forEach(o => o.markedForPayment.setValue(false));
-            console.log(this.ordersList,"ordersList111222")
             this.orderCheckedForPayment = [];
         }).catch((e) => {
             this.toasterService.pop('error', e.message);
