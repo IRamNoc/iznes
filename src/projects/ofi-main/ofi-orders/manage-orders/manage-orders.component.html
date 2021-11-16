@@ -550,7 +550,7 @@
                                             </tr>
                                             </tbody>
                                         </table>
-                                    </div>
+                                    </div>                                    
                                     <div class="form-group col-sm-2">
                                         <table>
                                             <tbody>
@@ -558,20 +558,7 @@
                                                 <td>
                                                     <b>{{ 'Latest NAV Date' | translate }}</b>
                                                 </td> 
-                                                <td>{{getOnlyDate(order.latestNavDate)}}</td>  
-                                                                                             
-                                            </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                    <div class="form-group col-sm-3">
-                                        <table>
-                                            <tbody>
-                                            <tr>
-                                                <td>
-                                                    <b>{{ 'Fees Amount' | translate }}</b>
-                                                </td>
-                                                <td>{{ order.fee | moneyValue: 2 }}</td>
+                                                <td>{{getOnlyDate(order.latestNavDate)}}</td>                                                                                               
                                             </tr>
                                             </tbody>
                                         </table>
@@ -588,6 +575,18 @@
                                             </tbody>
                                         </table>
                                     </div>
+                                    <div class="form-group col-sm-3">
+                                        <table>
+                                            <tbody>
+                                            <tr>
+                                                <td>
+                                                    <b>{{ 'Fees Amount' | translate }}</b>
+                                                </td>
+                                                <td>{{ order.fee | moneyValue: 2 }}</td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>                                    
                                 </div>
                             </div>
                         </clr-dg-row-detail>
