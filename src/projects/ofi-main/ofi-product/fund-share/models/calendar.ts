@@ -14,6 +14,30 @@ export class ShareCalendarSubscriptionMandatory extends DynamicFormsValidator {
         listItems: mDateHelper.getMomentTimeZoneNameList(),
         style: [FormItemStyle.BreakOnAfter],
     };
+    subscriptionSettlementPeriod: FormItem = {
+        type: FormItemType.list,
+        title: 'Settlement Date Settings',
+        label: 'Settlement Date',
+        required: true,
+        listItems: [
+            { id: E.BusinessDaysEnum.Zero, text: 'D' },
+            { id: E.BusinessDaysEnum.One, text: 'D+1' },
+            { id: E.BusinessDaysEnum.Two, text: 'D+2' },
+            { id: E.BusinessDaysEnum.Three, text: 'D+3' },
+            { id: E.BusinessDaysEnum.Four, text: 'D+4' },
+            { id: E.BusinessDaysEnum.Five, text: 'D+5' },
+        ],
+    };
+    subscriptionSettlementPivotDate: FormItem = {
+        type: FormItemType.list,
+        label: 'Settlement Pivot Date',
+        required: true,
+        listItems: [
+            { id: E.SettlementPivotDate.NavDate, text: 'NAV Date' },
+            { id: E.SettlementPivotDate.CutoffDate, text: 'Cut-off Date' },
+        ],
+        style: [FormItemStyle.BreakOnAfter, FormItemStyle.TitleMargin],
+    };
     navPeriodForSubscription: FormItem = {
         type: FormItemType.list,
         title: 'NAV Date Settings',
@@ -29,26 +53,6 @@ export class ShareCalendarSubscriptionMandatory extends DynamicFormsValidator {
         ],
         required: true,
     };
-    subscriptionSettlementPeriod: FormItem = {
-        type: FormItemType.list,
-        title: 'Settlement Date Settings',
-        label: 'Settlement Date',
-        required: true,
-        listItems: [
-            { id: E.BusinessDaysEnum.Zero, text: 'D' },
-            { id: E.BusinessDaysEnum.One, text: 'D+1' },
-            { id: E.BusinessDaysEnum.Two, text: 'D+2' },
-            { id: E.BusinessDaysEnum.Three, text: 'D+3' },
-            { id: E.BusinessDaysEnum.Four, text: 'D+4' },
-            { id: E.BusinessDaysEnum.Five, text: 'D+5' },
-        ],
-    };
-    // removed by PZ 28/06/2018
-    // subscriptionRedemptionCalendar: FormItem = {
-    //     type: FormItemType.text,
-    //     label: 'Calendar of subscription/redemption',
-    //     required: true,
-    // };
 }
 
 export class ShareCalendarRedemptionMandatory extends DynamicFormsValidator {
@@ -63,6 +67,30 @@ export class ShareCalendarRedemptionMandatory extends DynamicFormsValidator {
         required: true,
         listItems: mDateHelper.getMomentTimeZoneNameList(),
         style: [FormItemStyle.BreakOnAfter],
+    };
+    redemptionSettlementPeriod: FormItem = {
+        type: FormItemType.list,
+        label: 'Settlement Date',
+        title: 'Settlement Date Settings',
+        required: true,
+        listItems: [
+            { id: E.BusinessDaysEnum.Zero, text: 'D' },
+            { id: E.BusinessDaysEnum.One, text: 'D+1' },
+            { id: E.BusinessDaysEnum.Two, text: 'D+2' },
+            { id: E.BusinessDaysEnum.Three, text: 'D+3' },
+            { id: E.BusinessDaysEnum.Four, text: 'D+4' },
+            { id: E.BusinessDaysEnum.Five, text: 'D+5' },
+        ],
+    };
+    redemptionSettlementPivotDate: FormItem = {
+        type: FormItemType.list,
+        label: 'Settlement Pivot Date',
+        required: true,
+        listItems: [
+            { id: E.SettlementPivotDate.NavDate, text: 'NAV Date' },
+            { id: E.SettlementPivotDate.CutoffDate, text: 'Cut-off Date' },
+        ],
+        style: [FormItemStyle.BreakOnAfter, FormItemStyle.TitleMargin],
     };
     navPeriodForRedemption: FormItem = {
         type: FormItemType.list,
@@ -79,24 +107,4 @@ export class ShareCalendarRedemptionMandatory extends DynamicFormsValidator {
         ],
         required: true,
     };
-    redemptionSettlementPeriod: FormItem = {
-        type: FormItemType.list,
-        title: 'Settlement Date Settings',
-        label: 'Settlement Date',
-        required: true,
-        listItems: [
-            { id: E.BusinessDaysEnum.Zero, text: 'D' },
-            { id: E.BusinessDaysEnum.One, text: 'D+1' },
-            { id: E.BusinessDaysEnum.Two, text: 'D+2' },
-            { id: E.BusinessDaysEnum.Three, text: 'D+3' },
-            { id: E.BusinessDaysEnum.Four, text: 'D+4' },
-            { id: E.BusinessDaysEnum.Five, text: 'D+5' },
-        ],
-    };
-    // removed by PZ 28/06/2018
-    // subscriptionRedemptionCalendar: FormItem = {
-    //     type: FormItemType.text,
-    //     label: 'Calendar of subscription/redemption',
-    //     required: true,
-    // };
 }

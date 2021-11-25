@@ -333,3 +333,8 @@ export enum SellBuyCalendar {
     SubscriptionCalendar,
     RedemptionCalendar,
 }
+
+export enum SettlementPivotDate {
+    NavDate,
+    CutoffDate,
+}

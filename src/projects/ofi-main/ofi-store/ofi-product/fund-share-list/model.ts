@@ -53,9 +53,11 @@ export interface IznesShareDetail {
     subscriptionCutOffTime: string;
     subscriptionCutOffTimeZone: string;
     subscriptionSettlementPeriod: string;
+    subscriptionSettlementPivotDate: number;
     redemptionCutOffTime: string;
     redemptionCutOffTimeZone: string;
     redemptionSettlementPeriod: string;
+    redemptionSettlementPivotDate: number;
     subscriptionRedemptionCalendar: string;
     maxManagementFee: number;
     maxSubscriptionFee: number;
