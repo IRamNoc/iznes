@@ -1305,7 +1305,7 @@ export class InvestFundComponent implements OnInit, OnDestroy {
         } else if (e.type === 'valuation') {
             const mCutoffDate = this.getCutoffDateFromValuation(momentDateValue);
 
-            // if cutoff date is equal to holiday calendar cutoff date, dpn't continue
+            // if cutoff date is equal to holiday calendar cutoff date, don't continue
             if (!mCutoffDate) {
                 triggering.setValue(null);
                 beTriggered[0].setValue(null);

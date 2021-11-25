@@ -489,9 +489,24 @@ export class CalendarHelper {
         // get settlement holiday calendar
         const settlementCalendar = this.orderType === OrderType.Subscription ? this.fundShare.buySettlementCalendar : this.fundShare.sellSettlementCalendar;
         const settlementPivot = this.orderType === OrderType.Subscription ? this.fundShare.subscriptionSettlementPivotDate : this.fundShare.redemptionSettlementPivotDate;
-        const settlementPivotDate = settlementPivot === E.SettlementPivotDate.CutoffDate ? cutoffDate : valuationDate;
+        let settlementPivotDate = settlementPivot === E.SettlementPivotDate.CutoffDate ? cutoffDate : valuationDate;
+        let currentOffset = 0;
 
         this.orderType = orderType;
+
+        if (currentOffset === this.settlementOffSet) {
+            while(settlementCalendar.includes(settlementPivotDate.format('YYYY-MM-DD'))) {
+                settlementPivotDate = settlementPivotDate.clone().add(1, 'days');
+            }
+        } else {
+            while(currentOffset < this.settlementOffSet) {
+                settlementPivotDate = settlementPivotDate.clone().add(1, 'days');
+
+                if (!settlementCalendar.includes(settlementPivotDate.format('YYYY-MM-DD'))) {
+                    currentOffset = currentOffset + 1;
+                }
+            }
+        }
 
         const settlementDateStr = settlementPivotDate.clone().add(this.settlementOffSet, 'days').format('YYYY-MM-DD');
         const settlementDate = moment.utc(settlementDateStr).set({
@@ -500,19 +515,8 @@ export class CalendarHelper {
             second: 1,
         });
 
-        // check the date is not in specific calendar
-        if (settlementCalendar.includes(settlementDate.format('YYYY-MM-DD'))) {
-            let newSetDate = settlementDate.clone().add(1, 'days');
-
-            while(settlementCalendar.includes(newSetDate.format('YYYY-MM-DD'))) {
-                newSetDate = newSetDate.clone().add(1, 'days');
-            }
-
-            return newSetDate;
-        }
-
         if (settlementDate.isSame(moment(), 'day')) {
-            return cutoffDate.clone().add(2, 'minutes');
+            return settlementDate.clone().add(2, 'minutes');
         }
 
         return settlementDate;
@@ -544,6 +548,10 @@ export class CalendarHelper {
             // after plus 1 calendar day, this day need to be a working day.
             // e.g if valuation day is saturday, plus 1 day, would be sunday, this case it should be false.
             let newDate = p1c.clone().subtract(wos, 'day');
+
+
+            // remove x days => calVL
+            
             if (cutoffCalendar.includes(newDate.format('YYYY-MM-DD'))) {
                 return false;
             }
