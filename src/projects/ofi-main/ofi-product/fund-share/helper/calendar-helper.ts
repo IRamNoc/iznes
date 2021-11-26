@@ -527,36 +527,32 @@ export class CalendarHelper {
         this.orderType = orderType;
 
         const cutoffCalendar = this.orderType === OrderType.Subscription ? this.fundShare.buyCentralizationCalendar : this.fundShare.sellCentralizationCalendar;
+        const navCalendar = this.orderType === OrderType.Subscription ? this.fundShare.buyNAVCalendar : this.fundShare.sellNAVCalendar;
+
+        let currentOpenDay = 0;
+        let newDate = valuationDate.clone();
 
         if (this.valuationOffSet === E.BusinessDaysEnum.MinusOne) {
-            // force the NAV Date to the previous day, whether or not this day is a working day
-            // opposite with getValuationDateFromCutoff
-            let newDate = valuationDate.clone().add(1, 'day');
-
-            if (cutoffCalendar.includes(newDate.format('YYYY-MM-DD'))) {
-                return false;
+            while (currentOpenDay !== this.valuationOffSet) {
+                newDate = newDate.subtract(1, 'day');
+                if (!navCalendar.includes(newDate.format('YYYY-MM-DD'))) {
+                    currentOpenDay = currentOpenDay - 1;
+                }
+            }
+        } else {
+            while (currentOpenDay !== this.valuationOffSet) {
+                newDate = newDate.add(1, 'day');
+                if (!navCalendar.includes(newDate.format('YYYY-MM-DD'))) {
+                    currentOpenDay = currentOpenDay + 1;
+                }
             }
         }
-        if (this.valuationOffSet >= E.BusinessDaysEnum.Zero && this.valuationOffSet <= E.BusinessDaysEnum.Five) {
-            // working day work offset
-            const wos = this.valuationOffSet + 1;
 
-            // force the NAV Date to the day before the next offset + 1 business day, whether or not that day is a business day
-            // opposite with getValuationDateFromCutoff
-            // plus 1 calendar day
-            const p1c = valuationDate.clone().add(1, 'day');
-            // after plus 1 calendar day, this day need to be a working day.
-            // e.g if valuation day is saturday, plus 1 day, would be sunday, this case it should be false.
-            let newDate = p1c.clone().subtract(wos, 'day');
-
-
-            // remove x days => calVL
-            
-            if (cutoffCalendar.includes(newDate.format('YYYY-MM-DD'))) {
-                return false;
-            }
-            return newDate;
+        if (cutoffCalendar.includes(newDate.format('YYYY-MM-DD'))) {
+            return false;
         }
+
+        return newDate;
     }
 
     getValuationDateFromSettlement(settlementDate: moment.Moment, orderType: OrderType) {
