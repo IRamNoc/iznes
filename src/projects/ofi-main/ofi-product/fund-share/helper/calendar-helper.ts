@@ -178,7 +178,9 @@ export class CalendarHelper {
         return dayToFind;
     }
 
-    checkHolidayCalendar(calendarType: string, dateToCheck: any) {
+    checkHolidayCalendar(calendarType: string, dateToCheck: any, orderType: number) {
+        this.orderType = orderType;
+
         let calendar;
 
         switch (calendarType) {
@@ -209,7 +211,6 @@ export class CalendarHelper {
     }
 
     isValidCutoffDateTime(dateTimeToChecks: any, orderType: OrderType): boolean {
-        console.log('is valid cutoff date');
         this.orderType = orderType;
 
         const cutoffCalendar = this.orderType === OrderType.Subscription ? this.fundShare.buyCentralizationCalendar : this.fundShare.sellCentralizationCalendar;

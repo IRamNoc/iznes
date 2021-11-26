@@ -821,17 +821,20 @@ export class InvestFundComponent implements OnInit, OnDestroy {
     }
 
     isCutoffDay(thisDate: moment.Moment): boolean {
-        const isValidCutOff = (new CalendarHelper(this.shareData)).checkHolidayCalendar('cutoff', thisDate);
+        const orderNumberType = this.getCalendarHelperOrderNumber();
+        const isValidCutOff = (new CalendarHelper(this.shareData)).checkHolidayCalendar('cutoff', thisDate, orderNumberType);
         return isValidCutOff || !this.doValidate;
     }
 
     isValuationDay(thisDate: moment.Moment): boolean {
-        const isValidValuation = (new CalendarHelper(this.shareData)).checkHolidayCalendar('nav', thisDate);
+        const orderNumberType = this.getCalendarHelperOrderNumber();
+        const isValidValuation = (new CalendarHelper(this.shareData)).checkHolidayCalendar('nav', thisDate, orderNumberType);
         return isValidValuation || !this.doValidate;
     }
 
     isSettlementDay(thisDate: moment.Moment): boolean {
-        const isValidSettlement = (new CalendarHelper(this.shareData)).checkHolidayCalendar('settlement', thisDate);
+        const orderNumberType = this.getCalendarHelperOrderNumber();
+        const isValidSettlement = (new CalendarHelper(this.shareData)).checkHolidayCalendar('settlement', thisDate, orderNumberType);
         return isValidSettlement || !this.doValidate;
     }
 
