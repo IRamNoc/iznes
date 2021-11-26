@@ -537,14 +537,14 @@ export class CalendarHelper {
             while (currentOpenDay !== this.valuationOffSet) {
                 newDate = newDate.add(1, 'day');
                 if (!navCalendar.includes(newDate.format('YYYY-MM-DD'))) {
-                    currentOpenDay = currentOpenDay + 1;
+                    currentOpenDay = currentOpenDay - 1;
                 }
             }
         } else {
             while (currentOpenDay !== this.valuationOffSet) {
                 newDate = newDate.subtract(1, 'day');
                 if (!navCalendar.includes(newDate.format('YYYY-MM-DD'))) {
-                    currentOpenDay = currentOpenDay - 1;
+                    currentOpenDay = currentOpenDay + 1;
                 }
             }
         }
