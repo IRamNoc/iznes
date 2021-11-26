@@ -503,13 +503,13 @@ export class CalendarHelper {
             while(currentOffset < this.settlementOffSet) {
                 settlementPivotDate = settlementPivotDate.clone().add(1, 'days');
 
-                if (!settlementCalendar.includes(settlementPivotDate.format('YYYY-MM-DD'))) {
+                    if (!settlementCalendar.includes(settlementPivotDate.format('YYYY-MM-DD'))) {
                     currentOffset = currentOffset + 1;
                 }
             }
         }
 
-        const settlementDateStr = settlementPivotDate.clone().add(this.settlementOffSet, 'days').format('YYYY-MM-DD');
+        const settlementDateStr = settlementPivotDate.clone().format('YYYY-MM-DD');
         const settlementDate = moment.utc(settlementDateStr).set({
             hour: 0,
             minute: 0,
