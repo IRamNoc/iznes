@@ -609,6 +609,11 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
                 dataSource: 'umbrellaFundName',
                 sortable: true,
             },
+            uInternalReference: {
+                label: this.translate.translate('Umbrella Internal Reference'),
+                dataSource: 'internalReference',
+                sortable: true,
+            },
             waitingStatus: {
                 label: this.translate.translate('Status'),
                 dataSource: 'waitingStatus',
@@ -674,6 +679,7 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
                     title: this.translate.translate('Umbrella Funds'),
                     columns: [
                         this.columns['uFundName'],
+                        this.columns['uInternalReference'],
                         this.columns['lei'],
                         this.columns['managementCompany'],
                         this.columns['country'],
@@ -782,6 +788,7 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
                     columns: [
                         this.columns['managementCompany'],
                         this.columns['uFundName'],
+                        this.columns['uInternalReference'],
                         this.columns['lei'],
                         this.columns['country'],
                     ],

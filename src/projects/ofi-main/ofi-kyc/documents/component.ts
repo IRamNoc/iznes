@@ -132,6 +132,11 @@ export class OfiDocumentsComponent implements OnInit, OnDestroy {
                         sortable: true,
                     },
                     {
+                        label: this.translate.translate('Umbrella Internal Reference'),
+                        dataSource: 'name',
+                        sortable: true,
+                    },
+                    {
                         label: this.translate.translate('LEI'),
                         dataSource: 'lei',
                         sortable: true,

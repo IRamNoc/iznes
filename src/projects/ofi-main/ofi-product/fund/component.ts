@@ -1112,7 +1112,7 @@ export class FundComponent implements OnInit, OnDestroy {
         return;
     }
 
-    waitForCurrentUmbrella(umbrellaID) {
+    waitForCurrentUmbrella(umbrellaID: string | number) {
         this.umbrellaFundList$
         .pipe(
             filter(umbrellas => umbrellas[umbrellaID]),
