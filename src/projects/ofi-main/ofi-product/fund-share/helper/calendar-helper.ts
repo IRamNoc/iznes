@@ -573,9 +573,22 @@ export class CalendarHelper {
         this.orderType = orderType;
         const settlementPivot = this.orderType === OrderType.Subscription ? this.fundShare.subscriptionSettlementPivotDate : this.fundShare.redemptionSettlementPivotDate;
         const cutoffCalendar = this.orderType === OrderType.Subscription ? this.fundShare.buyCentralizationCalendar : this.fundShare.sellCentralizationCalendar;
+        const settlementCalendar = this.orderType === OrderType.Subscription ? this.fundShare.buySettlementCalendar : this.fundShare.sellSettlementCalendar;
+        const valuationCalendar = this.orderType === OrderType.Subscription ? this.fundShare.buyNAVCalendar : this.fundShare.sellNAVCalendar;
+
+
+        let currentOpenDay = 0;
+        let newDate = settlementDate.clone();
+
+        while (this.settlementOffSet !== currentOpenDay) {
+            newDate = settlementDate.subtract(1, 'day');
+
+            if (!settlementCalendar.includes(newDate.format('YYYY-MM-DD'))) {
+                currentOpenDay = currentOpenDay + 1;
+            }
+        }
 
         if (settlementPivot === E.SettlementPivotDate.CutoffDate) {
-            let newDate = settlementDate.clone().subtract(this.settlementOffSet as number, 'days');
             // check the date is not in specific calendar
             if (cutoffCalendar.includes(newDate.format('YYYY-MM-DD'))) {
                 return false;
@@ -585,8 +598,10 @@ export class CalendarHelper {
         }
 
         if (settlementPivot === E.SettlementPivotDate.NavDate) {
-            let newDate = this.getValuationDateFromSettlement(settlementDate, orderType);
-            if (!newDate) return false;
+            // check the date is not in specific calendar
+            if (valuationCalendar.includes(newDate.format('YYYY-MM-DD'))) {
+                return false;
+            }
             
             let cutoffDate = this.getCutoffDateFromValuation(newDate, orderType);
             
