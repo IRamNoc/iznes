@@ -24,6 +24,7 @@ export interface productCharacteristics {
     navPeriodForSubscription: number;
     subscriptionSettlementPeriod: number;
     subscriptionSettlementPivotDate: number;
+    subscriptionValuationReference: number;
     subscriptionCategory: number;
     subscriptionQuantityRoundingRule: number;
     minInitialSubscriptionInAmount: number;
@@ -33,6 +34,7 @@ export interface productCharacteristics {
     navPeriodForRedemption: number;
     redemptionSettlementPeriod: number;
     redemptionSettlementPivotDate: number;
+    redemptionValuationReference: number;
     redemptionCategory: number;
     redemptionQuantityRoundingRule: number;
     minSubsequentRedemptionInAmount: number;

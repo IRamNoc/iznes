@@ -338,3 +338,8 @@ export enum SettlementPivotDate {
     NavDate,
     CutoffDate,
 }
+
+export enum ValuationReferenceDate {
+    CalculationDay,
+    NextWorkingDay,
+}

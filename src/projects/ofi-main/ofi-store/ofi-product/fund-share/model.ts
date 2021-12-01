@@ -52,10 +52,12 @@ export interface OfiFundShare {
     subscriptionCutOffTimeZone: number;
     subscriptionSettlementPeriod: number;
     subscriptionSettlementPivotDate: number;
+    subscriptionValuationReference: number;
     redemptionCutOffTime: string;
     redemptionCutOffTimeZone: number;
     redemptionSettlementPeriod: number;
     redemptionSettlementPivotDate: number;
+    redemptionValuationReference: number;
     subscriptionRedemptionCalendar: string;
     maxManagementFee: number;
     maxSubscriptionFee: number;

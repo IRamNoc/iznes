@@ -53,6 +53,16 @@ export class ShareCalendarSubscriptionMandatory extends DynamicFormsValidator {
         ],
         required: true,
     };
+    subscriptionValuationReference: FormItem = {
+        type: FormItemType.list,
+        label: 'NAV Reference Date',
+        listItems: [
+            { id: E.ValuationReferenceDate.CalculationDay, text: 'Calculation Day' },
+            { id: E.ValuationReferenceDate.NextWorkingDay, text: 'Day before the next working day' },
+        ],
+        style: [FormItemStyle.TitleMargin],
+        required: true,
+    };
 }
 
 export class ShareCalendarRedemptionMandatory extends DynamicFormsValidator {
@@ -105,6 +115,16 @@ export class ShareCalendarRedemptionMandatory extends DynamicFormsValidator {
             { id: E.BusinessDaysEnum.Four, text: 'D+4' },
             { id: E.BusinessDaysEnum.Five, text: 'D+5' },
         ],
+        required: true,
+    };
+    redemptionValuationReference: FormItem = {
+        type: FormItemType.list,
+        label: 'NAV Reference Date',
+        listItems: [
+            { id: E.ValuationReferenceDate.CalculationDay, text: 'Calculation Day' },
+            { id: E.ValuationReferenceDate.NextWorkingDay, text: 'Day before the next working day' },
+        ],
+        style: [FormItemStyle.TitleMargin],
         required: true,
     };
 }
