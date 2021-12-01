@@ -205,7 +205,7 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
                     const domicile = _.find(this.countryItems, { id: fund.domicile }) || { text: '' };
                     const lawStatus = _.find(this.legalFormItems, { id: fund.legalForm }) || { text: '' };
                     const fundCurrency = this.fundCurrencyItems.find(p => p.id === Number(fund.fundCurrency));
-
+                    console.log(fund);
                     fundList.push({
                         fundID: fund.fundID,
                         fundName: fund.fundName,
@@ -218,6 +218,7 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
                         domicile: domicile.text,
                         lawStatus: lawStatus.text,
                         umbrellaFundName: fund.umbrellaFundName,
+                        internalReference: fund.internalReference, 
                         fundCurrency: (fundCurrency) ? fundCurrency.text : '',
                     });
                 }
@@ -256,6 +257,7 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
 
         if ((shares !== undefined) && Object.keys(shares).length > 0) {
             Object.keys(shares).map((key) => {
+                console.log(shares);
                 if (Number(shares[key].draft) === 0) {
                     const share = shares[key];
                     const keyFactsStatus = new FundShareModels.ShareKeyFactsStatus();
@@ -264,7 +266,7 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
                     }).text;
 
                     const shareCurrency = this.fundCurrencyItems.find(p => p.id === share.shareClassCurrency);
-
+                    console.log(share);
                     if (Number(share.draft) === 0) {
                         shareList.push({
                             fundShareID: share.fundShareID,
@@ -304,10 +306,12 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
             data.map((item) => {
                 if (Number(item.get('draft')) === 0) {
                     const domicile = _.find(this.countryItems, { id: item.get('domicile') }) || { text: '' };
-
+console.log("item", item.get('internalReference'));
+console.log(JSON.stringify(item));
                     umbrellaFundList.push({
                         umbrellaFundID: item.get('umbrellaFundID', 0),
                         umbrellaFundName: item.get('umbrellaFundName', ''),
+                        internalReference: item.get('internalReference', ''),
                         registerOffice: item.get('registerOffice', ''),
                         registerOfficeAddress: item.get('registerOfficeAddress', ''),
                         registerOfficeAddress2: item.get('registerOfficeAddress2', ''),
@@ -360,6 +364,7 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
             data1.map((item) => {
                 if (Number(item.get('draft')) === 1) {
                     const name = item.get('umbrellaFundName', '');
+                    console.log("data1", item);
                     this.draftList.push({
                         draftID: item.get('umbrellaFundID', 0),
                         draftType: 'Umbrella Fund',
@@ -609,7 +614,7 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
                 dataSource: 'umbrellaFundName',
                 sortable: true,
             },
-            uInternalReference: {
+            internalReference: {
                 label: this.translate.translate('Umbrella Internal Reference'),
                 dataSource: 'internalReference',
                 sortable: true,
@@ -679,7 +684,7 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
                     title: this.translate.translate('Umbrella Funds'),
                     columns: [
                         this.columns['uFundName'],
-                        this.columns['uInternalReference'],
+                        this.columns['internalReference'],
                         this.columns['lei'],
                         this.columns['managementCompany'],
                         this.columns['country'],
@@ -788,7 +793,7 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
                     columns: [
                         this.columns['managementCompany'],
                         this.columns['uFundName'],
-                        this.columns['uInternalReference'],
+                        this.columns['internalReference'],
                         this.columns['lei'],
                         this.columns['country'],
                     ],

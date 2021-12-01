@@ -271,6 +271,7 @@ export class FundComponent implements OnInit, OnDestroy {
             umbrellaFundCreationDate: { value: '', disabled: true },
             umbrellaFundID: { value: '', disabled: true },
             umbrellaFundName: { value: '', disabled: true },
+            umbrellaInternalReference: { value: '', disabled: true },
             internalReference: { value: '', disabled: true },
             additionalNotes: { value: '', disabled: true },
         });
@@ -435,6 +436,8 @@ export class FundComponent implements OnInit, OnDestroy {
                 .setValue(newUmbrella.umbrellaFundID);
                 this.umbrellaEditForm.controls['umbrellaFundName']
                 .setValue(newUmbrella.umbrellaFundName);
+                this.umbrellaEditForm.controls['umbrellaInternalReference']
+                .setValue(newUmbrella.internalReference);
                 this.umbrellaEditForm.controls['internalReference']
                 .setValue(newUmbrella.internalReference);
                 this.umbrellaEditForm.controls['additionalNotes']
