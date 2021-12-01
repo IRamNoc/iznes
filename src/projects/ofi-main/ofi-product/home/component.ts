@@ -22,6 +22,7 @@ import {
 import { OfiCurrenciesService } from '../../ofi-req-services/ofi-currencies/service';
 import { Observable, Subscription, combineLatest as observableCombineLatest } from 'rxjs';
 import { MultilingualService } from '@setl/multilingual';
+import { get } from '../../../utils/helper/imu-wrapper';
 
 const AM_USERTYPE = 36;
 
@@ -266,11 +267,11 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
                     }).text;
 
                     const shareCurrency = this.fundCurrencyItems.find(p => p.id === share.shareClassCurrency);
-                    console.log(share);
                     if (Number(share.draft) === 0) {
                         shareList.push({
                             fundShareID: share.fundShareID,
                             shareName: share.fundShareName,
+                            internalReference: share.internalReference,
                             fundName: share.fundName,
                             isin: share.isin,
                             managementCompany: share.managementCompanyName,
@@ -574,6 +575,11 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
                 dataSource: 'isin',
                 sortable: true,
             },
+            shareInternal: {
+                label: this.translate.translate('Share Internal Reference'),
+                dataSource: 'internalReference',
+                sortable: true,
+            },
             managementCompany: {
                 label: this.translate.translate('Management Company'),
                 dataSource: 'managementCompany',
@@ -738,6 +744,7 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
                     title: this.translate.translate('Shares'),
                     columns: [
                         this.columns['shareName'],
+                        this.columns['shareInternal'],
                         this.columns['isin'],
                         this.columns['fundName'],
                         this.columns['shareCurrency'],
@@ -846,6 +853,7 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
                     columns: [
                         this.columns['managementCompany'],
                         this.columns['shareName'],
+                        this.columns['shareInternal'],
                         this.columns['isin'],
                         this.columns['fundName'],
                         this.columns['shareCurrency'],
