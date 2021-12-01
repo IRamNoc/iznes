@@ -306,8 +306,8 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
             data.map((item) => {
                 if (Number(item.get('draft')) === 0) {
                     const domicile = _.find(this.countryItems, { id: item.get('domicile') }) || { text: '' };
-console.log("item", item.get('internalReference'));
-console.log(JSON.stringify(item));
+                    console.log("item", item.get('internalReference'));
+                    console.log(JSON.stringify(item));
                     umbrellaFundList.push({
                         umbrellaFundID: item.get('umbrellaFundID', 0),
                         umbrellaFundName: item.get('umbrellaFundName', ''),
@@ -564,6 +564,11 @@ console.log(JSON.stringify(item));
                 dataSource: 'fundName',
                 sortable: true,
             },
+            fFundInternal: {
+                label: this.translate.translate('Fund Internal Reference'),
+                dataSource: 'internalReference',
+                sortable: true,
+            },
             isin: {
                 label: this.translate.translate('ISIN'),
                 dataSource: 'isin',
@@ -614,7 +619,7 @@ console.log(JSON.stringify(item));
                 dataSource: 'umbrellaFundName',
                 sortable: true,
             },
-            internalReference: {
+            uInternalReference: {
                 label: this.translate.translate('Umbrella Internal Reference'),
                 dataSource: 'internalReference',
                 sortable: true,
@@ -684,7 +689,7 @@ console.log(JSON.stringify(item));
                     title: this.translate.translate('Umbrella Funds'),
                     columns: [
                         this.columns['uFundName'],
-                        this.columns['internalReference'],
+                        this.columns['uInternalReference'],
                         this.columns['lei'],
                         this.columns['managementCompany'],
                         this.columns['country'],
@@ -707,6 +712,7 @@ console.log(JSON.stringify(item));
                     title: this.translate.translate('Funds/Subfunds'),
                     columns: [
                         this.columns['fFundName'],
+                        this.columns['fFundInternal'],
                         this.columns['lei'],
                         this.columns['fundCurrency'],
                         this.columns['managementCompany'],
@@ -793,7 +799,7 @@ console.log(JSON.stringify(item));
                     columns: [
                         this.columns['managementCompany'],
                         this.columns['uFundName'],
-                        this.columns['internalReference'],
+                        this.columns['uInternalReference'],
                         this.columns['lei'],
                         this.columns['country'],
                     ],
@@ -815,6 +821,7 @@ console.log(JSON.stringify(item));
                     columns: [
                         this.columns['managementCompany'],
                         this.columns['fFundName'],
+                        this.columns['fFundInternal'],
                         this.columns['lei'],
                         this.columns['fundCurrency'],
                         this.columns['country'],
