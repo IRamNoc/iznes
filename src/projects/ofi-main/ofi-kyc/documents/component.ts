@@ -41,11 +41,6 @@ export class OfiDocumentsComponent implements OnInit, OnDestroy {
                         sortable: true,
                     },
                     {
-                        label: this.translate.translate('Share Internal Reference'),
-                        dataSource: 'internalReference',
-                        sortable: true,
-                    },
-                    {
                         label: this.translate.translate('Fund Name'),
                         dataSource: 'fund',
                         sortable: true,
@@ -53,6 +48,11 @@ export class OfiDocumentsComponent implements OnInit, OnDestroy {
                     {
                         label: this.translate.translate('ISIN'),
                         dataSource: 'isin',
+                        sortable: true,
+                    },
+                    {
+                        label: this.translate.translate('Share Internal Reference'),
+                        dataSource: 'internalReference',
                         sortable: true,
                     },
                     {

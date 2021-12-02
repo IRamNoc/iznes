@@ -744,8 +744,8 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
                     title: this.translate.translate('Shares'),
                     columns: [
                         this.columns['shareName'],
-                        this.columns['shareInternal'],
                         this.columns['isin'],
+                        this.columns['shareInternal'],
                         this.columns['fundName'],
                         this.columns['shareCurrency'],
                         this.columns['managementCompany'],
@@ -853,8 +853,8 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
                     columns: [
                         this.columns['managementCompany'],
                         this.columns['shareName'],
-                        this.columns['shareInternal'],
                         this.columns['isin'],
+                        this.columns['shareInternal'],
                         this.columns['fundName'],
                         this.columns['shareCurrency'],
                         // this.columns['uFundName'],
