@@ -766,13 +766,13 @@ export class OrderHelper {
                 if (!dateValid) {
                     return {
                         orderValid: false,
-                        errorMessage: 'Invalid date',
+                        errorMessage: 'Invalid cutoff date',
                     };
                 }
 
                 cutoff = this.calendarHelper.getCutoffTimeForSpecificDate(this.dateValue, this.orderType);
                 valuation = this.calendarHelper.getValuationDateFromCutoff(cutoff, this.orderType);
-                settlement = this.calendarHelper.getSettlementDateFromCutoff(cutoff, this.orderType);
+                settlement = this.calendarHelper.getSettlementDateFromCutoff(cutoff, valuation, this.orderType);
 
                 break;
                 
@@ -786,7 +786,7 @@ export class OrderHelper {
                     if (dateValid) {
                         cutoff = this.calendarHelper.getCutoffTimeForSpecificDate(currentDate, this.orderType);
                         valuation = this.calendarHelper.getValuationDateFromCutoff(cutoff, this.orderType);
-                        settlement = this.calendarHelper.getSettlementDateFromCutoff(cutoff, this.orderType);
+                        settlement = this.calendarHelper.getSettlementDateFromCutoff(cutoff, valuation, this.orderType);
                         currentRetry = maxRetries;
                     }; 
                     currentDate = currentDate.add(1, 'days');
@@ -805,14 +805,22 @@ export class OrderHelper {
                 if (!dateValid) {
                     return {
                         orderValid: false,
-                        errorMessage: 'Invalid date',
+                        errorMessage: 'Invalid valuation date',
                     };
                 }
 
                 cutoff = this.calendarHelper.getCutoffDateFromValuation(this.dateValue, this.orderType);
+
+                if (!cutoff) {
+                    return {
+                        orderValid: false,
+                        errorMessage: 'NAV date rejected, unable to set cutoff date for this NAV date',
+                    };
+                }
+
                 cutoff = this.calendarHelper.getCutoffTimeForSpecificDate(cutoff, this.orderType);
                 valuation = this.calendarHelper.getValuationDateFromCutoff(cutoff, this.orderType);
-                settlement = this.calendarHelper.getSettlementDateFromCutoff(cutoff, this.orderType);
+                settlement = this.calendarHelper.getSettlementDateFromCutoff(cutoff, valuation, this.orderType);
 
                 break;
 
@@ -826,9 +834,17 @@ export class OrderHelper {
                 }
 
                 cutoff = this.calendarHelper.getCutoffDateFromSettlement(this.dateValue, this.orderType);
+
+                if (!cutoff) {
+                    return {
+                        orderValid: false,
+                        errorMessage: 'Settlement date rejected, unable to set cutoff date for this Settlement date',
+                    };
+                }
+
                 cutoff = this.calendarHelper.getCutoffTimeForSpecificDate(cutoff, this.orderType);
                 valuation = this.calendarHelper.getValuationDateFromCutoff(cutoff, this.orderType);
-                settlement = this.calendarHelper.getSettlementDateFromCutoff(cutoff, this.orderType);
+                settlement = this.calendarHelper.getSettlementDateFromCutoff(cutoff, valuation, this.orderType);
 
                 break;
 
