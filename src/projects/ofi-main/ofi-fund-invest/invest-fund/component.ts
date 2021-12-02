@@ -378,6 +378,10 @@ export class InvestFundComponent implements OnInit, OnDestroy {
         return this.calenderHelper.settlementOffSet;
     }
 
+    get settlementPivotDate() {
+        return this.calenderHelper.settlementPivotDate;
+    }
+
     get allowAmount(): any {
         if (typeof this.orderHelper === 'undefined') {
             return '';
@@ -817,17 +821,20 @@ export class InvestFundComponent implements OnInit, OnDestroy {
     }
 
     isCutoffDay(thisDate: moment.Moment): boolean {
-        const isValidCutOff = (new CalendarHelper(this.shareData)).isValidCutoffDateTime(thisDate, this.getCalendarHelperOrderNumber());
+        const orderNumberType = this.getCalendarHelperOrderNumber();
+        const isValidCutOff = (new CalendarHelper(this.shareData)).checkHolidayCalendar('cutoff', thisDate, orderNumberType);
         return isValidCutOff || !this.doValidate;
     }
 
     isValuationDay(thisDate: moment.Moment): boolean {
-        const isValidValuation = (new CalendarHelper(this.shareData)).isValidValuationDateTime(thisDate, this.getCalendarHelperOrderNumber());
+        const orderNumberType = this.getCalendarHelperOrderNumber();
+        const isValidValuation = (new CalendarHelper(this.shareData)).checkHolidayCalendar('nav', thisDate, orderNumberType);
         return isValidValuation || !this.doValidate;
     }
 
     isSettlementDay(thisDate: moment.Moment): boolean {
-        const isValidSettlement = (new CalendarHelper(this.shareData)).isValidSettlementDateTime(thisDate, this.getCalendarHelperOrderNumber());
+        const orderNumberType = this.getCalendarHelperOrderNumber();
+        const isValidSettlement = (new CalendarHelper(this.shareData)).checkHolidayCalendar('settlement', thisDate, orderNumberType);
         return isValidSettlement || !this.doValidate;
     }
 
@@ -1290,7 +1297,7 @@ export class InvestFundComponent implements OnInit, OnDestroy {
             const mValuationDate = this.getValuationDateFromCutoff(momentDateValue);
             const valuationDateStr = mValuationDate.clone().format('YYYY-MM-DD');
 
-            const mSettlementDate = this.getSettlementDateFromCutoff(momentDateValue);
+            const mSettlementDate = this.getSettlementDateFromCutoff(momentDateValue, mValuationDate);
             const settlementDateStr = mSettlementDate.format('YYYY-MM-DD');
 
             triggering.setValue(cutoffDateStr);
@@ -1300,10 +1307,20 @@ export class InvestFundComponent implements OnInit, OnDestroy {
             this.dateBy = 'cutoff';
         } else if (e.type === 'valuation') {
             const mCutoffDate = this.getCutoffDateFromValuation(momentDateValue);
+
+            // if cutoff date is equal to holiday calendar cutoff date, don't continue
+            if (!mCutoffDate) {
+                triggering.setValue(null);
+                beTriggered[0].setValue(null);
+                beTriggered[1].setValue(null);
+                this.showAlertNavError();
+                return;
+            }
+
             const cutoffDateStr = this.getCutoffTimeForSpecificDate(mCutoffDate)
                 .format('YYYY-MM-DD HH:mm');
 
-            const mSettlementDate = this.getSettlementDateFromCutoff(mCutoffDate);
+            const mSettlementDate = this.getSettlementDateFromCutoff(mCutoffDate, momentDateValue);
             const settlementDateStr = mSettlementDate.format('YYYY-MM-DD');
 
             beTriggered[0].setValue(cutoffDateStr);
@@ -1312,6 +1329,15 @@ export class InvestFundComponent implements OnInit, OnDestroy {
             this.dateBy = 'valuation';
         } else if (e.type === 'settlement') {
             const mCutoffDate = this.getCutoffDateFromSettlement(momentDateValue);
+
+            if (!mCutoffDate) {
+                triggering.setValue(null);
+                beTriggered[0].setValue(null);
+                beTriggered[1].setValue(null);
+                this.showAlertSettlementError();
+                return;
+            }
+
             const cutoffDateStr = this.getCutoffTimeForSpecificDate(mCutoffDate)
                 .format('YYYY-MM-DD HH:mm');
 
@@ -1516,6 +1542,50 @@ export class InvestFundComponent implements OnInit, OnDestroy {
         }
     }
 
+    showAlertNavError() {
+        if (this.doValidate) {
+            this.alertsService
+                .create('error', `
+                    <table class="table grid">
+                        <tbody>
+                            <tr>
+                                <td class="text-center text-danger">${this.translate.translate('The NAV date is rejected : unable to set cutoff date for this NAV date')}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                `)
+                .pipe(
+                    take(1),
+                )
+                .subscribe(() => {
+                    this.disclaimer.setValue(false);
+                    this.cutoffDate.setErrors({ tooLate: true });
+                });
+        }
+    }
+
+    showAlertSettlementError() {
+        if (this.doValidate) {
+            this.alertsService
+                .create('error', `
+                    <table class="table grid">
+                        <tbody>
+                            <tr>
+                                <td class="text-center text-danger">${this.translate.translate('The Settlement date is rejected : unable to set cutoff date for this settlement date')}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                `)
+                .pipe(
+                    take(1),
+                )
+                .subscribe(() => {
+                    this.disclaimer.setValue(false);
+                    this.cutoffDate.setErrors({ tooLate: true });
+                });
+        }
+    }
+
     handleCutOffDateError(): Boolean {
         const cutOffValue = new Date(this.cutoffDate.value).getTime();
         const now = new Date().getTime();
@@ -1658,10 +1728,10 @@ export class InvestFundComponent implements OnInit, OnDestroy {
      * @param momentDateValue
      * @return {moment.Moment}
      */
-    getSettlementDateFromCutoff(momentDateValue): moment.Moment {
+    getSettlementDateFromCutoff(momentDateValue, momentValuationDateValue): moment.Moment {
         const orderNumberType = this.getCalendarHelperOrderNumber();
 
-        return this.calenderHelper.getSettlementDateFromCutoff(momentDateValue, orderNumberType);
+        return this.calenderHelper.getSettlementDateFromCutoff(momentDateValue, momentValuationDateValue, orderNumberType);
     }
 
     /**
@@ -1682,7 +1752,7 @@ export class InvestFundComponent implements OnInit, OnDestroy {
      * @param momentDateValue
      * @return {moment.Moment}
      */
-    getCutoffDateFromSettlement(momentDateValue): moment.Moment {
+    getCutoffDateFromSettlement(momentDateValue): moment.Moment | false {
         const orderNumberType = this.getCalendarHelperOrderNumber();
 
         return this.calenderHelper.getCutoffDateFromSettlement(momentDateValue, orderNumberType);
