@@ -53,7 +53,7 @@
                                             <ng-select id="holders-list-shares-search-field" [items]="sharesList"
                                                 [allowClear]="true" (selected)="onChange($event)"
                                                 [placeholder]="translate.translate('Type a Share name or an ISIN code')"
-                                                [formControl]="searchForm.controls['searchShares']"
+                                               
                                                 formControlName="sharesList">
                                             </ng-select>
                                         </div>
@@ -66,7 +66,7 @@
                                         </label>
                                         <div>
                                             <input id="isinCode" type="text" 
-                                                placeholder="{{shareISIN}}" [formControl]="isinCode" readonly>
+                                                placeholder="{{shareISIN}}" formControlName="isinCode" readonly>
                                         </div>
                                     </div>
                                 </div>
@@ -81,7 +81,7 @@
                                         <ng-select id="holders-list-shares-search-field" [items]="subportfolioListData"
                                             [allowClear]="true" formControlName="subportfolioListData"
                                             [placeholder]="translate.translate('Type a subportfolio ')"
-                                            [formControl]="searchForm.controls['searchPortfolio']">
+                                          >
                                         </ng-select>
                                     </div>
                                 </div>

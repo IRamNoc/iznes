@@ -105,6 +105,7 @@ export class MyHoldingsComponent implements OnInit, OnDestroy {
         this.aicForm = new FormGroup({
             sharesList: new FormControl(null, Validators.required),
             fromDate: new FormControl(null, Validators.required),
+            isinCode: new FormControl(null),
             subportfolioListData: new FormControl(null, Validators.required),
         });
 
@@ -114,8 +115,26 @@ export class MyHoldingsComponent implements OnInit, OnDestroy {
         this.changeDetectorRef.detectChanges();
     }
 
-    initSubscriptions() {
-        this.language$
+    initSubscriptions() {        
+            this.subportfolioListData = this.ofiSubPortfolioService.getSubPortfolioList();
+                this.subportfolioListData.forEach((e, i) => {
+                    e.id = i;
+                    e.text = e.label;
+                });    
+        // this.ofiSubPortfolioService.getSubPortfolioData()
+        //     .pipe(
+        //         takeUntil(this.unSubscribe),
+        //     )
+        //     .subscribe((data) => {
+        //         console.log(data, "atiqur")
+        //         this.subportfolioListData = data;
+        //         this.subportfolioListData.forEach((e, i) => {
+        //             e.id = i;
+        //             e.text = e.label;
+        //         });
+        //     });
+
+            this.language$
             .pipe(
                 takeUntil(this.unSubscribe),
             )
@@ -124,22 +143,6 @@ export class MyHoldingsComponent implements OnInit, OnDestroy {
                 this.initCompanies();
                 this.formatManagementCompanyList();
             });
-        this.ofiSubPortfolioService.getSubPortfolioData()
-            .pipe(
-                takeUntil(this.unSubscribe),
-            )
-            .subscribe((data) => {
-                this.subportfolioListData = data;
-                this.subportfolioListData.forEach((e, i) => {
-                    e.id = i;
-                    e.text = e.label;
-                });
-            });
-
-
-
-
-
         this.currencyList$
             .pipe(
                 switchMap(() => this.loaded$),
@@ -270,7 +273,6 @@ export class MyHoldingsComponent implements OnInit, OnDestroy {
     }
 
     onChange(event) {
-
         this.shareISIN = this.sharesList.filter(e => e.id == event.id)[0].shareIsin;
     }
 }

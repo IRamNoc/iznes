@@ -92,7 +92,9 @@ export class OfiSubPortfolioService {
     public updateSubPortfolioObservable() {
         this.subPortfolioListOb.next(this.subPortfolioList);
     }
-
+public getSubPortfolioList(){
+    return this.subPortfolioList;
+}
     /**
      * Gets the Sub-portfolio list observable
      * @return {observable} subPortfolioListOb
