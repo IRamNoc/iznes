@@ -451,9 +451,7 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit, Log
                 };
             }
 
-            // const redirect: any = myAuthenData.defaultHomePage ? myAuthenData.defaultHomePage : '/home';
-            const redirect: any = '/home';
-
+            const redirect: any = myAuthenData.defaultHomePage ? myAuthenData.defaultHomePage : '/home';
 
             this.loginedRedirect(redirect, this.queryParams);
 
