@@ -54,6 +54,7 @@ import { FileDownloader } from '@setl/utils/services/file-downloader/service';
 import { OfiNavService } from '../../ofi-req-services/ofi-product/nav/service';
 import { validateKiid } from '../../ofi-store/ofi-fund-invest/ofi-fund-access-my';
 import { OfiSubPortfolioService } from '../../ofi-sub-portfolio/sub-portfolio/service';
+import { C } from '@angular/core/src/render3';
 
 interface DateChangeEvent {
     type: string;
@@ -1341,7 +1342,16 @@ export class InvestFundComponent implements OnInit, OnDestroy {
             const cutoffDateStr = this.getCutoffTimeForSpecificDate(mCutoffDate)
                 .format('YYYY-MM-DD HH:mm');
 
-            const mValuationDate = this.getValuationDateFromCutoff(mCutoffDate);
+            const mValuationDate = this.getValuationDateFromSettlement(momentDateValue);
+            
+            if (!mValuationDate) {
+                triggering.setValue(null);
+                beTriggered[0].setValue(null);
+                beTriggered[1].setValue(null);
+                this.showAlertSettlementError();
+                return;
+            }
+
             const valuationStr = mValuationDate.format('YYYY-MM-DD');
 
             beTriggered[0].setValue(cutoffDateStr);
@@ -1756,6 +1766,12 @@ export class InvestFundComponent implements OnInit, OnDestroy {
         const orderNumberType = this.getCalendarHelperOrderNumber();
 
         return this.calenderHelper.getCutoffDateFromSettlement(momentDateValue, orderNumberType);
+    }
+
+    getValuationDateFromSettlement(momentDateValue): moment.Moment | false {
+        const orderNumberType = this.getCalendarHelperOrderNumber();
+
+        return this.calenderHelper.getValuationDateFromSettlement(momentDateValue, orderNumberType);
     }
 
     /**

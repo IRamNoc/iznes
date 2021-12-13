@@ -480,8 +480,11 @@ export class CalendarHelper {
         if (this.valuationOffSet === E.BusinessDaysEnum.MinusOne) {
             // force the NAV Date to the previous day, whether or not this day is a working day
             newDate = cutoffDate.clone().subtract(1, 'day');
-            while (valuationCalendar.includes(newDate.format('YYYY-MM-DD'))) {
-                newDate = newDate.clone().subtract(1, 'day');
+            
+            if (valuationDateReference === E.ValuationReferenceDate.CalculationDay) {
+                while (valuationCalendar.includes(newDate.format('YYYY-MM-DD'))) {
+                    newDate = newDate.clone().subtract(1, 'day');
+                }
             }
             
             valuationDateStr = newDate.format('YYYY-MM-DD');
@@ -489,8 +492,10 @@ export class CalendarHelper {
         if (this.valuationOffSet >= E.BusinessDaysEnum.Zero && this.valuationOffSet <= E.BusinessDaysEnum.Five) {
             let newDate = cutoffDate.clone().add(this.valuationOffSet, 'day');
             
-            while (valuationCalendar.includes(newDate.format('YYYY-MM-DD'))) {
-                newDate = newDate.clone().add(1, 'day');
+            if (valuationDateReference === E.ValuationReferenceDate.CalculationDay) {
+                while (valuationCalendar.includes(newDate.format('YYYY-MM-DD'))) {
+                    newDate = newDate.clone().add(1, 'day');
+                }
             }
             valuationDateStr = newDate.format('YYYY-MM-DD');
         }
@@ -557,6 +562,7 @@ export class CalendarHelper {
 
         const cutoffCalendar = this.orderType === OrderType.Subscription ? this.fundShare.buyCentralizationCalendar : this.fundShare.sellCentralizationCalendar;
         const navCalendar = this.orderType === OrderType.Subscription ? this.fundShare.buyNAVCalendar : this.fundShare.sellNAVCalendar;
+        const valuationDateReference = this.orderType === OrderType.Subscription ? this.fundShare.subscriptionValuationReference : this.fundShare.redemptionValuationReference;
 
         let currentOpenDay = 0;
         let newDate = valuationDate.clone();
@@ -577,6 +583,14 @@ export class CalendarHelper {
             }
         }
 
+        if (valuationDateReference === E.ValuationReferenceDate.NextWorkingDay) {
+            while (cutoffCalendar.includes(newDate.format('YYYY-MM-DD'))) {
+                newDate = newDate.clone().subtract(1, 'day');
+            }
+
+            return newDate;
+        }
+
         if (cutoffCalendar.includes(newDate.format('YYYY-MM-DD'))) {
             return false;
         }
@@ -586,15 +600,51 @@ export class CalendarHelper {
 
     getValuationDateFromSettlement(settlementDate: moment.Moment, orderType: OrderType) {
         this.orderType = orderType;
+        const settlementPivot = this.orderType === OrderType.Subscription ? this.fundShare.subscriptionSettlementPivotDate : this.fundShare.redemptionSettlementPivotDate;
+        const settlementCalendar = this.orderType === OrderType.Subscription ? this.fundShare.buySettlementCalendar : this.fundShare.sellSettlementCalendar;
         const valuationCalendar = this.orderType === OrderType.Subscription ? this.fundShare.buyNAVCalendar : this.fundShare.sellNAVCalendar;
+        const valuationDateReference = this.orderType === OrderType.Subscription ? this.fundShare.subscriptionValuationReference : this.fundShare.redemptionValuationReference;
 
-        let newDate = settlementDate.clone().subtract(this.settlementOffSet as number, 'days');
+        let currentOpenDay = 0;
+        let newDate = settlementDate.clone();
 
-        if (valuationCalendar.includes(newDate.format('YYYY-MM-DD'))) {
-            return false;
+        while (this.settlementOffSet !== currentOpenDay) {
+            newDate = newDate.subtract(1, 'day');
+
+            if (settlementPivot === E.SettlementPivotDate.NavDate && valuationDateReference === E.ValuationReferenceDate.NextWorkingDay) {
+                currentOpenDay = currentOpenDay + 1;
+            } else {
+                console.log('coucou');
+                if (!settlementCalendar.includes(newDate.format('YYYY-MM-DD'))) {
+                    currentOpenDay = currentOpenDay + 1;
+                }
+            }
+
+            console.log(`From ${currentOpenDay} to ${this.settlementOffSet}`);
         }
 
-        return newDate;
+        console.log(settlementDate.format('YYYY-MM-DD'));
+        console.log(`Settlement pivot : ${settlementPivot}`);
+        console.log(`Valuation Reference : ${valuationDateReference}`);
+        console.log(`Settlement Offset : ${this.settlementOffSet}`);
+        console.log(newDate.format('YYYY-MM-DD'));
+
+        if (settlementPivot === E.SettlementPivotDate.CutoffDate) {
+            let navDate = this.getValuationDateFromCutoff(newDate, orderType);
+            return navDate;
+        }
+
+        if (settlementPivot === E.SettlementPivotDate.NavDate) {
+            if (valuationDateReference === E.ValuationReferenceDate.NextWorkingDay) {
+                return newDate;
+            } 
+
+            if (valuationCalendar.includes(newDate.format('YYYY-MM-DD'))) {
+                return false;
+            }
+
+            return newDate;
+        }
     }
 
     getCutoffDateFromSettlement(settlementDate: moment.Moment, orderType: OrderType) {
@@ -603,16 +653,20 @@ export class CalendarHelper {
         const cutoffCalendar = this.orderType === OrderType.Subscription ? this.fundShare.buyCentralizationCalendar : this.fundShare.sellCentralizationCalendar;
         const settlementCalendar = this.orderType === OrderType.Subscription ? this.fundShare.buySettlementCalendar : this.fundShare.sellSettlementCalendar;
         const valuationCalendar = this.orderType === OrderType.Subscription ? this.fundShare.buyNAVCalendar : this.fundShare.sellNAVCalendar;
-
+        const valuationDateReference = this.orderType === OrderType.Subscription ? this.fundShare.subscriptionValuationReference : this.fundShare.redemptionValuationReference;
 
         let currentOpenDay = 0;
         let newDate = settlementDate.clone();
 
         while (this.settlementOffSet !== currentOpenDay) {
-            newDate = settlementDate.subtract(1, 'day');
+            newDate = newDate.subtract(1, 'day');
 
-            if (!settlementCalendar.includes(newDate.format('YYYY-MM-DD'))) {
+            if (settlementPivot === E.SettlementPivotDate.NavDate && valuationDateReference === E.ValuationReferenceDate.NextWorkingDay) {
                 currentOpenDay = currentOpenDay + 1;
+            } else {
+                if (!settlementCalendar.includes(newDate.format('YYYY-MM-DD'))) {
+                    currentOpenDay = currentOpenDay + 1;
+                }
             }
         }
 
@@ -627,17 +681,22 @@ export class CalendarHelper {
 
         if (settlementPivot === E.SettlementPivotDate.NavDate) {
             // check the date is not in specific calendar
-            if (valuationCalendar.includes(newDate.format('YYYY-MM-DD'))) {
-                return false;
-            }
             
-            let cutoffDate = this.getCutoffDateFromValuation(newDate, orderType);
-            
-            if (!this.isValidCutoffDateTime(cutoffDate, orderType)) {
-                return false;
-            }
+            if (valuationDateReference === E.ValuationReferenceDate.NextWorkingDay) {
+                let cutoffDate = this.getCutoffDateFromValuation(newDate, orderType);
+                return cutoffDate;
+            } else {
+                if (valuationCalendar.includes(newDate.format('YYYY-MM-DD'))) {
+                    return false;
+                }
 
-            return cutoffDate;
+                let cutoffDate = this.getCutoffDateFromValuation(newDate, orderType);
+                if (!this.isValidCutoffDateTime(cutoffDate, orderType)) {
+                    return false;
+                }
+
+                return cutoffDate;
+            }
         }
     }
 
