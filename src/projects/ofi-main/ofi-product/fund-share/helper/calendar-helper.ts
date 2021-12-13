@@ -98,6 +98,13 @@ export class CalendarHelper {
         }[this.orderType];
     }
 
+    get valuationDateReference() {
+        return  {
+            [OrderType.Subscription]: this.fundShare.subscriptionValuationReference || 0,
+            [OrderType.Redemption]: this.fundShare.redemptionValuationReference || 0,
+        }[this.orderType];
+    }
+
     constructor(fundShare: IznShareDetailWithNav) {
         this.fundShare = fundShare;
 
@@ -182,6 +189,7 @@ export class CalendarHelper {
         this.orderType = orderType;
 
         let calendar;
+        const valuationDateReference = this.orderType === OrderType.Subscription ? this.fundShare.subscriptionValuationReference : this.fundShare.redemptionValuationReference;
 
         switch (calendarType) {
             case 'nav':
@@ -205,6 +213,11 @@ export class CalendarHelper {
             if (!isDateTimeToCheckInFuture) {
                 return false;
             }
+        }
+
+        if (calendarType === 'nav' && valuationDateReference === E.ValuationReferenceDate.NextWorkingDay) {
+            const nextValuationDate = dateToCheck.clone().add(1, 'days');
+            return !calendar.includes(nextValuationDate.format('YYYY-MM-DD'));
         }
 
         return !calendar.includes(dateToCheck.format('YYYY-MM-DD'));
@@ -455,16 +468,18 @@ export class CalendarHelper {
 
     getValuationDateFromCutoff(cutoffDate: moment.Moment, orderType: OrderType) {
         const valuationCalendar = this.orderType === OrderType.Subscription ? this.fundShare.buyNAVCalendar : this.fundShare.sellNAVCalendar;
+        const valuationDateReference = this.orderType === OrderType.Subscription ? this.fundShare.subscriptionValuationReference : this.fundShare.redemptionValuationReference;
 
         cutoffDate = this.momentToMomentBusiness(cutoffDate);
         this.orderType = orderType;
 
         let valuationDateStr;
+        let newDate;
 
         // allow outside working day
         if (this.valuationOffSet === E.BusinessDaysEnum.MinusOne) {
             // force the NAV Date to the previous day, whether or not this day is a working day
-            let newDate = cutoffDate.clone().subtract(1, 'day');
+            newDate = cutoffDate.clone().subtract(1, 'day');
             while (valuationCalendar.includes(newDate.format('YYYY-MM-DD'))) {
                 newDate = newDate.clone().subtract(1, 'day');
             }
@@ -479,6 +494,19 @@ export class CalendarHelper {
             }
             valuationDateStr = newDate.format('YYYY-MM-DD');
         }
+
+        // NAV management dated the day before the next business day
+        if (valuationDateReference === E.ValuationReferenceDate.NextWorkingDay) {
+            let nextValuationDate = newDate.clone().add(1, 'day');
+
+            while (valuationCalendar.includes(nextValuationDate.format('YYYY-MM-DD'))) {
+                newDate = newDate.clone().add(1, 'day');
+                nextValuationDate = nextValuationDate.clone().add(1, 'day');
+            }
+
+            valuationDateStr = newDate.format('YYYY-MM-DD');
+        }
+
         return moment.utc(valuationDateStr).set({
             hour: 0,
             minute: 0,
