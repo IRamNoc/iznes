@@ -268,10 +268,11 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
 
                     const shareCurrency = this.fundCurrencyItems.find(p => p.id === share.shareClassCurrency);
                     if (Number(share.draft) === 0) {
+                        const keyFacts = JSON.parse(share.keyFactOptionalData);
                         shareList.push({
                             fundShareID: share.fundShareID,
                             shareName: share.fundShareName,
-                            internalReference: share.internalReference,
+                            internalReference: keyFacts.internalReference,
                             fundName: share.fundName,
                             isin: share.isin,
                             managementCompany: share.managementCompanyName,
@@ -279,7 +280,7 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
                             status,
                             shareCurrency: (shareCurrency) ? shareCurrency.text : '',
                             umbrellaFundName: this.getUmbrellaFundName(share.umbrellaFundID),
-                        });
+                        });    
                     }
                 }
             });
