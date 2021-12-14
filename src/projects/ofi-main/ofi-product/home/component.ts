@@ -206,7 +206,6 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
                     const domicile = _.find(this.countryItems, { id: fund.domicile }) || { text: '' };
                     const lawStatus = _.find(this.legalFormItems, { id: fund.legalForm }) || { text: '' };
                     const fundCurrency = this.fundCurrencyItems.find(p => p.id === Number(fund.fundCurrency));
-                    console.log(fund);
                     fundList.push({
                         fundID: fund.fundID,
                         fundName: fund.fundName,
@@ -258,7 +257,6 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
 
         if ((shares !== undefined) && Object.keys(shares).length > 0) {
             Object.keys(shares).map((key) => {
-                console.log(shares);
                 if (Number(shares[key].draft) === 0) {
                     const share = shares[key];
                     const keyFactsStatus = new FundShareModels.ShareKeyFactsStatus();
@@ -308,8 +306,6 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
             data.map((item) => {
                 if (Number(item.get('draft')) === 0) {
                     const domicile = _.find(this.countryItems, { id: item.get('domicile') }) || { text: '' };
-                    console.log("item", item.get('internalReference'));
-                    console.log(JSON.stringify(item));
                     umbrellaFundList.push({
                         umbrellaFundID: item.get('umbrellaFundID', 0),
                         umbrellaFundName: item.get('umbrellaFundName', ''),
@@ -366,7 +362,6 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
             data1.map((item) => {
                 if (Number(item.get('draft')) === 1) {
                     const name = item.get('umbrellaFundName', '');
-                    console.log("data1", item);
                     this.draftList.push({
                         draftID: item.get('umbrellaFundID', 0),
                         draftType: 'Umbrella Fund',
