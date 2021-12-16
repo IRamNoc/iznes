@@ -819,7 +819,7 @@ export class OrderHelper {
                 }
 
                 cutoff = this.calendarHelper.getCutoffTimeForSpecificDate(cutoff, this.orderType);
-                valuation = this.calendarHelper.getValuationDateFromCutoff(cutoff, this.orderType);
+                valuation = this.dateValue;
                 settlement = this.calendarHelper.getSettlementDateFromCutoff(cutoff, valuation, this.orderType);
 
                 break;
@@ -843,9 +843,16 @@ export class OrderHelper {
                 }
 
                 cutoff = this.calendarHelper.getCutoffTimeForSpecificDate(cutoff, this.orderType);
-                valuation = this.calendarHelper.getValuationDateFromCutoff(cutoff, this.orderType);
-                settlement = this.calendarHelper.getSettlementDateFromCutoff(cutoff, valuation, this.orderType);
+                valuation = this.calendarHelper.getValuationDateFromSettlement(this.dateValue, this.orderType);
 
+                if (!valuation) {
+                    return {
+                        orderValid: false,
+                        errorMessage: 'Settlement date rejected, unable to set cutoff date for this Settlement date',
+                    };
+                }
+
+                settlement = this.dateValue;
                 break;
 
             default:
