@@ -22,7 +22,6 @@ import {
 import { OfiCurrenciesService } from '../../ofi-req-services/ofi-currencies/service';
 import { Observable, Subscription, combineLatest as observableCombineLatest } from 'rxjs';
 import { MultilingualService } from '@setl/multilingual';
-import { get } from '../../../utils/helper/imu-wrapper';
 
 const AM_USERTYPE = 36;
 
