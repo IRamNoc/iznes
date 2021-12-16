@@ -1341,7 +1341,16 @@ export class InvestFundComponent implements OnInit, OnDestroy {
             const cutoffDateStr = this.getCutoffTimeForSpecificDate(mCutoffDate)
                 .format('YYYY-MM-DD HH:mm');
 
-            const mValuationDate = this.getValuationDateFromCutoff(mCutoffDate);
+            const mValuationDate = this.getValuationDateFromSettlement(momentDateValue);
+            
+            if (!mValuationDate) {
+                triggering.setValue(null);
+                beTriggered[0].setValue(null);
+                beTriggered[1].setValue(null);
+                this.showAlertSettlementError();
+                return;
+            }
+
             const valuationStr = mValuationDate.format('YYYY-MM-DD');
 
             beTriggered[0].setValue(cutoffDateStr);
@@ -1756,6 +1765,12 @@ export class InvestFundComponent implements OnInit, OnDestroy {
         const orderNumberType = this.getCalendarHelperOrderNumber();
 
         return this.calenderHelper.getCutoffDateFromSettlement(momentDateValue, orderNumberType);
+    }
+
+    getValuationDateFromSettlement(momentDateValue): moment.Moment | false {
+        const orderNumberType = this.getCalendarHelperOrderNumber();
+
+        return this.calenderHelper.getValuationDateFromSettlement(momentDateValue, orderNumberType);
     }
 
     /**
