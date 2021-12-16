@@ -826,9 +826,10 @@ export class FundShare {
         if (!field) return;
 
         if (field.type === FormItemType.list) {
+            // not working for now
             this.setListItemPresetFromOptional(field, value);
         } else {
-            field.preset = value;
+            field.control.setValue(value);
         }
     }
 
