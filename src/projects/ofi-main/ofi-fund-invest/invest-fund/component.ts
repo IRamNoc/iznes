@@ -54,7 +54,6 @@ import { FileDownloader } from '@setl/utils/services/file-downloader/service';
 import { OfiNavService } from '../../ofi-req-services/ofi-product/nav/service';
 import { validateKiid } from '../../ofi-store/ofi-fund-invest/ofi-fund-access-my';
 import { OfiSubPortfolioService } from '../../ofi-sub-portfolio/sub-portfolio/service';
-import { C } from '@angular/core/src/render3';
 
 interface DateChangeEvent {
     type: string;
