@@ -474,7 +474,7 @@ export class CalendarHelper {
         this.orderType = orderType;
 
         let valuationDateStr;
-        let newDate;
+        let newDate: moment.Moment;
 
         // allow outside working day
         if (this.valuationOffSet === E.BusinessDaysEnum.MinusOne) {
@@ -490,7 +490,7 @@ export class CalendarHelper {
             valuationDateStr = newDate.format('YYYY-MM-DD');
         }
         if (this.valuationOffSet >= E.BusinessDaysEnum.Zero && this.valuationOffSet <= E.BusinessDaysEnum.Five) {
-            let newDate = cutoffDate.clone().add(this.valuationOffSet, 'day');
+            newDate = cutoffDate.clone().add(this.valuationOffSet, 'day');
             
             if (valuationDateReference === E.ValuationReferenceDate.CalculationDay) {
                 while (valuationCalendar.includes(newDate.format('YYYY-MM-DD'))) {
@@ -609,25 +609,16 @@ export class CalendarHelper {
         let newDate = settlementDate.clone();
 
         while (this.settlementOffSet !== currentOpenDay) {
-            newDate = newDate.subtract(1, 'day');
+            newDate = newDate.clone().subtract(1, 'day');
 
             if (settlementPivot === E.SettlementPivotDate.NavDate && valuationDateReference === E.ValuationReferenceDate.NextWorkingDay) {
                 currentOpenDay = currentOpenDay + 1;
             } else {
-                console.log('coucou');
                 if (!settlementCalendar.includes(newDate.format('YYYY-MM-DD'))) {
                     currentOpenDay = currentOpenDay + 1;
                 }
             }
-
-            console.log(`From ${currentOpenDay} to ${this.settlementOffSet}`);
         }
-
-        console.log(settlementDate.format('YYYY-MM-DD'));
-        console.log(`Settlement pivot : ${settlementPivot}`);
-        console.log(`Valuation Reference : ${valuationDateReference}`);
-        console.log(`Settlement Offset : ${this.settlementOffSet}`);
-        console.log(newDate.format('YYYY-MM-DD'));
 
         if (settlementPivot === E.SettlementPivotDate.CutoffDate) {
             let navDate = this.getValuationDateFromCutoff(newDate, orderType);
