@@ -53,9 +53,13 @@ export interface IznesShareDetail {
     subscriptionCutOffTime: string;
     subscriptionCutOffTimeZone: string;
     subscriptionSettlementPeriod: string;
+    subscriptionSettlementPivotDate: number;
+    subscriptionValuationReference: number;
     redemptionCutOffTime: string;
     redemptionCutOffTimeZone: string;
     redemptionSettlementPeriod: string;
+    redemptionSettlementPivotDate: number;
+    redemptionValuationReference: number;
     subscriptionRedemptionCalendar: string;
     maxManagementFee: number;
     maxSubscriptionFee: number;
@@ -91,9 +95,7 @@ export interface IznesShareDetail {
     monthlyRedemptionDealingDays: number;
     yearlyRedemptionDealingDays: number;
     navPeriodForSubscription: number;
-    subscriptionEnableNonWorkingDay: number;
     navPeriodForRedemption: number;
-    redemptionEnableNonWorkingDay: number;
     isProduction?: string;
     amUserId?: number;
     classification: number;

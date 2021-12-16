@@ -136,6 +136,8 @@ export class DynamicFormService {
                     cssClass = cssClass.replace('col-sm-6 ', '');
                     cssClass += 'col-sm-3 ';
                     break;
+                case FormItemStyle.TitleMargin:
+                    cssClass += 'title-margin '; 
                 }
             });
         }

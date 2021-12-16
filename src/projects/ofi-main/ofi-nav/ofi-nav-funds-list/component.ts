@@ -517,7 +517,7 @@ export class OfiNavFundsList implements OnInit, OnDestroy, AfterViewInit {
     }
 
     private navToFrontEndString(nav: number): string {
-        return this.moneyPipe.transform(this.numberConverterService.toFrontEnd(nav));
+        return this.moneyPipe.transform(this.numberConverterService.toFrontEnd(nav), 4);
     }
 
     private initDataTypes(): void {

@@ -139,9 +139,13 @@ export class FundShare {
             subscriptionCutOffTime: this.calendarSubscription.mandatory.subscriptionCutOffTime.value(),
             subscriptionCutOffTimeZone: this.getSelectValue(this.calendarSubscription.mandatory.subscriptionCutOffTimeZone),
             subscriptionSettlementPeriod: this.getSelectValue(this.calendarSubscription.mandatory.subscriptionSettlementPeriod),
+            subscriptionSettlementPivotDate: this.getSelectValue(this.calendarSubscription.mandatory.subscriptionSettlementPivotDate),
+            subscriptionValuationReference: this.getSelectValue(this.calendarSubscription.mandatory.subscriptionValuationReference),
             redemptionCutOffTime: this.calendarRedemption.mandatory.redemptionCutOffTime.value(),
             redemptionCutOffTimeZone: this.getSelectValue(this.calendarRedemption.mandatory.redemptionCutOffTimeZone),
             redemptionSettlementPeriod: this.getSelectValue(this.calendarRedemption.mandatory.redemptionSettlementPeriod),
+            redemptionSettlementPivotDate: this.getSelectValue(this.calendarRedemption.mandatory.redemptionSettlementPivotDate),
+            redemptionValuationReference: this.getSelectValue(this.calendarRedemption.mandatory.redemptionValuationReference), 
             subscriptionRedemptionCalendar: '0',
             maxManagementFee: this.fees.mandatory.maxManagementFee.value(),
             maxSubscriptionFee: this.fees.mandatory.maxSubscriptionFee.value(),
@@ -179,9 +183,7 @@ export class FundShare {
                 this.convertArrayToJSON(
                     (this.calendarRedemption.redemptionTradeCycle as FundShareTradeCycleModel).yearlyDealingDays),
             navPeriodForSubscription: this.getSelectValue(this.calendarSubscription.mandatory.navPeriodForSubscription),
-            subscriptionEnableNonWorkingDay: this.calendarSubscription.mandatory.subscriptionEnableNonWorkingDay.value(),
             navPeriodForRedemption: this.getSelectValue(this.calendarRedemption.mandatory.navPeriodForRedemption),
-            redemptionEnableNonWorkingDay: this.calendarRedemption.mandatory.redemptionEnableNonWorkingDay.value(),
             keyFactOptionalData: this.generateJSONString(this.keyFacts.optional),
             profileOptionalData: this.generateJSONString(this.profile.optional),
             priipOptionalData: this.generateJSONString(this.priip.optional),
@@ -301,6 +303,14 @@ export class FundShare {
             this.calendarSubscription.mandatory.subscriptionSettlementPeriod,
             fundShare.subscriptionSettlementPeriod,
         );
+        this.setListItemPreset(
+            this.calendarSubscription.mandatory.subscriptionSettlementPivotDate,
+            fundShare.subscriptionSettlementPivotDate,
+        );
+        this.setListItemPreset(
+            this.calendarSubscription.mandatory.subscriptionValuationReference,
+            fundShare.subscriptionValuationReference,
+        );
 
         this.calendarRedemption.mandatory.redemptionCutOffTime.preset = fundShare.redemptionCutOffTime; // AC
         this.setListItemPreset(this.calendarRedemption.mandatory.redemptionCutOffTimeZone, fundShare.redemptionCutOffTimeZone);
@@ -308,18 +318,22 @@ export class FundShare {
             this.calendarRedemption.mandatory.redemptionSettlementPeriod,
             fundShare.redemptionSettlementPeriod,
         );
-
+        this.setListItemPreset(
+            this.calendarRedemption.mandatory.redemptionSettlementPivotDate,
+            fundShare.redemptionSettlementPivotDate,
+        );
+        this.setListItemPreset(
+            this.calendarRedemption.mandatory.redemptionValuationReference,
+            fundShare.redemptionValuationReference,
+        );
         this.setListItemPreset(
             this.calendarSubscription.mandatory.navPeriodForSubscription,
             fundShare.navPeriodForSubscription,
         );
-        this.calendarSubscription.mandatory.subscriptionEnableNonWorkingDay.preset = fundShare.subscriptionEnableNonWorkingDay;
         this.setListItemPreset(
             this.calendarRedemption.mandatory.navPeriodForRedemption,
             fundShare.navPeriodForRedemption,
         );
-        this.calendarRedemption.mandatory.redemptionEnableNonWorkingDay.preset = fundShare.redemptionEnableNonWorkingDay;
-
         // removed by PZ 28/06/2018
         // this.calendar.mandatory.subscriptionRedemptionCalendar.preset = fundShare.subscriptionRedemptionCalendar;
         this.fees.mandatory.maxManagementFee.preset = this.numberConverter.toFrontEnd(fundShare.maxManagementFee);
@@ -391,6 +405,14 @@ export class FundShare {
             this.calendarSubscription.mandatory.subscriptionSettlementPeriod,
             fundShare.subscriptionSettlementPeriod,
         );
+        this.setListItemValue(
+            this.calendarSubscription.mandatory.subscriptionSettlementPivotDate,
+            fundShare.subscriptionSettlementPivotDate,
+        );
+        this.setListItemValue(
+            this.calendarSubscription.mandatory.subscriptionValuationReference,
+            fundShare.subscriptionValuationReference,
+        );
 
         this.calendarRedemption.mandatory.redemptionCutOffTime.control.setValue(fundShare.redemptionCutOffTime);
         this.setListItemValue(this.calendarRedemption.mandatory.redemptionCutOffTimeZone, fundShare.redemptionCutOffTimeZone);
@@ -399,15 +421,21 @@ export class FundShare {
             fundShare.redemptionSettlementPeriod,
         );
         this.setListItemValue(
+            this.calendarRedemption.mandatory.redemptionSettlementPivotDate,
+            fundShare.redemptionSettlementPivotDate,
+        );
+        this.setListItemValue(
+            this.calendarRedemption.mandatory.redemptionValuationReference,
+            fundShare.redemptionValuationReference,
+        );
+        this.setListItemValue(
             this.calendarSubscription.mandatory.navPeriodForSubscription,
             fundShare.navPeriodForSubscription,
         );
-        this.calendarSubscription.mandatory.subscriptionEnableNonWorkingDay.control.setValue(fundShare.subscriptionEnableNonWorkingDay);
         this.setListItemValue(
             this.calendarRedemption.mandatory.navPeriodForRedemption,
             fundShare.navPeriodForRedemption,
         );
-        this.calendarRedemption.mandatory.redemptionEnableNonWorkingDay.control.setValue(fundShare.redemptionEnableNonWorkingDay);
 
         // removed by PZ 28/06/2018
         // this.calendar.mandatory.subscriptionRedemptionCalendar.control.setValue(fundShare.subscriptionRedemptionCalendar);
@@ -798,9 +826,10 @@ export class FundShare {
         if (!field) return;
 
         if (field.type === FormItemType.list) {
+            // not working for now
             this.setListItemPresetFromOptional(field, value);
         } else {
-            field.preset = value;
+            field.control.setValue(value);
         }
     }
 
