@@ -158,7 +158,7 @@ export class CalendarHelper {
         dayToFind = dayToFind.subtract(1, 'days');
 
         // loop until next cutoff date is found
-        while (!cutoffDateFound) {
+        for (let i = 0; i < 366; i++) {
             dayToFind = dayToFind.add(1, 'days');
 
             const dateTimeToCheck = this.getSpecificDateCutOff(
@@ -180,6 +180,7 @@ export class CalendarHelper {
             }
 
             cutoffDateFound = true;
+            break;
         }
 
         return dayToFind;
@@ -482,7 +483,8 @@ export class CalendarHelper {
             newDate = cutoffDate.clone().subtract(1, 'day');
             
             if (valuationDateReference === E.ValuationReferenceDate.CalculationDay) {
-                while (valuationCalendar.includes(newDate.format('YYYY-MM-DD'))) {
+                for (let i = 0; i < 366; i++) {
+                    if (!valuationCalendar.includes(newDate.format('YYYY-MM-DD'))) break;
                     newDate = newDate.clone().subtract(1, 'day');
                 }
             }
@@ -493,8 +495,9 @@ export class CalendarHelper {
             newDate = cutoffDate.clone().add(this.valuationOffSet, 'day');
             
             if (valuationDateReference === E.ValuationReferenceDate.CalculationDay) {
-                while (valuationCalendar.includes(newDate.format('YYYY-MM-DD'))) {
-                    newDate = newDate.clone().add(1, 'day');
+                for (let i = 0; i < 366; i++) {
+                    if (!valuationCalendar.includes(newDate.format('YYYY-MM-DD'))) break;
+                    newDate = newDate.clone().add(1, 'day');   
                 }
             }
             valuationDateStr = newDate.format('YYYY-MM-DD');
@@ -504,7 +507,8 @@ export class CalendarHelper {
         if (valuationDateReference === E.ValuationReferenceDate.NextWorkingDay) {
             let nextValuationDate = newDate.clone().add(1, 'day');
 
-            while (valuationCalendar.includes(nextValuationDate.format('YYYY-MM-DD'))) {
+            for (let i = 0; i < 366; i++) {
+                if(!valuationCalendar.includes(nextValuationDate.format('YYYY-MM-DD'))) break;
                 newDate = newDate.clone().add(1, 'day');
                 nextValuationDate = nextValuationDate.clone().add(1, 'day');
             }
@@ -529,14 +533,15 @@ export class CalendarHelper {
         this.orderType = orderType;
 
         if (currentOffset === this.settlementOffSet) {
-            while(settlementCalendar.includes(settlementPivotDate.format('YYYY-MM-DD'))) {
+            for (let i = 0; i < 366; i++) {
+                if (!settlementCalendar.includes(settlementPivotDate.format('YYYY-MM-DD'))) break;
                 settlementPivotDate = settlementPivotDate.clone().add(1, 'days');
             }
         } else {
-            while(currentOffset < this.settlementOffSet) {
+            for (let i = 0; i < 366; i++) {
+                if (currentOffset === this.settlementOffSet) break;
                 settlementPivotDate = settlementPivotDate.clone().add(1, 'days');
-
-                    if (!settlementCalendar.includes(settlementPivotDate.format('YYYY-MM-DD'))) {
+                if (!settlementCalendar.includes(settlementPivotDate.format('YYYY-MM-DD'))) {
                     currentOffset = currentOffset + 1;
                 }
             }
@@ -568,14 +573,16 @@ export class CalendarHelper {
         let newDate = valuationDate.clone();
 
         if (this.valuationOffSet === E.BusinessDaysEnum.MinusOne) {
-            while (currentOpenDay !== this.valuationOffSet) {
+            for (let i = 0; i < 366; i++) {
+                if (currentOpenDay === this.valuationOffSet) break;
                 newDate = newDate.add(1, 'day');
                 if (!navCalendar.includes(newDate.format('YYYY-MM-DD'))) {
                     currentOpenDay = currentOpenDay - 1;
                 }
             }
         } else {
-            while (currentOpenDay !== this.valuationOffSet) {
+            for (let i = 0; i < 366; i++) {
+                if (currentOpenDay === this.valuationOffSet) break;
                 newDate = newDate.subtract(1, 'day');
                 if (!navCalendar.includes(newDate.format('YYYY-MM-DD'))) {
                     currentOpenDay = currentOpenDay + 1;
@@ -584,7 +591,8 @@ export class CalendarHelper {
         }
 
         if (valuationDateReference === E.ValuationReferenceDate.NextWorkingDay) {
-            while (cutoffCalendar.includes(newDate.format('YYYY-MM-DD'))) {
+            for (let i = 0; i < 366; i++) {
+                if (!cutoffCalendar.includes(newDate.format('YYYY-MM-DD'))) break;
                 newDate = newDate.clone().subtract(1, 'day');
             }
 
@@ -608,7 +616,8 @@ export class CalendarHelper {
         let currentOpenDay = 0;
         let newDate = settlementDate.clone();
 
-        while (this.settlementOffSet !== currentOpenDay) {
+        for (let i = 0; i < 366; i++) {
+            if (this.settlementOffSet === currentOpenDay) break;
             newDate = newDate.clone().subtract(1, 'day');
 
             if (settlementPivot === E.SettlementPivotDate.NavDate && valuationDateReference === E.ValuationReferenceDate.NextWorkingDay) {
@@ -649,9 +658,10 @@ export class CalendarHelper {
         let currentOpenDay = 0;
         let newDate = settlementDate.clone();
 
-        while (this.settlementOffSet !== currentOpenDay) {
-            newDate = newDate.subtract(1, 'day');
+        for (let i = 0; i < 366; i++) {
+            if (this.settlementOffSet === currentOpenDay) break;
 
+            newDate = newDate.subtract(1, 'day');
             if (settlementPivot === E.SettlementPivotDate.NavDate && valuationDateReference === E.ValuationReferenceDate.NextWorkingDay) {
                 currentOpenDay = currentOpenDay + 1;
             } else {
