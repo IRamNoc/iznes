@@ -799,7 +799,7 @@ export const fundItems = {
         { id: 9, text: 'None' },
     ],
     transferAgentItems: [
-        { id: 1, text: 'J.P Morgan Ireland ' },
+        { id: 1, text: 'J.P Morgan Ireland' },
         { id: 2, text: 'SGSS Luxembourg' },
         { id: 3, text: 'CACEIS Bank Luxembourg' },
         { id: 4, text: 'BPSS Luxembourg' },
