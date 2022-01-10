@@ -157,6 +157,7 @@ export class OfiOrdersService {
             rowOffset: (data.rowOffSet * data.pageSize),
             sortByField: data.sortByField,
             sortOrder: data.sortOrder,
+            portfolioLabel: data.portfolioLabel,
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
@@ -182,6 +183,7 @@ export class OfiOrdersService {
             rowOffset: (data.rowOffSet * data.pageSize),
             sortByField: data.sortByField,
             sortOrder: data.sortOrder,
+            portfolioLabel: data.portfolioLabel,
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);

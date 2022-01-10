@@ -285,7 +285,7 @@
                             <span class="column-label"></span>
                         </ng-container>
                     </clr-dg-column>
-                    <clr-dg-column *ngIf="isIznesAdmin" [clrDgField]="'portfolio'" clrDgSortIcon clrDgSortNoSearch id="Order-Portfolio">
+                    <clr-dg-column [clrDgField]="'portfolio'" clrDgSortIcon clrDgSortNoSearch id="Order-Portfolio">
                         <ng-container *clrDgHideableColumn="{hidden: false}">{{ 'Portfolio' | translate }}
                             <span class="column-label"></span>
                         </ng-container>
@@ -392,7 +392,7 @@
                             {{order.investorCompanyName}}
                             <div *ngIf="showColumnSpacer" class="column-spacer">{{getColumnSpaceText(order.investorCompanyName)}}</div>
                         </clr-dg-cell>
-                        <clr-dg-cell *ngIf="isIznesAdmin" (click)="buildLink(order, $event)">
+                        <clr-dg-cell (click)="buildLink(order, $event)">
                             {{order.label}}
                             <div *ngIf="showColumnSpacer" class="column-spacer">{{getColumnSpaceText(order.label)}}</div>
                         </clr-dg-cell>

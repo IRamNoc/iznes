@@ -556,6 +556,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         this.showColumnSpacer = true;
         this.detectChanges(true);
         this.resizeDatagridRemoveSpacers();
+        console.log("OrderlList", this.ordersList);
     }
 
     subEstimated(order, field: string, estimatedField: string): number {
@@ -820,7 +821,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         } else {
             asyncTaskPipe = this.ofiOrdersService.requestManageOrdersList(this.datagridParams.get());
         }
-
+console.log("loggg", asyncTaskPipe);
         this.ngRedux.dispatch(SagaHelper.runAsync(
             [ofiManageOrderActions.OFI_SET_MANAGE_ORDER_LIST],
             [],

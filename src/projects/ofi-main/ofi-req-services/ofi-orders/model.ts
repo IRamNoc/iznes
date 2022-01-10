@@ -32,6 +32,7 @@ export interface OfiAmOrdersRequestBody extends OfiMemberNodeBody {
     rowOffset?: any;
     sortByField?: any;
     sortOrder?: any;
+    portfolioLabel?: any;
 }
 
 export interface OfiIznAdminOrdersRequestBody extends OfiMemberNodeBody {
