@@ -11,7 +11,7 @@ import * as _ from 'lodash';
 import { OfiManagementCompanyService } from '../../ofi-req-services/ofi-product/management-company/management-company.service';
 import { OfiReportsService } from '../../ofi-req-services/ofi-reports/service';
 import { OfiCurrenciesService } from '../../ofi-req-services/ofi-currencies/service';
-import { InvestorHoldingRequestData } from '@ofi/ofi-main/ofi-req-services/ofi-reports/model';
+import { InvestorHoldingRequestData, InvestorGenerateAICRequestData } from '@ofi/ofi-main/ofi-req-services/ofi-reports/model';
 import { OfiSubPortfolioService } from './../../../ofi-main/ofi-sub-portfolio/sub-portfolio/service'
 @Component({
     styleUrls: ['./component.scss'],
@@ -28,9 +28,13 @@ export class MyHoldingsComponent implements OnInit, OnDestroy {
     managementCompanyList: any[] = [];
     allCompaniesList: any[] = [];
 
+    // modal
+    showGenerateAIC = false;
+
     public subportfolioListData: Array<any>;
     public sharesList: Array<any>;
     shareISIN = "";
+    selectedSubportfolio: any = "";
 
     @select(['user', 'connected', 'connectedWallet']) connectedWallet$;
     @select(['user', 'siteSettings', 'language']) language$;
@@ -107,25 +111,23 @@ export class MyHoldingsComponent implements OnInit, OnDestroy {
     }
 
     initSubscriptions() {
-            this.subportfolioListData = this.ofiSubPortfolioService.getSubPortfolioList();
-                this.subportfolioListData.forEach((e, i) => {
-                    e.id = i;
-                    e.text = e.label;
+        this.ofiSubPortfolioService.getSubPortfolioData()
+            .pipe(
+                takeUntil(this.unSubscribe),
+            )
+            .subscribe((data) => {
+                if (!data) return;
+                this.subportfolioListData = _.map(data, (subportfolio, index) => {
+                    return  {
+                        id: index,
+                        text: subportfolio.label,
+                        option: subportfolio.addr,
+                    }
                 });
-        // this.ofiSubPortfolioService.getSubPortfolioData()
-        //     .pipe(
-        //         takeUntil(this.unSubscribe),
-        //     )
-        //     .subscribe((data) => {
-        //         console.log(data, "atiqur")
-        //         this.subportfolioListData = data;
-        //         this.subportfolioListData.forEach((e, i) => {
-        //             e.id = i;
-        //             e.text = e.label;
-        //         });
-        //     });
+            });
+        this.ofiSubPortfolioService.updateSubPortfolioObservable();
 
-            this.language$
+        this.language$
             .pipe(
                 takeUntil(this.unSubscribe),
             )
@@ -134,6 +136,7 @@ export class MyHoldingsComponent implements OnInit, OnDestroy {
                 this.initCompanies();
                 this.formatManagementCompanyList();
             });
+
         this.currencyList$
             .pipe(
                 switchMap(() => this.loaded$),
@@ -187,10 +190,7 @@ export class MyHoldingsComponent implements OnInit, OnDestroy {
         ).pipe(
             takeUntil(this.unSubscribe),
         )
-            .subscribe(([requested, d]) => this.formatInvestorHoldingList(d));
-
-
-
+        .subscribe(([requested, d]) => this.formatInvestorHoldingList(d));
     }
 
     /**
@@ -212,15 +212,24 @@ export class MyHoldingsComponent implements OnInit, OnDestroy {
     /**
      * Generate AIC
      */
-    handleGenerateAIC() {
-        // this.showGenerateAIC = true;
-        const requestParams = {
+    handleGenerateAIC() {        
+        const payload: InvestorGenerateAICRequestData = {
             fromDate: moment(this.aicForm.controls['fromDate'].value).format('YYYY-MM-DD HH:mm:ss'),
             isin: this.shareISIN,
-            subportfolio: this.aicForm.controls['subportfolio'].value,
+            subportfolio: this.selectedSubportfolio,
         }
 
-        console.log(requestParams);
+        this.ofiReportsService.defaultRequestGenerateAICInvestor(payload, (data) => {
+            console.log('success !');
+            console.log(data);
+
+            // if success, closes modal
+            this.showGenerateAIC = false;
+        },
+        (error) => {
+            console.log('error !');
+            console.log(error);
+        });
     }
 
     /**
@@ -279,5 +288,10 @@ export class MyHoldingsComponent implements OnInit, OnDestroy {
 
     onChange(event) {
         this.shareISIN = this.sharesList.filter(e => e.id == event.id)[0].shareIsin;
+    }
+
+    onSubportfolioChange(event) {
+        this.selectedSubportfolio = this.subportfolioListData.filter(e => e.id == event.id)[0].option;
+        console.log(this.selectedSubportfolio);
     }
 }

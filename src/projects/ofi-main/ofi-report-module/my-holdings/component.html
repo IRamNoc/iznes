@@ -46,9 +46,7 @@
                                 <div class="row">
 
                                     <div class="form-group">
-                                        <label>
-                                            <b>{{ 'Share Name' | translate }}</b>
-                                        </label>
+                                        <label>{{ 'Share Name' | translate }}</label>
                                         <div class="input-button-group col-lg-3">
                                             <ng-select id="holders-list-shares-search-field" [items]="sharesList"
                                                 [allowClear]="true" (selected)="onChange($event)"
@@ -73,12 +71,10 @@
 
 
                                 <div class="form-group">
-                                    <label>
-                                        <b>{{ 'client subportfolio' | translate }}</b>
-                                    </label>
+                                    <label>{{ 'Client Sub-portfolio' | translate }}</label>
                                     <div class="input-button-group col-rg-7">
                                         <ng-select id="holders-list-shares-search-field" [items]="subportfolioListData"
-                                            [allowClear]="true" formControlName="subportfolio"
+                                            [allowClear]="true" (selected)="onSubportfolioChange($event)" formControlName="subportfolio"
                                             [placeholder]="translate.translate('Type a subportfolio ')"
                                           >
                                         </ng-select>

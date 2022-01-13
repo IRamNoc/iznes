@@ -39,6 +39,19 @@ export interface InvestorHoldingRequestData {
     accountID: number;
 }
 
+export interface InvestorGenerateAICRequestData {
+    fromDate: string;
+    isin: string;
+    subportfolio: string;
+}
+
+export interface InvestorGenerateAICRequestBody extends MemberNodeMessageBody {
+    token: string;
+    fromDate: string;
+    isin: string;
+    subportfolio: string;
+}
+
 export interface InvestorHoldingRequestBody extends MemberNodeMessageBody {
     token: string;
     walletID: number;
