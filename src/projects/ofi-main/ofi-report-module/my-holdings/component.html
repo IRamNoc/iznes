@@ -53,8 +53,7 @@
                                             <ng-select id="holders-list-shares-search-field" [items]="sharesList"
                                                 [allowClear]="true" (selected)="onChange($event)"
                                                 [placeholder]="translate.translate('Type a Share name or an ISIN code')"
-                                               
-                                                formControlName="sharesList">
+                                            >
                                             </ng-select>
                                         </div>
                                     </div>
@@ -79,7 +78,7 @@
                                     </label>
                                     <div class="input-button-group col-rg-7">
                                         <ng-select id="holders-list-shares-search-field" [items]="subportfolioListData"
-                                            [allowClear]="true" formControlName="subportfolioListData"
+                                            [allowClear]="true" formControlName="subportfolio"
                                             [placeholder]="translate.translate('Type a subportfolio ')"
                                           >
                                         </ng-select>
@@ -98,7 +97,7 @@
                                 </div>
 
                                 <div class="form-group">
-                                    <button id="aic" class="btn btn-primary action-button" type="button" (click)="clickReset()"
+                                    <button id="aic" class="btn btn-primary action-button" type="button" (click)="handleGenerateAIC()"
                                         [disabled]="aicForm.invalid">{{ 'Generate AIC' | translate }}
                                     </button>
                                 </div>

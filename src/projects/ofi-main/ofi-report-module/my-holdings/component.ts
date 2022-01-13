@@ -4,6 +4,7 @@ import { select } from '@angular-redux/store';
 import { MultilingualService } from '@setl/multilingual';
 import { List } from 'immutable';
 import { combineLatest } from 'rxjs'
+import * as moment from 'moment';
 import { Subject } from 'rxjs/Subject';
 import { filter, takeUntil, switchMap } from 'rxjs/operators';
 import * as _ from 'lodash';
@@ -21,7 +22,7 @@ export class MyHoldingsComponent implements OnInit, OnDestroy {
     investorManagementCompanyList = [];
     holdingList: Array<any>;
     searchForm: FormGroup;
-    aicForm: FormGroup
+    aicForm: FormGroup;
     unSubscribe: Subject<any> = new Subject();
     language = 'en';
     managementCompanyList: any[] = [];
@@ -55,8 +56,7 @@ export class MyHoldingsComponent implements OnInit, OnDestroy {
         private translate: MultilingualService,
         private ofiSubPortfolioService: OfiSubPortfolioService,
 
-    ) {
-    }
+    ) {}
 
     ngOnInit(): void {
         this.initCompanies();
@@ -91,36 +91,27 @@ export class MyHoldingsComponent implements OnInit, OnDestroy {
 
     };
 
-
-
-
     initForm() {
         this.holdingList = [];
         this.searchForm = this.fb.group({
             search: ['', Validators.required],
-
-
         });
 
-        this.aicForm = new FormGroup({
-            sharesList: new FormControl(null, Validators.required),
-            fromDate: new FormControl(null, Validators.required),
-            isinCode: new FormControl(null),
-            subportfolioListData: new FormControl(null, Validators.required),
+        this.aicForm = this.fb.group({
+            fromDate: [ moment().format('YYYY-MM-DD') ],
+            isinCode: [''],
+            subportfolio: ['', Validators.required],
         });
-
-
-
 
         this.changeDetectorRef.detectChanges();
     }
 
-    initSubscriptions() {        
+    initSubscriptions() {
             this.subportfolioListData = this.ofiSubPortfolioService.getSubPortfolioList();
                 this.subportfolioListData.forEach((e, i) => {
                     e.id = i;
                     e.text = e.label;
-                });    
+                });
         // this.ofiSubPortfolioService.getSubPortfolioData()
         //     .pipe(
         //         takeUntil(this.unSubscribe),
@@ -216,6 +207,20 @@ export class MyHoldingsComponent implements OnInit, OnDestroy {
 
         this.changeDetectorRef.detectChanges();
         this.searchForm.controls['search'].setValue(this.allCompaniesList);
+    }
+
+    /**
+     * Generate AIC
+     */
+    handleGenerateAIC() {
+        // this.showGenerateAIC = true;
+        const requestParams = {
+            fromDate: moment(this.aicForm.controls['fromDate'].value).format('YYYY-MM-DD HH:mm:ss'),
+            isin: this.shareISIN,
+            subportfolio: this.aicForm.controls['subportfolio'].value,
+        }
+
+        console.log(requestParams);
     }
 
     /**
