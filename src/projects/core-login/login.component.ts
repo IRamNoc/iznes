@@ -194,7 +194,6 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit, Log
                 '',
                 [
                     Validators.required,
-                    Validators.pattern(/^(((\([A-z0-9]+\))?[^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/),
                 ]),
         });
 
