@@ -100,7 +100,7 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
     holdersFundData: any = [];
     holdersShareData: any = [];
     shareISIN = "";
-    walletNameList: any = [];
+    portfolioList: any = [];
 
 
     subportfolio: any[] = [];
@@ -128,6 +128,7 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
     // fund select list
     @select(['ofi', 'ofiAmDashboard', 'shareHolders', 'fundsByUserRequested']) fundsByUserRequestedOb;
     @select(['ofi', 'ofiAmDashboard', 'shareHolders', 'fundsByUserList']) fundsByUserListOb;
+    @select(['user', 'siteSettings', 'language']) language$;
 
     // fund details
     @select(['ofi', 'ofiAmDashboard', 'shareHolders', 'fundWithHoldersList']) fundWithHoldersListOb;
@@ -323,31 +324,65 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
         this.loadingDatagrid = false;
 
         this.aicForm = new FormGroup({
-            'sharesList' : new FormControl(null, Validators.required),
-            'allClientNameList' : new FormControl(null, Validators.required),
-            'walletNameList' : new FormControl(null, Validators.required),
-            'fromDate' : new FormControl(null, Validators.required),
+            sharesList: new FormControl(null, Validators.required),
+            fromDate: new FormControl(null, Validators.required),
+            subportfolioListData: new FormControl(null, Validators.required),
+            allClientNameList: new FormControl(null, Validators.required),
+        });
+
+        //  this.language$
+        //     .pipe(
+        //         takeUntil(this.unSubscribe),
+        //     )
+        //     .subscribe((language) => {
+        //         this.language = language;
+            
+        //     });
+        // this.ofiSubPortfolioService.getSubPortfolioData()
+        //     .pipe(
+        //         takeUntil(this.unSubscribe),
+        //     )
+        //     .subscribe((data) => {
+        //         this.subportfolioListData = data;
+        //         this.subportfolioListData.forEach((e, i) => {
+        //             e.id = i;
+        //             e.text = e.label;
+        //         });
+        //     });
 
 
-        })
+
+
+
+        // this.changeDetectorRef.detectChanges();
+
+
 
 
     }
 
     initSubscriptions() {
-        console.log("enter Sub")
-        this.ofiSubPortfolioService.getSubPortfolioData()
-            .pipe(
-                takeUntil(this.unSubscribe),
-            )
-            .subscribe((data) => {
-                this.subportfolioListData = data;
-                this.subportfolioListData.forEach((e, i) => {
-                    e.id = i;
-                    e.text = e.accountLabel;
-                });
-                console.log(this.subportfolioListData, "subdata")
+        this.language$
+        .pipe(
+            takeUntil(this.unSubscribe),
+        )
+        .subscribe((language) => {
+            this.language = language;
+            // this.initCompanies();
+            // this.formatManagementCompanyList();
+        });
+    this.ofiSubPortfolioService.getSubPortfolioData()
+        .pipe(
+            takeUntil(this.unSubscribe),
+        )
+        .subscribe((data) => {
+            this.subportfolioListData = data;
+            this.subportfolioListData.forEach((e, i) => {
+                e.id = i;
+                e.text = e.label;
             });
+            console.log(data, "data")
+        });
 
         this.hasPermissionCanManageAllClientFile$ = Observable.fromPromise(this.permissionsService.hasPermission('manageAllClientFile', 'canUpdate'));
         this.hasNowCpAMPermission$ = Observable.fromPromise(this.permissionsService.hasPermission('nowCpAM', 'canRead'));
@@ -366,7 +401,7 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
                     console.log(amKycListData, "amKycListData");
 
                     this.getAmClientListFromRedux(amKycListData);
-                    this.getAmWalletNameFromRedux(amKycListData)
+                    this.getAmportfolioFromRedux(amKycListData)
                     // this.updateTable(amKycListData);
                 },
                 ));
@@ -495,6 +530,8 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
                     },
                     [],
                 );
+
+                console.log(this.holdersFundData, "holdersFundData")
             }
         }
 
@@ -569,17 +606,17 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
        * @param holderList
        */
 
-    getAmWalletNameFromRedux(walletName) {
-        if (walletName) {
-            this.walletNameList = [];
-            let walletNameListData = [...walletName];
+    getAmportfolioFromRedux(portfolio) {
+        if (portfolio) {
+            this.portfolioList = [];
+            let portfolioListData = [...portfolio];
 
-            walletNameListData.forEach(d => {
+            portfolioListData.forEach(d => {
                 let obj = {};
                 if (d.investorUserID) {
                     obj['id'] = d.kycID;
-                    obj['text'] = d.walletName;
-                    this.walletNameList.push(obj)
+                    obj['text'] = d.portfolio;
+                    this.portfolioList.push(obj)
                 }
             });
             this.changeDetectorRef.markForCheck();
