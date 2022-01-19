@@ -15,6 +15,7 @@ import { Subject } from 'rxjs';
 import { OfiKycService } from '../../ofi-req-services/ofi-kyc/service';
 import { Observable, combineLatest as observableCombineLatest } from 'rxjs';
 import { PermissionsService } from '../../../utils';
+import { TransferInOutService } from '../../ofi-transfer-in-out/transfer-in-out.service';
 interface SelectedItem {
     id: number;
     text: string;
@@ -121,6 +122,9 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
     public isNowCpAm: boolean = false;
     hasID2SAMPermission$: Observable<boolean>;
     public isID2SAm: boolean = false;
+    
+    transferListItems: any[];    
+    rowOffset = 0;
 
     @select(['user', 'siteSettings', 'language']) requestLanguageObj;
     @select(['user', 'myDetail']) myDetailOb: any;
@@ -144,6 +148,8 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
     @select(['user', 'siteSettings', 'language']) requestLanguageOb;
     @select(['ofi', 'ofiKyc', 'amKycList', 'requested']) requestedOfiKycListOb;
     @select(['ofi', 'ofiKyc', 'amKycList', 'amKycList']) kycListOb;
+    
+    @select(['ofi', 'ofiTransfers', 'manageTransfers', 'transferList']) transferObs;
 
     constructor(private ngRedux: NgRedux<any>,
         private changeDetectorRef: ChangeDetectorRef,
@@ -159,6 +165,7 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
         private ofiSubPortfolioService: OfiSubPortfolioService,
         private ofiKycService: OfiKycService,
         private permissionsService: PermissionsService,
+        private transferService: TransferInOutService,
 
     ) {
         this.loadingDatagrid = false;
@@ -329,6 +336,10 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
             subportfolioListData: new FormControl(null, Validators.required),
             allClientNameList: new FormControl(null, Validators.required),
         });
+
+        this.transferService.defaultRequestManageTransfersList({ itemPerPage: this.itemPerPage, rowOffset: this.rowOffset });        
+        this.subscriptions.push(
+            this.transferObs.subscribe(transfers => this.transferListItems = this.transferObjectToList(transfers)));
 
         //  this.language$
         //     .pipe(
@@ -805,6 +816,55 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
                 selectedFilter: this.selectedTopHolders,
             });
         }
+    }
+
+     // Converts Transfer List Object to Array
+     transferObjectToList(listTransfer) {
+         const tranferList=[];
+        let transfers = _.toArray(listTransfer).map((transfer) => {
+            // const referenceID = transfer.referenceID;
+            // const externalReference = transfer.externalReference;
+            // const transferDirection = transfer.transferDirection;
+            // const assetManagementCompany = transfer.assetManagementCompanyName;
+            // const investorCompany = transfer.investorCompanyName;
+            const investorWallet = transfer.accountLabel;
+            // const investorWalletName = transfer.investorWalletName;
+            // const shareISIN = transfer.fundShareISIN;
+            // const shareName = transfer.fundShareName;
+            // const quantity = transfer.quantity;
+            // const unitPrice = transfer.price;
+            // const amount = quantity * unitPrice;
+            // const transferStatus = transfer.transferStatus;
+            // const dateEntered = transfer.dateEntered;
+            // const comment = transfer.comment;
+            // const totalResult = transfer.totalResult;
+            tranferList.push({'id':investorWallet,'text':investorWallet});
+            return {
+                tranferList
+                // referenceID,
+                // externalReference,
+                // transferDirection,
+                // assetManagementCompany,
+                // investorCompany,
+                // investorWallet,
+                // investorWalletName,
+                // shareISIN,
+                // shareName,
+                // quantity,
+                // unitPrice,
+                // amount,
+                // transferStatus,
+                // dateEntered,
+                // comment,
+                // totalResult,
+            };
+        });
+
+        // Sorting transfer by refrenceID DESC by default
+        // transfers = _.orderBy(transfers, ['referenceID'], ['desc']);       
+       let transferListData=transfers.length>0 ? transfers[0].tranferList : [];
+       console.log(transferListData,"transfers")
+        return transferListData;
     }
 
     ngOnDestroy(): void {
