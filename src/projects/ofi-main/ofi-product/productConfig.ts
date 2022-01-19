@@ -799,9 +799,10 @@ export const fundItems = {
         { id: 9, text: 'None' },
     ],
     transferAgentItems: [
-        { id: 1, text: 'transfer agent 1' },
-        { id: 2, text: 'transfer agent 2' },
-        { id: 3, text: 'transfer agent 3' },
+        { id: 1, text: 'J.P Morgan Ireland' },
+        { id: 2, text: 'SGSS Luxembourg' },
+        { id: 3, text: 'CACEIS Bank Luxembourg' },
+        { id: 4, text: 'BPSS Luxembourg' },
     ],
     centralizingAgentItems: [
         { id: 1, text: 'Société Générale Securities Services France' },

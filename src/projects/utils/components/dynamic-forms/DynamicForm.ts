@@ -59,6 +59,7 @@ export enum FormItemStyle {
     BreakOnAfter,
     WidthThird,
     WidthFourth,
+    TitleMargin,
 }
 
 export interface FormItemDropdown {
