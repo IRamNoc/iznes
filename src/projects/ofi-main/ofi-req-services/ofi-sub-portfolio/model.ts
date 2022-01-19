@@ -8,6 +8,8 @@ export interface Subportfolio {
     walletId: number;
     investorReference: string;
     accountLabel: string;
+    emailtransactionnotice: string;
+    emailcertificationbookentry: string;
     accountCurrency: number;
     custodianPayment: number;
     custodianPosition: number;
