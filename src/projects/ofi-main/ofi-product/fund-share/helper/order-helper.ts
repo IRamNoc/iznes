@@ -331,6 +331,8 @@ export class OrderHelper {
                     amCompanyRcsMatriculation: order.amCompanyRcsMatriculation,
                     amCompanyWebsiteUrl: order.amCompanyWebsiteUrl,
                     amCompanyPhoneNumber: order.amCompanyPhoneNumber,
+                    emailtransactnotice: order.emailtransactnotice,
+                    emailcertificationbookentry: order.emailcertificationbookentry,
                     setl_db_b64_amCompanyLogo: {
                         query: 'call s2_iznMnGetMcImage(?, ?)',
                         params: {
