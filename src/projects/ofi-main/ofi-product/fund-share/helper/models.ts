@@ -178,6 +178,8 @@ export interface ShareRegistrationCertificateEmailPayload {
     amCompanyID: number;
     setl_db_b64_amCompanyLogo: any;
     setl_db_b64_amCompanySignature: any;
+    emailtransactnotice: any;
+    emailcertificationbookentry: any;
 }
 
 export interface InvestorBalances {

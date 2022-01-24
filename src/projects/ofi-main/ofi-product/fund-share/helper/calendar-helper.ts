@@ -508,7 +508,7 @@ export class CalendarHelper {
             let nextValuationDate = newDate.clone().add(1, 'day');
 
             for (let i = 0; i < 366; i++) {
-                if(!valuationCalendar.includes(nextValuationDate.format('YYYY-MM-DD')) && !valuationCalendar.includes(newDate.format('YYYY-MM-DD'))) break;
+                if(!valuationCalendar.includes(nextValuationDate.format('YYYY-MM-DD'))) break;
                 newDate = newDate.clone().add(1, 'day');
                 nextValuationDate = nextValuationDate.clone().add(1, 'day');
             }
