@@ -449,12 +449,16 @@ export class CalendarHelper {
 
     isValidValuationDateTime(dateTimeToChecks: any, orderType: OrderType): boolean {
         const valuationCalendar = this.orderType === OrderType.Subscription ? this.fundShare.buyNAVCalendar : this.fundShare.sellNAVCalendar;
+        const valuationDateReference = this.orderType === OrderType.Subscription ? this.fundShare.subscriptionValuationReference : this.fundShare.redemptionValuationReference;
+       
         // check if the date is working date
         dateTimeToChecks = this.momentToMomentBusiness(dateTimeToChecks);
 
         // check the date is not in specific calendar
-        if (valuationCalendar.includes(dateTimeToChecks.format('YYYY-MM-DD'))) {
-            return false;
+        if (valuationDateReference === E.ValuationReferenceDate.CalculationDay) {
+            if (valuationCalendar.includes(dateTimeToChecks.format('YYYY-MM-DD'))) {
+                return false;
+            }
         }
 
         // get cutoff date from valuation date.
