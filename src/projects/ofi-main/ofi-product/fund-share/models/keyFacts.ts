@@ -84,11 +84,11 @@ export class ShareKeyFactsMandatory extends DynamicFormsValidator {
         label: 'Share Currency Hedge',
         required: true,
         listItems: [
-            { id: E.CurrencyHedgeEnum.No, text: 'No' },
-            { id: E.CurrencyHedgeEnum.Yes, text: 'Yes' },
-            { id: E.CurrencyHedgeEnum.YesMultiCurrencyHedge, text: 'Yes, multi-currency hedge' },
-            { id: E.CurrencyHedgeEnum.YesPartialNavHedge, text: 'Yes, partial NAV Hedge'},
-            { id: E.CurrencyHedgeEnum.YesFullNavHedge, text: 'Yes, full NAV hedge' },
+            { id: E.sharePortfolioCurrencyHedge.No, text: 'No' },
+            { id: E.sharePortfolioCurrencyHedge.Yes, text: 'Yes' },
+            { id: E.sharePortfolioCurrencyHedge.YesMultiCurrencyHedge, text: 'Yes, multi-currency hedge' },
+            { id: E.sharePortfolioCurrencyHedge.YesPartialNAVHedge, text: 'Yes, partial NAV Hedge'},
+            { id: E.sharePortfolioCurrencyHedge.YesFullNAVHedge, text: 'Yes, full NAV hedge' },
             
         ],
         style: [FormItemStyle.BreakOnBefore],

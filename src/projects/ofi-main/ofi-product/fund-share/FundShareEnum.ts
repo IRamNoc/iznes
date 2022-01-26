@@ -189,12 +189,12 @@ export enum SubscriptionRoundingRuleEnum {
     Commercial,
     Lower,
 }
-export enum CurrencyHedgeEnum {
+export enum sharePortfolioCurrencyHedge {
     No,
     Yes,
     YesMultiCurrencyHedge,
-    YesPartialNavHedge,
-    YesFullNavHedge,
+    YesPartialNAVHedge,
+    YesFullNAVHedge,
 }
 export enum BusinessDaysEnum {
     MinusOne = -1,
