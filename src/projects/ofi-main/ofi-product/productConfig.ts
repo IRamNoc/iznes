@@ -644,10 +644,10 @@ export const fundItems = {
         ],
     },
     portfolioCurrencyHedgeItems: [
-        { id: 1, text: 'No ' },
-        { id: 2, text: 'Yes ' },
-        { id: 3, text: 'Yes,full portfolio Hedge' },
-        { id: 4, text: 'Yes,partial Hedge' },
+        { id: 1, text: 'No' },
+        { id: 2, text: 'Yes' },
+        { id: 3, text: 'Yes, full portfolio Hedge' },
+        { id: 4, text: 'Yes, partial Hedge' },
         { id: 5, text: 'Yes, currency overlay' },
     ],
     classificationItems: [
