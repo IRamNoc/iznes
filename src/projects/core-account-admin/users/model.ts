@@ -31,6 +31,7 @@ export class AccountAdminUserForm extends DynamicFormsValidator {
         label: 'Email address (username)',
         type: FormItemType.text,
         required: true,
+        maxLength:320,
         style: [FormItemStyle.WidthThird],
     };
 

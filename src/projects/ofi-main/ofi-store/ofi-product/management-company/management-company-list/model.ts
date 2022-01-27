@@ -33,6 +33,7 @@ export interface ManagementCompanyDetail {
     managementCompanyType: 'nowcp' | 'common' | 'id2s';
     externalEmail: string;
     emailValidation: string;
+    mt502Email: string;
 }
 
 export interface ManagementCompanyListState {
