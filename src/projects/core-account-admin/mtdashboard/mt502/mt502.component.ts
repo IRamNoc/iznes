@@ -160,7 +160,7 @@ export class Mt502Component implements OnInit, OnDestroy {
         sortable: true,
       },
       generationIznes: {
-        label: this.translate.translate('Generation IZNES'),
+        label: this.translate.translate('Generation IZNES (GMT)'),
         dataSource: 'generationIznes',
         sortable: true,
       },
