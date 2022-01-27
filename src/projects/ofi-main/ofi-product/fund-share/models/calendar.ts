@@ -14,6 +14,30 @@ export class ShareCalendarSubscriptionMandatory extends DynamicFormsValidator {
         listItems: mDateHelper.getMomentTimeZoneNameList(),
         style: [FormItemStyle.BreakOnAfter],
     };
+    subscriptionSettlementPeriod: FormItem = {
+        type: FormItemType.list,
+        title: 'Settlement Date Settings',
+        label: 'Settlement Date',
+        required: true,
+        listItems: [
+            { id: E.BusinessDaysEnum.Zero, text: 'D' },
+            { id: E.BusinessDaysEnum.One, text: 'D+1' },
+            { id: E.BusinessDaysEnum.Two, text: 'D+2' },
+            { id: E.BusinessDaysEnum.Three, text: 'D+3' },
+            { id: E.BusinessDaysEnum.Four, text: 'D+4' },
+            { id: E.BusinessDaysEnum.Five, text: 'D+5' },
+        ],
+    };
+    subscriptionSettlementPivotDate: FormItem = {
+        type: FormItemType.list,
+        label: 'Settlement Pivot Date',
+        required: true,
+        listItems: [
+            { id: E.SettlementPivotDate.NavDate, text: 'NAV Date' },
+            { id: E.SettlementPivotDate.CutoffDate, text: 'Cut-off Date' },
+        ],
+        style: [FormItemStyle.BreakOnAfter, FormItemStyle.TitleMargin],
+    };
     navPeriodForSubscription: FormItem = {
         type: FormItemType.list,
         title: 'NAV Date Settings',
@@ -29,40 +53,16 @@ export class ShareCalendarSubscriptionMandatory extends DynamicFormsValidator {
         ],
         required: true,
     };
-    subscriptionEnableNonWorkingDay: FormItem = {
-        type: FormItemType.checkbox,
-        title: '',
-        label: '',
-        checkboxLabel: 'Enable NAV dates outside working days',
-        required: false,
-        style: [FormItemStyle.BreakOnAfter],
-        checkboxHint: () => {
-            return getNonWorkingDayHintMsg(this.navPeriodForSubscription.value(), this.subscriptionEnableNonWorkingDay.value());
-        },
-        hidden: () => {
-            return this.navPeriodForSubscription.value() === null;
-        },
-    };
-    subscriptionSettlementPeriod: FormItem = {
+    subscriptionValuationReference: FormItem = {
         type: FormItemType.list,
-        title: 'Settlement Date Settings',
-        label: 'Settlement Date',
-        required: true,
+        label: 'NAV Reference Date',
         listItems: [
-            { id: E.BusinessDaysEnum.Zero, text: 'D' },
-            { id: E.BusinessDaysEnum.One, text: 'D+1' },
-            { id: E.BusinessDaysEnum.Two, text: 'D+2' },
-            { id: E.BusinessDaysEnum.Three, text: 'D+3' },
-            { id: E.BusinessDaysEnum.Four, text: 'D+4' },
-            { id: E.BusinessDaysEnum.Five, text: 'D+5' },
+            { id: E.ValuationReferenceDate.CalculationDay, text: 'Calculation Day' },
+            { id: E.ValuationReferenceDate.NextWorkingDay, text: 'Day before the next working day' },
         ],
+        style: [FormItemStyle.TitleMargin],
+        required: true,
     };
-    // removed by PZ 28/06/2018
-    // subscriptionRedemptionCalendar: FormItem = {
-    //     type: FormItemType.text,
-    //     label: 'Calendar of subscription/redemption',
-    //     required: true,
-    // };
 }
 
 export class ShareCalendarRedemptionMandatory extends DynamicFormsValidator {
@@ -77,6 +77,30 @@ export class ShareCalendarRedemptionMandatory extends DynamicFormsValidator {
         required: true,
         listItems: mDateHelper.getMomentTimeZoneNameList(),
         style: [FormItemStyle.BreakOnAfter],
+    };
+    redemptionSettlementPeriod: FormItem = {
+        type: FormItemType.list,
+        label: 'Settlement Date',
+        title: 'Settlement Date Settings',
+        required: true,
+        listItems: [
+            { id: E.BusinessDaysEnum.Zero, text: 'D' },
+            { id: E.BusinessDaysEnum.One, text: 'D+1' },
+            { id: E.BusinessDaysEnum.Two, text: 'D+2' },
+            { id: E.BusinessDaysEnum.Three, text: 'D+3' },
+            { id: E.BusinessDaysEnum.Four, text: 'D+4' },
+            { id: E.BusinessDaysEnum.Five, text: 'D+5' },
+        ],
+    };
+    redemptionSettlementPivotDate: FormItem = {
+        type: FormItemType.list,
+        label: 'Settlement Pivot Date',
+        required: true,
+        listItems: [
+            { id: E.SettlementPivotDate.NavDate, text: 'NAV Date' },
+            { id: E.SettlementPivotDate.CutoffDate, text: 'Cut-off Date' },
+        ],
+        style: [FormItemStyle.BreakOnAfter, FormItemStyle.TitleMargin],
     };
     navPeriodForRedemption: FormItem = {
         type: FormItemType.list,
@@ -93,56 +117,14 @@ export class ShareCalendarRedemptionMandatory extends DynamicFormsValidator {
         ],
         required: true,
     };
-    redemptionEnableNonWorkingDay: FormItem = {
-        type: FormItemType.checkbox,
-        title: '',
-        label: '',
-        checkboxLabel: 'Enable NAV dates outside working days',
-        required: false,
-        style: [FormItemStyle.BreakOnAfter],
-        checkboxHint: () => {
-            return getNonWorkingDayHintMsg(this.navPeriodForRedemption.value(), this.redemptionEnableNonWorkingDay.value());
-        },
-        hidden: () => {
-            return this.navPeriodForRedemption.value() === null;
-        },
-    };
-    redemptionSettlementPeriod: FormItem = {
+    redemptionValuationReference: FormItem = {
         type: FormItemType.list,
-        title: 'Settlement Date Settings',
-        label: 'Settlement Date',
-        required: true,
+        label: 'NAV Reference Date',
         listItems: [
-            { id: E.BusinessDaysEnum.Zero, text: 'D' },
-            { id: E.BusinessDaysEnum.One, text: 'D+1' },
-            { id: E.BusinessDaysEnum.Two, text: 'D+2' },
-            { id: E.BusinessDaysEnum.Three, text: 'D+3' },
-            { id: E.BusinessDaysEnum.Four, text: 'D+4' },
-            { id: E.BusinessDaysEnum.Five, text: 'D+5' },
+            { id: E.ValuationReferenceDate.CalculationDay, text: 'Calculation Day' },
+            { id: E.ValuationReferenceDate.NextWorkingDay, text: 'Day before the next working day' },
         ],
+        style: [FormItemStyle.TitleMargin],
+        required: true,
     };
-    // removed by PZ 28/06/2018
-    // subscriptionRedemptionCalendar: FormItem = {
-    //     type: FormItemType.text,
-    //     label: 'Calendar of subscription/redemption',
-    //     required: true,
-    // };
-}
-
-function getNonWorkingDayHintMsg(periodValue: {id: number}[], enableNonWorkingDay: boolean): string {
-    if (!enableNonWorkingDay ||
-        !periodValue
-    ) {
-        return undefined;
-    }
-
-    return {
-        [E.BusinessDaysEnum.MinusOne]: 'The NAV date will correspond to the calendar day before the cutoff day',
-        [E.BusinessDaysEnum.Zero]: 'The NAV date will correspond to the calendar day before the next business day',
-        [E.BusinessDaysEnum.One]: 'The NAV date will correspond to the calendar day before the next 2 business day',
-        [E.BusinessDaysEnum.Two]: 'The NAV date will correspond to the calendar day before the next 3 business day',
-        [E.BusinessDaysEnum.Three]: 'The NAV date will correspond to the calendar day before the next 4 business day',
-        [E.BusinessDaysEnum.Four]: 'The NAV date will correspond to the calendar day before the next 5 business day',
-        [E.BusinessDaysEnum.Five]: 'The NAV date will correspond to the calendar day before the next 6 business day',
-    }[periodValue[0].id];
 }

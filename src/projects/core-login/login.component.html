@@ -118,16 +118,16 @@
         <div class="login-group">
             <ng-container *ngTemplateOutlet="alertTemplate"></ng-container>
             <div *ngIf="!isTokenExpired" class="text-block">
-                <p class="no-margin">{{ 'Fill in your email address and we will send you a link to reset your password' | translate }}</p>
+                <p class="no-margin">{{ 'Fill in your username and we will send you a link to reset your password' | translate }}</p>
             </div>
             <form [formGroup]="forgottenPasswordForm" (ngSubmit)="sendEmail()">
                 <div class="form-group">
-                    <label for="forgotten-password-email">{{ 'Email Address' | translate }}</label>
+                    <label for="forgotten-password-email">{{ 'Username' | translate }}</label>
                     <input
                         id="forgotten-password-email"
                         type="text"
                         name="email"
-                        placeholder="{{ 'Enter your email address' | translate }}"
+                        placeholder="{{ 'Enter your username' | translate }}"
                         class="form-control"
                         formControlName="email">
                     <div *ngIf="forgottenPasswordForm.controls.email.hasError('required')" class="field-error">

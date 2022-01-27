@@ -93,7 +93,7 @@
                         <clr-dg-cell>{{fund['srri']}}<div *ngIf="showColumnSpacer" class="column-spacer">{{getColumnSpaceText(fund['srri'])}}</div></clr-dg-cell>
                         <clr-dg-cell>{{fund['sri']}}<div *ngIf="showColumnSpacer" class="column-spacer">{{getColumnSpaceText(fund['sri'])}}</div></clr-dg-cell>
                         <clr-dg-cell>{{fund['currency']}}<div *ngIf="showColumnSpacer" class="column-spacer">{{getColumnSpaceText(fund['currency'])}}</div></clr-dg-cell>
-                        <clr-dg-cell class="right">{{fund['nav'] | moneyValue}}<div *ngIf="showColumnSpacer" class="column-spacer">{{getColumnSpaceText(fund['nav'])}}</div></clr-dg-cell>
+                        <clr-dg-cell class="right">{{fund['nav'] | moneyValue: 4 }}<div *ngIf="showColumnSpacer" class="column-spacer">{{getColumnSpaceText(fund['nav'])}}</div></clr-dg-cell>
                         <clr-dg-cell>{{fund['nextSubCutOff']}}<div *ngIf="showColumnSpacer" class="column-spacer">{{getColumnSpaceText(fund['nextSubCutOff'])}}</div></clr-dg-cell>
                         <clr-dg-cell>{{fund['nextRedCutOff']}}<div *ngIf="showColumnSpacer" class="column-spacer">{{getColumnSpaceText(fund['nextRedCutOff'])}}</div></clr-dg-cell>
                         <clr-dg-cell class="right">{{fund['position']}}<div *ngIf="showColumnSpacer" class="column-spacer">{{getColumnSpaceText(fund['position'])}}</div></clr-dg-cell>

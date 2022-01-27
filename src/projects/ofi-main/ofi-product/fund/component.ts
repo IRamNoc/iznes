@@ -197,20 +197,20 @@ export class FundComponent implements OnInit, OnDestroy {
 
         this.typeOfEuDirectiveItems = this.fundItems.typeOfEuDirectiveItems;
         this.UcitsVersionItems = this.fundItems.UCITSVersionItems;
-        this.legalFormItems = this.fundItems.fundLegalFormItems;
-        this.portfolioCurrencyHedgeItems = this.fundItems.portfolioCurrencyHedgeItems;
-        this.classificationItems = this.fundItems.classificationItems;
-        this.auditorItems = this.fundItems.auditorItems;
-        this.taxAuditorItems = this.fundItems.taxAuditorItems;
-        this.legalAdvisorItems = this.fundItems.legalAdvisorItems;
+        this.legalFormItems = this.sortingList(this.fundItems.fundLegalFormItems);
+        this.portfolioCurrencyHedgeItems =  this.sortingList(this.fundItems.portfolioCurrencyHedgeItems);
+        this.classificationItems = this.sortingList(this.fundItems.classificationItems);
+        this.auditorItems = this.sortingList(this.fundItems.auditorItems);
+        this.taxAuditorItems = this.sortingList(this.fundItems.taxAuditorItems);
+        this.legalAdvisorItems = this.sortingList(this.fundItems.legalAdvisorItems);
         this.capitalPreservationPeriodItems = this.fundItems.capitalPreservationPeriodItems;
-        this.fundAdministratorItems = this.fundItems.fundAdministratorItems;
-        this.custodianBankItems = this.fundItems.custodianBankItems;
-        this.investmentManagerItems = this.fundItems.investmentManagerItems;
-        this.principalPromoterItems = this.fundItems.principalPromoterItems;
-        this.payingAgentItems = this.fundItems.payingAgentItems;
-        this.transferAgentItems = this.fundItems.transferAgentItems;
-        this.centralizingAgentItems = this.fundItems.centralizingAgentItems;
+        this.fundAdministratorItems = this.sortingList(this.fundItems.fundAdministratorItems);
+        this.custodianBankItems = this.sortingList(this.fundItems.custodianBankItems);
+        this.investmentManagerItems = this.sortingList(this.fundItems.investmentManagerItems);
+        this.principalPromoterItems = this.sortingList(this.fundItems.principalPromoterItems);
+        this.payingAgentItems = this.sortingList(this.fundItems.payingAgentItems);
+        this.transferAgentItems = this.sortingList(this.fundItems.transferAgentItems);
+        this.centralizingAgentItems = this.sortingList(this.fundItems.centralizingAgentItems);
 
         if (!this.isAdmin()) {
             this.fundService.getFundList();
@@ -271,6 +271,7 @@ export class FundComponent implements OnInit, OnDestroy {
             umbrellaFundCreationDate: { value: '', disabled: true },
             umbrellaFundID: { value: '', disabled: true },
             umbrellaFundName: { value: '', disabled: true },
+            umbrellaInternalReference: { value: '', disabled: true },
             internalReference: { value: '', disabled: true },
             additionalNotes: { value: '', disabled: true },
         });
@@ -435,6 +436,8 @@ export class FundComponent implements OnInit, OnDestroy {
                 .setValue(newUmbrella.umbrellaFundID);
                 this.umbrellaEditForm.controls['umbrellaFundName']
                 .setValue(newUmbrella.umbrellaFundName);
+                this.umbrellaEditForm.controls['umbrellaInternalReference']
+                .setValue(newUmbrella.internalReference);
                 this.umbrellaEditForm.controls['internalReference']
                 .setValue(newUmbrella.internalReference);
                 this.umbrellaEditForm.controls['additionalNotes']
@@ -647,10 +650,13 @@ export class FundComponent implements OnInit, OnDestroy {
                 return [];
             }
 
-            this.fundCurrencyItems = data;
+            this.fundCurrencyItems = this.sortingList(data);
         });
     }
 
+    sortingList(updateList){
+        return _.sortBy(updateList, 'text');
+    }
     ngOnInit() {
         this.route.queryParams.subscribe((params) => {
             if (params.fromShare) {
@@ -1112,7 +1118,7 @@ export class FundComponent implements OnInit, OnDestroy {
         return;
     }
 
-    waitForCurrentUmbrella(umbrellaID) {
+    waitForCurrentUmbrella(umbrellaID: string | number) {
         this.umbrellaFundList$
         .pipe(
             filter(umbrellas => umbrellas[umbrellaID]),
@@ -1403,9 +1409,11 @@ export class FundComponent implements OnInit, OnDestroy {
      * @return {string}
      */
     getHolidayMgmtConfig(): string {
+        /*
         if (this.fundForm.value.useDefaultHolidayMgmt === '0') {
             return JSON.stringify(this.holidayMgmtConfigDates());
         }
+        */
 
         return JSON.stringify([]);
     }

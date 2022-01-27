@@ -154,9 +154,13 @@ function handleGetIznesShareList(state: OfiFundShareListState, action: Action) {
             subscriptionCutOffTime: share.subscriptionCutOffTime,
             subscriptionCutOffTimeZone: share.subscriptionCutOffTimeZone,
             subscriptionSettlementPeriod: share.subscriptionSettlementPeriod,
+            subscriptionSettlementPivotDate: share.subscriptionSettlementPivotDate,
+            subscriptionValuationReference: share.subscriptionValuationReference,
             redemptionCutOffTime: share.redemptionCutOffTime,
             redemptionCutOffTimeZone: share.redemptionCutOffTimeZone,
             redemptionSettlementPeriod: share.redemptionSettlementPeriod,
+            redemptionSettlementPivotDate: share.redemptionSettlementPivotDate,
+            redemptionValuationReference: share.redemptionValuationReference,
             subscriptionRedemptionCalendar: share.subscriptionRedemptionCalendar,
             maxManagementFee: share.maxManagementFee,
             maxSubscriptionFee: share.maxSubscriptionFee,
@@ -192,9 +196,7 @@ function handleGetIznesShareList(state: OfiFundShareListState, action: Action) {
             monthlyRedemptionDealingDays: share.monthlyRedemptionDealingDays,
             yearlyRedemptionDealingDays: share.yearlyRedemptionDealingDays,
             navPeriodForSubscription: share.navPeriodForSubscription,
-            subscriptionEnableNonWorkingDay: share.subscriptionEnableNonWorkingDay,
             navPeriodForRedemption: share.navPeriodForRedemption,
-            redemptionEnableNonWorkingDay: share.redemptionEnableNonWorkingDay,
             classification: share.classification,
         };
 

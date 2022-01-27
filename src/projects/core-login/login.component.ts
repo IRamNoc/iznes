@@ -194,7 +194,6 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit, Log
                 '',
                 [
                     Validators.required,
-                    Validators.pattern(/^(((\([A-z0-9]+\))?[^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/),
                 ]),
         });
 
@@ -451,9 +450,7 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit, Log
                 };
             }
 
-            // const redirect: any = myAuthenData.defaultHomePage ? myAuthenData.defaultHomePage : '/home';
-            const redirect: any = '/home';
-
+            const redirect: any = myAuthenData.defaultHomePage ? myAuthenData.defaultHomePage : '/home';
 
             this.loginedRedirect(redirect, this.queryParams);
 

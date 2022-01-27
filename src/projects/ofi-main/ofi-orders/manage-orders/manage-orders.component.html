@@ -527,7 +527,7 @@
                         <clr-dg-row-detail *clrIfExpanded>
                             <div class="additionalInfos">
                                 <div class="row">
-                                    <div class="form-group col-sm-3">
+                                    <div class="form-group col-sm-2">
                                         <table>
                                             <tbody>
                                             <tr>
@@ -539,26 +539,26 @@
                                             </tbody>
                                         </table>
                                     </div>
-                                    <div class="form-group col-sm-3">
+                                    <div class="form-group col-sm-2">
                                         <table>
                                             <tbody>
                                             <tr>
                                                 <td>
                                                     <b>{{ 'Latest NAV' | translate }}</b>
-                                                </td>
-                                                <td [class]="getPriceStatusCss(order)">{{order.price | moneyValue: 2}}</td>
+                                                </td>                                                
+                                                <td [class]="getPriceStatusCss(order)">{{order.price | moneyValue: 4}}</td>                                                                                              
                                             </tr>
                                             </tbody>
                                         </table>
-                                    </div>
-                                    <div class="form-group col-sm-3">
+                                    </div>                                    
+                                    <div class="form-group col-sm-2">
                                         <table>
                                             <tbody>
                                             <tr>
                                                 <td>
-                                                    <b>{{ 'Fees Amount' | translate }}</b>
-                                                </td>
-                                                <td>{{ order.fee | moneyValue: 2 }}</td>
+                                                    <b>{{ 'Latest NAV Date' | translate }}</b>
+                                                </td> 
+                                                <td>{{getOnlyDate(order.latestNavDate)}}</td>                                                                                               
                                             </tr>
                                             </tbody>
                                         </table>
@@ -575,6 +575,18 @@
                                             </tbody>
                                         </table>
                                     </div>
+                                    <div class="form-group col-sm-3">
+                                        <table>
+                                            <tbody>
+                                            <tr>
+                                                <td>
+                                                    <b>{{ 'Fees Amount' | translate }}</b>
+                                                </td>
+                                                <td>{{ order.fee | moneyValue: 2 }}</td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>                                    
                                 </div>
                             </div>
                         </clr-dg-row-detail>
@@ -841,7 +853,7 @@
                         <div class="form-group col-sm-6">
                             <label>{{ 'NAV' | translate }}</label>
                             <div>
-                                <span class="readonly-field {{getPriceStatusCss(orderData)}}">{{ orderData.price | moneyValue: 2 }}</span>
+                                <span class="readonly-field {{getPriceStatusCss(orderData)}}">{{ orderData.price | moneyValue: 4 }}</span>
                             </div>
                         </div>
 

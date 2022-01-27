@@ -123,18 +123,18 @@
     </section>
     <div class="login-group">
         <div class="text-block">
-            <p class="no-margin">{{ 'Fill in your email address and we will send you a link to reset your authenication settings' | translate }}</p>
+            <p class="no-margin">{{ 'Fill in your username and we will send you a link to reset your authenication settings' | translate }}</p>
         </div>
         <form [formGroup]="forgottenTwoFactorForm" (ngSubmit)="sendForgottonTwoFactorEmail()">
             <div class="form-group">
                 <ng-container *ngTemplateOutlet="alertTemplate"></ng-container>
-                <label for="forgot-two-factor-email">{{ 'Email Address' | translate }}</label>
+                <label for="forgot-two-factor-email">{{ 'Username' | translate }}</label>
                 <input id="forgot-two-factor-email"
                     type="text"
                     class="form-control"
                     formControlName="email"
                     size="45"
-                    placeholder="{{ 'Please enter your email address' | translate }}">
+                    placeholder="{{ 'Please enter your username' | translate }}">
                 <div *ngIf="forgottenTwoFactorForm.controls.email.hasError('required')"
                     class="field-error">
                     {{ 'Field is required' | translate }}

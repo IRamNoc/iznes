@@ -26,6 +26,7 @@ export interface ManageOrderDetails {
     estimatedAmountWithCost: any;
     estimatedPrice: any;
     latestNav: number;
+    latestNavDate: any;
     initialized: any;
     estimatedQuantity: any;
     feePercentage: any;
