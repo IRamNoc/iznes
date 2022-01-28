@@ -31,6 +31,7 @@ import {
     TestNotificationsMessageBody,
     GetAlertsRequestBody,
     MarkAlertAsReadRequestBody,
+    ResetAPITokenRequestBody,
 } from './my-user.service.model';
 import { NgRedux, select } from '@angular-redux/store';
 import {
@@ -227,6 +228,15 @@ export class MyUserService implements OnDestroy {
         for (const subscription of this.subscriptionsArray) {
             subscription.unsubscribe();
         }
+    }
+
+    resetAPIToken(): any {
+        const messageBody: ResetAPITokenRequestBody = {
+            RequestName: 'rak',
+            token: this.memberSocketService.token,
+        };
+
+        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
     }
 
     loginRequest(loginData: LoginRequestData): any {
