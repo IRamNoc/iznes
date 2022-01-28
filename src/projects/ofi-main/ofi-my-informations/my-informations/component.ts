@@ -14,13 +14,10 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgRedux, select } from '@angular-redux/store';
 import * as _ from 'lodash';
 import { KycMyInformations } from '../../ofi-store/ofi-kyc/my-informations';
-
+import { UserTeamsService } from '../../../core-account-admin/teams/service'
+import * as Model from '../../../core-account-admin/teams/model';
 // Services
-import {
-    OfiManagementCompanyService,
-} from '@ofi/ofi-main/ofi-req-services/ofi-product/management-company/management-company.service';
 import { fromJS } from 'immutable';
-
 import { MultilingualService } from '@setl/multilingual';
 
 export enum ViewMode {
@@ -48,6 +45,8 @@ export class OfiMyInformationsComponent implements OnInit, OnDestroy {
     private subscriptions = [];
 
     phoneNumbersCountryCodes = [];
+    teams: Model.AccountAdminTeam[];
+    hasTeams: boolean = false;
 
     /* Observables. */
     @select(['user', 'siteSettings', 'language']) requestLanguageObj;
@@ -56,11 +55,13 @@ export class OfiMyInformationsComponent implements OnInit, OnDestroy {
     public managementCompanyList;
 
     constructor(
+        private service: UserTeamsService,
         private changeDetectorRef: ChangeDetectorRef,
         private ngRedux: NgRedux<any>,
         private fb: FormBuilder,
         public translate: MultilingualService,
         @Inject('phoneCodeList') phoneCodeList,
+        
     ) {
         this.phoneNumbersCountryCodes = phoneCodeList;
 
@@ -120,11 +121,23 @@ export class OfiMyInformationsComponent implements OnInit, OnDestroy {
         );
     }
     
-    
+    ngOnInit() {    
+        this.service.getMyUserTeams((success) => {
+            const data = _.get(success, '[1].Data', []);
 
-
-    ngOnInit() {
-    }
+            if (data) {
+                this.hasTeams = true;
+                this.teams = _.map(data, (team, index) => {
+                    return {
+                        id: index,
+                        text: team.name
+                    }
+                })
+            }
+        }, (error) => {
+            console.log(`Unable to get user teams: ${error}`);
+        });
+    };
 
     @Input() set userInfo(userInfo) {
         if (!this.additionnalForm.controls.phoneCode.value) {
@@ -205,6 +218,9 @@ export class OfiMyInformationsComponent implements OnInit, OnDestroy {
         this.changeDetectorRef.markForCheck();
     }
 
+  
+
+
     getManagementCompanyListFromRedux(managementCompanyList) {
         // if investor no need to run the code
         if (this.type === 46) {
@@ -226,6 +242,8 @@ export class OfiMyInformationsComponent implements OnInit, OnDestroy {
             },
             [],
         );
+
+       
 
         // get am company name
         const assetManagerValue = this.managementCompanyList && this.managementCompanyList[0].companyName;
