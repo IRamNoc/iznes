@@ -14,19 +14,11 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgRedux, select } from '@angular-redux/store';
 import * as _ from 'lodash';
 import { KycMyInformations } from '../../ofi-store/ofi-kyc/my-informations';
-import { UserTeamsService } from '/home/iznes/iznes/frontend/src/projects/core-account-admin/teams/service';
-import * as Model from '/home/iznes/iznes/frontend/src/projects/core-account-admin/teams/model';
-
-
-
+import { UserTeamsService } from '../../../core-account-admin/teams/service'
+import * as Model from '../../../core-account-admin/teams/model';
 // Services
-import {
-    OfiManagementCompanyService,
-} from '@ofi/ofi-main/ofi-req-services/ofi-product/management-company/management-company.service';
 import { fromJS } from 'immutable';
-
 import { MultilingualService } from '@setl/multilingual';
-import { forEach } from '@angular/router/src/utils/collection';
 
 export enum ViewMode {
     PAGE = 'PAGE',
@@ -54,14 +46,11 @@ export class OfiMyInformationsComponent implements OnInit, OnDestroy {
 
     phoneNumbersCountryCodes = [];
     teams: Model.AccountAdminTeam[];
-    teamNames: string= '';
-
+    hasTeams: boolean = false;
 
     /* Observables. */
     @select(['user', 'siteSettings', 'language']) requestLanguageObj;
     @select(['ofi', 'ofiProduct', 'ofiManagementCompany', 'managementCompanyList', 'managementCompanyList']) managementCompanyAccessListOb;
-    @select(['accountAdmin', 'teams', 'requested']) teamsRequestedOb;
-    @select(['accountAdmin', 'teams', 'teams']) teamsOb;
 
     public managementCompanyList;
 
@@ -132,40 +121,23 @@ export class OfiMyInformationsComponent implements OnInit, OnDestroy {
         );
     }
     
-    
+    ngOnInit() {    
+        this.service.getMyUserTeams((success) => {
+            const data = _.get(success, '[1].Data', []);
 
-
-    //Displaying Teams on My information section
-
-        ngOnInit() {
-
-    
-            this.subscriptions.push(this.teamsRequestedOb.subscribe((requested: boolean) => {
-                this.service.readUserTeams(null, null, () => {}, () => {});
-
-            }));
-    
-            this.subscriptions.push(this.teamsOb.subscribe((teams: Model.AccountAdminTeam[]) => {
-                this.teams = teams;
-                
-                // this.teams.map(team => this.teamNames.concat(team.name))
-               
-
-            }));
-        console.log(this.teams);
-        console.log("teams");
-        for (const team of this.teams) { 
-            this.teamNames = this.teamNames + team.name + ', ';                    
-            
-            
-           }
-        //  this.teams.map(team => this.teamNames.concat(team.name));        
-         console.log(this.teamNames);
-            
-
-        };
-        
-    
+            if (data) {
+                this.hasTeams = true;
+                this.teams = _.map(data, (team, index) => {
+                    return {
+                        id: index,
+                        text: team.name
+                    }
+                })
+            }
+        }, (error) => {
+            console.log(`Unable to get user teams: ${error}`);
+        });
+    };
 
     @Input() set userInfo(userInfo) {
         if (!this.additionnalForm.controls.phoneCode.value) {

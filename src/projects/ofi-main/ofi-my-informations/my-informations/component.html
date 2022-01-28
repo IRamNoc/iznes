@@ -46,12 +46,10 @@
                     
                         <div class="form-group col-sm-4">
                             <label for="kyc_additionnal_team">{{ 'Team(s)' | translate }}</label>
-                            <div>
-                                <input type="text"
-                                        id="kyc_additionnal_team"
-                                        class="form-control"
-                                        value={{teamNames}}
-                                        readonly>
+                            <div *ngIf="hasTeams">
+                                <span *ngFor="let team of teams">
+                                    <span class="label label-info ml-1">{{team.text}}</span>
+                                </span>
                             </div>
                         </div>
                 </div>
