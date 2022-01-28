@@ -128,6 +128,7 @@ describe('OfiManagementCompanyComponent', () => {
         managementCompanyType: 'common',
         externalEmail: 'externalEmail',
         emailValidation: 'emailValidation',
+        mt502Email: 'mt502Email',
     };
 
     beforeAll(done => (async () => {
