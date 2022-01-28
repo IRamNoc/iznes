@@ -32,6 +32,8 @@ import {
     SET_CENTRA_FUNDS_LIST,
     setRequestedCentraFundsList,
     clearRequestedCentraFundsList,
+    OFI_SET_AM_HOLDING_HISTORY,
+    ofiSetRequestedAmHoldingHistory
 } from '../../ofi-store/ofi-reports';
 
 /* Import interfaces for message bodies. */
@@ -234,7 +236,7 @@ export class OfiReportsService {
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
-    }
+    }   
 
     requestCentralisationReportsFundsDetailsList(data: CentralisationFundsRequestData): any {
         const messageBody: CentralisationRequestFundsBody = {
@@ -374,7 +376,6 @@ export class OfiReportsService {
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
     }
-
     requestMyHoldingDetail(requestData): any {
         const messageBody = {
             RequestName: 'izngetmyholdingdetail',
@@ -383,5 +384,27 @@ export class OfiReportsService {
         };
 
         return createMemberNodeRequest(this.memberSocketService, messageBody);
+    }
+    requestMyHoldingHistoryDetail(): any {
+        const messageBody = {
+            RequestName: 'izngetholdingdb',
+            token: this.memberSocketService.token 
+        };
+
+        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+    }
+    static defaultPositionHoldingList(ofiReportsService: OfiReportsService, ngRedux: NgRedux<any>) {
+        // Set the state flag to true. so we do not request it again.
+        ngRedux.dispatch(ofiSetRequestedAmHoldingHistory());
+
+        // Request the list.
+        const asyncTaskPipe = ofiReportsService.requestMyHoldingHistoryDetail();
+
+        ngRedux.dispatch(SagaHelper.runAsync(
+            [OFI_SET_AM_HOLDING_HISTORY],
+            [],
+            asyncTaskPipe,
+            {},
+        ));
     }
 }
