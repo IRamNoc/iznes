@@ -62,12 +62,12 @@
                 <div class="row col-sm-12">
                     <div class="form-group required-field col-sm-4">
                         <label>{{ 'Corporate Purpose' | translate }}</label>
-                        <input type="text"
-                        id="corporatePurpose"
-                        formControlName="corporatePurpose"
+                        <textarea name="corporatePurpose" id="corporatePurpose" cols="6" rows="10" formControlName="corporatePurpose"
                         [readonly]="isFormReadonly"
-                        placeholder="{{ 'Please make a summary of the main activities carried out by your company' | translate }}">
-                <span class="field-error" *ngIf="hasError('corporatePurpose')">{{ 'Field is required' | translate }}</span>
+                        placeholder="{{ 'Please make a summary of the main activities carried out by your company' | translate }}"></textarea>
+
+                <span class="field-error" *ngIf="hasError('corporatePurpose', ['required'])">{{ 'Field is required' | translate }}</span>
+                <span class="field-error" *ngIf="hasError('corporatePurpose', ['maxlength'])">{{ 'Field is too long' | translate }}</span>
 
                     </div>
                 </div>

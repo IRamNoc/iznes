@@ -28,7 +28,6 @@ export class OfiProfileMyInformationsComponent implements OnInit, OnDestroy {
     userInfo = {
         firstName: '',
         lastName: '',
-
     };
     userType: string;
     setHomePage: string;
