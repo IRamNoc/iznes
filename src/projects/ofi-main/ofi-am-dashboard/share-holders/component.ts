@@ -341,31 +341,6 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
         this.subscriptions.push(
             this.transferObs.subscribe(transfers => this.transferListItems = this.transferObjectToList(transfers)));
 
-        //  this.language$
-        //     .pipe(
-        //         takeUntil(this.unSubscribe),
-        //     )
-        //     .subscribe((language) => {
-        //         this.language = language;
-            
-        //     });
-        // this.ofiSubPortfolioService.getSubPortfolioData()
-        //     .pipe(
-        //         takeUntil(this.unSubscribe),
-        //     )
-        //     .subscribe((data) => {
-        //         this.subportfolioListData = data;
-        //         this.subportfolioListData.forEach((e, i) => {
-        //             e.id = i;
-        //             e.text = e.label;
-        //         });
-        //     });
-
-
-
-
-
-        // this.changeDetectorRef.detectChanges();
 
 
 
@@ -822,41 +797,12 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
      transferObjectToList(listTransfer) {
          const tranferList=[];
         let transfers = _.toArray(listTransfer).map((transfer) => {
-            // const referenceID = transfer.referenceID;
-            // const externalReference = transfer.externalReference;
-            // const transferDirection = transfer.transferDirection;
-            // const assetManagementCompany = transfer.assetManagementCompanyName;
-            // const investorCompany = transfer.investorCompanyName;
             const investorWallet = transfer.accountLabel;
-            // const investorWalletName = transfer.investorWalletName;
-            // const shareISIN = transfer.fundShareISIN;
-            // const shareName = transfer.fundShareName;
-            // const quantity = transfer.quantity;
-            // const unitPrice = transfer.price;
-            // const amount = quantity * unitPrice;
-            // const transferStatus = transfer.transferStatus;
-            // const dateEntered = transfer.dateEntered;
-            // const comment = transfer.comment;
-            // const totalResult = transfer.totalResult;
+            
             tranferList.push({'id':investorWallet,'text':investorWallet});
             return {
                 tranferList
-                // referenceID,
-                // externalReference,
-                // transferDirection,
-                // assetManagementCompany,
-                // investorCompany,
-                // investorWallet,
-                // investorWalletName,
-                // shareISIN,
-                // shareName,
-                // quantity,
-                // unitPrice,
-                // amount,
-                // transferStatus,
-                // dateEntered,
-                // comment,
-                // totalResult,
+                
             };
         });
 

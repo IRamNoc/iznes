@@ -20,3 +20,20 @@ export interface GetFundWithHoldersRequestData {
     fundId: number;
     selectedFilter?: number;
 }
+
+export interface AMGenerateAICRequestData {
+    fromDate: string;
+    isin: string;
+    subportfolio: string;
+    client: string;
+
+}
+
+export interface AMGenerateAICRequestBody extends MemberNodeMessageBody {
+    token: string;
+    fromDate: string;
+    isin: string;
+    subportfolio: string;
+    client: string;
+
+}
