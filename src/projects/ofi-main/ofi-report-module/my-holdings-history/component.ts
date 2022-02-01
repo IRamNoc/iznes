@@ -1,8 +1,8 @@
 import { OnInit, ChangeDetectorRef, Component, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { select } from '@angular-redux/store';
+import { select, NgRedux } from '@angular-redux/store';
 import { MultilingualService } from '@setl/multilingual';
-import { List,fromJS } from 'immutable';
+import { List, fromJS } from 'immutable';
 import { combineLatest } from 'rxjs';
 import { Subject } from 'rxjs/Subject';
 import { filter, takeUntil, switchMap } from 'rxjs/operators';
@@ -79,8 +79,10 @@ export class MyHoldingsHistoryComponent implements OnInit, OnDestroy {
     @select(['ofi', 'ofiCurrencies', 'currencies']) currencyList$;
     @select(['ofi', 'ofiReports', 'amHolders', 'invRequested']) investorHoldingRequested;
     @select(['ofi', 'ofiReports', 'amHolders', 'invHoldingsList']) investorHoldingList$;
-    @select(['ofi', 'ofiReports', 'amHolders', 'amHoldersList']) OfiAmHoldersListObj;
     @select(['ofi', 'ofiAmDashboard', 'shareHolders', 'fundsByUserList']) fundsByUserListOb;
+    @select(['ofi', 'ofiReports', 'amHolderHistoryList', 'amHoldersList']) OfiAmHoldersListObj;
+    @select(['ofi', 'ofiReports', 'amHolderHistoryList', 'requested']) requestedOfiAmHoldersObj;
+
     
     @select([
         'ofi',
@@ -91,6 +93,7 @@ export class MyHoldingsHistoryComponent implements OnInit, OnDestroy {
     ]) investorManagementCompany$;
 
     constructor(
+        private ngRedux: NgRedux<any>,
         private changeDetectorRef: ChangeDetectorRef,
         private fb: FormBuilder,
         private currenciesService: OfiCurrenciesService,
@@ -115,13 +118,15 @@ export class MyHoldingsHistoryComponent implements OnInit, OnDestroy {
         this.initForm();        
         this.initListItems();
         this.initSubscriptions();
-        // this.managementCompanyService.fetchInvestorManagementCompanyList();
+        this.subscriptions.push(this.requestedOfiAmHoldersObj.subscribe(requested => this.getAmHoldersRequested(requested)));
+        this.subscriptions.push(this.OfiAmHoldersListObj.subscribe(list => this.getAmHoldersListFromRedux(list)));
+
     }
 
-    initListItems(){
+    initListItems() {
         this.subscriptions.push(this.managementCompanyAccessListOb
             .subscribe((d) => {
-                console.log(d,"444444444444");
+                console.log(d, "444444444444");
                 this.managementCompanyAccessList = d;
                 this.mananagementCompanyItems = Object.keys(this.managementCompanyAccessList).map((key) => {
                     return {
@@ -131,19 +136,22 @@ export class MyHoldingsHistoryComponent implements OnInit, OnDestroy {
                 });
             }),
         );
-        console.log(this.fundShareObs,"this.fundShareObs")
+        console.log(this.fundShareObs, "this.fundShareObs")
         this.subscriptions.push(this.fundShareObs.subscribe(shares => this.shareList = shares));
         this.changeDetectorRef.detectChanges();
+
     }
 
-    ngOnDestroy(): void {
-        this.searchForm.get('search').patchValue(['']);
-        this.holdingList.splice(0, this.holdingList.length);
-        this.ofiReportsService.clearInvestorHoldingList();
-
-        this.unSubscribe.next();
+     ngOnDestroy(): void {
         this.unSubscribe.complete();
         this.changeDetectorRef.detach();
+
+    }
+    
+    getAmHoldersRequested(requested): void {
+        if (!requested) {
+            OfiReportsService.defaultPositionHoldingList(this.ofiReportsService, this.ngRedux);
+        }
     }
     fundsByUserList(list) {
         const listImu = fromJS(list);
@@ -167,11 +175,12 @@ export class MyHoldingsHistoryComponent implements OnInit, OnDestroy {
      *
      * @param holderList
      */
-     getAmHoldersListFromRedux(holderList) {
+    getAmHoldersListFromRedux(holderList) {
         if (holderList) {
-            this.allList = holderList.toJS() || [];
+            this.holdingList = holderList.toJS() || [];
+            console.log("venkat123456", this.holdingList)
 
-            this.sharesList = this.allList.filter(it => it.shareId !== 0).map((holder) => {
+            this.sharesList = this.holdingList.filter(it => it.shareId !== 0).map((holder) => {
                 return {
                     id: holder.shareId,
                     text: holder.fundName + ' - ' + holder.shareName + ' (' + holder.shareIsin + ')',
@@ -181,6 +190,7 @@ export class MyHoldingsHistoryComponent implements OnInit, OnDestroy {
         this.changeDetectorRef.markForCheck();
         this.loadingDatagrid = false;
     }
+
     initCompanies() {
         this.allCompaniesList = [{
             id: -1,
