@@ -170,7 +170,7 @@ export class Mt502Component implements OnInit, OnDestroy {
         sortable: true,
       },
       sendToCentralizer: {
-        label: this.translate.translate('Send to centralizer'),
+        label: this.translate.translate('Send to centralizer (GMT)'),
         dataSource: 'sendToCentralizer',
         sortable: true,
       },
