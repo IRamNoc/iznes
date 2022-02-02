@@ -72,8 +72,8 @@
                                     <div class="input-button-group col-lg-3">
                                         <ng-select id="holders-list-shares-search-field" [items]="sharesList"
                                             [allowClear]="true"
-                                             (selected)="onChange($event)"
                                             formControlName="sharesList"
+                                            (selected)="onChange($event)"
                                             class="form-control"
                                             [placeholder]="translate.translate('Type a Share name')">
                                         </ng-select>
@@ -102,6 +102,7 @@
                                              [items]="allClientNameList"
                                              formControlName="allClientNameList"
                                              class="form-control"
+                                             (selected)="onChange($event)"
                                                 [allowClear]=true
                                                  placeholder="{{ 'Select address' | translate }}">
                                             </ng-select>
@@ -118,6 +119,7 @@
                                                 [items]="transferListItems"
                                                 [allowClear]="true"
                                                 formControlName="subportfolioListData"
+                                                (selected)="onChange($event)"
                                                 [placeholder]="translate.translate('Search a Subportfolio')"
                                             >
                                             </ng-select>
@@ -133,6 +135,7 @@
                                           <span class="fa fa-calendar" aria-hidden="true"></span>
                                           <input id="fromDate" formControlName="fromDate"
                                           class="form-control"
+                                          
 
                                           [dpDayPicker]="fromConfigDate"
                                             [placeholder]="(!isPeriod) ? translate.translate('Select Date') : translate.translate('Date From')"

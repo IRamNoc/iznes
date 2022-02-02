@@ -50,6 +50,8 @@ import {
     CentralisationRequestFundsBody,
     CentralisationFundsRequestData,
     CentralisationSharesRequestData,
+    AMGenerateAICRequestBody,
+    AMGenerateAICRequestData
 } from './model';
 
 @Injectable()
@@ -107,6 +109,37 @@ export class OfiReportsService {
             {},
         ));
     }
+
+      /* GENERATE AIC */
+
+      defaultRequestGenerateAICAM(data: AMGenerateAICRequestData, successCallback: (res) => void, errorCallback: (res) => void) {
+        // Request the list.
+        const asyncTaskPipe = this.requestGenerateAICAM(data);
+    
+        this.ngRedux.dispatch(SagaHelper.runAsync(
+          [],
+          [],
+          asyncTaskPipe,
+          {},
+          res => successCallback(res),
+          res => errorCallback(res),
+        ));
+      }
+    
+      requestGenerateAICAM(data: AMGenerateAICRequestData): any {
+        const messageBody: AMGenerateAICRequestBody = {
+          RequestName: 'izngenerateaicam',
+          token: this.memberSocketService.token,
+          fromDate: data.fromDate,
+          isin: data.isin,
+          subportfolio: data.subportfolio,
+          allClientNameList:data.allClientNameList
+        };
+    
+        return createMemberNodeRequest(this.memberSocketService, messageBody);
+      }
+    
+
 
     /* CENTRALIZATION FUNDS */
 

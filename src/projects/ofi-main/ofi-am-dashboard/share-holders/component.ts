@@ -16,6 +16,10 @@ import { OfiKycService } from '../../ofi-req-services/ofi-kyc/service';
 import { Observable, combineLatest as observableCombineLatest } from 'rxjs';
 import { PermissionsService } from '../../../utils';
 import { TransferInOutService } from '../../ofi-transfer-in-out/transfer-in-out.service';
+import * as moment from 'moment';
+import { AMGenerateAICRequestData,AMGenerateAICRequestBody} from '../../ofi-req-services/ofi-reports/model'
+
+
 interface SelectedItem {
     id: number;
     text: string;
@@ -33,6 +37,8 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
 
     //aic Form
     aicForm:FormGroup;
+    selectedSubportfolio: any = "";
+
 
     // funds forms
     searchForm: FormGroup;
@@ -323,6 +329,8 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
     locale: this.language,
   };
 
+  
+
     ngOnInit() {
         if (this.setLoadingDatagrid) {
             this.loadingDatagrid = true;
@@ -337,6 +345,7 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
             allClientNameList: new FormControl(null, Validators.required),
         });
 
+
         this.transferService.defaultRequestManageTransfersList({ itemPerPage: this.itemPerPage, rowOffset: this.rowOffset });        
         this.subscriptions.push(
             this.transferObs.subscribe(transfers => this.transferListItems = this.transferObjectToList(transfers)));
@@ -345,6 +354,16 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
 
 
 
+    }
+
+
+    handleGenerateAIC() {        
+        const payload: AMGenerateAICRequestData = {
+            fromDate: moment(this.aicForm.controls['fromDate'].value).format('YYYY-MM-DD HH:mm:ss'),
+            isin: this.shareISIN,
+            subportfolioListData: this.selectedSubportfolio,
+            allClientNameList: this.allClientNameList,
+        }
     }
 
     initSubscriptions() {
@@ -586,6 +605,18 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
         console.log(this.sharesList.filter(e => e.id == event.id)[0].shareIsin, "isin")
         this.shareISIN = this.sharesList.filter(e => e.id == event.id)[0].shareIsin;
     }
+
+    onSubportfolioChange(event) {
+        this.selectedSubportfolio = this.subportfolioListData.filter(e => e.id == event.id)[0].option;
+        console.log(this.selectedSubportfolio);
+    }
+
+    onClientnameList(event) {
+        this.onClientnameList = this.allClientNameList.filter(e => e.id == event.id)[0].option;
+        console.log(this.onClientnameList);
+    }
+
+
     /**
        * Get the actual list of holders from redux
        *

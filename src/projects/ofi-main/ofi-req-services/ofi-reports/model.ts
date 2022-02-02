@@ -114,3 +114,20 @@ export interface CentralisationHistoryRequestData {
     dateTo: any;
     dateRange: any;
 }
+
+export interface AMGenerateAICRequestData {
+    fromDate: string;
+    isin: string;
+    subportfolio: string;
+    allClientNameList:string
+}
+
+export interface AMGenerateAICRequestBody extends MemberNodeMessageBody {
+    token: string;
+    fromDate: string;
+    isin: string;
+    subportfolio: string;
+    allClientNameList:string
+
+}
+
