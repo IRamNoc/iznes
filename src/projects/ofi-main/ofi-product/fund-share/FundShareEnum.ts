@@ -189,11 +189,12 @@ export enum SubscriptionRoundingRuleEnum {
     Commercial,
     Lower,
 }
-export enum CurrencyHedgeEnum {
-    NoHedge,
-    FullPortfolioHedge,
-    CurrencyOverlay,
-    PartialHedge,
+export enum sharePortfolioCurrencyHedge {
+    No,
+    Yes,
+    YesMultiCurrencyHedge,
+    YesPartialNAVHedge,
+    YesFullNAVHedge,
 }
 export enum BusinessDaysEnum {
     MinusOne = -1,
@@ -332,4 +333,14 @@ export enum FatcaStatusV2Enum {
 export enum SellBuyCalendar {
     SubscriptionCalendar,
     RedemptionCalendar,
+}
+
+export enum SettlementPivotDate {
+    NavDate,
+    CutoffDate,
+}
+
+export enum ValuationReferenceDate {
+    CalculationDay,
+    NextWorkingDay,
 }

@@ -294,7 +294,7 @@ export class NewRequestService {
                 { value: '', disabled: true },
                 this.getLengthValidator(255),
             ],
-            corporatePurpose: ['', Validators.required],
+            corporatePurpose: ['', [Validators.required, Validators.maxLength(2500)]],
             activities: ['', Validators.required],
             investorOnBehalfThirdParties: [
                 { value: '', disabled: true },

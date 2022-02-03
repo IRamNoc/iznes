@@ -218,6 +218,7 @@ function formatManageOrderDataResponse(rawData: any[]): ManageOrderDetails[] {
                 estimatedAmountWithCost: item.get('estimatedAmountWithCost'),
                 estimatedPrice: item.get('estimatedPrice'),
                 latestNav: item.get('latestNav'),
+                latestNavDate: item.get('latestNavDate'),
                 estimatedQuantity: item.get('estimatedQuantity'),
                 feePercentage: item.get('feePercentage'),
                 firstName: item.get('firstName'),
