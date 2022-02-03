@@ -52,6 +52,8 @@ import {
     CentralisationSharesRequestData,
     AMGenerateAICRequestBody,
     AMGenerateAICRequestData
+    InvestorGenerateAICRequestData,
+    InvestorGenerateAICRequestBody,
 } from './model';
 
 @Injectable()
@@ -417,4 +419,33 @@ export class OfiReportsService {
 
         return createMemberNodeRequest(this.memberSocketService, messageBody);
     }
+
+    /* GENERATE AIC */
+
+    defaultRequestGenerateAICInvestor(data: InvestorGenerateAICRequestData, successCallback: (res) => void, errorCallback: (res) => void) {
+        // Request the list.
+        const asyncTaskPipe = this.requestGenerateAICInvestor(data);
+    
+        this.ngRedux.dispatch(SagaHelper.runAsync(
+          [],
+          [],
+          asyncTaskPipe,
+          {},
+          res => successCallback(res),
+          res => errorCallback(res),
+        ));
+      }
+    
+      requestGenerateAICInvestor(data: InvestorGenerateAICRequestData): any {
+        const messageBody: InvestorGenerateAICRequestBody = {
+          RequestName: 'izngenerateaicinvestor',
+          token: this.memberSocketService.token,
+          fromDate: data.fromDate,
+          isin: data.isin,
+          subportfolio: data.subportfolio,
+        };
+    
+        return createMemberNodeRequest(this.memberSocketService, messageBody);
+      }
+    
 }
