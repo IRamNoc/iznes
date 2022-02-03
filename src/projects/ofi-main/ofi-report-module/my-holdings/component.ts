@@ -4,13 +4,14 @@ import { select } from '@angular-redux/store';
 import { MultilingualService } from '@setl/multilingual';
 import { List } from 'immutable';
 import { combineLatest } from 'rxjs'
+import * as moment from 'moment';
 import { Subject } from 'rxjs/Subject';
 import { filter, takeUntil, switchMap } from 'rxjs/operators';
 import * as _ from 'lodash';
 import { OfiManagementCompanyService } from '../../ofi-req-services/ofi-product/management-company/management-company.service';
 import { OfiReportsService } from '../../ofi-req-services/ofi-reports/service';
 import { OfiCurrenciesService } from '../../ofi-req-services/ofi-currencies/service';
-import { InvestorHoldingRequestData } from '@ofi/ofi-main/ofi-req-services/ofi-reports/model';
+import { InvestorHoldingRequestData, InvestorGenerateAICRequestData } from '@ofi/ofi-main/ofi-req-services/ofi-reports/model';
 import { OfiSubPortfolioService } from './../../../ofi-main/ofi-sub-portfolio/sub-portfolio/service'
 @Component({
     styleUrls: ['./component.scss'],
@@ -21,15 +22,19 @@ export class MyHoldingsComponent implements OnInit, OnDestroy {
     investorManagementCompanyList = [];
     holdingList: Array<any>;
     searchForm: FormGroup;
-    aicForm: FormGroup
+    aicForm: FormGroup;
     unSubscribe: Subject<any> = new Subject();
     language = 'en';
     managementCompanyList: any[] = [];
     allCompaniesList: any[] = [];
 
+    // modal
+    showGenerateAIC = false;
+
     public subportfolioListData: Array<any>;
     public sharesList: Array<any>;
     shareISIN = "";
+    selectedSubportfolio: any = "";
 
     @select(['user', 'connected', 'connectedWallet']) connectedWallet$;
     @select(['user', 'siteSettings', 'language']) language$;
@@ -55,8 +60,7 @@ export class MyHoldingsComponent implements OnInit, OnDestroy {
         private translate: MultilingualService,
         private ofiSubPortfolioService: OfiSubPortfolioService,
 
-    ) {
-    }
+    ) {}
 
     ngOnInit(): void {
         this.initCompanies();
@@ -91,30 +95,38 @@ export class MyHoldingsComponent implements OnInit, OnDestroy {
 
     };
 
-
-
-
     initForm() {
         this.holdingList = [];
         this.searchForm = this.fb.group({
             search: ['', Validators.required],
-
-
         });
 
-        this.aicForm = new FormGroup({
-            sharesList: new FormControl(null, Validators.required),
-            fromDate: new FormControl(null, Validators.required),
-            subportfolioListData: new FormControl(null, Validators.required),
+        this.aicForm = this.fb.group({
+            fromDate: [ moment().format('YYYY-MM-DD') ],
+            isinCode: [''],
+            subportfolio: ['', Validators.required],
         });
-
-
-
 
         this.changeDetectorRef.detectChanges();
     }
 
     initSubscriptions() {
+        this.ofiSubPortfolioService.getSubPortfolioData()
+            .pipe(
+                takeUntil(this.unSubscribe),
+            )
+            .subscribe((data) => {
+                if (!data) return;
+                this.subportfolioListData = _.map(data, (subportfolio, index) => {
+                    return  {
+                        id: index,
+                        text: subportfolio.label,
+                        option: subportfolio.addr,
+                    }
+                });
+            });
+        this.ofiSubPortfolioService.updateSubPortfolioObservable();
+
         this.language$
             .pipe(
                 takeUntil(this.unSubscribe),
@@ -124,21 +136,6 @@ export class MyHoldingsComponent implements OnInit, OnDestroy {
                 this.initCompanies();
                 this.formatManagementCompanyList();
             });
-        this.ofiSubPortfolioService.getSubPortfolioData()
-            .pipe(
-                takeUntil(this.unSubscribe),
-            )
-            .subscribe((data) => {
-                this.subportfolioListData = data;
-                this.subportfolioListData.forEach((e, i) => {
-                    e.id = i;
-                    e.text = e.label;
-                });
-            });
-
-
-
-
 
         this.currencyList$
             .pipe(
@@ -193,10 +190,7 @@ export class MyHoldingsComponent implements OnInit, OnDestroy {
         ).pipe(
             takeUntil(this.unSubscribe),
         )
-            .subscribe(([requested, d]) => this.formatInvestorHoldingList(d));
-
-
-
+        .subscribe(([requested, d]) => this.formatInvestorHoldingList(d));
     }
 
     /**
@@ -213,6 +207,29 @@ export class MyHoldingsComponent implements OnInit, OnDestroy {
 
         this.changeDetectorRef.detectChanges();
         this.searchForm.controls['search'].setValue(this.allCompaniesList);
+    }
+
+    /**
+     * Generate AIC
+     */
+    handleGenerateAIC() {        
+        const payload: InvestorGenerateAICRequestData = {
+            fromDate: moment(this.aicForm.controls['fromDate'].value).format('YYYY-MM-DD HH:mm:ss'),
+            isin: this.shareISIN,
+            subportfolio: this.selectedSubportfolio,
+        }
+
+        this.ofiReportsService.defaultRequestGenerateAICInvestor(payload, (data) => {
+            console.log('success !');
+            console.log(data);
+
+            // if success, closes modal
+            this.showGenerateAIC = false;
+        },
+        (error) => {
+            console.log('error !');
+            console.log(error);
+        });
     }
 
     /**
@@ -270,7 +287,11 @@ export class MyHoldingsComponent implements OnInit, OnDestroy {
     }
 
     onChange(event) {
-
         this.shareISIN = this.sharesList.filter(e => e.id == event.id)[0].shareIsin;
+    }
+
+    onSubportfolioChange(event) {
+        this.selectedSubportfolio = this.subportfolioListData.filter(e => e.id == event.id)[0].option;
+        console.log(this.selectedSubportfolio);
     }
 }
