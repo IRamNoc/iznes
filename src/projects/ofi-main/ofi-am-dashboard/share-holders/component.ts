@@ -38,6 +38,9 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
     //aic Form
     aicForm:FormGroup;
     selectedSubportfolio: any = "";
+    showGenerateAIC = false;
+
+
 
 
     // funds forms
@@ -338,11 +341,11 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
         }
         this.loadingDatagrid = false;
 
-        this.aicForm = new FormGroup({
-            sharesList: new FormControl(null, Validators.required),
-            fromDate: new FormControl(null, Validators.required),
-            subportfolioListData: new FormControl(null, Validators.required),
-            allClientNameList: new FormControl(null, Validators.required),
+        this.aicForm = this.fb.group({
+            isinCode: [''],
+            fromDate: [ moment().format('YYYY-MM-DD') ],
+            subportfolioListData: ['', Validators.required],
+            allClientNameList: ['', Validators.required],
         });
 
 
@@ -361,10 +364,24 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
         const payload: AMGenerateAICRequestData = {
             fromDate: moment(this.aicForm.controls['fromDate'].value).format('YYYY-MM-DD HH:mm:ss'),
             isin: this.shareISIN,
-            subportfolioListData: this.selectedSubportfolio,
+            subportfolio: this.selectedSubportfolio,
             allClientNameList: this.allClientNameList,
         }
+
+        this.ofiReportsService.defaultRequestGenerateAICAM(payload, (data) => {
+            console.log('success !');
+            console.log(data);
+
+            // if success, closes modal
+            this.showGenerateAIC = false;
+        },
+        (error) => {
+            console.log('error !');
+            console.log(error);
+        });
     }
+
+
 
     initSubscriptions() {
         this.language$
@@ -611,9 +628,9 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
         console.log(this.selectedSubportfolio);
     }
 
-    onClientnameList(event) {
-        this.onClientnameList = this.allClientNameList.filter(e => e.id == event.id)[0].option;
-        console.log(this.onClientnameList);
+    onClientNameListChange(event) {
+        this.onClientNameListChange = this.allClientNameList.filter(e => e.id == event.id)[0].option;
+        console.log(this.onClientNameListChange);
     }
 
 
