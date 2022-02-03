@@ -1,46 +1,42 @@
 import { OnInit, ChangeDetectorRef, Component, OnDestroy } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms';
 import { select } from '@angular-redux/store';
 import { MultilingualService } from '@setl/multilingual';
 import { List } from 'immutable';
-<<<<<<< HEAD
 import { combineLatest } from 'rxjs'
 import * as moment from 'moment';
-=======
-import { combineLatest } from 'rxjs';
->>>>>>> 4bb87c33553d5e1c545bd0e14a8f59e2a59ac329
+import { ToasterService, Toast } from 'angular2-toaster';
 import { Subject } from 'rxjs/Subject';
 import { filter, takeUntil, switchMap } from 'rxjs/operators';
 import * as _ from 'lodash';
 import { OfiManagementCompanyService } from '../../ofi-req-services/ofi-product/management-company/management-company.service';
 import { OfiReportsService } from '../../ofi-req-services/ofi-reports/service';
 import { OfiCurrenciesService } from '../../ofi-req-services/ofi-currencies/service';
-<<<<<<< HEAD
 import { InvestorHoldingRequestData, InvestorGenerateAICRequestData } from '@ofi/ofi-main/ofi-req-services/ofi-reports/model';
 import { OfiSubPortfolioService } from './../../../ofi-main/ofi-sub-portfolio/sub-portfolio/service'
-=======
-import { InvestorHoldingRequestData } from '@ofi/ofi-main/ofi-req-services/ofi-reports/model';
-
->>>>>>> 4bb87c33553d5e1c545bd0e14a8f59e2a59ac329
 @Component({
     styleUrls: ['./component.scss'],
     templateUrl: './component.html',
 })
 export class MyHoldingsComponent implements OnInit, OnDestroy {
+    toastTimer;
+    timerToast: Toast;
+    toasterConfig: any = {
+        type: 'warning',
+        title: '',
+        timeout: 0,
+        tapToDismiss: false,
+    };
     currencyList = [];
     investorManagementCompanyList = [];
     holdingList: Array<any>;
     searchForm: FormGroup;
-<<<<<<< HEAD
     aicForm: FormGroup;
-=======
->>>>>>> 4bb87c33553d5e1c545bd0e14a8f59e2a59ac329
     unSubscribe: Subject<any> = new Subject();
     language = 'en';
     managementCompanyList: any[] = [];
     allCompaniesList: any[] = [];
 
-<<<<<<< HEAD
     // modal
     showGenerateAIC = false;
 
@@ -49,8 +45,6 @@ export class MyHoldingsComponent implements OnInit, OnDestroy {
     shareISIN = "";
     selectedSubportfolio: any = "";
 
-=======
->>>>>>> 4bb87c33553d5e1c545bd0e14a8f59e2a59ac329
     @select(['user', 'connected', 'connectedWallet']) connectedWallet$;
     @select(['user', 'siteSettings', 'language']) language$;
     @select(['user', 'myDetail', 'accountId']) accountId$;
@@ -73,14 +67,9 @@ export class MyHoldingsComponent implements OnInit, OnDestroy {
         private managementCompanyService: OfiManagementCompanyService,
         private ofiReportsService: OfiReportsService,
         private translate: MultilingualService,
-<<<<<<< HEAD
         private ofiSubPortfolioService: OfiSubPortfolioService,
-
+        private toaster: ToasterService,
     ) {}
-=======
-    ) {
-    }
->>>>>>> 4bb87c33553d5e1c545bd0e14a8f59e2a59ac329
 
     ngOnInit(): void {
         this.initCompanies();
@@ -105,7 +94,6 @@ export class MyHoldingsComponent implements OnInit, OnDestroy {
             text: this.translate.translate('All Asset Management Companies'),
         }];
     }
-<<<<<<< HEAD
     // Datepicker config
     fromConfigDate = {
         firstDayOfWeek: 'mo',
@@ -115,13 +103,10 @@ export class MyHoldingsComponent implements OnInit, OnDestroy {
         locale: this.language,
 
     };
-=======
->>>>>>> 4bb87c33553d5e1c545bd0e14a8f59e2a59ac329
 
     initForm() {
         this.holdingList = [];
         this.searchForm = this.fb.group({
-<<<<<<< HEAD
             search: ['', Validators.required],
         });
 
@@ -131,11 +116,6 @@ export class MyHoldingsComponent implements OnInit, OnDestroy {
             subportfolio: ['', Validators.required],
         });
 
-=======
-            search: [''],
-        });
-
->>>>>>> 4bb87c33553d5e1c545bd0e14a8f59e2a59ac329
         this.changeDetectorRef.detectChanges();
     }
 
@@ -157,7 +137,6 @@ export class MyHoldingsComponent implements OnInit, OnDestroy {
         this.ofiSubPortfolioService.updateSubPortfolioObservable();
 
         this.language$
-<<<<<<< HEAD
             .pipe(
                 takeUntil(this.unSubscribe),
             )
@@ -166,35 +145,25 @@ export class MyHoldingsComponent implements OnInit, OnDestroy {
                 this.initCompanies();
                 this.formatManagementCompanyList();
             });
-=======
-        .pipe(
-            takeUntil(this.unSubscribe),
-        )
-        .subscribe((language) => {
-            this.language = language;
-            this.initCompanies();
-            this.formatManagementCompanyList();
-        });
->>>>>>> 4bb87c33553d5e1c545bd0e14a8f59e2a59ac329
 
         this.currencyList$
-        .pipe(
-            switchMap(() => this.loaded$),
-            filter((loaded) => !loaded),
-            takeUntil(this.unSubscribe),
-        )
-        .subscribe(() => this.currenciesService.getCurrencyList());
+            .pipe(
+                switchMap(() => this.loaded$),
+                filter((loaded) => !loaded),
+                takeUntil(this.unSubscribe),
+            )
+            .subscribe(() => this.currenciesService.getCurrencyList());
 
         this.currencyList$
-        .pipe(filter((v: List<any>) => v && v.size > 0), takeUntil(this.unSubscribe))
-        .subscribe((d) => this.currencyList = d.toJS());
+            .pipe(filter((v: List<any>) => v && v.size > 0), takeUntil(this.unSubscribe))
+            .subscribe((d) => this.currencyList = d.toJS());
 
         this.accountId$
-        .pipe(
-            filter(accountId => accountId && accountId !== 0),
-            takeUntil(this.unSubscribe),
-        )
-        .subscribe(accountId => this.managementCompanyService.setAccountId(accountId));
+            .pipe(
+                filter(accountId => accountId && accountId !== 0),
+                takeUntil(this.unSubscribe),
+            )
+            .subscribe(accountId => this.managementCompanyService.setAccountId(accountId));
 
         combineLatest(
             this.accountId$,
@@ -204,25 +173,25 @@ export class MyHoldingsComponent implements OnInit, OnDestroy {
             filter(([accountId, walletId, selectedItem]) => accountId && accountId !== 0 && walletId && selectedItem.search.length),
             takeUntil(this.unSubscribe),
         )
-        .subscribe(([accountId, selectedWalletId, selectedItem]) => {
-            const payload: InvestorHoldingRequestData = {
-                amCompanyID: selectedItem.search[0].id,
-                walletID: Number(selectedWalletId),
-                accountID: Number(accountId),
-            };
+            .subscribe(([accountId, selectedWalletId, selectedItem]) => {
+                const payload: InvestorHoldingRequestData = {
+                    amCompanyID: selectedItem.search[0].id,
+                    walletID: Number(selectedWalletId),
+                    accountID: Number(accountId),
+                };
 
-            this.ofiReportsService.fetchInvestorHoldingList(payload);
-        });
+                this.ofiReportsService.fetchInvestorHoldingList(payload);
+            });
 
         this.investorManagementCompany$
-        .pipe(
-            filter((v: List<any>) => v && v.size > 0),
-            takeUntil(this.unSubscribe),
-        )
-        .subscribe(d => {
-            this.managementCompanyList = d.toJS();
-            this.formatManagementCompanyList();
-        });
+            .pipe(
+                filter((v: List<any>) => v && v.size > 0),
+                takeUntil(this.unSubscribe),
+            )
+            .subscribe(d => {
+                this.managementCompanyList = d.toJS();
+                this.formatManagementCompanyList();
+            });
 
         combineLatest(
             this.investorHoldingRequested,
@@ -259,16 +228,28 @@ export class MyHoldingsComponent implements OnInit, OnDestroy {
             subportfolio: this.selectedSubportfolio,
         }
 
-        this.ofiReportsService.defaultRequestGenerateAICInvestor(payload, (data) => {
-            console.log('success !');
-            console.log(data);
+        this.ofiReportsService.requestGenerateAICInvestor(payload).then((result) => {
+            const data = result[1].Data;
+            
+            if (data.error) {
+                return this.toaster.pop('error', this.translate.translate('There is a problem with the request.'));
+            }
 
-            // if success, closes modal
+            // decodes base64 file payload
+            const byteArray = new Uint8Array(atob(data.payload).split('').map(char => char.charCodeAt(0)));
+
+            // create temporary element and delete it after file download
+            const element = document.createElement('a');
+            document.body.appendChild(element);
+            const fileURL = window.URL.createObjectURL(new Blob([byteArray], {type: 'application/pdf'}));
+            element.href = fileURL;
+            element.download = data.filename;
+            element.click();
+            document.body.removeChild(element);
+
+            // hide modal and return toaster message notification
             this.showGenerateAIC = false;
-        },
-        (error) => {
-            console.log('error !');
-            console.log(error);
+            return this.toaster.pop('error', this.translate.translate('PDF file successfully generated.'));
         });
     }
 
@@ -281,7 +262,7 @@ export class MyHoldingsComponent implements OnInit, OnDestroy {
     formatInvestorHoldingList(d) {
         const data = d.toJS();
 
-        this.holdingList = data.map(it => ({
+        this.holdingList = data.map((it, i) => ({
             amManagementCompanyID: it.amManagementCompanyID,
             companyName: it.companyName,
             shareID: it.shareID,
@@ -295,14 +276,25 @@ export class MyHoldingsComponent implements OnInit, OnDestroy {
             amount: it.amount,
             ratio: it.ratio,
         }));
+        this.sharesList = data.map((it, i) => ({
+            id: i,
+            text: it.fundShareName,
+            shareIsin: it.isin,
+
+        }));
     }
 
-     /**
-     * Get the code of the currency by its id
-     *
-     * @param {number} currencyId
-     * @returns {string}
-     */
+    onSubmit(): void {
+
+    }
+
+
+    /**
+    * Get the code of the currency by its id
+    *
+    * @param {number} currencyId
+    * @returns {string}
+    */
     getCurrencyString(currencyId: number): string {
         try {
             return this.currencyList.find(v => v.id === currencyId).text || '';
@@ -310,7 +302,6 @@ export class MyHoldingsComponent implements OnInit, OnDestroy {
             return '';
         }
     }
-<<<<<<< HEAD
 
     clickReset() {
         this.aicForm.reset();
@@ -324,6 +315,4 @@ export class MyHoldingsComponent implements OnInit, OnDestroy {
         this.selectedSubportfolio = this.subportfolioListData.filter(e => e.id == event.id)[0].option;
         console.log(this.selectedSubportfolio);
     }
-=======
->>>>>>> 4bb87c33553d5e1c545bd0e14a8f59e2a59ac329
 }

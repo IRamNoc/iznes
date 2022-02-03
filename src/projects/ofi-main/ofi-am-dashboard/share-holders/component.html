@@ -5,7 +5,8 @@
 <section class="wrapper wrapper-content">
     <clr-tabs *ngIf="tabsControl.length">
         <clr-tab *ngFor="let tabdata of tabsControl">
-            <button clrTabLink id="{{tabdata.id}}" [routerLink]="[(tabdata.id === 0) ? tabdata.link : tabdata.link + '/' + tabdata.id]">
+            <button clrTabLink id="{{tabdata.id}}"
+                [routerLink]="[(tabdata.id === 0) ? tabdata.link : tabdata.link + '/' + tabdata.id]">
                 <i class="fa {{tabdata.title.icon}}"></i> {{tabdata.title.text}}
                 <span *ngIf="tabTitle !== '' && tabdata.type !== 'list'"> - {{tabTitle}}</span>
             </button>
@@ -16,43 +17,51 @@
                         <div class="row ">
                             <div class="form-group col-lg-4">
                                 <div style="margin: 10px 0;">
-                                    <b><span>{{ 'Search for a recordkeeping for a specific Fund' | translate }}</span></b>
+                                    <b><span>{{ 'Search for a recordkeeping for a specific Fund' | translate
+                                            }}</span></b>
                                 </div>
 
                                 <div class="input-button-group">
-                                    <ng-select id="holders-list-funds-search-field"
-                                                [items]="fundList"
-                                                [allowClear]="true"
-                                                [placeholder]="translate.translate('Type a Fund name or a LEI code')"
-                                                [formControl]="listSearchForm.controls['searchFunds']">
+                                    <ng-select id="holders-list-funds-search-field" [items]="fundList"
+                                        [allowClear]="true"
+                                        [placeholder]="translate.translate('Type a Fund name or a LEI code')"
+                                        [formControl]="listSearchForm.controls['searchFunds']">
                                     </ng-select>
                                 </div>
                             </div>
                             <div class="form-group col-lg-4">
                                 <div style="margin: 10px 0;">
-                                    <b><span>{{ 'Search for a recordkeeping for a specific Share' | translate }}</span></b>
+                                    <b><span>{{ 'Search for a recordkeeping for a specific Share' | translate
+                                            }}</span></b>
                                 </div>
 
                                 <div class="input-button-group">
-                                    <ng-select id="holders-list-shares-search-field"
-                                                [items]="sharesList"
-                                                [allowClear]="true"
-                                                [placeholder]="translate.translate('Type a Share name or an ISIN code')"
-                                                [formControl]="listSearchForm.controls['searchShares']">
+                                    <ng-select id="holders-list-shares-search-field" [items]="sharesList"
+                                        [allowClear]="true"
+                                        [placeholder]="translate.translate('Type a Share name or an ISIN code')"
+                                        [formControl]="listSearchForm.controls['searchShares']">
                                     </ng-select>
                                 </div>
-                            </div>
 
-                            <div class="form-group col-lg-4"></div>
+                            </div>
+                            <div class="col-xs-4 text-right">
+                                <button id="aic" class="btn btn-primary action-button"
+                                    (click)=" showGenerateAIC = true">{{ 'Generate AIC' | translate }}
+                                </button>
+                            </div>
                         </div>
+
+
                     </div>
+
+
                     <div class="hr-line-dashed"></div>
                 </form>
 
                 <clr-modal [(clrModalOpen)]="showGenerateAIC" [clrModalSize]="'l'">
                     <h3 id="override_header" class="modal-title">{{ 'Generate AIC' | translate }}</h3>
                     <div class="modal-body">
-                        <form autocomplete="off" (ngSubmit)="onSubmit()" [formGroup]="aicForm">
+                        <form [formGroup]="aicForm">
                             <section class="form-block">
                             <div class="row">
 
@@ -80,10 +89,7 @@
 
                                     <div>
                                         <input id="isinCode" type="text"
-                                            placeholder="{{shareISIN}}"
-                                            formControlName="isinCode"
-
-                                            readonly>
+                                            placeholder="{{shareISIN}}" readonly>
                                     </div>
                                     <div class="row mt-1">
 
@@ -96,7 +102,7 @@
                                              [items]="allClientNameList"
                                              formControlName="allClientNameList"
                                              class="form-control"
-                                             (selected)="onSubportfolioChange($event)"
+                                             (selected)="onChange($event)"
                                                 [allowClear]=true
                                                  placeholder="{{ 'Select address' | translate }}">
                                             </ng-select>
@@ -113,7 +119,7 @@
                                                 [items]="transferListItems"
                                                 [allowClear]="true"
                                                 formControlName="subportfolioListData"
-                                                (selected)="onSubportfolioChange($event)"
+                                                (selected)="onChange($event)"
                                                 [placeholder]="translate.translate('Search a Subportfolio')"
                                             >
                                             </ng-select>
@@ -140,12 +146,12 @@
 
                                         <div class="col-xs-4 text-right">
                                             <button id="aic" 
-                                            class="btn btn-primary action-button" 
-                                            type="button" 
-                                            (click)="handleGenerateAIC()"
-                                            [disabled]="aicForm.invalid">{{ 'Generate AIC' | translate }}
-                                        </button>
-    
+                                            class="btn btn-primary action-button"
+                                            (click)="clicksub()" 
+                                            [disabled]="aicForm.invalid" 
+                                            type="button">
+                                            {{ 'Generate AIC' | translate }}
+                                            </button>
                                         </div>
                                     </div>
                                 </div>
@@ -165,7 +171,8 @@
                         <div class="row ">
                             <div class="form-group col-lg-8">
                                 <p>
-                                    {{ 'Please select the Fund on which you want to see the recordkeeping or export recordkeeping for all Funds by the top right button.' | translate }}
+                                    {{ 'Please select the Fund on which you want to see the recordkeeping or export
+                                    recordkeeping for all Funds by the top right button.' | translate }}
                                 </p>
 
                                 <div style="margin: 10px 0;">
@@ -173,18 +180,16 @@
                                 </div>
 
                                 <div class="input-button-group">
-                                    <ng-select id="holders-funds-search-field"
-                                                [items]="fundList"
-                                                [allowClear]="true"
-                                                [placeholder]="translate.translate('Type a Fund Name')"
-                                                [formControl]="searchForm.controls['search']">
+                                    <ng-select id="holders-funds-search-field" [items]="fundList" [allowClear]="true"
+                                        [placeholder]="translate.translate('Type a Fund Name')"
+                                        [formControl]="searchForm.controls['search']">
                                     </ng-select>
                                 </div>
                             </div>
 
                             <div class="col-lg-4 text-right">
-                                <button id="holders-funds-all-export-btn" type="button" class="btn btn-success" style="max-width: none !important"
-                                        (click)="exportFile('funds', 0)">
+                                <button id="holders-funds-all-export-btn" type="button" class="btn btn-success"
+                                    style="max-width: none !important" (click)="exportFile('funds', 0)">
                                     {{ 'Export Recordkeeping for all Funds' | translate }}
                                 </button>
                             </div>
@@ -205,18 +210,16 @@
                                 </div>
 
                                 <div class="input-button-group">
-                                    <ng-select id="holders-shares-search-field"
-                                                [items]="sharesList"
-                                                [allowClear]="true"
-                                                [placeholder]="translate.translate('Type a Share Name or an ISIN code')"
-                                                [formControl]="searchForm.controls['search']">
+                                    <ng-select id="holders-shares-search-field" [items]="sharesList" [allowClear]="true"
+                                        [placeholder]="translate.translate('Type a Share Name or an ISIN code')"
+                                        [formControl]="searchForm.controls['search']">
                                     </ng-select>
                                 </div>
                             </div>
 
                             <div class="col-lg-4 text-right">
-                                <button id="holders-shares-all-export-btn" type="button" class="btn btn-success" style="max-width: none !important"
-                                        (click)="exportFile('shares', 0)">
+                                <button id="holders-shares-all-export-btn" type="button" class="btn btn-success"
+                                    style="max-width: none !important" (click)="exportFile('shares', 0)">
                                     {{ 'Export Recordkeeping for all Shares' | translate }}
                                 </button>
                             </div>
@@ -249,18 +252,20 @@
         <div class="panel-body">
             <div class="row ">
                 <div class="col-lg-8">
-                    <h3 style="margin-bottom: 3px;">{{ 'Please find a list of all your products below' | translate }}</h3>
-                    <p>{{ 'You can access the recordkeeping for a specific Fund or Share by clicking on the corresponding line in the table below.' | translate }}</p>
+                    <h3 style="margin-bottom: 3px;">{{ 'Please find a list of all your products below' | translate }}
+                    </h3>
+                    <p>{{ 'You can access the recordkeeping for a specific Fund or Share by clicking on the
+                        corresponding line in the table below.' | translate }}</p>
                 </div>
 
                 <div class="col-lg-4 text-right">
-                    <button id="holders-export-list-btn1" type="button" class="btn btn-success" style="max-width: none !important"
-                            (click)="exportFile('funds', 0)">
+                    <button id="holders-export-list-btn1" type="button" class="btn btn-success"
+                        style="max-width: none !important" (click)="exportFile('funds', 0)">
                         {{ 'Export Recordkeeping for all Funds' | translate }}
                     </button>
                     <br>
-                    <button id="holders-export-list-btn2" type="button" class="btn btn-success" style="max-width: none !important"
-                            (click)="exportFile('shares', 0)">
+                    <button id="holders-export-list-btn2" type="button" class="btn btn-success"
+                        style="max-width: none !important" (click)="exportFile('shares', 0)">
                         {{ 'Export Recordkeeping for all Shares' | translate }}
                     </button>
                 </div>
@@ -304,7 +309,7 @@
                     </ng-container>
 
                     <ng-container *ngIf="data.shareId !== 0" ngProjectAs="clr-dg-cell">
-                        <clr-dg-cell class="right">{{data.shareNav | moneyValue: 4}}</clr-dg-cell>
+                        <clr-dg-cell class="right">{{data.shareNav | moneyValue: 2}}</clr-dg-cell>
                     </ng-container>
 
                     <ng-container *ngIf="data.shareId === 0" ngProjectAs="clr-dg-cell">
@@ -358,11 +363,9 @@
                                 <b>{{ 'Top Holders of this Fund' | translate }}</b>
                             </label>
                             <div class="input-button-group">
-                                <ng-select id="holders-fund-filter-top"
-                                            [items]="holderFilters"
-                                            [allowClear]="true"
-                                            [placeholder]="translate.translate('Top Holders of this Fund')"
-                                            [formControl]="filtersForm.controls['topholders']">
+                                <ng-select id="holders-fund-filter-top" [items]="holderFilters" [allowClear]="true"
+                                    [placeholder]="translate.translate('Top Holders of this Fund')"
+                                    [formControl]="filtersForm.controls['topholders']">
                                 </ng-select>
                             </div>
                         </div>
@@ -404,8 +407,9 @@
                         </div>
                         <div class="col-lg-4 text-right">
                             <button *ngIf="holdersFundData.length > 0" id="holders-funds-export-btn" type="button"
-                                    class="mt-1 btn btn-success" style="max-width: none !important" (click)="exportFile('funds', 1)">
-                                    {{ 'Export @tabTitle@ Recordkeeping' | translate: { 'tabTitle': tabTitle } }}
+                                class="mt-1 btn btn-success" style="max-width: none !important"
+                                (click)="exportFile('funds', 1)">
+                                {{ 'Export @tabTitle@ Recordkeeping' | translate: { 'tabTitle': tabTitle } }}
                             </button>
                         </div>
                     </div>
@@ -447,11 +451,9 @@
                                 <b>{{ 'Top Holders of this Share' | translate }}</b>
                             </label>
                             <div class="input-button-group">
-                                <ng-select id="holders-shares-filter-top"
-                                            [items]="holderFilters"
-                                            [allowClear]="true"
-                                            [placeholder]="translate.translate('Top Holders of this Share')"
-                                            [formControl]="filtersForm.controls['topholders']">
+                                <ng-select id="holders-shares-filter-top" [items]="holderFilters" [allowClear]="true"
+                                    [placeholder]="translate.translate('Top Holders of this Share')"
+                                    [formControl]="filtersForm.controls['topholders']">
                                 </ng-select>
                             </div>
                         </div>
@@ -465,9 +467,9 @@
                         </div>
                         <!--</div>-->
                         <div class="col-lg-4 text-right">
-                            <button id="holders-shares-export-btn" type="button" class="mt-1 btn btn-success" style="max-width: none !important"
-                                    (click)="exportFile('shares', 1)">
-                                    {{ 'Export @tabTitle@ Recordkeeping' | translate: { 'tabTitle': tabTitle } }}
+                            <button id="holders-shares-export-btn" type="button" class="mt-1 btn btn-success"
+                                style="max-width: none !important" (click)="exportFile('shares', 1)">
+                                {{ 'Export @tabTitle@ Recordkeeping' | translate: { 'tabTitle': tabTitle } }}
                             </button>
                         </div>
                     </div>
@@ -501,7 +503,7 @@
                                 <b>{{ 'Latest NAV' | translate }}</b>
                             </label>
                             <div>
-                                <span class="readonly-field">{{sharesLatestNAV | moneyValue:4}}</span>
+                                <span class="readonly-field">{{sharesLatestNAV | moneyValue:2}}</span>
                             </div>
                         </div>
                         <div class="form-group col-lg-2">

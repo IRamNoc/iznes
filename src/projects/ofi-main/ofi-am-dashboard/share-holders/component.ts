@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup,Validators,FormControl } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgRedux, select } from '@angular-redux/store';
 import { fromJS } from 'immutable';
@@ -9,7 +9,6 @@ import { MemberSocketService } from '@setl/websocket-service';
 import { OfiAmDashboardService } from '../../ofi-req-services/ofi-am-dashboard/service';
 import { OfiReportsService } from '../../ofi-req-services/ofi-reports/service';
 import { MultilingualService } from '@setl/multilingual';
-<<<<<<< HEAD
 import { OfiSubPortfolioService } from './../../../ofi-main/ofi-sub-portfolio/sub-portfolio/service'
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
@@ -20,8 +19,6 @@ import { TransferInOutService } from '../../ofi-transfer-in-out/transfer-in-out.
 import * as moment from 'moment';
 import { AMGenerateAICRequestData,AMGenerateAICRequestBody} from '../../ofi-req-services/ofi-reports/model'
 
-=======
->>>>>>> 4bb87c33553d5e1c545bd0e14a8f59e2a59ac329
 
 interface SelectedItem {
     id: number;
@@ -38,17 +35,11 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
     // list forms
     listSearchForm: FormGroup;
 
-<<<<<<< HEAD
     //aic Form
     aicForm:FormGroup;
     selectedSubportfolio: any = "";
-    showGenerateAIC = false;
 
 
-
-
-=======
->>>>>>> 4bb87c33553d5e1c545bd0e14a8f59e2a59ac329
     // funds forms
     searchForm: FormGroup;
     filtersForm: FormGroup;
@@ -107,12 +98,21 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
     sharesCCY = '';
 
     allList: any = [];
+    allClientNameList: any = [];
     fundList: any = [];
     sharesList: any = [];
+    clientNameList: any = [];
     fundsData: any = [];
     sharesData: any = [];
     holdersFundData: any = [];
     holdersShareData: any = [];
+    shareISIN = "";
+    portfolioList: any = [];
+
+
+    subportfolio: any[] = [];
+    subportfolioList = [];
+    public subportfolioListData: Array<any>;
 
     loadingDatagrid: boolean = false;
     setLoadingDatagrid: boolean = false;
@@ -120,6 +120,17 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
     /* Private Properties. */
     private myDetails: any = {};
     private subscriptions: Array<any> = [];
+    unSubscribe: Subject<any> = new Subject();
+    hasPermissionCanManageAllClientFile$: Observable<boolean>;
+    hasPermissionCanManageAllClientFile = false;
+
+    hasNowCpAMPermission$: Observable<boolean>;
+    public isNowCpAm: boolean = false;
+    hasID2SAMPermission$: Observable<boolean>;
+    public isID2SAm: boolean = false;
+    
+    transferListItems: any[];    
+    rowOffset = 0;
 
     @select(['user', 'siteSettings', 'language']) requestLanguageObj;
     @select(['user', 'myDetail']) myDetailOb: any;
@@ -127,6 +138,7 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
     // fund select list
     @select(['ofi', 'ofiAmDashboard', 'shareHolders', 'fundsByUserRequested']) fundsByUserRequestedOb;
     @select(['ofi', 'ofiAmDashboard', 'shareHolders', 'fundsByUserList']) fundsByUserListOb;
+    @select(['user', 'siteSettings', 'language']) language$;
 
     // fund details
     @select(['ofi', 'ofiAmDashboard', 'shareHolders', 'fundWithHoldersList']) fundWithHoldersListOb;
@@ -138,17 +150,29 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
     // shares details
     @select(['ofi', 'ofiReports', 'amHolders', 'shareHolderDetail']) shareHolderDetailObs;
 
+    /* Observables. */
+    @select(['user', 'siteSettings', 'language']) requestLanguageOb;
+    @select(['ofi', 'ofiKyc', 'amKycList', 'requested']) requestedOfiKycListOb;
+    @select(['ofi', 'ofiKyc', 'amKycList', 'amKycList']) kycListOb;
+    
+    @select(['ofi', 'ofiTransfers', 'manageTransfers', 'transferList']) transferObs;
+
     constructor(private ngRedux: NgRedux<any>,
-                private changeDetectorRef: ChangeDetectorRef,
-                private route: ActivatedRoute,
-                private router: Router,
-                private fb: FormBuilder,
-                private memberSocketService: MemberSocketService,
-                private ofiReportsService: OfiReportsService,
-                private ofiAmDashboardService: OfiAmDashboardService,
-                private fileDownloader: FileDownloader,
-                private activatedRoute: ActivatedRoute,
-                public translate: MultilingualService,
+        private changeDetectorRef: ChangeDetectorRef,
+        private route: ActivatedRoute,
+        private router: Router,
+        private fb: FormBuilder,
+        private memberSocketService: MemberSocketService,
+        private ofiReportsService: OfiReportsService,
+        private ofiAmDashboardService: OfiAmDashboardService,
+        private fileDownloader: FileDownloader,
+        private activatedRoute: ActivatedRoute,
+        public translate: MultilingualService,
+        private ofiSubPortfolioService: OfiSubPortfolioService,
+        private ofiKycService: OfiKycService,
+        private permissionsService: PermissionsService,
+        private transferService: TransferInOutService,
+
     ) {
         this.loadingDatagrid = false;
 
@@ -173,6 +197,9 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
             searchShares: [
                 '',
             ],
+            searchPortfolio: [
+                ''
+            ]
         });
 
         this.searchForm = this.fb.group({
@@ -186,6 +213,7 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
                 '',
             ],
         });
+
 
         // all list
         this.subscriptions.push(this.requestedOfiAmHoldersObj.subscribe(requested => this.getAmHoldersRequested(requested)));
@@ -204,6 +232,7 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
         this.subscriptions.push(this.filtersForm.valueChanges.subscribe(() => this.requestSearch()));
 
         this.setInitialTabs();
+        this.initSubscriptions();
 
         this.subscriptions.push(this.route.params.subscribe((params) => {
             const tabId = Number(params['tabid']);
@@ -291,7 +320,6 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
         });
     }
 
-<<<<<<< HEAD
      // Datepicker config
    fromConfigDate = {
     firstDayOfWeek: 'mo',
@@ -303,21 +331,18 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
 
   
 
-=======
->>>>>>> 4bb87c33553d5e1c545bd0e14a8f59e2a59ac329
     ngOnInit() {
         if (this.setLoadingDatagrid) {
             this.loadingDatagrid = true;
             return;
         }
         this.loadingDatagrid = false;
-<<<<<<< HEAD
 
-        this.aicForm = this.fb.group({
-            isinCode: [''],
-            fromDate: [ moment().format('YYYY-MM-DD') ],
-            subportfolioListData: ['', Validators.required],
-            allClientNameList: ['', Validators.required],
+        this.aicForm = new FormGroup({
+            sharesList: new FormControl(null, Validators.required),
+            fromDate: new FormControl(null, Validators.required),
+            subportfolioListData: new FormControl(null, Validators.required),
+            allClientNameList: new FormControl(null, Validators.required),
         });
 
 
@@ -339,21 +364,7 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
             subportfolio: this.selectedSubportfolio,
             allClientNameList: this.allClientNameList,
         }
-
-        this.ofiReportsService.defaultRequestGenerateAICAM(payload, (data) => {
-            console.log('success !');
-            console.log(data);
-
-            // if success, closes modal
-            this.showGenerateAIC = false;
-        },
-        (error) => {
-            console.log('error !');
-            console.log(error);
-        });
     }
-
-
 
     initSubscriptions() {
         this.language$
@@ -410,10 +421,6 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
             OfiKycService.defaultRequestAmKycList(this.ofiKycService, this.ngRedux);
         }
     }
-=======
-    }
-
->>>>>>> 4bb87c33553d5e1c545bd0e14a8f59e2a59ac329
     getLanguage(requested): void {
         if (requested) {
             switch (requested) {
@@ -439,6 +446,10 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
             OfiAmDashboardService.defaultRequestGetUserManagementCompanyFunds(this.ofiAmDashboardService, this.ngRedux);
         }
     }
+
+    clicksub() {
+        this.aicForm.reset();
+      }
 
     fundsByUserList(list) {
         const listImu = fromJS(list);
@@ -524,6 +535,8 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
                     },
                     [],
                 );
+
+                console.log(this.holdersFundData, "holdersFundData")
             }
         }
 
@@ -549,6 +562,7 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
      * @param holderList
      */
     getAmHoldersListFromRedux(holderList) {
+        console.log(holderList, "holderList")
         if (holderList) {
             this.allList = holderList.toJS() || [];
 
@@ -556,13 +570,14 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
                 return {
                     id: holder.shareId,
                     text: holder.fundName + ' - ' + holder.shareName + ' (' + holder.shareIsin + ')',
+                    shareIsin: holder.shareIsin,
                 };
             });
+
         }
         this.changeDetectorRef.markForCheck();
         this.loadingDatagrid = false;
     }
-<<<<<<< HEAD
     /**
      * Get the actual list of holders from redux
      *
@@ -596,9 +611,9 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
         console.log(this.selectedSubportfolio);
     }
 
-    onClientNameListChange(event) {
-        this.onClientNameListChange = this.allClientNameList.filter(e => e.id == event.id)[0].option;
-        console.log(this.onClientNameListChange);
+    onClientnameList(event) {
+        this.onClientnameList = this.allClientNameList.filter(e => e.id == event.id)[0].option;
+        console.log(this.onClientnameList);
     }
 
 
@@ -625,8 +640,6 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
             this.loadingDatagrid = false;
         }
     }
-=======
->>>>>>> 4bb87c33553d5e1c545bd0e14a8f59e2a59ac329
 
     /**
      * Get detail of holders for a given share id
@@ -811,7 +824,6 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
         }
     }
 
-<<<<<<< HEAD
      // Converts Transfer List Object to Array
      transferObjectToList(listTransfer) {
          const tranferList=[];
@@ -832,11 +844,12 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
         return transferListData;
     }
 
-=======
->>>>>>> 4bb87c33553d5e1c545bd0e14a8f59e2a59ac329
     ngOnDestroy(): void {
         for (const subscription of this.subscriptions) {
             subscription.unsubscribe();
         }
+        this.unSubscribe.next();
+        this.unSubscribe.complete();
+
     }
 }

@@ -10,25 +10,31 @@
         <clr-tab-content *clrIfActive>
             <section class="form-block">
 
-                <form [formGroup]="searchForm" id="search-orders-form">
+                <form [formGroup]="searchForm" id="search-orders-form" (ngSubmit)="onSubmit(searchForm.value)">
                     <div class="form-horizontal">
                         <div class="row bordered">
                             <div class="form-group col-sm-6">
                                 <label>{{ 'Asset Management Company' | translate }}</label>
                                 <div class="input-button-group">
-                                    <ng-select id="my-holdings-search-field" 
-                                                [items]="investorManagementCompanyList" 
-                                                [allowClear]="false" 
-                                                [placeholder]="translate.translate('Select Asset Management Company')"
-                                                [formControl]="searchForm.controls['search']">
+                                    <ng-select id="my-holdings-search-field" [items]="investorManagementCompanyList"
+                                        [allowClear]="false"
+                                        [placeholder]="translate.translate('Select Asset Management Company')"
+                                        [formControl]="searchForm.controls['search']">
                                     </ng-select>
                                 </div>
                             </div>
+                            <div class="col-xs-4 text-right">
+                                <button id="aic" class="btn btn-primary action-button"
+                                    (click)=" showGenerateAIC = true">{{ 'Generate AIC' | translate }}
+                                </button>
+                            </div>
                         </div>
+
                     </div>
+
+
                 </form>
 
-<<<<<<< HEAD
 
                 <form autocomplete="off" (ngSubmit)="onSubmit()" [formGroup]="aicForm">
 
@@ -101,8 +107,6 @@
 
 
 
-=======
->>>>>>> 4bb87c33553d5e1c545bd0e14a8f59e2a59ac329
                 <div class="hr-line-dashed"></div>
 
                 <clr-datagrid>
@@ -141,7 +145,7 @@
                         <clr-dg-cell>{{data.isin}}</clr-dg-cell>
                         <clr-dg-cell>{{data.shareClassCurrency}}</clr-dg-cell>
                         <clr-dg-cell class="right">{{data.quantity | moneyValue: 5 }}</clr-dg-cell>
-                        <clr-dg-cell class="right">{{data.latestNav | moneyValue: 4}}</clr-dg-cell>
+                        <clr-dg-cell class="right">{{data.latestNav | moneyValue: 2}}</clr-dg-cell>
                         <clr-dg-cell class="right">{{data.amount | moneyValue: 2}}</clr-dg-cell>
                         <clr-dg-cell class="right">{{data.ratio | moneyValue: 2}}%</clr-dg-cell>
                     </clr-dg-row>
