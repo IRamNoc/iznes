@@ -129,16 +129,16 @@ export interface CentralisationHistoryRequestData {
 }
 
 export interface AMGenerateAICRequestData {
-    fromDate: string;
     isin: string;
+    fromDate: string;
     subportfolio: string;
     client:string;
 }
 
 export interface AMGenerateAICRequestBody extends MemberNodeMessageBody {
     token: string;
-    fromDate: string;
     isin: string;
+    fromDate: string;
     subportfolio: string;
     client:string;
 

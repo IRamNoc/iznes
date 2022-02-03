@@ -133,8 +133,8 @@ export class OfiReportsService {
         const messageBody: AMGenerateAICRequestBody = {
           RequestName: 'izngenerateaicam',
           token: this.memberSocketService.token,
-          fromDate: data.fromDate,
           isin: data.isin,
+          fromDate: data.fromDate,
           subportfolio: data.subportfolio,
           client:data.client
         };

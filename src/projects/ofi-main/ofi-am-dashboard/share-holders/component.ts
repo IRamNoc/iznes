@@ -347,7 +347,7 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
             fromDate: [ moment().format('YYYY-MM-DD') ],
             isinCode: [''],
             subportfolio: ['', Validators.required],
-            clientNameList: ['', Validators.required],
+            client: ['', Validators.required],
         });
 
 
@@ -367,11 +367,10 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
             fromDate: moment(this.aicForm.controls['fromDate'].value).format('YYYY-MM-DD HH:mm:ss'),
             isin: this.shareISIN,
             subportfolio: this.selectedSubportfolio,
-            clientNameList: this.selectedClientName,
+            client: this.selectedClientName,
         }
         this.ofiReportsService.requestGenerateAICAM(payload).then((result) => {
             const data = result[1].Data;
-            console.log("atiqur loves sumaira")
             console.log(data)
             
             if (data.error) {
