@@ -166,6 +166,7 @@ export class OfiManagementCompanyService {
             managementCompanyType: get(mcData.managementCompanyType, '[0].id', 'common'),
             externalEmail: mcData.externalEmail,
             emailValidation: mcData.emailValidation,
+            mt502Email: mcData.mt502Email,
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
@@ -205,6 +206,7 @@ export class OfiManagementCompanyService {
             logoHash: mcData.logoHash,
             externalEmail: mcData.externalEmail,
             emailValidation: mcData.emailValidation,
+            mt502Email: mcData.mt502Email,
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);

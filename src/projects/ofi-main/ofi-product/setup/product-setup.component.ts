@@ -278,11 +278,14 @@ export class ProductSetupComponent implements OnInit, OnDestroy {
 								subscriptionCutOffTime: share.subscriptionCutOffTime,
 								subscriptionCutOffTimeZone: share.subscriptionCutOffTimeZone,
 								subscriptionSettlementPeriod: share.subscriptionSettlementPeriod === 0 ? 'D' : share.subscriptionSettlementPeriod > 0 ? `D+${share.subscriptionSettlementPeriod}` : `D${share.subscriptionSettlementPeriod}`,
+								subscriptionSettlementPivotDate: share.subscriptionSettlementPivotDate,
+								subscriptionValuationReference: share.subscriptionValuationReference,
 								redemptionTradeCyclePeriod: TradeCyclePeriodEnum[share.redemptionTradeCyclePeriod],
 								navPeriodForRedemption: share.navPeriodForRedemption === 0 ? 'D' : share.navPeriodForRedemption > 0 ? `D+${share.navPeriodForRedemption}` : `D${share.navPeriodForRedemption}`,
 								redemptionCutOffTime: share.redemptionCutOffTime,
 								redemptionCutOffTimeZone: share.redemptionCutOffTimeZone,
-								redemptionSettlementPeriod: share.redemptionSettlementPeriod === 0 ? 'D' : share.redemptionSettlementPeriod > 0 ? `D+${share.redemptionSettlementPeriod}` : `D${share.redemptionSettlementPeriod}`,
+								redemptionSettlementPivotDate: share.redemptionSettlementPivotDate,
+								redemptionValuationReference: share.redemptionValuationReference,
 								shareClassInvestmentStatus: status,
 							});
 						} else {
@@ -300,12 +303,15 @@ export class ProductSetupComponent implements OnInit, OnDestroy {
 								subscriptionCutOffTime: share.subscriptionCutOffTime,
 								subscriptionCutOffTimeZone: share.subscriptionCutOffTimeZone,
 								subscriptionSettlementPeriod: share.subscriptionSettlementPeriod === 0 ? 'D' : share.subscriptionSettlementPeriod > 0 ? `D+${share.subscriptionSettlementPeriod}` : `D${share.subscriptionSettlementPeriod}`,
+								subscriptionSettlementPivotDate: share.subscriptionSettlementPivotDate,
+								subscriptionValuationReference: share.subscriptionValuationReference,
 								redemptionTradeCyclePeriod: TradeCyclePeriodEnum[share.redemptionTradeCyclePeriod],
 								navPeriodForRedemption: share.navPeriodForRedemption === 0 ? 'D' : share.navPeriodForRedemption > 0 ? `D+${share.navPeriodForRedemption}` : `D${share.navPeriodForRedemption}`,
 								redemptionCutOffTime: share.redemptionCutOffTime,
 								redemptionCutOffTimeZone: share.redemptionCutOffTimeZone,
 								redemptionSettlementPeriod: share.redemptionSettlementPeriod === 0 ? 'D' : share.redemptionSettlementPeriod > 0 ? `D+${share.redemptionSettlementPeriod}` : `D${share.redemptionSettlementPeriod}`,
-							
+								redemptionSettlementPivotDate: share.redemptionSettlementPivotDate,
+								redemptionValuationReference: share.redemptionValuationReference,
 								shareClassInvestmentStatus: status,
 							});
 						}

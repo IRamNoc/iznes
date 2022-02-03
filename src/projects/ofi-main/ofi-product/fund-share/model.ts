@@ -139,9 +139,13 @@ export class FundShare {
             subscriptionCutOffTime: this.calendarSubscription.mandatory.subscriptionCutOffTime.value(),
             subscriptionCutOffTimeZone: this.getSelectValue(this.calendarSubscription.mandatory.subscriptionCutOffTimeZone),
             subscriptionSettlementPeriod: this.getSelectValue(this.calendarSubscription.mandatory.subscriptionSettlementPeriod),
+            subscriptionSettlementPivotDate: this.getSelectValue(this.calendarSubscription.mandatory.subscriptionSettlementPivotDate),
+            subscriptionValuationReference: this.getSelectValue(this.calendarSubscription.mandatory.subscriptionValuationReference),
             redemptionCutOffTime: this.calendarRedemption.mandatory.redemptionCutOffTime.value(),
             redemptionCutOffTimeZone: this.getSelectValue(this.calendarRedemption.mandatory.redemptionCutOffTimeZone),
             redemptionSettlementPeriod: this.getSelectValue(this.calendarRedemption.mandatory.redemptionSettlementPeriod),
+            redemptionSettlementPivotDate: this.getSelectValue(this.calendarRedemption.mandatory.redemptionSettlementPivotDate),
+            redemptionValuationReference: this.getSelectValue(this.calendarRedemption.mandatory.redemptionValuationReference), 
             subscriptionRedemptionCalendar: '0',
             maxManagementFee: this.fees.mandatory.maxManagementFee.value(),
             maxSubscriptionFee: this.fees.mandatory.maxSubscriptionFee.value(),
@@ -299,6 +303,14 @@ export class FundShare {
             this.calendarSubscription.mandatory.subscriptionSettlementPeriod,
             fundShare.subscriptionSettlementPeriod,
         );
+        this.setListItemPreset(
+            this.calendarSubscription.mandatory.subscriptionSettlementPivotDate,
+            fundShare.subscriptionSettlementPivotDate,
+        );
+        this.setListItemPreset(
+            this.calendarSubscription.mandatory.subscriptionValuationReference,
+            fundShare.subscriptionValuationReference,
+        );
 
         this.calendarRedemption.mandatory.redemptionCutOffTime.preset = fundShare.redemptionCutOffTime; // AC
         this.setListItemPreset(this.calendarRedemption.mandatory.redemptionCutOffTimeZone, fundShare.redemptionCutOffTimeZone);
@@ -306,7 +318,14 @@ export class FundShare {
             this.calendarRedemption.mandatory.redemptionSettlementPeriod,
             fundShare.redemptionSettlementPeriod,
         );
-
+        this.setListItemPreset(
+            this.calendarRedemption.mandatory.redemptionSettlementPivotDate,
+            fundShare.redemptionSettlementPivotDate,
+        );
+        this.setListItemPreset(
+            this.calendarRedemption.mandatory.redemptionValuationReference,
+            fundShare.redemptionValuationReference,
+        );
         this.setListItemPreset(
             this.calendarSubscription.mandatory.navPeriodForSubscription,
             fundShare.navPeriodForSubscription,
@@ -386,12 +405,28 @@ export class FundShare {
             this.calendarSubscription.mandatory.subscriptionSettlementPeriod,
             fundShare.subscriptionSettlementPeriod,
         );
+        this.setListItemValue(
+            this.calendarSubscription.mandatory.subscriptionSettlementPivotDate,
+            fundShare.subscriptionSettlementPivotDate,
+        );
+        this.setListItemValue(
+            this.calendarSubscription.mandatory.subscriptionValuationReference,
+            fundShare.subscriptionValuationReference,
+        );
 
         this.calendarRedemption.mandatory.redemptionCutOffTime.control.setValue(fundShare.redemptionCutOffTime);
         this.setListItemValue(this.calendarRedemption.mandatory.redemptionCutOffTimeZone, fundShare.redemptionCutOffTimeZone);
         this.setListItemValue(
             this.calendarRedemption.mandatory.redemptionSettlementPeriod,
             fundShare.redemptionSettlementPeriod,
+        );
+        this.setListItemValue(
+            this.calendarRedemption.mandatory.redemptionSettlementPivotDate,
+            fundShare.redemptionSettlementPivotDate,
+        );
+        this.setListItemValue(
+            this.calendarRedemption.mandatory.redemptionValuationReference,
+            fundShare.redemptionValuationReference,
         );
         this.setListItemValue(
             this.calendarSubscription.mandatory.navPeriodForSubscription,
@@ -791,9 +826,10 @@ export class FundShare {
         if (!field) return;
 
         if (field.type === FormItemType.list) {
+            // not working for now
             this.setListItemPresetFromOptional(field, value);
         } else {
-            field.preset = value;
+            field.control.setValue(value);
         }
     }
 
