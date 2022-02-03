@@ -51,7 +51,7 @@ import {
     CentralisationFundsRequestData,
     CentralisationSharesRequestData,
     AMGenerateAICRequestBody,
-    AMGenerateAICRequestData
+    AMGenerateAICRequestData,
     InvestorGenerateAICRequestData,
     InvestorGenerateAICRequestBody,
 } from './model';
