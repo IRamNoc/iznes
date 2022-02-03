@@ -57,11 +57,11 @@
 
                     <div class="hr-line-dashed"></div>
                 </form>
+                <form autocomplete="off" (ngSubmit)="handleGenerateAIC()" [formGroup]="aicForm">
 
                 <clr-modal [(clrModalOpen)]="showGenerateAIC" [clrModalSize]="'l'">
                     <h3 id="override_header" class="modal-title">{{ 'Generate AIC' | translate }}</h3>
                     <div class="modal-body">
-                        <form [formGroup]="aicForm">
                             <section class="form-block">
                             <div class="row">
 
@@ -72,7 +72,6 @@
                                     <div class="input-button-group col-lg-3">
                                         <ng-select id="holders-list-shares-search-field" [items]="sharesList"
                                             [allowClear]="true"
-                                            formControlName="sharesList"
                                             (selected)="onChange($event)"
                                             class="form-control"
                                             [placeholder]="translate.translate('Type a Share name')">
@@ -100,9 +99,9 @@
                                         <div class="input-button-group">
                                             <ng-select id="add-subportfolio-select"
                                              [items]="allClientNameList"
-                                             formControlName="allClientNameList"
+                                             formControlName="clientNameList"
                                              class="form-control"
-                                             (selected)="onChange($event)"
+                                             (selected)="onClientnameList"
                                                 [allowClear]=true
                                                  placeholder="{{ 'Select address' | translate }}">
                                             </ng-select>
@@ -118,8 +117,8 @@
                                             <ng-select id="holders-list-shares-search-field" 
                                                 [items]="transferListItems"
                                                 [allowClear]="true"
-                                                formControlName="subportfolioListData"
-                                                (selected)="onChange($event)"
+                                                formControlName="subportfolio"
+                                                (selected)="onSubportfolioChange(event)"
                                                 [placeholder]="translate.translate('Search a Subportfolio')"
                                             >
                                             </ng-select>
@@ -145,11 +144,11 @@
                                     </div>
 
                                         <div class="col-xs-4 text-right">
-                                            <button id="aic" 
+                                            <button id="aic"
+                                            type="submit" 
                                             class="btn btn-primary action-button"
-                                            (click)="clicksub()" 
                                             [disabled]="aicForm.invalid" 
-                                            type="button">
+                                            >
                                             {{ 'Generate AIC' | translate }}
                                             </button>
                                         </div>
@@ -161,10 +160,11 @@
 
 
 
-                        </form>
                     </div>
 
                 </clr-modal>
+            </form>
+
 
                 <form [formGroup]="searchForm" id="search-funds-orders-form" *ngIf="tabdata.type === 'funds'">
                     <div class="form-horizontal">

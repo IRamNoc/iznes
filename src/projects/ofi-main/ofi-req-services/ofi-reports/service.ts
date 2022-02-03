@@ -129,13 +129,14 @@ export class OfiReportsService {
       }
     
       requestGenerateAICAM(data: AMGenerateAICRequestData): any {
+         
         const messageBody: AMGenerateAICRequestBody = {
           RequestName: 'izngenerateaicam',
           token: this.memberSocketService.token,
           fromDate: data.fromDate,
           isin: data.isin,
           subportfolio: data.subportfolio,
-          allClientNameList:data.allClientNameList
+          client:data.client
         };
     
         return createMemberNodeRequest(this.memberSocketService, messageBody);

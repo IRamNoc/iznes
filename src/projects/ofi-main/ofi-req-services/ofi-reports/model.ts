@@ -132,7 +132,7 @@ export interface AMGenerateAICRequestData {
     fromDate: string;
     isin: string;
     subportfolio: string;
-    allClientNameList:string
+    client:string;
 }
 
 export interface AMGenerateAICRequestBody extends MemberNodeMessageBody {
@@ -140,7 +140,9 @@ export interface AMGenerateAICRequestBody extends MemberNodeMessageBody {
     fromDate: string;
     isin: string;
     subportfolio: string;
-    allClientNameList:string
+    client:string;
+
+
 
 }
 

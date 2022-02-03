@@ -17,6 +17,8 @@ import { Observable, combineLatest as observableCombineLatest } from 'rxjs';
 import { PermissionsService } from '../../../utils';
 import { TransferInOutService } from '../../ofi-transfer-in-out/transfer-in-out.service';
 import * as moment from 'moment';
+import { ToasterService, Toast } from 'angular2-toaster';
+
 import { AMGenerateAICRequestData,AMGenerateAICRequestBody} from '../../ofi-req-services/ofi-reports/model'
 
 
@@ -37,7 +39,8 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
 
     //aic Form
     aicForm:FormGroup;
-    selectedSubportfolio: any = "";
+    selectedSubportfolio: string = "";
+    selectedClientName:string = "";
 
 
     // funds forms
@@ -128,7 +131,8 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
     public isNowCpAm: boolean = false;
     hasID2SAMPermission$: Observable<boolean>;
     public isID2SAm: boolean = false;
-    
+    showGenerateAIC = false;
+
     transferListItems: any[];    
     rowOffset = 0;
 
@@ -172,6 +176,7 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
         private ofiKycService: OfiKycService,
         private permissionsService: PermissionsService,
         private transferService: TransferInOutService,
+        private toaster: ToasterService,
 
     ) {
         this.loadingDatagrid = false;
@@ -338,11 +343,11 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
         }
         this.loadingDatagrid = false;
 
-        this.aicForm = new FormGroup({
-            sharesList: new FormControl(null, Validators.required),
-            fromDate: new FormControl(null, Validators.required),
-            subportfolioListData: new FormControl(null, Validators.required),
-            allClientNameList: new FormControl(null, Validators.required),
+        this.aicForm = this.fb.group({
+            fromDate: [ moment().format('YYYY-MM-DD') ],
+            isinCode: [''],
+            subportfolio: ['', Validators.required],
+            clientNameList: ['', Validators.required],
         });
 
 
@@ -357,14 +362,61 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
     }
 
 
-    handleGenerateAIC() {        
+    handleGenerateAIC() { 
         const payload: AMGenerateAICRequestData = {
             fromDate: moment(this.aicForm.controls['fromDate'].value).format('YYYY-MM-DD HH:mm:ss'),
             isin: this.shareISIN,
             subportfolio: this.selectedSubportfolio,
-            allClientNameList: this.allClientNameList,
+            clientNameList: this.selectedClientName,
         }
-    }
+        this.ofiReportsService.requestGenerateAICAM(payload).then((result) => {
+            const data = result[1].Data;
+            console.log("atiqur loves sumaira")
+            console.log(data)
+            
+            if (data.error) {
+                return this.toaster.pop('error', this.translate.translate('There is a problem with the request.'));
+            }
+
+            // decodes base64 file payload
+            const byteArray = new Uint8Array(atob(data.payload).split('').map(char => char.charCodeAt(0)));
+
+            // create temporary element and delete it after file download
+            const element = document.createElement('a');
+            document.body.appendChild(element);
+            const fileURL = window.URL.createObjectURL(new Blob([byteArray], {type: 'application/pdf'}));
+            element.href = fileURL;
+            element.download = data.filename;
+            element.click();
+            document.body.removeChild(element);
+
+            // hide modal and return toaster message notification
+            this.showGenerateAIC = false;
+            return this.toaster.pop('error', this.translate.translate('PDF file successfully generated.'));
+    //     }); this.ofiReportsService.requestGenerateAICInvestor(payload).then((result) => {
+    //         const data = result[1].Data;
+            
+    //         if (data.error) {
+    //             return this.toaster.pop('error', this.translate.translate('There is a problem with the request.'));
+    //         }
+
+    //         // decodes base64 file payload
+    //         const byteArray = new Uint8Array(atob(data.payload).split('').map(char => char.charCodeAt(0)));
+
+    //         // create temporary element and delete it after file download
+    //         const element = document.createElement('a');
+    //         document.body.appendChild(element);
+    //         const fileURL = window.URL.createObjectURL(new Blob([byteArray], {type: 'application/pdf'}));
+    //         element.href = fileURL;
+    //         element.download = data.filename;
+    //         element.click();
+    //         document.body.removeChild(element);
+
+    //         // hide modal and return toaster message notification
+    //         this.showGenerateAIC = false;
+    //         return this.toaster.pop('error', this.translate.translate('PDF file successfully generated.'));
+     });
+     }
 
     initSubscriptions() {
         this.language$
@@ -446,10 +498,9 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
             OfiAmDashboardService.defaultRequestGetUserManagementCompanyFunds(this.ofiAmDashboardService, this.ngRedux);
         }
     }
+     
 
-    clicksub() {
-        this.aicForm.reset();
-      }
+ 
 
     fundsByUserList(list) {
         const listImu = fromJS(list);
@@ -543,7 +594,10 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
         this.changeDetectorRef.markForCheck();
         this.loadingDatagrid = false;
     }
+       
+    onSubmit(): void {
 
+    }
     /**
      * Run the process for requesting the list of holders
      *
@@ -612,10 +666,11 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
     }
 
     onClientnameList(event) {
-        this.onClientnameList = this.allClientNameList.filter(e => e.id == event.id)[0].option;
-        console.log(this.onClientnameList);
+        this.selectedClientName = this.allClientNameList.filter(e => e.id == event.id)[0].option;
+        console.log(this.selectedClientName);
     }
 
+    
 
     /**
        * Get the actual list of holders from redux
