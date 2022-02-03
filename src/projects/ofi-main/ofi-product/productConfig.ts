@@ -130,6 +130,12 @@ export enum useDefaultHolidayMgmt {
     YES,
 }
 
+export enum externalTransmissionCollection {
+    None,
+    Global,
+    Detailled,
+}
+
 export const enums = {
     typeOfEuDirective,
     isFundStructure,
@@ -150,6 +156,7 @@ export const enums = {
     hasSwap,
     hasDurationHedge,
     useDefaultHolidayMgmt,
+    externalTransmissionCollection,
 };
 
 export const fundItems = {
