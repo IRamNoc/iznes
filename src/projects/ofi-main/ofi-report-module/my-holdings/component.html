@@ -1,5 +1,5 @@
 <div class="header-breadcrumbs">
-    <h1><i class="fa fa-list-ul"></i> {{ 'Register' | translate }}</h1>
+    <h1><i class="fa fa-list-ul"></i> {{ 'My Holdings' | translate }}</h1>
 </div>
 
 <clr-tabs>
@@ -13,8 +13,6 @@
                 <form [formGroup]="searchForm" id="search-orders-form">
                     <div class="form-horizontal">
                         <div class="row bordered">
-                              
-                          
                             <div class="form-group col-sm-6">
                                 <label>{{ 'Asset Management Company' | translate }}</label>
                                 <div class="input-button-group">
@@ -31,9 +29,7 @@
                 </form>
 
                 <div class="hr-line-dashed"></div>
-    
-                   
-                
+
                 <clr-datagrid>
                     <clr-dg-column [clrDgField]="'companyName'" clrDgSortIcon>
                         <span>{{ 'Asset Management Company' | translate }}</span> <span class="column-label"></span>
@@ -41,7 +37,6 @@
                     <clr-dg-column [clrDgField]="'portfolioLabel'" clrDgSortIcon>
                         {{ 'Portfolio' | translate }} <span class="column-label"></span>
                     </clr-dg-column>
-                
                     <clr-dg-column [clrDgField]="'fundShareName'" clrDgSortIcon>
                         {{ 'Share Name' | translate }} <span class="column-label"></span>
                     </clr-dg-column>
@@ -49,20 +44,19 @@
                         {{ 'ISIN' | translate }} <span class="column-label"></span>
                     </clr-dg-column>
                     <clr-dg-column [clrDgField]="'shareClassCurrency'" clrDgSortIcon>
-                        Share Currency<span class="column-label"></span>
+                        {{ 'Share Currency' | translate }} <span class="column-label"></span>
                     </clr-dg-column>
                     <clr-dg-column [clrDgField]="'quantity'" class="right" clrDgSortIcon>
                         {{ 'Quantity' | translate }} <span class="column-label"></span>
                     </clr-dg-column>
                     <clr-dg-column [clrDgField]="'latestNav'" class="right" clrDgSortIcon>
-                       Last Nav <span class="column-label"></span>
+                        {{ 'Last NAV' | translate }} <span class="column-label"></span>
                     </clr-dg-column>
-                    
-                    <clr-dg-column [clrDgField]="'auiLabel'" class="right" clrDgSortIcon>
-                       AUI <span class="column-label"></span>
+                    <clr-dg-column [clrDgField]="'amount'" class="right" clrDgSortIcon>
+                        {{ 'AUI (Settled)' | translate }} <span class="column-label"></span>
                     </clr-dg-column>
                     <clr-dg-column [clrDgField]="'ratio'" class="right" clrDgSortIcon>
-                        'Ratio (% AM)'  <span class="column-label"></span>
+                        {{ 'Ratio (% AM)' | translate }} <span class="column-label"></span>
                     </clr-dg-column>
 
                     <clr-dg-row *clrDgItems="let data of holdingList">
