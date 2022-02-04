@@ -26,7 +26,7 @@
                                 <label>{{ 'Asset Management Company' | translate }}</label>
                                 <div class="input-button-group">
                                     <ng-select id="my-holdings-search-field" 
-                                                [items]="mananagementCompanyItems" 
+                                                [items]="managementCompanyListItems" 
                                                 [allowClear]="false" 
                                                 [placeholder]="translate.translate('Select Asset Management Company')"
                                                 [formControl]="searchForm.controls['search']" (selected)="handleDropdownAmSelect($event)"
@@ -212,7 +212,7 @@
                             <div class="form-group col-sm-6">
                                 <clr-checkbox-container class="text-left">
                                     <clr-checkbox-wrapper>
-                                        <input formControlName="invistorInInvestorFunds" type="checkbox" clrCheckbox />
+                                        <input formControlName="investorInInvestorFunds" type="checkbox" clrCheckbox />
                                         <label>Consider that the investor in Investor in the management company of these funds</label>
                                     </clr-checkbox-wrapper>
                                 </clr-checkbox-container>

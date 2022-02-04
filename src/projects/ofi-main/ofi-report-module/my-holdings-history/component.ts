@@ -2,7 +2,7 @@ import { OnInit, ChangeDetectorRef, Component, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { select, NgRedux } from '@angular-redux/store';
 import { MultilingualService } from '@setl/multilingual';
-import { List, fromJS } from 'immutable';
+import { List } from 'immutable';
 import { combineLatest } from 'rxjs';
 import { Subject } from 'rxjs/Subject';
 import { filter, takeUntil, switchMap } from 'rxjs/operators';
@@ -10,7 +10,6 @@ import * as _ from 'lodash';
 import { OfiManagementCompanyService } from '../../ofi-req-services/ofi-product/management-company/management-company.service';
 import { OfiReportsService } from '../../ofi-req-services/ofi-reports/service';
 import { OfiCurrenciesService } from '../../ofi-req-services/ofi-currencies/service';
-import { InvestorHoldingRequestData } from '@ofi/ofi-main/ofi-req-services/ofi-reports/model';
 import { TransferInOutService } from '../../ofi-transfer-in-out/transfer-in-out.service';
 import { LogService } from '../../../utils';
 import { ToasterService } from 'angular2-toaster';
@@ -22,17 +21,6 @@ import { OfiFundShareService } from '../../ofi-req-services/ofi-product/fund-sha
 })
 export class MyHoldingsHistoryComponent implements OnInit, OnDestroy {
     currencyList = [];
-    investorManagementCompanyList = [];
-    fundNameList = [
-        {
-            id:1,text:"Test"
-        }
-    ];
-    allList: any = [];
-    fundList: any = [];
-    sharesList: any = [];
-    fundsData: any = [];
-    sharesData: any = [];
     dateTypeList = [
         
            { id:1,text:"Settlement Date"},
@@ -44,14 +32,11 @@ export class MyHoldingsHistoryComponent implements OnInit, OnDestroy {
     holdingList: Array<any>;
     searchForm: FormGroup;
     unSubscribe: Subject<any> = new Subject();
-    private subscriptions: Array<any> = [];
-    language = 'en';
+
+    // management company list
     managementCompanyList: any[] = [];
-    allCompaniesList: any[] = [];
-    loadingDatagrid: boolean = false;
-    mananagementCompanyItems: any[] = [];
-    managementCompanyAccessList: any[] = []; 
-    managementCompanySelected: any = {};
+    managementCompanyListItems: any[] = [];
+
     shareList: any[] = [];
     filteredShareList: any[] = [];
     shareSelected: any = {};
@@ -63,34 +48,16 @@ export class MyHoldingsHistoryComponent implements OnInit, OnDestroy {
     defaultObjectData:any;
     totalOrderList: any[] = [];
 
-
-    @select([
-        'ofi',
-        'ofiProduct',
-        'ofiManagementCompany',
-        'managementCompanyList',
-        'managementCompanyList',
-    ]) managementCompanyAccessListOb;    
-    @select(['ofi', 'ofiProduct', 'ofiFundShare', 'fundShare']) fundShareObs;
+    userType: number = 0;
+   
     @select(['user', 'connected', 'connectedWallet']) connectedWallet$;
-    @select(['user', 'siteSettings', 'language']) language$;
     @select(['user', 'myDetail', 'accountId']) accountId$;
+    @select(['user', 'myDetail', 'userType']) userType$;
     @select(['ofi', 'ofiCurrencies', 'loaded']) loaded$;
     @select(['ofi', 'ofiCurrencies', 'currencies']) currencyList$;
-    @select(['ofi', 'ofiReports', 'amHolders', 'invRequested']) investorHoldingRequested;
     @select(['ofi', 'ofiReports', 'amHolders', 'invHoldingsList']) investorHoldingList$;
-    @select(['ofi', 'ofiAmDashboard', 'shareHolders', 'fundsByUserList']) fundsByUserListOb;
-    @select(['ofi', 'ofiReports', 'amHolderHistoryList', 'amHoldersList']) OfiAmHoldersListObj;
-    @select(['ofi', 'ofiReports', 'amHolderHistoryList', 'requested']) requestedOfiAmHoldersObj;
-
-    
-    @select([
-        'ofi',
-        'ofiProduct',
-        'ofiManagementCompany',
-        'investorManagementCompanyList',
-        'investorManagementCompanyList',
-    ]) investorManagementCompany$;
+    @select(['ofi', 'ofiProduct', 'ofiManagementCompany', 'managementCompanyList', 'managementCompanyList']) managementCompanyList$;
+    @select(['ofi', 'ofiProduct', 'ofiManagementCompany', 'investorManagementCompanyList', 'investorManagementCompanyList']) investorManagementCompanyList$;
 
     constructor(
         private ngRedux: NgRedux<any>,
@@ -104,37 +71,12 @@ export class MyHoldingsHistoryComponent implements OnInit, OnDestroy {
         private logService: LogService,
         private toaster: ToasterService,
         private ofiFundShareService: OfiFundShareService,
-    ) {                
-        this.ofiFundShareService.fetchIznesAdminShareList();        
-        this.managementCompanyService.getManagementCompanyList();
+    ) {
     }
 
     ngOnInit(): void {
-        this.initCompanies();
         this.initForm();        
-        this.initListItems();
         this.initSubscriptions();
-        // this.subscriptions.push(this.requestedOfiAmHoldersObj.subscribe(requested => this.getAmHoldersRequested(requested)));
-        // this.subscriptions.push(this.OfiAmHoldersListObj.subscribe(list => this.getAmHoldersListFromRedux(list)));
-
-    }
-
-    initListItems() {
-        this.subscriptions.push(this.managementCompanyAccessListOb
-            .subscribe((d) => {
-                this.managementCompanyAccessList = d;
-                console.log(d);
-                this.mananagementCompanyItems = Object.keys(this.managementCompanyAccessList).map((key) => {
-                    return {
-                        id: this.managementCompanyAccessList[key].companyID,
-                        text: this.managementCompanyAccessList[key].companyName,
-                    };
-                });
-            }),
-        );
-        this.subscriptions.push(this.fundShareObs.subscribe(shares => this.shareList = shares));
-        this.changeDetectorRef.detectChanges();
-
     }
 
      ngOnDestroy(): void {
@@ -143,54 +85,6 @@ export class MyHoldingsHistoryComponent implements OnInit, OnDestroy {
 
     }
     
-    getAmHoldersRequested(requested): void {
-        if (!requested) {
-            OfiReportsService.defaultPositionHoldingList(this.ofiReportsService, this.ngRedux);
-        }
-    }
-    fundsByUserList(list) {
-        const listImu = fromJS(list);
-        this.fundList = listImu.reduce(
-            (result, item) => {
-                const text = item.fundLei !== '' ? `${item.fundName} (${item.fundLei})` : item.fundName;
-
-                result.push({
-                    id: item.fundId,
-                    text,
-                });
-                return result;
-            },
-            [],
-        );
-
-        this.changeDetectorRef.markForCheck();
-    }
-    /**
-     * Get the actual list of holders from redux
-     *
-     * @param holderList
-     */
-    getAmHoldersListFromRedux(holderList) {
-        if (holderList) {
-            this.holdingList = holderList.toJS() || [];
-
-            this.sharesList = this.holdingList.filter(it => it.shareId !== 0).map((holder) => {
-                return {
-                    id: holder.shareId,
-                    text: holder.fundName + ' - ' + holder.shareName + ' (' + holder.shareIsin + ')',
-                };
-            });
-        }
-        this.changeDetectorRef.markForCheck();
-        this.loadingDatagrid = false;
-    }
-
-    initCompanies() {
-        this.allCompaniesList = [{
-            id: -1,
-            text: this.translate.translate('All Asset Management Companies'),
-        }];
-    }
 
     initForm() {
         this.holdingList = [];
@@ -208,16 +102,13 @@ export class MyHoldingsHistoryComponent implements OnInit, OnDestroy {
             AggregationShare:[''],
             AggregationPortfolio:[''],
             hideZeroPositions:[''],
-            invistorInInvestorFunds:[''],
+            investorInInvestorFunds:[''],
         });
 
         this.changeDetectorRef.detectChanges();
     }
 
     initSubscriptions() {
-        this.initCompanies();
-        this.formatManagementCompanyList();
-
         this.currencyList$
         .pipe(
             switchMap(() => this.loaded$),
@@ -229,6 +120,22 @@ export class MyHoldingsHistoryComponent implements OnInit, OnDestroy {
         this.currencyList$
         .pipe(filter((v: List<any>) => v && v.size > 0), takeUntil(this.unSubscribe))
         .subscribe((d) => this.currencyList = d.toJS());
+
+        this.userType$
+        .pipe(
+            filter(userType => userType && userType !== 0),
+            takeUntil(this.unSubscribe),
+        )
+        .subscribe(userType => {
+            this.userType = userType;
+
+            // fetch management companies items
+            if (this.isInvestor) {
+                this.managementCompanyService.fetchInvestorManagementCompanyList(true);
+            } else {
+                this.managementCompanyService.getManagementCompanyList();
+            }
+        });
 
         this.accountId$
         .pipe(
@@ -245,17 +152,27 @@ export class MyHoldingsHistoryComponent implements OnInit, OnDestroy {
             filter(([accountId, walletId, selectedItem]) => accountId && accountId !== 0 && walletId && selectedItem.search.length),
             takeUntil(this.unSubscribe),
         )
-        .subscribe(([accountId, selectedWalletId, selectedItem]) => {
-            const payload: InvestorHoldingRequestData = {
-                amCompanyID: selectedItem.search[0].id,
-                walletID: Number(selectedWalletId),
-                accountID: Number(accountId),
-            };
 
-            this.ofiReportsService.fetchInvestorHoldingList(payload);
+        this.managementCompanyList$
+        .pipe(
+            takeUntil(this.unSubscribe),
+        )
+        .subscribe(d => {
+                const values = _.values(d);
+                if (!values.length) {
+                    return [];
+                }
+
+                this.managementCompanyList = d;
+                this.managementCompanyListItems = values.map((item) => {
+                    return {
+                        id: item.companyID,
+                        text: item.companyName,
+                    };
+                });
         });
 
-        this.investorManagementCompany$
+        this.investorManagementCompanyList$
         .pipe(
             filter((v: List<any>) => v && v.size > 0),
             takeUntil(this.unSubscribe),
@@ -264,15 +181,6 @@ export class MyHoldingsHistoryComponent implements OnInit, OnDestroy {
             this.managementCompanyList = d.toJS();
             this.formatManagementCompanyList();
         });
-
-        combineLatest(
-            this.investorHoldingRequested,
-            this.investorHoldingList$,
-        ).pipe(
-            takeUntil(this.unSubscribe),
-        )
-        .subscribe(([requested, d]) => this.formatInvestorHoldingList(d));
-
     }
 
     /**
@@ -281,14 +189,16 @@ export class MyHoldingsHistoryComponent implements OnInit, OnDestroy {
      * @memberof MyHoldingsComponent
      */
     formatManagementCompanyList() {
-        this.investorManagementCompanyList = this.allCompaniesList.concat(
-            this.managementCompanyList.map(it => ({
-                id: it.companyID,
-                text: it.companyName,
-            })));
-
+        this.managementCompanyListItems =
+            this.managementCompanyList.map(it => {
+                return {
+                    id: it.companyID,
+                    text: it.companyName
+                };
+            });
+        
         this.changeDetectorRef.detectChanges();
-        this.searchForm.controls['search'].setValue(this.allCompaniesList);
+        // this.searchForm.controls['search'].setValue(this.allCompaniesList);
     }
 
     /**
@@ -343,21 +253,22 @@ clearFilters(){
 
 
     handleDropdownAmSelect(event) {        
-        this.shareSelected = this.walletSelected = this.investorSelected = {};
-        for (const key in this.managementCompanyAccessList) {
-            if (this.managementCompanyAccessList[key].companyID === event.id) {
-                this.managementCompanySelected = this.managementCompanyAccessList[key];
-            }
-        }
-        this.filteredShareList = Object.keys(this.shareList).map((key) => {
-            if (this.shareList[key].managementCompanyId === event.id) {
-                return {
-                    id: key,
-                    text: this.shareList[key].fundShareName,
-                };
-            }
-        });
+        // this.shareSelected = this.walletSelected = this.investorSelected = {};
+        // for (const key in this.managementCompanyAccessList) {
+        //     if (this.managementCompanyAccessList[key].companyID === event.id) {
+        //         this.managementCompanySelected = this.managementCompanyAccessList[key];
+        //     }
+        // }
+        // this.filteredShareList = Object.keys(this.shareList).map((key) => {
+        //     if (this.shareList[key].managementCompanyId === event.id) {
+        //         return {
+        //             id: key,
+        //             text: this.shareList[key].fundShareName,
+        //         };
+        //     }
+        // });
     }
+
     handleDropdownShareSelect(event) {
         this.walletSelected = this.investorSelected = {};
         this.shareSelected = this.shareList[event.id];
@@ -410,5 +321,10 @@ clearFilters(){
     searchFiltersclear(){
         this.searchForm.get('isin').patchValue(['']);
         this.formatInvestorHoldingList(this.defaultObjectData);
+    }
+
+    // getters
+    get isInvestor(): boolean {
+        return Boolean(this.userType === 46);
     }
 }
