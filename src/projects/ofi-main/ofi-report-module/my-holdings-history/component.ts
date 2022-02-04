@@ -104,11 +104,7 @@ export class MyHoldingsHistoryComponent implements OnInit, OnDestroy {
         private logService: LogService,
         private toaster: ToasterService,
         private ofiFundShareService: OfiFundShareService,
-    ) {        
-       
-        this.subscriptions.push(this.OfiAmHoldersListObj.subscribe(list => this.getAmHoldersListFromRedux(list)));
-        this.subscriptions.push(this.fundsByUserListOb.subscribe(list => this.fundsByUserList(list)));
-        
+    ) {                
         this.ofiFundShareService.fetchIznesAdminShareList();        
         this.managementCompanyService.getManagementCompanyList();
     }
@@ -118,16 +114,16 @@ export class MyHoldingsHistoryComponent implements OnInit, OnDestroy {
         this.initForm();        
         this.initListItems();
         this.initSubscriptions();
-        this.subscriptions.push(this.requestedOfiAmHoldersObj.subscribe(requested => this.getAmHoldersRequested(requested)));
-        this.subscriptions.push(this.OfiAmHoldersListObj.subscribe(list => this.getAmHoldersListFromRedux(list)));
+        // this.subscriptions.push(this.requestedOfiAmHoldersObj.subscribe(requested => this.getAmHoldersRequested(requested)));
+        // this.subscriptions.push(this.OfiAmHoldersListObj.subscribe(list => this.getAmHoldersListFromRedux(list)));
 
     }
 
     initListItems() {
         this.subscriptions.push(this.managementCompanyAccessListOb
             .subscribe((d) => {
-                console.log(d, "444444444444");
                 this.managementCompanyAccessList = d;
+                console.log(d);
                 this.mananagementCompanyItems = Object.keys(this.managementCompanyAccessList).map((key) => {
                     return {
                         id: this.managementCompanyAccessList[key].companyID,
@@ -136,7 +132,6 @@ export class MyHoldingsHistoryComponent implements OnInit, OnDestroy {
                 });
             }),
         );
-        console.log(this.fundShareObs, "this.fundShareObs")
         this.subscriptions.push(this.fundShareObs.subscribe(shares => this.shareList = shares));
         this.changeDetectorRef.detectChanges();
 
@@ -178,7 +173,6 @@ export class MyHoldingsHistoryComponent implements OnInit, OnDestroy {
     getAmHoldersListFromRedux(holderList) {
         if (holderList) {
             this.holdingList = holderList.toJS() || [];
-            console.log("venkat123456", this.holdingList)
 
             this.sharesList = this.holdingList.filter(it => it.shareId !== 0).map((holder) => {
                 return {
@@ -221,15 +215,8 @@ export class MyHoldingsHistoryComponent implements OnInit, OnDestroy {
     }
 
     initSubscriptions() {
-        this.language$
-        .pipe(
-            takeUntil(this.unSubscribe),
-        )
-        .subscribe((language) => {
-            this.language = language;
-            this.initCompanies();
-            this.formatManagementCompanyList();
-        });
+        this.initCompanies();
+        this.formatManagementCompanyList();
 
         this.currencyList$
         .pipe(
@@ -315,7 +302,6 @@ export class MyHoldingsHistoryComponent implements OnInit, OnDestroy {
        
         this.totalOrderList=d;
         const data = d.toJS();
-        console.log(data,"d")
         this.holdingList = data.map(it => ({
             amManagementCompanyID: it.amManagementCompanyID,
             companyName: it.companyName,
@@ -358,13 +344,11 @@ clearFilters(){
 
     handleDropdownAmSelect(event) {        
         this.shareSelected = this.walletSelected = this.investorSelected = {};
-        console.log('shareSelected.............',this.shareSelected);
         for (const key in this.managementCompanyAccessList) {
             if (this.managementCompanyAccessList[key].companyID === event.id) {
                 this.managementCompanySelected = this.managementCompanyAccessList[key];
             }
         }
-        console.log('managementCompanySelected..........',this.managementCompanySelected);
         this.filteredShareList = Object.keys(this.shareList).map((key) => {
             if (this.shareList[key].managementCompanyId === event.id) {
                 return {
