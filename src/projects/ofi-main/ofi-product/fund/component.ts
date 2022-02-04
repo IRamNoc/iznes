@@ -292,6 +292,7 @@ export class FundComponent implements OnInit, OnDestroy {
             domicile: [[], this.validators.ngSelectRequired],
             tradingAccount: [],
             isEuDirective: [null, Validators.required],
+            externalTransmissionCollection: [null, Validators.required],
             typeOfEuDirective: [[]],
             UcitsVersion: [[]],
             legalForm: [[], this.validators.ngSelectRequired],
@@ -740,6 +741,7 @@ export class FundComponent implements OnInit, OnDestroy {
             ...this.fundForm.getRawValue(),
             isFundStructure: Number(this.fundForm.controls.isFundStructure.value),
             isEuDirective: Number(this.fundForm.controls.isEuDirective.value),
+            externalTransmissionCollection: Number(this.fundForm.controls.externalTransmissionCollection.value),
             openOrCloseEnded: Number(this.fundForm.controls.openOrCloseEnded.value),
             isFundOfFund: Number(this.fundForm.controls.isFundOfFund.value),
             isDedicatedFund: Number(this.fundForm.controls.isDedicatedFund.value),
@@ -1090,6 +1092,7 @@ export class FundComponent implements OnInit, OnDestroy {
             // formatting for radio inputs
             isFundStructure: fund.isFundStructure.toString(),
             isEuDirective: fund.isEuDirective.toString(),
+            externalTransmissionCollection: fund.externalTransmissionCollection.toString(),
             openOrCloseEnded: fund.openOrCloseEnded.toString(),
             isFundOfFund: fund.isFundOfFund.toString(),
             isDedicatedFund: fund.isDedicatedFund.toString(),

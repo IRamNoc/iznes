@@ -171,6 +171,31 @@ export class OfiProfileMyInformationsComponent implements OnInit, OnDestroy {
     }
 
     /**
+     * Reset API Token
+     */
+    resetAPIToken(): void {
+        const asyncTaskPipe = this.myUserService.resetAPIToken();
+
+        this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
+            asyncTaskPipe,
+            (response) => {
+                const message = getValue(response, '[1].Data[0].Message', 'OK');
+
+                if (message === 'OK') {
+                    this.apiKey = response[1].Data[0].APIKey;
+                    this.toasterService.pop(
+                        'success', this.translate.translate('Your API Key has been successfully changed'));
+                }
+            },
+            (error) => {
+                const message = getValue(error, '[1].Data[0].Message', 'Fail');
+                this.toasterService.pop(
+                    'error', this.translate.translate(`Unable to update your API Key, please contact IZNES (message: ${message}`));
+            }));
+        
+    }
+
+    /**
      * Check new password does not match existing password
      *
      * @param {FormControl} 

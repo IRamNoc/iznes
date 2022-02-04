@@ -209,4 +209,5 @@
     &nbsp;
     <span (click)="handleCopyApiKey($event)" class="click"><i class="fa fa-files-o"></i> <span *ngIf="copied" class="text-success">{{
             'copied' | translate }}!</span><span *ngIf="!copied">{{ 'copy' | translate }}</span></span>
+    <span (click)="resetAPIToken()" class="click"><i class="fa fa-refresh"></i> {{ 'Reset API Token' | translate }}</span>
 </ng-template>
