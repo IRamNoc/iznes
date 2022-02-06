@@ -184,6 +184,26 @@ export class MyHoldingsHistoryComponent implements OnInit, OnDestroy {
     }
 
     /**
+     * Request holding list data
+     */
+    requestHoldingListHistory() {
+        const params = {
+            isin: '',
+            fundId: '',
+            shareId: '',
+            dateFrom: '',
+            dateTo: '',
+            dateType: '',
+            positionToCalculate: '',
+            // investorId: '', // 
+            walletId: '',
+            shareAggregate: '',
+            walletAggregate: '',
+            hideZeroPosition: ''
+        }
+    }
+
+    /**
      * Format the list of management company of the investor
      *
      * @memberof MyHoldingsComponent

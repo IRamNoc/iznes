@@ -12,7 +12,7 @@
 
                 <form [formGroup]="searchForm" id="search-orders-form">
                     <div class="form-horizontal">
-                        <div class="row bordered">
+                        <div class="row">
                               <div class="form-group col-sm-3">
                                     <label for="isin">{{ 'ISIN' | translate }}</label>
                                     <input type="text"
@@ -21,34 +21,24 @@
                                            formControlName="isin"
                                            placeholder="ISIN">
                                 </div>
-                                <div class="form-group col-sm-3"></div>
-                            <div class="form-group col-sm-6">
+
+                            <div class="form-group col-sm-6 offset-sm-3">
                                 <label>{{ 'Asset Management Company' | translate }}</label>
                                 <div class="input-button-group">
                                     <ng-select id="my-holdings-search-field" 
                                                 [items]="managementCompanyListItems" 
                                                 [allowClear]="false" 
                                                 [placeholder]="translate.translate('Select Asset Management Company')"
-                                                [formControl]="searchForm.controls['search']" (selected)="handleDropdownAmSelect($event)"
-                                                
-                                                >
-
+                                                [formControl]="searchForm.controls['search']" (selected)="handleDropdownAmSelect($event)"  
+                                    >
                                     </ng-select>
                                 </div>
                             </div>
-                            <!-- <div class="form-group col-sm-6">
-                                <label>{{ 'Asset Management Company' | translate }}</label>
-                                <div class="input-button-group">
-                                    <ng-select id="my-holdings-search-field" 
-                                                [items]="investorManagementCompanyList" 
-                                                [allowClear]="false" 
-                                                [placeholder]="translate.translate('Select Asset Management Company')"
-                                                [formControl]="searchForm.controls['search']">
-                                    </ng-select>
-                                </div>
-                            </div> -->
+                        </div>
+
+                        <div class="row">
                             <div class="form-group col-sm-6">
-                                <label for="fundName">Fund Name</label>
+                                <label for="fundName">{{'Fund Name' | translate}}</label>
                                 <div class="input-button-group">
                                     <ng-select id="my-holdings-search-field"
                                     [items]="fundList"
@@ -59,7 +49,7 @@
                                 </div>
                             </div>
                             <div class="form-group col-sm-6">
-                                <label for="shareName">Share Name</label>
+                                <label for="shareName">{{'Share Name' | translate}}</label>
                                 <div class="input-button-group">
                                     <ng-select id="my-holdings-search-field"
                                     [items]="filteredShareList"
@@ -69,55 +59,58 @@
                                     </ng-select>
                                 </div>
                             </div>
-                            <table>
-                                <tr>
-                                    <td width="5%">
-                                        <div class="form-group">
-                                            <label>Date Type</label>
-                                            <div class="input-button-group">
-                                                <ng-select id="my-holdings-search-field"
-                                                [items]="dateTypeList"
-                                                [allowClear]="false"
-                                                [placeholder]="translate.translate('Select DateType')"
-                                                [formControl]="searchForm.controls['dateType']">
-                                                </ng-select>
-                                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-sm-6 form-group">
+                                <div class="row">
+                                    <div class="col-sm-6 form-group">
+                                        <label>{{'Date Type' | translate}}</label>
+                                        <div class="input-button-group">
+                                            <ng-select id="my-holdings-search-field"
+                                            [items]="dateTypeList"
+                                            [allowClear]="false"
+                                            [placeholder]="translate.translate('Select DateType')"
+                                            [formControl]="searchForm.controls['dateType']">
+                                            </ng-select>
                                         </div>
-                                    </td>
-                                    <td width="10%">
-                                        <div class="form-group">
-                                            <label>Positions to calculate</label>
-                                            <div class="input-button-group">
-                                                <clr-radio-container clrInline>
-                                                    <clr-radio-wrapper>
-                                                        <input type="radio" [checked]="true" clrRadio id="opt-type-all" value="posions_none" formControlName="postionsCal"/>
-                                                        <label>All</label>
-                                                    </clr-radio-wrapper>
-                                                    <clr-radio-wrapper>
-                                                        <input type="radio" clrRadio id="opt-type-nonHoliday" value="positions_nonHoliday" formControlName="postionsCal"/>
-                                                        <label>Non-holiday</label>
-                                                    </clr-radio-wrapper>
-                                                </clr-radio-container>
-                                            </div>
+                                    </div>
+    
+                                    <div class="col-sm-6 form-group">
+                                        <label>{{'Positions to calculate' | translate }}</label>
+                                        <div class="input-button-group">
+                                            <clr-radio-container clrInline>
+                                                <clr-radio-wrapper>
+                                                    <input type="radio" [checked]="true" clrRadio id="opt-type-all" value="posions_none" formControlName="postionsCal"/>
+                                                    <label>{{'All' | translate }}</label>
+                                                </clr-radio-wrapper>
+                                                <clr-radio-wrapper>
+                                                    <input type="radio" clrRadio id="opt-type-nonHoliday" value="positions_nonHoliday" formControlName="postionsCal"/>
+                                                    <label>{{'Non-holiday' | translate }}</label>
+                                                </clr-radio-wrapper>
+                                            </clr-radio-container>
                                         </div>
-                                    </td>
-                                    <td width="9%">
-                                        <div class="form-group">
-                                            <label>From Date</label>
-                                            <div class="input-group date-pick-wrapper">
-                                                <span class="fa fa-calendar" aria-hidden="true"></span>
-                                                <input id="centra-funds-date-from"
-                                                        formControlName="dateFrom"
-                                                        [dpDayPicker]="fromConfigDate"
-                                                        [placeholder]="(!isPeriod) ? translate.translate('Choose a date') : translate.translate('Date From')"
-                                                        mode="day"
-                                                        theme="dp-material">
-                                            </div>
+                                    </div>
+                                </div>
+                            </div>
+                        
+                            <div class="col-sm-6 form-group">
+                                <div class="row">
+                                    <div class="col-sm-3 form-group">
+                                        <label>{{'From Date' | translate }}</label>
+                                        <div class="input-group date-pick-wrapper">
+                                            <span class="fa fa-calendar" aria-hidden="true"></span>
+                                            <input id="centra-funds-date-from"
+                                                formControlName="dateFrom"
+                                                [dpDayPicker]="fromConfigDate"
+                                                [placeholder]="(!isPeriod) ? translate.translate('Choose a date') : translate.translate('Date From')"
+                                                mode="day"
+                                                theme="dp-material">
                                         </div>
-                                    </td>
-                                    <td width="9%">
-                                        <div class="form-group">
-                                            <label>To Date</label>
+                                    </div>
+    
+                                    <div class="col-sm-3 offset-sm-1 form-group">
+                                        <label>{{'To Date' | translate}}</label>
                                             <div class="input-group date-pick-wrapper" >
                                                 <span class="fa fa-calendar" aria-hidden="true"></span>
                                                 <input id="centra-funds-date-to"
@@ -126,15 +119,14 @@
                                                         [placeholder]="translate.translate('Date To')"
                                                         mode="day" theme="dp-material">
                                             </div>
-                                        </div>
-                                    </td>
-                                    <td width="12%"></td>
-                                    
-                                </tr>
-                            </table>
-                            
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
                             <div class="form-group col-sm-6">
-                                <label for="investor">Investor</label>
+                                <label for="investor">{{ 'Investor' | translate }}</label>
                                 <div class="input-button-group">
                                     <ng-select id="my-holdings-search-field"
                                     [items]="investorListItems"
@@ -145,7 +137,7 @@
                                 </div>
                             </div>
                             <div class="form-group col-sm-6">
-                                <label for="portfolio">Portfolio</label>
+                                <label for="portfolio">{{ 'Portfolio' | translate }}</label>
                                 <div class="input-button-group">
                                     <ng-select id="my-holdings-search-field"
                                     [items]="walletListItems"
@@ -157,43 +149,43 @@
                             </div>
                             <div class="form-group col-sm-6">
                                 <clr-radio-container clrInline>
-                                    <label class="required-field">Aggregation of shares</label>
+                                    <label class="required-field">{{ 'Aggregation of shares' | translate }}</label>
                                     <clr-radio-wrapper>
                                         <input type="radio" [checked]="true" clrRadio id="opt-type-none" value="agg_none" formControlName="AggregationShare"/>
-                                        <label>None</label>
+                                        <label>{{ 'None' | translate }}</label>
                                     </clr-radio-wrapper>
                                     <clr-radio-wrapper>
                                         <input type="radio" clrRadio id="opt-type-fund" value="agg_byfund" formControlName="AggregationShare"/>
-                                        <label>by fund</label>
+                                        <label>{{ 'by fund' | translate }}</label>
                                     </clr-radio-wrapper>
                                     <clr-radio-wrapper>
                                         <input type="radio" clrRadio id="opt-type-amc" value="agg_amc" formControlName="AggregationShare"/>
-                                        <label>by Asset Management Company</label>
+                                        <label>{{ 'by Asset Management Company' | translate }}</label>
                                     </clr-radio-wrapper>
                                     <clr-radio-wrapper>
                                         <input type="radio" clrRadio id="opt-type-global" value="agg_global" formControlName="AggregationShare"/>
-                                        <label>Global</label>
+                                        <label>{{ 'Global' | translate }}</label>
                                     </clr-radio-wrapper>
                                 </clr-radio-container>
                             </div>
                             <div class="form-group col-sm-6">
                                 <clr-radio-container clrInline>
-                                    <label class="required-field">Aggregation of portfolios</label>
+                                    <label class="required-field">{{ 'Aggregation of portfolios' | translate }}</label>
                                     <clr-radio-wrapper>
                                         <input type="radio" clrRadio [checked]="true" id="opt-type-portNone" value="agg_portfolio" formControlName="AggregationPortfolio"/>
-                                        <label>None</label>
+                                        <label>{{ 'None' | translate }}</label>
                                     </clr-radio-wrapper>
                                     <clr-radio-wrapper>
                                         <input type="radio" clrRadio id="opt-type-byinvestor" value="agg_byinvestor" formControlName="AggregationPortfolio"/>
-                                        <label>by Investor</label>
+                                        <label>{{ 'by Investor' | translate }}</label>
                                     </clr-radio-wrapper>
                                     <clr-radio-wrapper>
                                         <input type="radio" clrRadio id="opt-type-byportmanager" value="agg_byportmanager" formControlName="AggregationPortfolio"/>
-                                        <label>by Portfolio Manager</label>
+                                        <label>{{ 'by Portfolio Manager' | translate }}</label>
                                     </clr-radio-wrapper>
                                     <clr-radio-wrapper>
                                         <input type="radio" clrRadio id="opt-type-portGlobal" value="agg_portGlobal" formControlName="AggregationPortfolio"/>
-                                        <label>Global</label>
+                                        <label>{{ 'Global' | translate }}</label>
                                     </clr-radio-wrapper>
                                 </clr-radio-container>
                             </div>
@@ -202,18 +194,18 @@
                                 <clr-checkbox-container class="text-left">
                                     <clr-checkbox-wrapper>
                                         <input formControlName="hideZeroPositions" type="checkbox" clrCheckbox />
-                                        <label>Hide Zero Positions</label>
+                                        <label>{{ 'Hide Zero Positions' | translate }}</label>
                                     </clr-checkbox-wrapper>
                                 </clr-checkbox-container>
                             </div>
                             <div class="form-group col-sm-6">
-                                <label>Note:Only positions with at least one valid order before the end date(To Date) are displayed or extracted</label>
+                                <label>{{ 'Note : Only positions with at least one valid order before the end date (To Date) are displayed or extracted' | translate }}</label>
                             </div>
                             <div class="form-group col-sm-6">
                                 <clr-checkbox-container class="text-left">
                                     <clr-checkbox-wrapper>
                                         <input formControlName="investorInInvestorFunds" type="checkbox" clrCheckbox />
-                                        <label>Consider that the investor in Investor in the management company of these funds</label>
+                                        <label>{{ 'Consider that the investor in investor funds is the management company of these funds' | translate }}</label>
                                     </clr-checkbox-wrapper>
                                 </clr-checkbox-container>
                             </div>
