@@ -44,6 +44,7 @@ export class MyHoldingsComponent implements OnInit, OnDestroy {
     public sharesList: Array<any>;
     shareISIN = "";
     selectedSubportfolio: any = "";
+    validationMaxDate = moment();
 
     @select(['user', 'connected', 'connectedWallet']) connectedWallet$;
     @select(['user', 'siteSettings', 'language']) language$;
@@ -125,14 +126,25 @@ export class MyHoldingsComponent implements OnInit, OnDestroy {
                 takeUntil(this.unSubscribe),
             )
             .subscribe((data) => {
-                if (!data) return;
-                this.subportfolioListData = _.map(data, (subportfolio, index) => {
-                    return  {
-                        id: index,
-                        text: subportfolio.label,
-                        option: subportfolio.addr,
-                    }
-                });
+                const defaultList: any[] = [{
+                    id: 1,
+                    text: this.translate.translate('All subporfolios'),
+                    option: 'all',
+                }];
+
+                let dataList: any[] = [];
+                
+                if (data) {
+                    dataList = _.map(data, (subportfolio, index) => {
+                        return  {
+                            id: (index + 1) * 2,
+                            text: subportfolio.label,
+                            option: subportfolio.addr,
+                        }
+                    });
+                }
+
+                this.subportfolioListData = _.merge(defaultList, dataList);
             });
         this.ofiSubPortfolioService.updateSubPortfolioObservable();
 

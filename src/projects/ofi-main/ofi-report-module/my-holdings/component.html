@@ -43,50 +43,40 @@
                         <h3 id="override_header" class="modal-title">{{ 'Generate AIC' | translate }}</h3>
                         <div class="modal-body">
                             <section class="form-block">
-                                <div class="row">
-
-                                    <div class="form-group">
-                                        <label>{{ 'Share Name' | translate }}</label>
-                                        <div class="input-button-group col-lg-3">
-                                            <ng-select id="holders-list-shares-search-field" [items]="sharesList"
-                                                [allowClear]="true" (selected)="onChange($event)"
-                                                [placeholder]="translate.translate('Type a Share name or an ISIN code')"
-                                            >
-                                            </ng-select>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-lg-4">
-                                    <div class="form-group">
-                                        <label class="control-label">
-                                            {{ 'ISIN' | translate }}
-                                        </label>
-                                        <div>
-                                            <input id="isinCode" type="text" 
-                                                placeholder="{{shareISIN}}" formControlName="isinCode" readonly>
-                                        </div>
+                                <div class="col-lg-12 form-group">
+                                    <label>{{ 'Share Name' | translate }}</label>
+                                    <div class="input-button-group">
+                                        <ng-select id="holders-list-shares-search-field" [items]="sharesList"
+                                            [allowClear]="false" (selected)="onChange($event)"
+                                            [placeholder]="translate.translate('Type a Share name or an ISIN code')"
+                                        >
+                                        </ng-select>
                                     </div>
                                 </div>
 
+                                <div class="col-lg-4 form-group" *ngIf="shareISIN">
+                                    <label class="control-label">
+                                        <b>{{ 'ISIN' | translate }}</b> {{ shareISIN }}
+                                    </label>
+                                </div>
 
-
-                                <div class="form-group">
+                                <div class="col-lg-12 form-group">
                                     <label>{{ 'Client Sub-portfolio' | translate }}</label>
-                                    <div class="input-button-group col-rg-7">
+                                    <div class="input-button-group">
                                         <ng-select id="holders-list-shares-search-field" [items]="subportfolioListData"
-                                            [allowClear]="true" (selected)="onSubportfolioChange($event)" formControlName="subportfolio"
+                                            [allowClear]="false" (selected)="onSubportfolioChange($event)" formControlName="subportfolio"
                                             [placeholder]="translate.translate('Type a subportfolio ')"
                                           >
                                         </ng-select>
                                     </div>
                                 </div>
-                                <div class="form-group col-lg-5">
+                                <div class="form-group col-lg-6">
                                     <label class="control-label" for="date">
                                         {{ 'Date' | translate }}
                                     </label>
                                     <div class="input-group date-pick-wrapper">
                                         <span class="fa fa-calendar" aria-hidden="true"></span>
-                                        <input id="fromDate" formControlName="fromDate" [dpDayPicker]="fromConfigDate"
+                                        <input id="fromDate" formControlName="fromDate" [dpDayPicker]="fromConfigDate" [maxDate]="validationMaxDate"
                                             [placeholder]="(!isPeriod) ? translate.translate('Choose a date') : translate.translate('Date From')"
                                             mode="day" theme="dp-material">
                                     </div>
@@ -97,7 +87,6 @@
                                         [disabled]="aicForm.invalid">{{ 'Generate AIC' | translate }}
                                     </button>
                                 </div>
-
                             </section>
                         </div>
                     </clr-modal>
