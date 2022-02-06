@@ -461,6 +461,14 @@ export class CalendarHelper {
             }
         }
 
+        if (valuationDateReference === E.ValuationReferenceDate.NextWorkingDay) {
+            const nextDateTimeToChecks = dateTimeToChecks.clone().add(1, 'day');
+
+            if (valuationCalendar.includes(nextDateTimeToChecks.format('YYYY-MM-DD'))) {
+                return false;
+            }
+        }
+
         // get cutoff date from valuation date.
         const cutoffDate = this.getCutoffDateFromValuation(dateTimeToChecks, orderType);
         return this.isValidCutoffDateTime(cutoffDate, orderType);

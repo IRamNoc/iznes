@@ -32,6 +32,7 @@ export interface OfiAmOrdersRequestBody extends OfiMemberNodeBody {
     rowOffset?: any;
     sortByField?: any;
     sortOrder?: any;
+    isTransfer?: any;
 }
 
 export interface OfiIznAdminOrdersRequestBody extends OfiMemberNodeBody {
@@ -54,6 +55,7 @@ export interface OfiIznAdminOrdersRequestBody extends OfiMemberNodeBody {
     assetManagementCompany?: any;
     investorCompanyName?: any;
     portfolioLabel?: any;
+    isTransfer?: any;
 }
 
 export interface OfiAmExportOrdersRequestBody extends OfiMemberNodeBody {
@@ -120,4 +122,5 @@ export interface ManageOrdersRequestData {
     assetManagementCompany?: string;
     investorCompanyName?: string;
     portfolioLabel?: string;
+    isTransfer?: number;
 }
