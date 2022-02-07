@@ -23,7 +23,7 @@
                                     </ng-select>
                                 </div>
                             </div>
-                            <div class="col-xs-4 text-right">
+                            <div class="col-sm-4 offset-sm-2 text-right">
                                 <button id="aic" class="btn btn-primary action-button"
                                     (click)=" showGenerateAIC = true">{{ 'Generate AIC' | translate }}
                                 </button>
@@ -47,8 +47,9 @@
                                     <label>{{ 'Share Name' | translate }}</label>
                                     <div class="input-button-group">
                                         <ng-select id="holders-list-shares-search-field" [items]="sharesList"
-                                            [allowClear]="false" (selected)="onChange($event)"
-                                            [placeholder]="translate.translate('Type a Share name or an ISIN code')"
+                                            [allowClear]="true" (selected)="onChange($event)"
+                                            [placeholder]="translate.translate('Choose a Share name')"
+                                            formControlName="fundShare"
                                         >
                                         </ng-select>
                                     </div>
@@ -64,8 +65,9 @@
                                     <label>{{ 'Client Sub-portfolio' | translate }}</label>
                                     <div class="input-button-group">
                                         <ng-select id="holders-list-shares-search-field" [items]="subportfolioListData"
-                                            [allowClear]="false" (selected)="onSubportfolioChange($event)" formControlName="subportfolio"
-                                            [placeholder]="translate.translate('Type a subportfolio ')"
+                                            (selected)="onSubportfolioChange($event)"
+                                            [allowClear]="true" formControlName="subportfolio"
+                                            [placeholder]="translate.translate('Choose a subportfolio')"
                                           >
                                         </ng-select>
                                     </div>

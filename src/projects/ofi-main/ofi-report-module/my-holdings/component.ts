@@ -42,7 +42,8 @@ export class MyHoldingsComponent implements OnInit, OnDestroy {
 
     public subportfolioListData: Array<any>;
     public sharesList: Array<any>;
-    shareISIN = "";
+    shareISIN: string = "";
+    selectedWalletId: any;
     selectedSubportfolio: any = "";
     validationMaxDate = moment();
 
@@ -112,9 +113,10 @@ export class MyHoldingsComponent implements OnInit, OnDestroy {
         });
 
         this.aicForm = this.fb.group({
-            fromDate: [ moment().format('YYYY-MM-DD') ],
-            isinCode: [''],
+            fromDate: [ moment().format('YYYY-MM-DD'), Validators.required ],
+            isinCode: ['', Validators.required],
             subportfolio: ['', Validators.required],
+            fundShare: ['', Validators.required],
         });
 
         this.changeDetectorRef.detectChanges();
@@ -127,24 +129,20 @@ export class MyHoldingsComponent implements OnInit, OnDestroy {
             )
             .subscribe((data) => {
                 const defaultList: any[] = [{
-                    id: 1,
+                    id: -1,
                     text: this.translate.translate('All subporfolios'),
                     option: 'all',
                 }];
-
-                let dataList: any[] = [];
                 
                 if (data) {
-                    dataList = _.map(data, (subportfolio, index) => {
+                    this.subportfolioListData = defaultList.concat(_.map(data, (subportfolio, index) => {
                         return  {
-                            id: (index + 1) * 2,
+                            id: index,
                             text: subportfolio.label,
                             option: subportfolio.addr,
                         }
-                    });
+                    }));
                 }
-
-                this.subportfolioListData = _.merge(defaultList, dataList);
             });
         this.ofiSubPortfolioService.updateSubPortfolioObservable();
 
@@ -186,6 +184,8 @@ export class MyHoldingsComponent implements OnInit, OnDestroy {
             takeUntil(this.unSubscribe),
         )
             .subscribe(([accountId, selectedWalletId, selectedItem]) => {
+                this.selectedWalletId = selectedWalletId;
+
                 const payload: InvestorHoldingRequestData = {
                     amCompanyID: selectedItem.search[0].id,
                     walletID: Number(selectedWalletId),
@@ -233,11 +233,12 @@ export class MyHoldingsComponent implements OnInit, OnDestroy {
     /**
      * Generate AIC
      */
-    handleGenerateAIC() {        
+    handleGenerateAIC() {
         const payload: InvestorGenerateAICRequestData = {
             fromDate: moment(this.aicForm.controls['fromDate'].value).format('YYYY-MM-DD HH:mm:ss'),
-            isin: this.shareISIN,
-            subportfolio: this.selectedSubportfolio,
+            isin: this.aicForm.controls['isinCode'].value,
+            subportfolio: this.selectedSubportfolio.option,
+            walletId: this.selectedWalletId,
         }
 
         this.ofiReportsService.requestGenerateAICInvestor(payload).then((result) => {
@@ -261,7 +262,10 @@ export class MyHoldingsComponent implements OnInit, OnDestroy {
 
             // hide modal and return toaster message notification
             this.showGenerateAIC = false;
-            return this.toaster.pop('error', this.translate.translate('PDF file successfully generated.'));
+            this.aicForm.reset();
+            this.shareISIN = null;
+            this.selectedSubportfolio = null;
+            return this.toaster.pop('success', this.translate.translate('PDF file successfully generated.'));
         });
     }
 
@@ -274,7 +278,7 @@ export class MyHoldingsComponent implements OnInit, OnDestroy {
     formatInvestorHoldingList(d) {
         const data = d.toJS();
 
-        this.holdingList = data.map((it, i) => ({
+        this.holdingList = data.map((it) => ({
             amManagementCompanyID: it.amManagementCompanyID,
             companyName: it.companyName,
             shareID: it.shareID,
@@ -288,18 +292,17 @@ export class MyHoldingsComponent implements OnInit, OnDestroy {
             amount: it.amount,
             ratio: it.ratio,
         }));
-        this.sharesList = data.map((it, i) => ({
-            id: i,
+
+        this.sharesList = _.map(_.uniqBy(data, 'shareID'), it => ({
+            id: it.shareID,
             text: it.fundShareName,
             shareIsin: it.isin,
-
         }));
     }
 
     onSubmit(): void {
 
     }
-
 
     /**
     * Get the code of the currency by its id
@@ -321,10 +324,10 @@ export class MyHoldingsComponent implements OnInit, OnDestroy {
 
     onChange(event) {
         this.shareISIN = this.sharesList.filter(e => e.id == event.id)[0].shareIsin;
+        this.aicForm.controls['isinCode'].setValue(this.shareISIN);
     }
 
     onSubportfolioChange(event) {
-        this.selectedSubportfolio = this.subportfolioListData.filter(e => e.id == event.id)[0].option;
-        console.log(this.selectedSubportfolio);
+        this.selectedSubportfolio = this.subportfolioListData.filter(e => e.id == event.id)[0];
     }
 }

@@ -43,6 +43,7 @@ export interface InvestorGenerateAICRequestData {
     fromDate: string;
     isin: string;
     subportfolio: string;
+    walletId: number;
 }
 
 export interface InvestorGenerateAICRequestBody extends MemberNodeMessageBody {
@@ -50,6 +51,7 @@ export interface InvestorGenerateAICRequestBody extends MemberNodeMessageBody {
     fromDate: string;
     isin: string;
     subportfolio: string;
+    walletId: number;
 }
 
 export interface InvestorHoldingRequestBody extends MemberNodeMessageBody {

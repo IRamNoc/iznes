@@ -444,6 +444,7 @@ export class OfiReportsService {
           fromDate: data.fromDate,
           isin: data.isin,
           subportfolio: data.subportfolio,
+          walletId: data.walletId,
         };
     
         return createMemberNodeRequest(this.memberSocketService, messageBody);
