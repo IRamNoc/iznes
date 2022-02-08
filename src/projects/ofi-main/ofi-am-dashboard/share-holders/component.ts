@@ -133,7 +133,6 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
     public isID2SAm: boolean = false;
     showGenerateAIC = false;
 
-    transferListItems: any[];    
     rowOffset = 0;
 
     @select(['user', 'siteSettings', 'language']) requestLanguageObj;
@@ -345,20 +344,15 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
 
         this.aicForm = this.fb.group({
             fromDate: [ moment().format('YYYY-MM-DD') ],
-            isinCode: [''],
+            isinCode: ['', Validators.required],
+            fundShare: ['', Validators.required],
             subportfolio: ['', Validators.required],
             client: ['', Validators.required],
         });
 
-
         this.transferService.defaultRequestManageTransfersList({ itemPerPage: this.itemPerPage, rowOffset: this.rowOffset });        
         this.subscriptions.push(
-            this.transferObs.subscribe(transfers => this.transferListItems = this.transferObjectToList(transfers)));
-
-
-
-
-
+            this.transferObs.subscribe(transfers => this.transferObjectToList(transfers)));
     }
 
 
@@ -391,7 +385,7 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
 
             // hide modal and return toaster message notification
             this.showGenerateAIC = false;
-            return this.toaster.pop('error', this.translate.translate('PDF file successfully generated.'));
+            return this.toaster.pop('success', this.translate.translate('PDF file successfully generated.'));
     //     }); this.ofiReportsService.requestGenerateAICInvestor(payload).then((result) => {
     //         const data = result[1].Data;
             
@@ -651,21 +645,19 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
         }
     }
 
-
-
     onChange(event) {
-
         console.log(this.sharesList.filter(e => e.id == event.id)[0].shareIsin, "isin")
         this.shareISIN = this.sharesList.filter(e => e.id == event.id)[0].shareIsin;
+        this.aicForm.controls['isinCode'].setValue(this.shareISIN);
     }
 
     onSubportfolioChange(event) {
-        this.selectedSubportfolio = this.subportfolioListData.filter(e => e.id == event.id)[0].option;
+        this.selectedSubportfolio = this.subportfolioListData.filter(e => e.id == event.id)[0];
         console.log(this.selectedSubportfolio);
     }
 
-    onClientnameList(event) {
-        this.selectedClientName = this.allClientNameList.filter(e => e.id == event.id)[0].option;
+    onClientChange(event) {
+        this.selectedClientName = this.allClientNameList.filter(e => e.id == event.id)[0];
         console.log(this.selectedClientName);
     }
 
@@ -880,22 +872,27 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
 
      // Converts Transfer List Object to Array
      transferObjectToList(listTransfer) {
-         const tranferList=[];
-        let transfers = _.toArray(listTransfer).map((transfer) => {
-            const investorWallet = transfer.accountLabel;
-            
-            tranferList.push({'id':investorWallet,'text':investorWallet});
-            return {
-                tranferList
-                
-            };
-        });
+        // initialize object to empty
+        this.subportfolioListData = [];  
 
-        // Sorting transfer by refrenceID DESC by default
-        // transfers = _.orderBy(transfers, ['referenceID'], ['desc']);       
-       let transferListData=transfers.length>0 ? transfers[0].tranferList : [];
-       console.log(transferListData,"transfers")
-        return transferListData;
+        const defaultList: any[] = [{
+            id: -1,
+            text: this.translate.translate('All subporfolios'),
+            option: 'all',
+        }];
+
+        if (listTransfer) {
+            const transferList = defaultList.concat(_.map(listTransfer, (item, it) => {
+                console.log(item);
+                return {
+                    id: it,
+                    text: item.accountLabel,
+                    option: item.option,
+                }
+            }));
+
+            this.subportfolioListData = transferList;
+        }
     }
 
     ngOnDestroy(): void {
