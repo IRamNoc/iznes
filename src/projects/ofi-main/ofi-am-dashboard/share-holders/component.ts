@@ -9,13 +9,12 @@ import { MemberSocketService } from '@setl/websocket-service';
 import { OfiAmDashboardService } from '../../ofi-req-services/ofi-am-dashboard/service';
 import { OfiReportsService } from '../../ofi-req-services/ofi-reports/service';
 import { MultilingualService } from '@setl/multilingual';
-import { OfiSubPortfolioService } from './../../../ofi-main/ofi-sub-portfolio/sub-portfolio/service'
+import { OfiSubPortfolioReqService } from '@ofi/ofi-main/ofi-req-services/ofi-sub-portfolio/service';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { OfiKycService } from '../../ofi-req-services/ofi-kyc/service';
 import { Observable, combineLatest as observableCombineLatest } from 'rxjs';
 import { PermissionsService } from '../../../utils';
-import { TransferInOutService } from '../../ofi-transfer-in-out/transfer-in-out.service';
 import * as moment from 'moment';
 import { ToasterService, Toast } from 'angular2-toaster';
 
@@ -40,7 +39,7 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
     //aic Form
     aicForm:FormGroup;
     selectedSubportfolio: string = "";
-    selectedClientName:string = "";
+    selectedClientName: any;
 
 
     // funds forms
@@ -171,12 +170,10 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
         private fileDownloader: FileDownloader,
         private activatedRoute: ActivatedRoute,
         public translate: MultilingualService,
-        private ofiSubPortfolioService: OfiSubPortfolioService,
+        private ofiSubPortfolioReqService: OfiSubPortfolioReqService,
         private ofiKycService: OfiKycService,
         private permissionsService: PermissionsService,
-        private transferService: TransferInOutService,
         private toaster: ToasterService,
-
     ) {
         this.loadingDatagrid = false;
 
@@ -349,10 +346,6 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
             subportfolio: ['', Validators.required],
             client: ['', Validators.required],
         });
-
-        this.transferService.defaultRequestManageTransfersList({ itemPerPage: this.itemPerPage, rowOffset: this.rowOffset });        
-        this.subscriptions.push(
-            this.transferObs.subscribe(transfers => this.transferObjectToList(transfers)));
     }
 
 
@@ -407,7 +400,6 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
 
     //         // hide modal and return toaster message notification
     //         this.showGenerateAIC = false;
-    //         return this.toaster.pop('error', this.translate.translate('PDF file successfully generated.'));
      });
      }
 
@@ -420,18 +412,6 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
             this.language = language;
             // this.initCompanies();
             // this.formatManagementCompanyList();
-        });
-    this.ofiSubPortfolioService.getSubPortfolioData()
-        .pipe(
-            takeUntil(this.unSubscribe),
-        )
-        .subscribe((data) => {
-            this.subportfolioListData = data;
-            this.subportfolioListData.forEach((e, i) => {
-                e.id = i;
-                e.text = e.label;
-            });
-            console.log(data, "data")
         });
 
         this.hasPermissionCanManageAllClientFile$ = Observable.fromPromise(this.permissionsService.hasPermission('manageAllClientFile', 'canUpdate'));
@@ -448,7 +428,6 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
                     this.hasPermissionCanManageAllClientFile = hasClientFilePermission;
                     this.isNowCpAm = hasNowCpAMPermission;
                     this.isID2SAm = hasID2SAMPermission;
-                    console.log(amKycListData, "amKycListData");
 
                     this.getAmClientListFromRedux(amKycListData);
                     this.getAmportfolioFromRedux(amKycListData)
@@ -579,8 +558,6 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
                     },
                     [],
                 );
-
-                console.log(this.holdersFundData, "holdersFundData")
             }
         }
 
@@ -609,7 +586,6 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
      * @param holderList
      */
     getAmHoldersListFromRedux(holderList) {
-        console.log(holderList, "holderList")
         if (holderList) {
             this.allList = holderList.toJS() || [];
 
@@ -646,19 +622,46 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
     }
 
     onChange(event) {
-        console.log(this.sharesList.filter(e => e.id == event.id)[0].shareIsin, "isin")
         this.shareISIN = this.sharesList.filter(e => e.id == event.id)[0].shareIsin;
         this.aicForm.controls['isinCode'].setValue(this.shareISIN);
     }
 
     onSubportfolioChange(event) {
         this.selectedSubportfolio = this.subportfolioListData.filter(e => e.id == event.id)[0];
-        console.log(this.selectedSubportfolio);
     }
 
     onClientChange(event) {
         this.selectedClientName = this.allClientNameList.filter(e => e.id == event.id)[0];
-        console.log(this.selectedClientName);
+        this.ofiSubPortfolioReqService.defaultRequestGetInvestorSubportfolio(this.selectedClientName.investorWalletID,
+            (success) => {
+                const responseStatus = _.get(success, '[1].Status', 'Fail');
+                
+                if (responseStatus === 'Fail') {
+                    return this.toaster.pop('error', this.translate.translate('Unable to retrieve client\'s subportfolio informations'));
+                }
+
+                const data = _.get(success, '[1].Data', []);
+                
+                const defaultList: any[] = [{
+                    id: -1,
+                    text: this.translate.translate('All subporfolios'),
+                    option: 'all',
+                }];
+
+                this.subportfolioList = data;
+                this.subportfolioListData = _.concat(defaultList, _.map(data, (it, index) => {
+                    return {
+                        id: index,
+                        text: it.accountLabel,
+                        option: it.option,
+                    }
+                }));
+            },
+            (error) => {
+                console.log(error);
+                return this.toaster.pop('error', this.translate.translate('There is an error with the request'));
+            }
+        );
     }
 
     
@@ -867,31 +870,6 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
                 shareId: this.selectedShareId,
                 selectedFilter: this.selectedTopHolders,
             });
-        }
-    }
-
-     // Converts Transfer List Object to Array
-     transferObjectToList(listTransfer) {
-        // initialize object to empty
-        this.subportfolioListData = [];  
-
-        const defaultList: any[] = [{
-            id: -1,
-            text: this.translate.translate('All subporfolios'),
-            option: 'all',
-        }];
-
-        if (listTransfer) {
-            const transferList = defaultList.concat(_.map(listTransfer, (item, it) => {
-                console.log(item);
-                return {
-                    id: it,
-                    text: item.accountLabel,
-                    option: item.option,
-                }
-            }));
-
-            this.subportfolioListData = transferList;
         }
     }
 
