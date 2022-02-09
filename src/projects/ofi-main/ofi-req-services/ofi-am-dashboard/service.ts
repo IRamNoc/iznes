@@ -4,8 +4,7 @@ import { NgRedux } from '@angular-redux/store';
 
 /* Member socket and nodeSagaRequest import. */
 import { MemberSocketService } from '@setl/websocket-service';
-import { createMemberNodeSagaRequest, createMemberNodeRequest } from '@setl/utils/common';
-
+import { createMemberNodeSagaRequest } from '@setl/utils/common';
 import { SagaHelper, Common } from '@setl/utils';
 import * as _ from 'lodash';
 
@@ -14,9 +13,6 @@ import {
     OfiMemberNodeBody,
     OfiRequestWalletIdsByAddresses,
     GetFundWithHoldersRequestData,
-    AMGenerateAICRequestData,
-    AMGenerateAICRequestBody,
-
 } from './model';
 
 import {
@@ -34,12 +30,6 @@ export class OfiAmDashboardService {
     ) {
         /* Stub. */
     }
-    
-
-
-
-
-    
 
     static defaultRequestGetUserManagementCompanyFunds(ofiAmDashboardService: OfiAmDashboardService, ngRedux: NgRedux<any>) {
         // Set the state flag to true. so we do not request it again.
@@ -131,36 +121,6 @@ export class OfiAmDashboardService {
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
     }
-
-     /* GENERATE AIC */
-
-     defaultRequestGenerateAICAM(data: AMGenerateAICRequestData, successCallback: (res) => void, errorCallback: (res) => void) {
-        // Request the list.
-        const asyncTaskPipe = this.requestGenerateAICAM(data);
-    
-        this.ngRedux.dispatch(SagaHelper.runAsync(
-          [],
-          [],
-          asyncTaskPipe,
-          {},
-          res => successCallback(res),
-          res => errorCallback(res),
-        ));
-      }
-    
-      requestGenerateAICAM(data: AMGenerateAICRequestData): any {
-        const messageBody: AMGenerateAICRequestBody = {
-          RequestName: 'izngenerateaicam',
-          token: this.memberSocketService.token,
-          fromDate: data.fromDate,
-          isin: data.isin,
-          subportfolio: data.subportfolio,
-          client:data.client,
-        };
-    
-        return createMemberNodeRequest(this.memberSocketService, messageBody);
-      }
-
 
     /**
      * Build Request
