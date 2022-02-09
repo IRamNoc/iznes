@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup,Validators,FormControl } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgRedux, select } from '@angular-redux/store';
 import { fromJS } from 'immutable';
@@ -16,9 +16,9 @@ import { OfiKycService } from '../../ofi-req-services/ofi-kyc/service';
 import { Observable, combineLatest as observableCombineLatest } from 'rxjs';
 import { PermissionsService } from '../../../utils';
 import * as moment from 'moment';
-import { ToasterService, Toast } from 'angular2-toaster';
+import { ToasterService } from 'angular2-toaster';
 
-import { AMGenerateAICRequestData,AMGenerateAICRequestBody} from '../../ofi-req-services/ofi-reports/model'
+import { AMGenerateAICRequestData } from '../../ofi-req-services/ofi-reports/model'
 
 
 interface SelectedItem {
@@ -364,43 +364,10 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
                 return this.toaster.pop('error', this.translate.translate('There is a problem with the request.'));
             }
 
-            // decodes base64 file payload
-            const byteArray = new Uint8Array(atob(data.payload).split('').map(char => char.charCodeAt(0)));
-
-            // create temporary element and delete it after file download
-            const element = document.createElement('a');
-            document.body.appendChild(element);
-            const fileURL = window.URL.createObjectURL(new Blob([byteArray], {type: 'application/pdf'}));
-            element.href = fileURL;
-            element.download = data.filename;
-            element.click();
-            document.body.removeChild(element);
-
             // hide modal and return toaster message notification
             this.showGenerateAIC = false;
-            return this.toaster.pop('success', this.translate.translate('PDF file successfully generated.'));
-    //     }); this.ofiReportsService.requestGenerateAICInvestor(payload).then((result) => {
-    //         const data = result[1].Data;
-            
-    //         if (data.error) {
-    //             return this.toaster.pop('error', this.translate.translate('There is a problem with the request.'));
-    //         }
-
-    //         // decodes base64 file payload
-    //         const byteArray = new Uint8Array(atob(data.payload).split('').map(char => char.charCodeAt(0)));
-
-    //         // create temporary element and delete it after file download
-    //         const element = document.createElement('a');
-    //         document.body.appendChild(element);
-    //         const fileURL = window.URL.createObjectURL(new Blob([byteArray], {type: 'application/pdf'}));
-    //         element.href = fileURL;
-    //         element.download = data.filename;
-    //         element.click();
-    //         document.body.removeChild(element);
-
-    //         // hide modal and return toaster message notification
-    //         this.showGenerateAIC = false;
-     });
+            return this.toaster.pop('success', this.translate.translate('PDF file successfully generated.'))
+        });
      }
 
     initSubscriptions() {
