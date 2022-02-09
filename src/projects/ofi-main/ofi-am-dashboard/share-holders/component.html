@@ -67,7 +67,7 @@
                                     <label>{{ 'Share Name' | translate }}</label>
                                     <div class="input-button-group">
                                         <ng-select id="holders-list-shares-search-field" [items]="sharesList"
-                                            [allowClear]="true" (selected)="onChange($event)"
+                                            [allowClear]="false" (selected)="onChange($event)"
                                             [placeholder]="translate.translate('Choose a Share name')"
                                             formControlName="fundShare"
                                         >
@@ -86,7 +86,7 @@
                                     <div class="input-button-group">
                                         <ng-select id="holders-list-shares-search-field" [items]="allClientNameList"
                                             (selected)="onClientChange($event)"
-                                            [allowClear]="true" formControlName="client"
+                                            [allowClear]="false" formControlName="client"
                                             [placeholder]="translate.translate('Choose a Client')"
                                           >
                                         </ng-select>
@@ -98,7 +98,7 @@
                                     <div class="input-button-group">
                                         <ng-select id="holders-list-shares-search-field" [items]="subportfolioListData"
                                             (selected)="onSubportfolioChange($event)"
-                                            [allowClear]="true" formControlName="subportfolio"
+                                            [allowClear]="false" formControlName="subportfolio"
                                             [placeholder]="translate.translate('Choose a Subportfolio')"
                                           >
                                         </ng-select>

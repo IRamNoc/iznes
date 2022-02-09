@@ -38,7 +38,7 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
 
     //aic Form
     aicForm:FormGroup;
-    selectedSubportfolio: string = "";
+    selectedSubportfolio: any;
     selectedClientName: any;
 
 
@@ -624,6 +624,8 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
     onChange(event) {
         this.shareISIN = this.sharesList.filter(e => e.id == event.id)[0].shareIsin;
         this.aicForm.controls['isinCode'].setValue(this.shareISIN);
+        this.aicForm.controls['subportfolio'].setValue(null);
+        this.aicForm.controls['client'].setValue(null);
     }
 
     onSubportfolioChange(event) {
@@ -631,6 +633,9 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
     }
 
     onClientChange(event) {
+        this.selectedSubportfolio = null;
+        this.aicForm.controls['subportfolio'].setValue(null);
+
         this.selectedClientName = this.allClientNameList.filter(e => e.id == event.id)[0];
         this.ofiSubPortfolioReqService.defaultRequestGetInvestorSubportfolio(this.selectedClientName.investorWalletID,
             (success) => {
