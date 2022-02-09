@@ -248,24 +248,12 @@ export class MyHoldingsComponent implements OnInit, OnDestroy {
                 return this.toaster.pop('error', this.translate.translate('There is a problem with the request.'));
             }
 
-            // decodes base64 file payload
-            const byteArray = new Uint8Array(atob(data.payload).split('').map(char => char.charCodeAt(0)));
-
-            // create temporary element and delete it after file download
-            const element = document.createElement('a');
-            document.body.appendChild(element);
-            const fileURL = window.URL.createObjectURL(new Blob([byteArray], {type: 'application/pdf'}));
-            element.href = fileURL;
-            element.download = data.filename;
-            element.click();
-            document.body.removeChild(element);
-
             // hide modal and return toaster message notification
             this.showGenerateAIC = false;
             this.aicForm.reset();
             this.shareISIN = null;
             this.selectedSubportfolio = null;
-            return this.toaster.pop('success', this.translate.translate('PDF file successfully generated.'));
+            return this.toaster.pop('success', this.translate.translate('PDF file successfully generated, please check IZNES inbox.'));
         });
     }
 
