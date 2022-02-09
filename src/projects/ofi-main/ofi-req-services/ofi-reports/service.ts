@@ -112,38 +112,6 @@ export class OfiReportsService {
         ));
     }
 
-      /* GENERATE AIC */
-
-      defaultRequestGenerateAICAM(data: AMGenerateAICRequestData, successCallback: (res) => void, errorCallback: (res) => void) {
-        // Request the list.
-        const asyncTaskPipe = this.requestGenerateAICAM(data);
-    
-        this.ngRedux.dispatch(SagaHelper.runAsync(
-          [],
-          [],
-          asyncTaskPipe,
-          {},
-          res => successCallback(res),
-          res => errorCallback(res),
-        ));
-      }
-    
-      requestGenerateAICAM(data: AMGenerateAICRequestData): any {
-         
-        const messageBody: AMGenerateAICRequestBody = {
-          RequestName: 'izngenerateaicam',
-          token: this.memberSocketService.token,
-          isin: data.isin,
-          fromDate: data.fromDate,
-          subportfolio: data.subportfolio,
-          client:data.client
-        };
-    
-        return createMemberNodeRequest(this.memberSocketService, messageBody);
-      }
-    
-
-
     /* CENTRALIZATION FUNDS */
 
     static setRequestedCentralisationFundsList(boolValue: boolean, ngRedux: NgRedux<any>) {
