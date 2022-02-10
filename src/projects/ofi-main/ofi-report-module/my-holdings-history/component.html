@@ -29,7 +29,7 @@
                                                 [items]="managementCompanyListItems" 
                                                 [allowClear]="false" 
                                                 [placeholder]="translate.translate('Select Asset Management Company')"
-                                                [formControl]="searchForm.controls['search']" (selected)="handleDropdownAmSelect($event)"  
+                                                [formControl]="searchForm.controls['managementCompany']" (selected)="handleDropdownAmSelect($event)"  
                                     >
                                     </ng-select>
                                 </div>
@@ -81,11 +81,11 @@
                                         <div class="input-button-group">
                                             <clr-radio-container clrInline>
                                                 <clr-radio-wrapper>
-                                                    <input type="radio" [checked]="true" clrRadio id="opt-type-all" value="posions_none" formControlName="postionsCal"/>
+                                                    <input type="radio" [checked]="true" clrRadio id="opt-type-all" value="1" formControlName="includeHoliday"/>
                                                     <label>{{'All' | translate }}</label>
                                                 </clr-radio-wrapper>
                                                 <clr-radio-wrapper>
-                                                    <input type="radio" clrRadio id="opt-type-nonHoliday" value="positions_nonHoliday" formControlName="postionsCal"/>
+                                                    <input type="radio" clrRadio id="opt-type-nonHoliday" value="0" formControlName="includeHoliday"/>
                                                     <label>{{'Non-holiday' | translate }}</label>
                                                 </clr-radio-wrapper>
                                             </clr-radio-container>
@@ -151,19 +151,19 @@
                                 <clr-radio-container clrInline>
                                     <label class="required-field">{{ 'Aggregation of shares' | translate }}</label>
                                     <clr-radio-wrapper>
-                                        <input type="radio" [checked]="true" clrRadio id="opt-type-none" value="agg_none" formControlName="AggregationShare"/>
+                                        <input type="radio" [checked]="true" clrRadio id="opt-type-none" value="agg_none" formControlName="aggregationShare"/>
                                         <label>{{ 'None' | translate }}</label>
                                     </clr-radio-wrapper>
                                     <clr-radio-wrapper>
-                                        <input type="radio" clrRadio id="opt-type-fund" value="agg_byfund" formControlName="AggregationShare"/>
+                                        <input type="radio" clrRadio id="opt-type-fund" value="agg_byfund" formControlName="aggregationShare"/>
                                         <label>{{ 'by fund' | translate }}</label>
                                     </clr-radio-wrapper>
                                     <clr-radio-wrapper>
-                                        <input type="radio" clrRadio id="opt-type-amc" value="agg_amc" formControlName="AggregationShare"/>
+                                        <input type="radio" clrRadio id="opt-type-amc" value="agg_amc" formControlName="aggregationShare"/>
                                         <label>{{ 'by Asset Management Company' | translate }}</label>
                                     </clr-radio-wrapper>
                                     <clr-radio-wrapper>
-                                        <input type="radio" clrRadio id="opt-type-global" value="agg_global" formControlName="AggregationShare"/>
+                                        <input type="radio" clrRadio id="opt-type-global" value="agg_global" formControlName="aggregationShare"/>
                                         <label>{{ 'Global' | translate }}</label>
                                     </clr-radio-wrapper>
                                 </clr-radio-container>
@@ -172,19 +172,19 @@
                                 <clr-radio-container clrInline>
                                     <label class="required-field">{{ 'Aggregation of portfolios' | translate }}</label>
                                     <clr-radio-wrapper>
-                                        <input type="radio" clrRadio [checked]="true" id="opt-type-portNone" value="agg_portfolio" formControlName="AggregationPortfolio"/>
+                                        <input type="radio" clrRadio [checked]="true" id="opt-type-portNone" value="agg_portfolio" formControlName="aggregationPortfolio"/>
                                         <label>{{ 'None' | translate }}</label>
                                     </clr-radio-wrapper>
                                     <clr-radio-wrapper>
-                                        <input type="radio" clrRadio id="opt-type-byinvestor" value="agg_byinvestor" formControlName="AggregationPortfolio"/>
+                                        <input type="radio" clrRadio id="opt-type-byinvestor" value="agg_byinvestor" formControlName="aggregationPortfolio"/>
                                         <label>{{ 'by Investor' | translate }}</label>
                                     </clr-radio-wrapper>
                                     <clr-radio-wrapper>
-                                        <input type="radio" clrRadio id="opt-type-byportmanager" value="agg_byportmanager" formControlName="AggregationPortfolio"/>
+                                        <input type="radio" clrRadio id="opt-type-byportmanager" value="agg_byportmanager" formControlName="aggregationPortfolio"/>
                                         <label>{{ 'by Portfolio Manager' | translate }}</label>
                                     </clr-radio-wrapper>
                                     <clr-radio-wrapper>
-                                        <input type="radio" clrRadio id="opt-type-portGlobal" value="agg_portGlobal" formControlName="AggregationPortfolio"/>
+                                        <input type="radio" clrRadio id="opt-type-portGlobal" value="agg_portGlobal" formControlName="aggregationPortfolio"/>
                                         <label>{{ 'Global' | translate }}</label>
                                     </clr-radio-wrapper>
                                 </clr-radio-container>
@@ -193,7 +193,7 @@
                             <div class="form-group col-sm-6">
                                 <clr-checkbox-container class="text-left">
                                     <clr-checkbox-wrapper>
-                                        <input formControlName="hideZeroPositions" type="checkbox" clrCheckbox />
+                                        <input formControlName="hideZeroPosition" type="checkbox" clrCheckbox />
                                         <label>{{ 'Hide Zero Positions' | translate }}</label>
                                     </clr-checkbox-wrapper>
                                 </clr-checkbox-container>

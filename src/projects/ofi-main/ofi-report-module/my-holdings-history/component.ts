@@ -77,6 +77,7 @@ export class MyHoldingsHistoryComponent implements OnInit, OnDestroy {
     ngOnInit(): void {
         this.initForm();        
         this.initSubscriptions();
+        this.requestHoldingListHistory();
     }
 
      ngOnDestroy(): void {
@@ -89,19 +90,19 @@ export class MyHoldingsHistoryComponent implements OnInit, OnDestroy {
     initForm() {
         this.holdingList = [];
         this.searchForm = this.fb.group({
-            search: [''],
-            isin:[''],
-            fundName:[''],
-            shareName:[''],
-            dateFrom:[''],
-            dateType:[''],
-            dateTo:[''],
-            investor:[''],
-            portfolio:[''],
-            postionsCal:[''],
-            AggregationShare:[''],
-            AggregationPortfolio:[''],
-            hideZeroPositions:[''],
+            managementCompany: [''],
+            isin: [''],
+            fundName: [''],
+            shareName: [''],
+            dateFrom: [''],
+            dateTo: [''],
+            dateType: [''],
+            investor: [''],
+            portfolio: [''],
+            includeHoliday: [''],
+            aggregationShare:[''],
+            aggregationPortfolio:[''],
+            hideZeroPosition:[''],
             investorInInvestorFunds:[''],
         });
 
@@ -188,19 +189,20 @@ export class MyHoldingsHistoryComponent implements OnInit, OnDestroy {
      */
     requestHoldingListHistory() {
         const params = {
-            isin: '',
-            fundId: '',
-            shareId: '',
-            dateFrom: '',
-            dateTo: '',
-            dateType: '',
-            positionToCalculate: '',
-            // investorId: '', // 
-            walletId: '',
-            shareAggregate: '',
-            walletAggregate: '',
-            hideZeroPosition: ''
+            isin: this.searchForm.controls['isin'].value,
+            managementCompanyId: null,
+            fundId: null,
+            shareId: null,
+            dateFrom: null,
+            dateTo: null,
+            dateType: null,
+            includeHoliday: null,
+            investorId: null,
+            walletId: null,
+            hideZeroPosition: null,
         }
+
+        this.ofiReportsService.defaultRequestMyHoldingHistory(params);
     }
 
     /**

@@ -32,8 +32,6 @@ import {
     SET_CENTRA_FUNDS_LIST,
     setRequestedCentraFundsList,
     clearRequestedCentraFundsList,
-    OFI_SET_AM_HOLDING_HISTORY,
-    ofiSetRequestedAmHoldingHistory,
 
 } from '../../ofi-store/ofi-reports';
 
@@ -53,6 +51,8 @@ import {
     CentralisationRequestFundsBody,
     CentralisationFundsRequestData,
     CentralisationSharesRequestData,
+    myHoldingHistoryRequestData,
+    myHoldingHistoryRequestBody,
 } from './model';
 
 @Injectable()
@@ -387,22 +387,15 @@ export class OfiReportsService {
 
         return createMemberNodeRequest(this.memberSocketService, messageBody);
     }
-    requestMyHoldingHistoryDetail(): any {
-        const messageBody = {
-            RequestName: 'izngetholdingdb',
-            token: this.memberSocketService.token 
-        };
 
-        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
-    }
-    static defaultPositionHoldingList(ofiReportsService: OfiReportsService, ngRedux: NgRedux<any>) {
+    defaultRequestMyHoldingHistory(data: myHoldingHistoryRequestData) {
         // Set the state flag to true. so we do not request it again.
-        ngRedux.dispatch(ofiSetRequestedAmHoldingHistory());
+        this.ngRedux.dispatch(ofiSetRequestedAmHoldingHistory());
 
         // Request the list.
-        const asyncTaskPipe = ofiReportsService.requestMyHoldingHistoryDetail();
+        const asyncTaskPipe = this.requestMyHoldingHistory(data);
 
-        ngRedux.dispatch(SagaHelper.runAsync(
+        this.ngRedux.dispatch(SagaHelper.runAsync(
             [OFI_SET_AM_HOLDING_HISTORY],
             [],
             asyncTaskPipe,
@@ -410,4 +403,23 @@ export class OfiReportsService {
         ));
     }
 
+    requestMyHoldingHistory(requestData: myHoldingHistoryRequestData): any {
+        const messageBody: myHoldingHistoryRequestBody = {
+            RequestName: 'izngetholdinghistory',
+            token: this.memberSocketService.token,
+            isin: requestData.isin,
+            managementCompanyId: requestData.managementCompanyId,
+            fundId: requestData.fundId,
+            shareId: requestData.shareId,
+            dateFrom: requestData.dateFrom,
+            dateTo: requestData.dateTo,
+            dateType: requestData.dateType,
+            includeHoliday: requestData.includeHoliday,
+            investorId: requestData.investorId,
+            walletId: requestData.walletId,
+            hideZeroPosition: requestData.hideZeroPosition,
+        };
+
+        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+    }
 }

@@ -114,3 +114,32 @@ export interface CentralisationHistoryRequestData {
     dateTo: any;
     dateRange: any;
 }
+
+export interface myHoldingHistoryRequestBody extends MemberNodeMessageBody {
+    token: string;
+    isin: string,
+    managementCompanyId: number;
+    fundId: number;
+    shareId: number;
+    dateFrom: string;
+    dateTo: string;
+    dateType: string;
+    includeHoliday: number;
+    investorId: number;
+    walletId: number;
+    hideZeroPosition: number;
+}
+
+export interface myHoldingHistoryRequestData {
+    isin: string,
+    managementCompanyId: number;
+    fundId: number;
+    shareId: number;
+    dateFrom: string;
+    dateTo: string;
+    dateType: string;
+    includeHoliday: number;
+    investorId: number;
+    walletId: number;
+    hideZeroPosition: number;
+}
