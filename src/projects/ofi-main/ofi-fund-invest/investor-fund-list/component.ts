@@ -278,6 +278,7 @@ export class OfiInvestorFundListComponent implements OnInit, AfterViewInit, OnDe
         const newTabControlImu = tabControlImu.map((item, thisIndex) => {
             return item.set('active', thisIndex === Number(this.routeTabId));
         });
+        console.log("ararar", this.tabsControl );
 
         this.tabsControl = newTabControlImu.toJS();
     }
@@ -440,6 +441,7 @@ export class OfiInvestorFundListComponent implements OnInit, AfterViewInit, OnDe
         }
 
         /* Push the edit tab into the array. */
+        console.log("gagag", this.fundList);
         const fundShareId = _.get(this.fundList, [index, 'id'], 0);
         const fundShareData = _.get(this.fundListObj, [fundShareId], {});
         const fundShareName = _.get(fundShareData, ['shareName'], '');
@@ -511,8 +513,12 @@ export class OfiInvestorFundListComponent implements OnInit, AfterViewInit, OnDe
      * @param {{allowSellBuy: boolean}} share
      * @return {boolean}
      */
-    allowSellBuy(share: { allowSellBuy: number }): boolean {
-        return (share.allowSellBuy === 1);
+    allowSellBuy(  allowSellBuy: number ): boolean {
+        console.log("eeee", allowSellBuy);
+        if (allowSellBuy=== 1){
+            return true;
+        }
+        return false;
     }
 
     private setNewActiveTab(i: number): void {
