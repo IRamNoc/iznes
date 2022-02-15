@@ -1,5 +1,5 @@
 <div class="header-breadcrumbs">
-    <h1><i class="fa fa-university"></i> {{ 'Management Company' | translate }}</h1>
+    <h1><i class="fa fa-university"></i> {{ 'Operating Company' | translate }}</h1>
 </div>
 
 <clr-tabs>
@@ -12,7 +12,7 @@
 
                 <clr-datagrid>
                     <clr-dg-column [clrDgField]="'companyName'">
-                        {{ 'Management Company Name' | translate }}
+                        {{ 'Operating Company Name' | translate }}
                     </clr-dg-column>
                     <clr-dg-column [clrDgField]="'lei'">{{ 'LEI' | translate }}</clr-dg-column>
                     <clr-dg-column [clrDgField]="'country'">{{ 'Country' | translate }}</clr-dg-column>
@@ -46,12 +46,12 @@
     <clr-tab>
         <div *ngIf="!editForm; else editMcFTemplate">
             <button id="mcTabAddNewMc" clrTabLink (click)="resetForm()"><i class="fa fa-plus"></i>
-                {{ 'New Management Company' | translate }}
+                {{ 'New Operating Company' | translate }}
             </button>
         </div>
         <ng-template #editMcFTemplate>
             <button id="mcTabEditMc" clrTabLink><i class="fa fa-pencil"></i>
-                {{ 'Edit Management Company' | translate }}
+                {{ 'Edit Operating Company' | translate }}
             </button>
         </ng-template>
         <clr-tab-content *clrIfActive="editForm">
@@ -60,9 +60,9 @@
                 <section class="form-block">
                     <div *ngIf="!editForm;" class="row">
                         <div class="form-group col-sm-6">
-                            <label class="control-label">{{ 'Management company type' | translate }}</label>
+                            <label class="control-label">{{ 'Operating company type' | translate }}</label>
                             <ng-select [items]="managementCompanyTypes" [allowClear]="false" [containerWidth]="'95%'"
-                                placeholder="{{ 'Select Management company type' | translate }}"
+                                placeholder="{{ 'Select operating company type' | translate }}"
                                 formControlName="managementCompanyType">
                             </ng-select>
                         </div>
@@ -70,7 +70,7 @@
                     <div class="row">
                         <div class="form-group required-field col-sm-6">
                             <label class="control-label" for="companyName">
-                                {{ 'Management Company Name' | translate }}
+                                {{ 'Operating Company Name' | translate }}
                             </label>
                             <input type="text" id="companyName" class="form-control" formControlName="companyName"
                                 placeholder="{{ 'Please fill in the company name or legal name' | translate }}">
@@ -168,7 +168,7 @@
                                 {{ 'LEI Code' | translate }}
                             </label>
                             <input type="text" id="lei" class="form-control" formControlName="lei"
-                                placeholder="{{ 'Please fill in the LEI code of the management company' | translate }}">
+                                placeholder="{{ 'Please fill in the LEI code of the operating company' | translate }}">
                             <span
                                 *ngIf="managementCompanyForm.controls.lei.hasError('required') && managementCompanyForm.controls.lei.touched"
                                 class="field-error">{{ 'Field is required' | translate }}</span>
@@ -183,7 +183,7 @@
                                 {{ 'BIC Code' | translate }}
                             </label>
                             <input type="text" id="bic" class="form-control" formControlName="bic"
-                                placeholder="{{ 'Please fill in the BIC code of the management company' | translate }}">
+                                placeholder="{{ 'Please fill in the BIC code of the operating company' | translate }}">
                             <span
                                 *ngIf="managementCompanyForm.controls.bic.hasError('required') && managementCompanyForm.controls.bic.touched"
                                 class="field-error">{{ 'Field is required' | translate }}</span>
@@ -212,7 +212,7 @@
                             </label>
                             <input type="text" id="postalAddressLine1" class="form-control"
                                 formControlName="postalAddressLine1"
-                                placeholder="{{ 'Address of the management company headquarters' | translate }}">
+                                placeholder="{{ 'Address of the operating company headquarters' | translate }}">
                             <span
                                 *ngIf="managementCompanyForm.controls.postalAddressLine1.hasError('required') && managementCompanyForm.controls.postalAddressLine1.touched"
                                 class="field-error">{{ 'Field is required' | translate }}</span>
@@ -301,7 +301,7 @@
                     <div class="row">
                         <div class="form-group required-field col-sm-6">
                             <label for="mc_websiteurl" class="control-label">
-                                {{ 'Management Company Website Address' | translate }}
+                                {{ 'Operating Company Website Address' | translate }}
                             </label>
                             <input type="text" id="mc_websiteUrl" class="form-control" formControlName="websiteUrl"
                                 placeholder="{{ 'Website address' | translate }}">
@@ -311,7 +311,7 @@
                         </div>
                         <div class="form-group required-field col-sm-6">
                             <label for="mc_phoneNumber" class="control-label">
-                                {{ 'Management Company Phone Number' | translate }}
+                                {{ 'Operating Company Phone Number' | translate }}
                             </label>
                             <div class="phone-input-container">
                                 <div>
@@ -326,7 +326,7 @@
 
                                 <div>
                                     <input type="text" id="kyc_additionnal_phoneNumber" class="form-control"
-                                        placeholder="{{ 'Please fill in the commercial phone number of the management company' | translate }}"
+                                        placeholder="{{ 'Please fill in the commercial phone number of the operatingcompany' | translate }}"
                                         [formControl]="managementCompanyForm.controls.phoneNumber">
                                     <span
                                         *ngIf="managementCompanyForm.controls['phoneNumber'].hasError('required') && managementCompanyForm.controls['phoneNumber'].touched"
@@ -353,7 +353,7 @@
                         </div>
                         <div class="form-group col-sm-6">
                             <label for="mc_logo" class="required-field">
-                                {{ 'Document Logo of the Management Company' | translate }}
+                                {{ 'Document Logo of the Operating Company' | translate }}
                             </label>
                             <div class="filedrop-wrapper">
                                 <input type="hidden" class="form-control" formControlName="logo">
@@ -428,7 +428,7 @@
 
 <!--CONFIRM MODALS-->
 <clr-modal [(clrModalOpen)]="showConfirmModal">
-    <h3 class="modal-title">{{ 'Deleting Management Company' | translate }}</h3>
+    <h3 class="modal-title">{{ 'Deleting Operating Company' | translate }}</h3>
     <div class="modal-body">
         <p>{{ 'Are you sure you want to delete' | translate }}:<br />
             <strong>{{companyToDelete && companyToDelete.companyName}}</strong>
