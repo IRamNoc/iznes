@@ -68,8 +68,6 @@ export class NewKycDocumentsComponent implements OnInit, OnDestroy {
             });
     }
 
-
-
     initSubscriptions() {
         this.kycMyInformations
             .takeUntil(this.unsubscribe)
