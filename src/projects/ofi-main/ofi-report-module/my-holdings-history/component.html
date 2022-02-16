@@ -236,11 +236,8 @@
                     <clr-dg-column [clrDgField]="'companyName'" clrDgSortIcon>
                         <span>{{ 'Asset Management Company' | translate }}</span> <span class="column-label"></span>
                     </clr-dg-column>
-                    <clr-dg-column [clrDgField]="'portfolioLabel'" clrDgSortIcon>
-                        {{ 'Portfolio' | translate }} <span class="column-label"></span>
-                    </clr-dg-column>
                     <clr-dg-column [clrDgField]="'fundNameLabel'" clrDgSortIcon>
-                        FundName <span class="column-label"></span>
+                        {{ 'Fund Name' | translate }}<span class="column-label"></span>
                     </clr-dg-column>
                     <clr-dg-column [clrDgField]="'fundShareName'" clrDgSortIcon>
                         {{ 'Share Name' | translate }} <span class="column-label"></span>
@@ -249,31 +246,31 @@
                         {{ 'ISIN' | translate }} <span class="column-label"></span>
                     </clr-dg-column>
                     <clr-dg-column [clrDgField]="'shareClassCurrency'" clrDgSortIcon>
-                        Currency<span class="column-label"></span>
+                        {{ 'Currency' | translate }}<span class="column-label"></span>
                     </clr-dg-column>
                     <clr-dg-column [clrDgField]="'portfolioManager'" clrDgSortIcon>
-                        Portfolio Manager<span class="column-label"></span>
+                        {{ 'Portfolio Manager' | translate }}<span class="column-label"></span>
                     </clr-dg-column>
                     <clr-dg-column [clrDgField]="'investorLabel'" clrDgSortIcon>
-                        Investor<span class="column-label"></span>
+                        {{ 'Investor' | translate }}<span class="column-label"></span>
                     </clr-dg-column>
                     <clr-dg-column [clrDgField]="'portfolioLabel'" clrDgSortIcon>
-                        Portfolio<span class="column-label"></span>
+                        {{ 'Portfolio' | translate }}<span class="column-label"></span>
                     </clr-dg-column>
                     <clr-dg-column [clrDgField]="'dateLabel'" clrDgSortIcon>
-                        Date<span class="column-label"></span>
+                        {{ 'Date' | translate }}<span class="column-label"></span>
                     </clr-dg-column>
                     <clr-dg-column [clrDgField]="'quantity'" class="right" clrDgSortIcon>
                         {{ 'Quantity' | translate }} <span class="column-label"></span>
                     </clr-dg-column>
                     <clr-dg-column [clrDgField]="'latestNav'" class="right" clrDgSortIcon>
-                        Nav <span class="column-label"></span>
+                        {{ 'NAV' | translate }} <span class="column-label"></span>
                     </clr-dg-column>
                     <clr-dg-column [clrDgField]="'navDateLabel'" class="right" clrDgSortIcon>
-                        NavDate <span class="column-label"></span>
+                        {{ 'NAV Date' | translate }} <span class="column-label"></span>
                     </clr-dg-column>
                     <clr-dg-column [clrDgField]="'auiLabel'" class="right" clrDgSortIcon>
-                       AUI <span class="column-label"></span>
+                       {{ 'AUI' | translate }} <span class="column-label"></span>
                     </clr-dg-column>
 
                     <clr-dg-row *clrDgItems="let data of holdingList">

@@ -32,6 +32,10 @@ import {
     SET_CENTRA_FUNDS_LIST,
     setRequestedCentraFundsList,
     clearRequestedCentraFundsList,
+    OFI_SET_HOLDING_HISTORY_LIST,
+    ofiSetRequestedHoldingHistory,
+    OFI_CLEAR_REQUESTED_HOLDING_HISTORY,
+    ofiClearRequestedHoldingHistory,
 
 } from '../../ofi-store/ofi-reports';
 
@@ -71,6 +75,14 @@ export class OfiReportsService {
             ngRedux.dispatch(ofiClearRequestedAmHolders());
         } else {
             ngRedux.dispatch(ofiSetRequestedAmHolders());
+        }
+    }
+
+    static setRequestedHoldingHistoryList(boolValue: boolean, ngRedux: NgRedux<any>) {
+        if (!boolValue) {
+            ngRedux.dispatch(ofiClearRequestedHoldingHistory());
+        } else {
+            ngRedux.dispatch(ofiSetRequestedHoldingHistory());
         }
     }
 
@@ -390,13 +402,13 @@ export class OfiReportsService {
 
     defaultRequestMyHoldingHistory(data: myHoldingHistoryRequestData) {
         // Set the state flag to true. so we do not request it again.
-        this.ngRedux.dispatch(ofiSetRequestedAmHoldingHistory());
+        this.ngRedux.dispatch(ofiSetRequestedHoldingHistory());
 
         // Request the list.
         const asyncTaskPipe = this.requestMyHoldingHistory(data);
 
         this.ngRedux.dispatch(SagaHelper.runAsync(
-            [OFI_SET_AM_HOLDING_HISTORY],
+            [OFI_SET_HOLDING_HISTORY_LIST],
             [],
             asyncTaskPipe,
             {},
