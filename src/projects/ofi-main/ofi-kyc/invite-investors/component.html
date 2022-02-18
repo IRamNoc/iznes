@@ -28,7 +28,7 @@
                                 id="kyc_email_{{i}}"
                                 class="form-control"
                                 formControlName="email"
-                                maxlength="70">
+                                maxlength="320">
                             <div *ngIf="investor.get('email').touched && investor.get('email').hasError('required')" class="field-error">
                                 {{ 'Field is required' | translate }}
                             </div>

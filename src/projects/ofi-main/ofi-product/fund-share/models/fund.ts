@@ -40,6 +40,12 @@ export class ShareFund extends DynamicFormsValidator {
         label: 'Is EU Directive Relevant?',
         required: false,
         disabled: true,
+    };
+    externalTransmissionCollection: FormItem = {
+        type: FormItemType.boolean,
+        label: 'Transmission of the collection to an external aggregator',
+        required: false,
+        disabled: true,
         style: [FormItemStyle.BreakOnAfter],
     };
     legalForm: FormItem = {

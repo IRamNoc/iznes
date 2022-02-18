@@ -592,6 +592,7 @@ export class FundShare {
         this.fund.fundRegisteredOfficeAddress.preset = fund.registerOfficeAddress;
         this.setListItemPreset(this.fund.domicile, fund.domicile);
         this.fund.isEUDirectiveRelevant.preset = fund.isEuDirective;
+        this.fund.externalTransmissionCollection.preset = fund.externalTransmissionCollection;
         this.setListItemPreset(this.fund.legalForm, fund.legalForm);
         this.fund.nationalNomenclature.listItems = PC.fundItems.nationalNomenclatureOfLegalFormItems[fund.legalForm];
         this.setListItemPreset(this.fund.nationalNomenclature, fund.nationalNomenclatureOfLegalForm);
@@ -650,6 +651,7 @@ export class FundShare {
         this.fund.fundRegisteredOfficeAddress.control.setValue(fund.registerOfficeAddress);
         this.setListItemValue(this.fund.domicile, fund.domicile);
         this.fund.isEUDirectiveRelevant.control.setValue(fund.isEuDirective);
+        this.fund.externalTransmissionCollection.control.setValue(fund.externalTransmissionCollection);
         this.setListItemValue(this.fund.legalForm, fund.legalForm);
         this.fund.nationalNomenclature.listItems = PC.fundItems.nationalNomenclatureOfLegalFormItems[fund.legalForm];
         this.setListItemValue(this.fund.nationalNomenclature, fund.nationalNomenclatureOfLegalForm);

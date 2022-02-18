@@ -37,6 +37,7 @@ export class SearchFilters implements ISearchFilters {
         assetManagementCompany: null,
         investorCompanyName: null,
         portfolioLabel: null,
+        isTransfer: null,
     };
 
     private form: FormGroup;
@@ -94,6 +95,7 @@ export class SearchFilters implements ISearchFilters {
             this.setOptionalFormFilter('fromDate');
             this.setOptionalFormFilter('toDate');
             this.setOptionalFormFilter('orderID', get(this.filterStore, 'orderID'));
+            this.setOptionalFormFilter('isTransfer');
             this.optionalFiltersSubject.next(this.optionalFiltersValue);
 
             // this.filtersAppliedSubject.next();
