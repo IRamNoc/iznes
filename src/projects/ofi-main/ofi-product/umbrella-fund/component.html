@@ -186,7 +186,7 @@
                             </div>
 
                             <div class="form-group required-field col-sm-6">
-                                <label for="uf_managementCompany" class="control-label">{{ 'Management Company' | translate }}</label>
+                                <label for="uf_managementCompany" class="control-label">{{ 'Operating Company' | translate }}</label>
                                 <ng-select id="uf_managementCompany"
                                             [items]="managementCompanyList"
                                             [allowClear]="true"
@@ -302,7 +302,7 @@
                             </div>
 
                             <div class="form-group col-sm-6">
-                                <label for="uf_delegatedManagementCompany" class="control-label">{{ 'Delegated Management Company' | translate }}</label>
+                                <label for="uf_delegatedManagementCompany" class="control-label">{{ 'Delegated Operating Company' | translate }}</label>
                                 <ng-select id="uf_delegatedManagementCompany"
                                             [items]="managementCompanyList"
                                             [allowClear]="true"
@@ -443,7 +443,7 @@
 
 <!--CONFIRM MODALS-->
 <clr-modal [(clrModalOpen)]="showConfirmModal">
-    <h3 class="modal-title">{{ 'Deleting Management Company' | translate }}</h3>
+    <h3 class="modal-title">{{ 'Deleting Operating Company' | translate }}</h3>
     <div class="modal-body">
         <p>{{ 'Are you sure you want to delete:' | translate }}<br>
             <strong>{{ 'INSERT HERE' | translate }}</strong>
