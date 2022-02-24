@@ -102,7 +102,7 @@
                         <clr-dg-cell *ngIf="!fund['hasNoNav']" class="actions right action-width">
                             <div class="btn-group btn-sm">
                                 <button class="btn btn-success btn-sm" style="margin: 0px;" (click)="handleSubscribe(fund.id)" [attr.disabled]="disableSubscribeShareclass(fund)">
-                                    <i class="fa fa-sign-in"></i> {{ 'Subscribe' | translate }} {{fund.shareClassInvestmentStatus}}
+                                    <i class="fa fa-sign-in"></i> {{ 'Subscribe' | translate }}
                                 </button>
                                 <button class="btn btn-danger btn-sm" style="margin: 0px;" (click)="handleRedeem(fund.id)" [attr.disabled]="disableReedemShareclass(fund)"> <!-- disableRedeem((fund.isin + '|' + fund.shareName)) &&-->
                                     <i class="fa fa-sign-out"></i> {{ 'Redeem' | translate }}
