@@ -41,10 +41,12 @@
                                 <label for="fundName">{{'Fund Name' | translate}}</label>
                                 <div class="input-button-group">
                                     <ng-select id="my-holdings-search-field"
-                                    [items]="fundList"
+                                    [items]="filteredFundList"
                                     [allowClear]="false"
                                     [placeholder]="translate.translate('Select FundName')"
-                                    [formControl]="searchForm.controls['fundName']">
+                                    [formControl]="searchForm.controls['fundName']"
+                                    (selected)="handleDropdownFundSelect($event)"
+                                    >
                                     </ng-select>
                                 </div>
                             </div>
@@ -55,7 +57,8 @@
                                     [items]="filteredShareList"
                                     [allowClear]="false"
                                     [placeholder]="translate.translate('Select ShareName')"
-                                    [formControl]="searchForm.controls['shareName']" (selected)="handleDropdownShareSelect($event)">
+                                    [formControl]="searchForm.controls['shareName']"
+                                    (selected)="handleDropdownShareSelect($event)">
                                     </ng-select>
                                 </div>
                             </div>
@@ -63,64 +66,65 @@
 
                         <div class="row">
                             <div class="col-sm-6 form-group">
-                                <div class="row">
-                                    <div class="col-sm-6 form-group">
-                                        <label>{{'Date Type' | translate}}</label>
-                                        <div class="input-button-group">
-                                            <ng-select id="my-holdings-search-field"
-                                            [items]="dateTypeList"
-                                            [allowClear]="false"
-                                            [placeholder]="translate.translate('Select DateType')"
-                                            [formControl]="searchForm.controls['dateType']">
-                                            </ng-select>
-                                        </div>
-                                    </div>
-    
-                                    <div class="col-sm-6 form-group">
-                                        <label>{{'Positions to calculate' | translate }}</label>
-                                        <div class="input-button-group">
-                                            <clr-radio-container clrInline>
-                                                <clr-radio-wrapper>
-                                                    <input type="radio" [checked]="true" clrRadio id="opt-type-all" value="1" formControlName="includeHoliday"/>
-                                                    <label>{{'All' | translate }}</label>
-                                                </clr-radio-wrapper>
-                                                <clr-radio-wrapper>
-                                                    <input type="radio" clrRadio id="opt-type-nonHoliday" value="0" formControlName="includeHoliday"/>
-                                                    <label>{{'Non-holiday' | translate }}</label>
-                                                </clr-radio-wrapper>
-                                            </clr-radio-container>
-                                        </div>
-                                    </div>
+                                <label class="required-field">{{'Date Type' | translate}}</label>
+                                <div class="input-button-group">
+                                    <ng-select id="my-holdings-search-field"
+                                    [items]="dateTypeList"
+                                    [allowClear]="false"
+                                    [placeholder]="translate.translate('Select DateType')"
+                                    formControlName="dateType"
+                                    (selected)="handleDropdownDateTypeSelect($event)"
+                                    [required]="true"
+                                    >
+                                    </ng-select>
                                 </div>
                             </div>
-                        
+
                             <div class="col-sm-6 form-group">
-                                <div class="row">
-                                    <div class="col-sm-3 form-group">
-                                        <label>{{'From Date' | translate }}</label>
-                                        <div class="input-group date-pick-wrapper">
-                                            <span class="fa fa-calendar" aria-hidden="true"></span>
-                                            <input id="centra-funds-date-from"
-                                                formControlName="dateFrom"
-                                                [dpDayPicker]="fromConfigDate"
-                                                [placeholder]="(!isPeriod) ? translate.translate('Choose a date') : translate.translate('Date From')"
-                                                mode="day"
-                                                theme="dp-material">
-                                        </div>
-                                    </div>
-    
-                                    <div class="col-sm-3 offset-sm-1 form-group">
-                                        <label>{{'To Date' | translate}}</label>
-                                            <div class="input-group date-pick-wrapper" >
-                                                <span class="fa fa-calendar" aria-hidden="true"></span>
-                                                <input id="centra-funds-date-to"
-                                                        formControlName="dateTo"
-                                                        [dpDayPicker]="toConfigDate"
-                                                        [placeholder]="translate.translate('Date To')"
-                                                        mode="day" theme="dp-material">
-                                            </div>
-                                    </div>
+                                <label>{{'Positions to calculate' | translate }}</label>
+                                <div class="input-button-group">
+                                    <clr-radio-container clrInline>
+                                        <clr-radio-wrapper>
+                                            <input type="radio" [checked]="true" clrRadio id="opt-type-all" value="1" formControlName="includeHoliday"/>
+                                            <label>{{'All' | translate }}</label>
+                                        </clr-radio-wrapper>
+                                        <clr-radio-wrapper>
+                                            <input type="radio" clrRadio id="opt-type-nonHoliday" value="0" formControlName="includeHoliday"/>
+                                            <label>{{'Non-holiday' | translate }}</label>
+                                        </clr-radio-wrapper>
+                                    </clr-radio-container>
                                 </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-sm-6 form-group">
+                                <label class="required-field">{{'From Date' | translate }}</label>
+                                <div class="input-group date-pick-wrapper">
+                                    <span class="fa fa-calendar" aria-hidden="true"></span>
+                                    <input id="centra-funds-date-from"
+                                        formControlName="dateFrom"
+                                        [dpDayPicker]="fromConfigDate"
+                                        [placeholder]="(!isPeriod) ? translate.translate('Choose a date') : translate.translate('Date From')"
+                                        mode="day"
+                                        theme="dp-material"
+                                        [required]="true"
+                                        >
+                                </div>
+                            </div>
+    
+                            <div class="col-sm-6 form-group">
+                                <label>{{'To Date' | translate}}</label>
+                                    <div class="input-group date-pick-wrapper" >
+                                        <span class="fa fa-calendar" aria-hidden="true"></span>
+                                        <input id="centra-funds-date-to"
+                                                formControlName="dateTo"
+                                                [dpDayPicker]="toConfigDate"
+                                                [placeholder]="translate.translate('Date To')"
+                                                mode="day" theme="dp-material"
+                                                [required]="true"
+                                                >
+                                    </div>
                             </div>
                         </div>
 
@@ -129,7 +133,7 @@
                                 <label for="investor">{{ 'Investor' | translate }}</label>
                                 <div class="input-button-group">
                                     <ng-select id="my-holdings-search-field"
-                                    [items]="investorListItems"
+                                    [items]="investorList"
                                     [allowClear]="false"
                                     [placeholder]="translate.translate('Select Investor')"
                                     [formControl]="searchForm.controls['investor']" (selected)="handleDropdownInvestorSelect($event)">
@@ -140,7 +144,7 @@
                                 <label for="portfolio">{{ 'Portfolio' | translate }}</label>
                                 <div class="input-button-group">
                                     <ng-select id="my-holdings-search-field"
-                                    [items]="walletListItems"
+                                    [items]="filteredSubportfolioList"
                                     [allowClear]="false"
                                     [placeholder]="translate.translate('Select Portfolio')"
                                     [formControl]="searchForm.controls['portfolio']" (selected)="handleDropdownInvestorWalletSelect($event)">
@@ -151,19 +155,19 @@
                                 <clr-radio-container clrInline>
                                     <label class="required-field">{{ 'Aggregation of shares' | translate }}</label>
                                     <clr-radio-wrapper>
-                                        <input type="radio" [checked]="true" clrRadio id="opt-type-none" value="agg_none" formControlName="aggregationShare"/>
+                                        <input type="radio" [checked]="true" clrRadio id="opt-type-none" value="none" formControlName="aggregationShare"/>
                                         <label>{{ 'None' | translate }}</label>
                                     </clr-radio-wrapper>
                                     <clr-radio-wrapper>
-                                        <input type="radio" clrRadio id="opt-type-fund" value="agg_byfund" formControlName="aggregationShare"/>
+                                        <input type="radio" clrRadio id="opt-type-fund" value="fund" formControlName="aggregationShare"/>
                                         <label>{{ 'by fund' | translate }}</label>
                                     </clr-radio-wrapper>
                                     <clr-radio-wrapper>
-                                        <input type="radio" clrRadio id="opt-type-amc" value="agg_amc" formControlName="aggregationShare"/>
+                                        <input type="radio" clrRadio id="opt-type-amc" value="amc" formControlName="aggregationShare"/>
                                         <label>{{ 'by Asset Management Company' | translate }}</label>
                                     </clr-radio-wrapper>
                                     <clr-radio-wrapper>
-                                        <input type="radio" clrRadio id="opt-type-global" value="agg_global" formControlName="aggregationShare"/>
+                                        <input type="radio" clrRadio id="opt-type-global" value="global" formControlName="aggregationShare"/>
                                         <label>{{ 'Global' | translate }}</label>
                                     </clr-radio-wrapper>
                                 </clr-radio-container>
@@ -172,19 +176,19 @@
                                 <clr-radio-container clrInline>
                                     <label class="required-field">{{ 'Aggregation of portfolios' | translate }}</label>
                                     <clr-radio-wrapper>
-                                        <input type="radio" clrRadio [checked]="true" id="opt-type-portNone" value="agg_portfolio" formControlName="aggregationPortfolio"/>
+                                        <input type="radio" clrRadio [checked]="true" id="opt-type-portNone" value="none" formControlName="aggregationPortfolio"/>
                                         <label>{{ 'None' | translate }}</label>
                                     </clr-radio-wrapper>
                                     <clr-radio-wrapper>
-                                        <input type="radio" clrRadio id="opt-type-byinvestor" value="agg_byinvestor" formControlName="aggregationPortfolio"/>
+                                        <input type="radio" clrRadio id="opt-type-byinvestor" value="investor" formControlName="aggregationPortfolio"/>
                                         <label>{{ 'by Investor' | translate }}</label>
                                     </clr-radio-wrapper>
                                     <clr-radio-wrapper>
-                                        <input type="radio" clrRadio id="opt-type-byportmanager" value="agg_byportmanager" formControlName="aggregationPortfolio"/>
+                                        <input type="radio" clrRadio id="opt-type-byportmanager" value="pm" formControlName="aggregationPortfolio"/>
                                         <label>{{ 'by Portfolio Manager' | translate }}</label>
                                     </clr-radio-wrapper>
                                     <clr-radio-wrapper>
-                                        <input type="radio" clrRadio id="opt-type-portGlobal" value="agg_portGlobal" formControlName="aggregationPortfolio"/>
+                                        <input type="radio" clrRadio id="opt-type-portGlobal" value="global" formControlName="aggregationPortfolio"/>
                                         <label>{{ 'Global' | translate }}</label>
                                     </clr-radio-wrapper>
                                 </clr-radio-container>
@@ -273,20 +277,20 @@
                        {{ 'AUI' | translate }} <span class="column-label"></span>
                     </clr-dg-column>
 
-                    <clr-dg-row *clrDgItems="let data of holdingList">
-                        <clr-dg-cell>{{data.companyName}}</clr-dg-cell>
-                        <clr-dg-cell>{{data.portfolioLabel}}</clr-dg-cell>
-                        <clr-dg-cell>{{data.portfolioLabel}}</clr-dg-cell>
-                        <clr-dg-cell>{{data.portfolioLabel}}</clr-dg-cell>
-                        <clr-dg-cell>{{data.portfolioLabel}}</clr-dg-cell>
-                        <clr-dg-cell>{{data.portfolioLabel}}</clr-dg-cell>
-                        <clr-dg-cell>{{data.fundShareName}}</clr-dg-cell>
-                        <clr-dg-cell>{{data.isin}}</clr-dg-cell>
-                        <clr-dg-cell>{{data.shareClassCurrency}}</clr-dg-cell>
-                        <clr-dg-cell class="right">{{data.quantity | moneyValue: 5 }}</clr-dg-cell>
-                        <clr-dg-cell class="right">{{data.latestNav | moneyValue: 2}}</clr-dg-cell>
-                        <clr-dg-cell class="right">{{data.amount | moneyValue: 2}}</clr-dg-cell>
-                        <clr-dg-cell class="right">{{data.ratio | moneyValue: 2}}%</clr-dg-cell>
+                    <clr-dg-row *clrDgItems="let data of holdingListFiltered">
+                        <clr-dg-cell>{{ data.companyName }}</clr-dg-cell>
+                        <clr-dg-cell>{{ data.fundName }}</clr-dg-cell>
+                        <clr-dg-cell>{{ data.fundShareName }}</clr-dg-cell>
+                        <clr-dg-cell>{{ data.isin }}</clr-dg-cell>
+                        <clr-dg-cell>{{ data.currency }}</clr-dg-cell>
+                        <clr-dg-cell>{{ data.portfolioManager }}</clr-dg-cell>
+                        <clr-dg-cell>{{ data.investor }}</clr-dg-cell>
+                        <clr-dg-cell>{{ data.portfolio }}</clr-dg-cell>
+                        <clr-dg-cell>{{ data.date }}</clr-dg-cell>
+                        <clr-dg-cell class="right">{{ data.quantity | moneyValue: 5 }}</clr-dg-cell>
+                        <clr-dg-cell class="right">{{ data.navPrice | moneyValue: 4 }}</clr-dg-cell>
+                        <clr-dg-cell class="right">{{ data.navDate }}</clr-dg-cell>
+                        <clr-dg-cell class="right">{{ data.navPrice * data.quantity  | moneyValue: 2 }}</clr-dg-cell>
                     </clr-dg-row>
 
                     <clr-dg-footer>

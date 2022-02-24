@@ -34,14 +34,15 @@ const handleGetHoldingHistory = (state, action) => {
     const data = _.get(action, 'payload[1].Data', []);    // use [] not {} for list and Data not Data[0]
 
     if (data.Status !== 'Fail' && data.Message !== 'No holding history found') {
-        console.log(data);
-
         const holdingHistoryList = formatDataResponse(data);
 
         return Object.assign({}, state, {
             holdingHistoryList,
         });
     }
+
+    // handle error message here.
+    console.log(data);
 
     return state;
 };
@@ -50,23 +51,38 @@ const formatDataResponse = (rawData) => {
     let response = List();
 
     if (rawData.length > 0) {
-        rawData.forEach((iteratee) => {
+        rawData.forEach((item) => {
             const holdingHistoryItem = {
-                fundId: iteratee.fundId,
-                fundName: iteratee.fundName,
-                fundLei: iteratee.fundLei,
-                fundCurrency: iteratee.fundCurrency,
-                fundAum: iteratee.fundAum,
-                fundHolderNumber: iteratee.fundHolderNumber,
-                shareId: iteratee.shareId,
-                shareName: iteratee.shareName,
-                shareIsin: iteratee.shareIsin,
-                shareNav: iteratee.shareNav,
-                shareUnitNumber: iteratee.shareUnitNumber,
-                shareCurrency: iteratee.shareCurrency,
-                shareAum: iteratee.shareAum,
-                shareHolderNumber: iteratee.shareHolderNumber,
-                shareRatio: iteratee.shareRatio,
+                companyID: item.companyID,
+                companyName: item.companyName,
+                fundID: item.fundID,
+                fundName: item.fundName,
+                fundShareID: item.fundShareID,
+                fundShareName: item.fundShareName,
+                isin: item.isin,
+                currency: item.currency,
+                buyCentralizationCalendar: item.buyCentralizationCalendar,
+                buyNAVCalendar: item.buyNAVCalendar,
+                buySettlementCalendar: item.buySettlementCalendar,
+                sellCentralizationCalendar: item.sellCentralizationCalendar,
+                sellNAVCalendar: item.sellNAVCalendar,
+                sellSettlementCalendar: item.sellSettlementCalendar,
+                investorWalletID: item.investorWalletID,
+                investorWalletName: item.investorWalletName,
+                investorCompanyName: item.investorCompanyName,
+                subportfolioID: item.subportfolioID,
+                subportfolioLabel: item.subportfolioLabel,
+                orderType: item.orderType,
+                quantity: item.quantity,
+                amount: item.amount,
+                amountWithCost: item.amountWithCost,
+                settlementDate: item.settlementDate,
+                valuationDate: item.valuationDate,
+                cutoffDate: item.cutoffDate,
+                orderDate: item.orderDate,
+                valuationPrice: item.valuationPrice,
+                latestValuationPrice: item.latestValuationPrice,
+                latestValuationDate: item.latestValuationDate,
             };
             response = response.push(holdingHistoryItem);
         });

@@ -419,17 +419,17 @@ export class OfiReportsService {
         const messageBody: myHoldingHistoryRequestBody = {
             RequestName: 'izngetholdinghistory',
             token: this.memberSocketService.token,
-            isin: requestData.isin,
-            managementCompanyId: requestData.managementCompanyId,
-            fundId: requestData.fundId,
-            shareId: requestData.shareId,
-            dateFrom: requestData.dateFrom,
-            dateTo: requestData.dateTo,
-            dateType: requestData.dateType,
-            includeHoliday: requestData.includeHoliday,
-            investorId: requestData.investorId,
-            walletId: requestData.walletId,
-            hideZeroPosition: requestData.hideZeroPosition,
+            //isin: requestData.isin,
+            //managementCompanyId: requestData.managementCompanyId,
+            //fundId: requestData.fundId,
+            //shareId: requestData.shareId,
+            //dateFrom: requestData.dateFrom,
+            //dateTo: requestData.dateTo,
+            //dateType: requestData.dateType,
+            //includeHoliday: requestData.includeHoliday,
+            //investorId: requestData.investorId,
+            //walletId: requestData.walletId,
+            //hideZeroPosition: requestData.hideZeroPosition,
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
