@@ -101,13 +101,13 @@
                         <clr-dg-cell *ngIf="fund['hasNoNav']" class="action-width">{{ 'No NAV Exist' | translate }}</clr-dg-cell>
                         <clr-dg-cell *ngIf="!fund['hasNoNav']" class="actions right action-width">
                             <div class="btn-group btn-sm">
-                                <button class="btn btn-success btn-sm" style="margin: 0px;" (click)="handleSubscribe(fund.id)">
-                                    <i class="fa fa-sign-in"></i> {{ 'Subscribe' | translate }}
+                                <button class="btn btn-success btn-sm" style="margin: 0px;" (click)="handleSubscribe(fund.id)" [attr.disabled]="disableSubscribeShareclass(fund)">
+                                    <i class="fa fa-sign-in"></i> {{ 'Subscribe' | translate }} {{fund.shareClassInvestmentStatus}}
                                 </button>
-                                <button class="btn btn-danger btn-sm" style="margin: 0px;" (click)="handleRedeem(fund.id)" [attr.disabled]="disableRedeem((fund.isin + '|' + fund.shareName))">
+                                <button class="btn btn-danger btn-sm" style="margin: 0px;" (click)="handleRedeem(fund.id)" [attr.disabled]="disableReedemShareclass(fund)"> <!-- disableRedeem((fund.isin + '|' + fund.shareName)) &&-->
                                     <i class="fa fa-sign-out"></i> {{ 'Redeem' | translate }}
                                 </button>
-                                <button class="btn btn-orange btn-sm" style="margin: 0px;" (click)="handleBuySell(fund.id)" [attr.disabled]="disableRedeem((fund.isin + '|' + fund.shareName)) && !allowSellBuy(fund)">
+                                <button class="btn btn-orange btn-sm" style="margin: 0px;" (click)="handleBuySell(fund.id)" [attr.disabled]="disableSellShareclass(fund)"> <!-- disableRedeem((fund.isin + '|' + fund.shareName)) && !allowSellBuy(fund) -->
                                     <i class="fa fa-circle-o-notch"></i>
                                     <span> {{ 'Sell/Buy' | translate }}</span></button>
                             </div>
