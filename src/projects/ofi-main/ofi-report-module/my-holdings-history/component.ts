@@ -13,6 +13,7 @@ import { ToasterService } from 'angular2-toaster';
 import { OfiFundShareService } from '../../ofi-req-services/ofi-product/fund-share/service';
 import { OfiFundInvestService } from '../../ofi-req-services/ofi-fund-invest/service';
 import * as moment from 'moment-timezone';
+import { listener } from '@angular/core/src/render3/instructions';
 
 @Component({
     styleUrls: ['./component.scss'],
@@ -134,12 +135,12 @@ export class MyHoldingsHistoryComponent implements OnInit, OnDestroy {
             isin: [''],
             fundName: [''],
             shareName: [''],
-            dateFrom: [moment(), Validators.required],
+            dateFrom: [moment().subtract(1, 'months')],
             dateTo: [moment()],
-            dateType: [null, Validators.required],
+            dateType: [null],
             investor: [''],
             portfolio: [''],
-            includeHoliday: [0],
+            includeHoliday: ['all'],
             aggregationShare:['none'],
             aggregationPortfolio:['none'],
             hideZeroPosition:[false],
@@ -258,8 +259,8 @@ export class MyHoldingsHistoryComponent implements OnInit, OnDestroy {
                         fundShareName: list.fundShareName,
                         isin: list.isin,
                         currency: list.currency,
-                        portfolioManager: 'jcp',
-                        investor: list.investorCompanyName || list.investorWalletName,
+                        portfolioManager: list.investorCompanyName === null ? list.investorWalletName : '',
+                        investor: list.investorCompanyName,
                         investorWalletName: list.investorWalletName,
                         portfolio: list.subportfolioLabel,
                         date: moment().format('YYYY-MM-DD'),
@@ -283,23 +284,6 @@ export class MyHoldingsHistoryComponent implements OnInit, OnDestroy {
      * Request holding list data
      */
     requestHoldingListHistory() {
-        
-        const params = {
-            isin: this.searchForm.controls['isin'].value,
-            managementCompanyId: this.managementCompanySelected || null,
-            fundId: this.fundSelected || null,
-            shareId: this.shareSelected || null,
-            dateFrom: moment(this.searchForm.controls['dateFrom'].value).format('YYYY-MM-DD 00:00:00'),
-            dateTo: moment(this.searchForm.controls['dateTo'].value).format('YYYY-MM-DD 23:59:00'),
-            dateType: this.dateTypeSelected,
-            includeHoliday: null,
-            investorId: null,
-            walletId: null,
-            hideZeroPosition: null,
-        }
-
-        console.log(params);
-
         this.ofiReportsService.defaultRequestMyHoldingHistory({});
     }
 
@@ -410,31 +394,35 @@ export class MyHoldingsHistoryComponent implements OnInit, OnDestroy {
 
         _.forEach(this.holdingList, (list) => {
             let targetDate;
+            let holidayCalendar;
 
             switch (params.dateType) {
                 case 2:
                     targetDate = moment(list.cutoffDate).format('YYYY-MM-DD');
+                    holidayCalendar = list.orderType === 3 ? list.buyCentralizationCalendar : list.sellCentralizationCalendar;
                     break;
                 case 3:
                     targetDate = moment(list.settlementDate).format('YYYY-MM-DD');
+                    holidayCalendar = list.orderType === 3 ? list.buySettlementCalendar : list.sellSettlementCalendar;
                     break;
                 case 4:
                     targetDate = moment(list.valuationDate).format('YYYY-MM-DD');
+                    holidayCalendar = list.orderType === 3 ? list.buyNAVCalendar : list.sellNAVCalendar;
                     break;
                 case 1:
                 default:
                     targetDate = moment(list.orderDate).format('YYYY-MM-DD');
+                    holidayCalendar = null;
                     break;
             }
 
-            if (params.dateFrom !== null && targetDate < params.dateFrom) {
-                console.log('offset previous date');
+            if (params.dateTo !== null && targetDate > params.dateTo) {
                 return;
             }
 
-            if (params.dateTo !== null && targetDate > params.dateTo) {
-                console.log('offset next date');
-                return;
+            // removes holiday orders
+            if (params.includeHoliday === 'non-holiday' && holidayCalendar !== null) {
+                if (holidayCalendar.includes(targetDate)) return;
             }
 
             // removes non-selected management companies
@@ -460,13 +448,33 @@ export class MyHoldingsHistoryComponent implements OnInit, OnDestroy {
             // removes non-selected subportfolios
             if (params.subportfolioId !== null && params.subportfolioId !== list.subportfolioID)
                 return;
-
-            const found = _.findIndex(holdingListPrep, {
+            
+            const foundParams = {
                 companyName: list.companyName,
                 fundShareName: list.fundShareName,
                 investorWalletName: list.investorWalletName,
                 portfolio: list.subportfolioLabel,
-            });
+            };
+
+            if (params.dateFrom !== null) {
+                switch (params.dateType) {
+                    case 2:
+                        foundParams['cutoffDate'] = targetDate;
+                        break;
+                    case 3:
+                        foundParams['settlementDate'] = targetDate;
+                        break;
+                    case 4:
+                        foundParams['valuationDate'] = targetDate; 
+                        break;
+                    case 1:
+                    default:
+                        foundParams['orderDate'] = targetDate;
+                        break;
+                }
+            }
+
+            const found = _.findIndex(holdingListPrep, foundParams);
             
             if (found < 0) {
                 return holdingListPrep.push({
@@ -475,15 +483,15 @@ export class MyHoldingsHistoryComponent implements OnInit, OnDestroy {
                     fundShareName: list.fundShareName,
                     isin: list.isin,
                     currency: list.currency,
-                    portfolioManager: 'jcp',
-                    investor: list.investorCompanyName || list.investorWalletName,
+                    portfolioManager: list.investorCompanyName === null ? list.investorWalletName : '',
+                    investor: list.investorCompanyName,
                     investorWalletName: list.investorWalletName,
                     portfolio: list.subportfolioLabel,
-                    date: moment().format('YYYY-MM-DD'),
+                    date: targetDate,
                     quantity: Number(list.quantity),
-                    navPrice: Number(list.latestValuationPrice),
-                    navDate: list.latestValuationDate,
-                    AUI: (Number(list.latestValuationPrice) * Number(list.quantity)),
+                    navPrice: Number(list.valuationPrice),
+                    navDate: list.valuationDate,
+                    AUI: (Number(list.valuationPrice) * Number(list.quantity)),
                 });
             }
 
@@ -494,13 +502,138 @@ export class MyHoldingsHistoryComponent implements OnInit, OnDestroy {
             }
         });
 
+        // removes previous dates
+        if (params.dateFrom !== null) {
+            holdingListPrep = _.filter(holdingListPrep, (a) => a.date >= params.dateFrom);
+        }
+
         // Hide zero position
         if (params.hideZeroPosition) {
             holdingListPrep = _.filter(holdingListPrep, (a) => a.quantity > 0);
         }
-        console.log(holdingListPrep);
+
+        // share aggregation
+        holdingListPrep = this.shareAggregation(holdingListPrep, params.aggregationShare);
+
+        // portfolio aggregation
+        holdingListPrep = this.portfolioAggregation(holdingListPrep, params.aggregationPortfolio);
+
         this.holdingListFiltered = holdingListPrep;
-        console.log(params);
+    }
+
+    portfolioAggregation(data, type) {
+        let filteredData = data;
+
+        if (type === 'investor') {
+            filteredData = _.reduce(data, (result, value, key) => {
+                const found = _.findIndex(result, {
+                    companyName: value.companyName,
+                    fundName: value.fundName,
+                    fundShareName: value.fundShareName,
+                    date: value.date,
+                    investorWalletName: value.investorWalletName,
+                });
+
+                if (found < 0) {
+                    value.portfolio = null;
+                    result.push(value);
+                    return result;
+                }
+
+                result[found].quantity += value.quantity;
+                return result;
+            }, []);
+        }
+
+        if (type === 'pm') {
+            
+        }
+
+        if (type === 'global') {
+
+        }
+
+        return filteredData;
+    }
+
+    shareAggregation(data, type) {
+        let filteredData = data;
+
+        if (type === 'fund') {
+            filteredData = _.reduce(data, (result, value, key) => {
+                const found = _.findIndex(result, {
+                    companyName: value.companyName,
+                    investorWalletName: value.investorWalletName,
+                    portfolio: value.portfolio,
+                    fundName: value.fundName,
+                    date: value.date,
+                });
+
+                if (found < 0) {
+                    value.fundShareName = null;
+                    value.isin = null;
+                    value.navPrice = null;
+                    value.navDate = null;
+
+                    result.push(value);
+                    return result;
+                }
+
+                result[found].quantity += value.quantity;
+                return result;
+            }, []);
+        }
+
+        if (type === 'amc') {
+            filteredData = _.reduce(data, (result, value, key) => {
+                const found = _.findIndex(result, {
+                    companyName: value.companyName,
+                    investorWalletName: value.investorWalletName,
+                    portfolio: value.portfolio,
+                    date: value.date,
+                });
+
+                if (found < 0) {
+                    value.fundName = null;
+                    value.fundShareName = null;
+                    value.isin = null;
+                    value.navPrice = null;
+                    value.navDate = null;
+
+                    result.push(value);
+                    return result;
+                }
+
+                result[found].quantity += value.quantity;
+                return result;
+            }, []);
+        }
+
+        if (type === 'global') {
+            filteredData = _.reduce(data, (result, value, key) => {
+                const found = _.findIndex(result, {
+                    investorWalletName: value.investorWalletName,
+                    portfolio: value.portfolio,
+                    date: value.date,
+                });
+
+                if (found < 0) {
+                    value.companyName = null;
+                    value.fundName = null;
+                    value.fundShareName = null;
+                    value.isin = null;
+                    value.navPrice = null;
+                    value.navDate = null;
+
+                    result.push(value);
+                    return result;
+                }
+
+                result[found].quantity += value.quantity;
+                return result;
+            }, []);
+        }
+        return filteredData;
     }
 
     handleDropdownInvestorSelect(event) {
