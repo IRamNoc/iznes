@@ -243,8 +243,8 @@ export class OfiInvestorFundListComponent implements OnInit, AfterViewInit, OnDe
                 if (!isNaN(totalPosition)) {
                     totalPosition = this.numberConverterService.toFrontEnd(totalPosition);
                 }
-                // position=10;
-                // totalPosition=20;
+                //  position=10;
+                //  totalPosition=20;
                 result.push({
                     id: item.get('fundShareID', 0),
                     isin,
@@ -535,7 +535,9 @@ export class OfiInvestorFundListComponent implements OnInit, AfterViewInit, OnDe
     }  
     disableSellShareclass(fund){
         let sellShare=false;
-       if(fund.shareClassInvestmentStatus==0 || fund.shareClassInvestmentStatus==2 || fund.shareClassInvestmentStatus==3 || fund.shareClassInvestmentStatus==4){
+        if(fund.shareClassInvestmentStatus==0 || fund.shareClassInvestmentStatus==3){
+            sellShare=false;
+        }else if(fund.shareClassInvestmentStatus==2 || fund.shareClassInvestmentStatus==4){
         sellShare=true;
        }else if(fund.shareClassInvestmentStatus==1){
         sellShare=true;
