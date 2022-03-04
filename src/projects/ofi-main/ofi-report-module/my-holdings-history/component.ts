@@ -1,5 +1,5 @@
 import { OnInit, ChangeDetectorRef, Component, OnDestroy } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, FormControl } from '@angular/forms';
 import { select, NgRedux } from '@angular-redux/store';
 import { MultilingualService } from '@setl/multilingual';
 import { List } from 'immutable';
@@ -117,7 +117,7 @@ export class MyHoldingsHistoryComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
-        this.initForm();        
+        this.initForm();
         this.initSubscriptions();
         this.requestHoldingListHistory();
     }
@@ -129,23 +129,24 @@ export class MyHoldingsHistoryComponent implements OnInit, OnDestroy {
     }
     
     initForm() {
-        this.holdingList = [];
-        this.searchForm = this.fb.group({
-            managementCompany: [''],
-            isin: [''],
-            fundName: [''],
-            shareName: [''],
-            dateFrom: [moment().subtract(1, 'months')],
-            dateTo: [moment()],
-            dateType: [null],
-            investor: [''],
-            portfolio: [''],
-            includeHoliday: ['all'],
-            aggregationShare:['none'],
-            aggregationPortfolio:['none'],
-            hideZeroPosition:[false],
-            investorInInvestorFunds:[false],
+
+        this.searchForm = new FormGroup({
+            managementCompany: new FormControl(''),
+            isin: new FormControl(''),
+            fundName: new FormControl(''),
+            shareName: new FormControl(''),
+            dateFrom: new FormControl(moment().subtract(1, 'months').format('YYYY-MM-DD')),
+            dateTo: new FormControl(moment().format('YYYY-MM-DD')),
+            dateType: new FormControl(null),
+            investor: new FormControl(''),
+            portfolio: new FormControl(''),
+            includeHoliday: new FormControl('all'),
+            aggregationShare:new FormControl('none'),
+            aggregationPortfolio:new FormControl('none'),
+            hideZeroPosition: new FormControl(false),
+            investorInInvestorFunds: new FormControl(false),
         });
+
         this.changeDetectorRef.detectChanges();
     }
 
@@ -243,6 +244,19 @@ export class MyHoldingsHistoryComponent implements OnInit, OnDestroy {
 
                 return result;
             }, []);
+
+            this.subportfolioList = _.reduce(this.holdingList, (result, value, key) => {
+                if (_.findIndex(result, { id: value.subportfolioID }) < 0) {
+                    result.push({
+                        id: value.subportfolioID,
+                        text: value.subportfolioLabel,
+                    })
+                }
+    
+                return result;
+            }, []);
+
+            this.filteredSubportfolioList = this.subportfolioList;
             
             _.forEach(this.holdingList, (list) => {
                 const found = _.findIndex(this.holdingListFiltered, {
@@ -349,10 +363,12 @@ export class MyHoldingsHistoryComponent implements OnInit, OnDestroy {
                 text: share.fundShareName,
             }
         });
+
+        this.filteredShareList = this.shareList;
         
         // store funds
         this.fundList = _.reduce(list, (result, value) => {
-            if (!_.find(result, { fundID: value.fundID })) {
+            if (!_.find(result, { id: value.fundID })) {
                 const companyName = _.get(value, 'managementCompanyName', null);
 
                 result.push({
@@ -364,13 +380,24 @@ export class MyHoldingsHistoryComponent implements OnInit, OnDestroy {
 
             return result;
         }, []);
+
+        this.filteredFundList = _.uniq(this.fundList);
     }
 
     clearFilters() {
-        console.log('clear filter');
+        this.searchForm.reset();
+        this.initForm();
+        this.shareSelected = null;
+        this.fundSelected = null;
+        this.investorSelected = null;
+        this.subportfolioSelected = null;
+        this.managementCompanySelected = null;
+        this.filteredFundList = this.fundList;
+        this.filteredShareList = this.shareList;
+        this.filteredSubportfolioList = this.subportfolioList;
     }
 
-    filterOrders() {
+    filterHolding() {
         // reset filtered holding list
         this.holdingListFiltered = [];
         let holdingListPrep = [];
@@ -491,25 +518,63 @@ export class MyHoldingsHistoryComponent implements OnInit, OnDestroy {
                     quantity: Number(list.quantity),
                     navPrice: Number(list.valuationPrice),
                     navDate: list.valuationDate,
-                    AUI: (Number(list.valuationPrice) * Number(list.quantity)),
+                    AUI: (list.valuationPrice * list.quantity),
                 });
             }
 
             if (list.orderType === 3) {
-                holdingListPrep[found].quantity += Number(list.quantity);
+                holdingListPrep[found].quantity += list.quantity;
             } else {
-                holdingListPrep[found].quantity -= Number(list.quantity);
+                holdingListPrep[found].quantity -= list.quantity;
             }
         });
-
+    
         // removes previous dates
         if (params.dateFrom !== null) {
-            holdingListPrep = _.filter(holdingListPrep, (a) => a.date >= params.dateFrom);
-        }
+            // add default holders                        
+            const previousHolding = _.filter(holdingListPrep, (a) => a.date < params.dateFrom);
+            
+            const previousHoldingPrep = [];
+            _.forEach(previousHolding, (it) => {
+                const alreadyExist = _.findIndex(previousHoldingPrep, {
+                    companyName: it.companyName,
+                    fundName: it.fundName,
+                    fundShareName: it.fundShareName,
+                    investorWalletName: it.investorWalletName,
+                    portfolio: it.portfolio,
+                });
 
-        // Hide zero position
-        if (params.hideZeroPosition) {
-            holdingListPrep = _.filter(holdingListPrep, (a) => a.quantity > 0);
+                // check duplicate in filtered array
+                const foundDuplicateDate = _.findIndex(holdingListPrep, {
+                    companyName: it.companyName,
+                    fundName: it.fundName,
+                    fundShareName: it.fundShareName,
+                    investorWalletName: it.investorWalletName,
+                    portfolio: it.portfolio,
+                    date: params.dateFrom,
+                });
+
+                if (foundDuplicateDate !== -1) return;
+
+                // already exist in array, check if date is more recent
+                if (alreadyExist > -1) {
+                    const foundItem = previousHoldingPrep[alreadyExist];
+                    if (foundItem.realDate >= it.date) return;
+                    foundItem.realDate = it.date;
+                    foundItem.quantity = it.quantity;
+                    foundItem.navDate = it.navDate;
+                    foundItem.navPrice = it.navPrice;
+                    foundItem.AUI = it.navPrice * it.quantity;
+                    return;
+                }
+
+                it.realDate = it.date;
+                it.date = params.dateFrom;
+                previousHoldingPrep.push(it);
+                return;
+            });
+
+            holdingListPrep = _.merge(previousHoldingPrep, _.filter(holdingListPrep, (a) => a.date >= params.dateFrom));
         }
 
         // share aggregation
@@ -518,7 +583,12 @@ export class MyHoldingsHistoryComponent implements OnInit, OnDestroy {
         // portfolio aggregation
         holdingListPrep = this.portfolioAggregation(holdingListPrep, params.aggregationPortfolio);
 
-        this.holdingListFiltered = holdingListPrep;
+        // Hide zero position
+        if (params.hideZeroPosition) {
+            holdingListPrep = _.filter(holdingListPrep, (a) => a.quantity > 0);
+        }
+
+        this.holdingListFiltered = _.uniq(holdingListPrep);
     }
 
     portfolioAggregation(data, type) {
@@ -665,7 +735,7 @@ export class MyHoldingsHistoryComponent implements OnInit, OnDestroy {
         this.dateTypeSelected = event.id;
     }
 
-    handleDropdownAmSelect(event) {  
+    handleDropdownAmSelect(event) {
         this.managementCompanySelected = event.id;
         this.filteredFundList = _.filter(this.fundList, { managementCompanyName: event.text });
         this.filteredShareList = [];
