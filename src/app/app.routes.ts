@@ -35,6 +35,7 @@ import {
     OfiInvMyDocumentsComponent,
     OfiRedirectTokenComponent,
     MyHoldingsComponent,
+    MyHoldingsHistoryComponent,
     OfiSubPortfolioComponent,
     OfiClientReferentialComponent,
     UmbrellaAuditComponent,
@@ -688,6 +689,11 @@ export const ROUTES: Routes = [
             {
                 path: 'my-holdings',
                 component: MyHoldingsComponent,
+                canActivate: [LoginGuardService],
+            },
+            {
+                path: 'my-holdings-history',
+                component: MyHoldingsHistoryComponent,
                 canActivate: [LoginGuardService],
             },
 
