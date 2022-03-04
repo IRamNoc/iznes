@@ -644,7 +644,7 @@ export class MyHoldingsHistoryComponent implements OnInit, OnDestroy {
     portfolioAggregation(data, type) {
         let filteredData = data;
 
-        if (type === 'investor') {
+        if (type === 'investor' || type === "pm") {
             filteredData = _.reduce(data, (result, value, key) => {
                 const found = _.findIndex(result, {
                     companyName: value.companyName,
@@ -663,10 +663,6 @@ export class MyHoldingsHistoryComponent implements OnInit, OnDestroy {
                 result[found].quantity += value.quantity;
                 return result;
             }, []);
-        }
-
-        if (type === 'pm') {
-            
         }
 
         if (type === 'global') {
