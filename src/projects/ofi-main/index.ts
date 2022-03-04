@@ -103,6 +103,7 @@ export {
     CentralisationReportComponent,
     PrecentralisationReportComponent,
     MyHoldingsComponent,
+    MyHoldingsHistoryComponent,
 } from './ofi-report-module';
 
 /*
