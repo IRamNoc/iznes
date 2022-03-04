@@ -416,7 +416,7 @@ export class MyHoldingsHistoryComponent implements OnInit, OnDestroy {
 
     exportHolding() {
         const exportData = _.map(this.holdingListFiltered, (item) => {
-            const parsedNavPrice = this.moneyValue.transform(item.navPrice, 4);
+            const parsedNavPrice = item.navPrice ? this.moneyValue.transform(item.navPrice, 4) : '';
             const parsedQuantity = this.moneyValue.transform(item.quantity, 5);
             return {
                 'Asset Management Company': item.companyName,
@@ -431,7 +431,7 @@ export class MyHoldingsHistoryComponent implements OnInit, OnDestroy {
                 'Quantity': this.decimalSeparator === 'dot' ? parsedQuantity : parsedQuantity.replace('.', ','),
                 'NAV': this.decimalSeparator === 'dot' ? parsedNavPrice : parsedNavPrice.replace('.', ','),
                 'NAV Date': item.navDate,
-                'AUI': item.AUI,
+                'AUI': item.navPrice ? (item.navPrice * item.quantity) : '',
             }
         });
 
