@@ -5,6 +5,9 @@ import { MultilingualService } from '@setl/multilingual';
 import { List } from 'immutable';
 import { combineLatest } from 'rxjs';
 import { Subject } from 'rxjs/Subject';
+import {
+    MoneyValuePipe,
+} from '@setl/utils';
 import { filter, takeUntil, switchMap } from 'rxjs/operators';
 import * as _ from 'lodash';
 import { OfiManagementCompanyService } from '../../ofi-req-services/ofi-product/management-company/management-company.service';
@@ -13,7 +16,7 @@ import { ToasterService } from 'angular2-toaster';
 import { OfiFundShareService } from '../../ofi-req-services/ofi-product/fund-share/service';
 import { OfiFundInvestService } from '../../ofi-req-services/ofi-fund-invest/service';
 import * as moment from 'moment-timezone';
-import { listener } from '@angular/core/src/render3/instructions';
+import * as json2csv from 'json2csv';
 
 @Component({
     styleUrls: ['./component.scss'],
@@ -61,6 +64,8 @@ export class MyHoldingsHistoryComponent implements OnInit, OnDestroy {
     };
 
     menuSpec = {};
+    decimalSeparator: any;
+    dataSeparator: any;
 
     holdingList: Array<any>;
     holdingListFiltered: Array<any>;
@@ -102,6 +107,9 @@ export class MyHoldingsHistoryComponent implements OnInit, OnDestroy {
     @select(['ofi', 'ofiProduct', 'ofiFundShareList', 'requestedIznesShare']) readonly requestedShareList$;
     @select(['ofi', 'ofiProduct', 'ofiFundShareList', 'iznShareList']) readonly shareList$;
     @select(['user', 'siteSettings', 'siteMenu', 'side']) readonly menuSpec$;
+    @select(['user', 'siteSettings', 'decimalSeparator']) readonly decimalSeparator$;
+    @select(['user', 'siteSettings', 'dataSeperator']) readonly dataSeparator$;
+    
 
     constructor(
         private ngRedux: NgRedux<any>,
@@ -113,6 +121,7 @@ export class MyHoldingsHistoryComponent implements OnInit, OnDestroy {
         private toaster: ToasterService,
         private ofiFundShareService: OfiFundShareService,
         private fundInvestService: OfiFundInvestService,
+        private moneyValue: MoneyValuePipe,
     ) {
     }
 
@@ -177,6 +186,14 @@ export class MyHoldingsHistoryComponent implements OnInit, OnDestroy {
         this.menuSpec$
         .pipe(takeUntil(this.unSubscribe))
         .subscribe(menuSpec => this.menuSpec = menuSpec);
+
+        this.decimalSeparator$
+        .pipe(takeUntil(this.unSubscribe))
+        .subscribe(data => this.decimalSeparator = data);
+
+        this.dataSeparator$
+        .pipe(takeUntil(this.unSubscribe))
+        .subscribe(data => this.dataSeparator = data);
 
         this.connectedWallet$.pipe(
             takeUntil(this.unSubscribe),
@@ -395,6 +412,39 @@ export class MyHoldingsHistoryComponent implements OnInit, OnDestroy {
         this.filteredFundList = this.fundList;
         this.filteredShareList = this.shareList;
         this.filteredSubportfolioList = this.subportfolioList;
+    }
+
+    exportHolding() {
+        const exportData = _.map(this.holdingListFiltered, (item) => {
+            const parsedNavPrice = this.moneyValue.transform(item.navPrice, 4);
+            const parsedQuantity = this.moneyValue.transform(item.quantity, 5);
+            return {
+                'Asset Management Company': item.companyName,
+                'Fund Name': item.fundName,
+                'Share Name': item.fundShareName,
+                'ISIN': item.isin,
+                'Currency': item.currency,
+                'Portfolio Manager': item.portfolioManager,
+                'Investor': item.investor,
+                'Portfolio': item.investorWalletName,
+                'Date': item.date,
+                'Quantity': this.decimalSeparator === 'dot' ? parsedQuantity : parsedQuantity.replace('.', ','),
+                'NAV': this.decimalSeparator === 'dot' ? parsedNavPrice : parsedNavPrice.replace('.', ','),
+                'NAV Date': item.navDate,
+                'AUI': item.AUI,
+            }
+        });
+
+        const separator = this.dataSeparator === 'semicolon' ? ';' : ',';        
+        const data = json2csv.parse(exportData, { delimiter: separator, quote: '' });
+        const element = document.createElement('a');
+
+        element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(data));
+        element.setAttribute('download', `holding_history_${moment().format('YYYY-MM-DD HH:mm')}.csv`);
+        element.style.display = 'none'
+        document.body.appendChild(element);
+        element.click();
+        document.body.removeChild(element);
     }
 
     filterHolding() {
