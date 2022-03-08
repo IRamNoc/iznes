@@ -528,27 +528,14 @@ export class MyHoldingsHistoryComponent implements OnInit, OnDestroy {
             
             const foundParams = {
                 companyName: list.companyName,
+                fundName: list.fundName,
                 fundShareName: list.fundShareName,
                 investorWalletName: list.investorWalletName,
                 portfolio: list.subportfolioLabel,
             };
 
             if (params.dateFrom !== null) {
-                switch (params.dateType) {
-                    case 2:
-                        foundParams['cutoffDate'] = targetDate;
-                        break;
-                    case 3:
-                        foundParams['settlementDate'] = targetDate;
-                        break;
-                    case 4:
-                        foundParams['valuationDate'] = targetDate; 
-                        break;
-                    case 1:
-                    default:
-                        foundParams['orderDate'] = targetDate;
-                        break;
-                }
+                foundParams['date'] = targetDate;
             }
 
             const found = _.findIndex(holdingListPrep, foundParams);
@@ -573,16 +560,16 @@ export class MyHoldingsHistoryComponent implements OnInit, OnDestroy {
             }
 
             if (list.orderType === 3) {
-                holdingListPrep[found].quantity += list.quantity;
+                holdingListPrep[found].quantity += Number(list.quantity);
             } else {
-                holdingListPrep[found].quantity -= list.quantity;
+                holdingListPrep[found].quantity -= Number(list.quantity);
             }
         });
     
         // removes previous dates
         if (params.dateFrom !== null) {
             // add default holders                        
-            const previousHolding = _.filter(holdingListPrep, (a) => a.date < params.dateFrom);
+            const previousHolding = _.filter(holdingListPrep, a => a.date <= params.dateFrom);
             
             const previousHoldingPrep = [];
             _.forEach(previousHolding, (it) => {
@@ -594,40 +581,26 @@ export class MyHoldingsHistoryComponent implements OnInit, OnDestroy {
                     portfolio: it.portfolio,
                 });
 
-                // check duplicate in filtered array
-                const foundDuplicateDate = _.findIndex(holdingListPrep, {
-                    companyName: it.companyName,
-                    fundName: it.fundName,
-                    fundShareName: it.fundShareName,
-                    investorWalletName: it.investorWalletName,
-                    portfolio: it.portfolio,
-                    date: params.dateFrom,
-                });
-
-                if (foundDuplicateDate !== -1) return;
-
-                // already exist in array, check if date is more recent
                 if (alreadyExist > -1) {
                     const foundItem = previousHoldingPrep[alreadyExist];
-                    if (foundItem.realDate >= it.date) {
-                        foundItem.quantity = it.quantity + foundItem.quantity;
-                        return;
+            
+                    if (foundItem.navDate > it.navDate) {
+                        foundItem.navDate = it.navDate;
+                        foundItem.navPrice = it.navPrice;
                     }
-                    foundItem.realDate = it.date;
-                    foundItem.quantity = it.quantity + foundItem.quantity;
-                    foundItem.navDate = it.navDate;
-                    foundItem.navPrice = it.navPrice;
-                    foundItem.AUI = it.navPrice * it.quantity;
+
+                    foundItem.quantity += it.quantity;
+                    foundItem.AUI = foundItem.navPrice * foundItem.quantity;
                     return;
                 }
 
-                it.realDate = it.date;
                 it.date = params.dateFrom;
                 previousHoldingPrep.push(it);
                 return;
             });
 
-            holdingListPrep = _.merge(previousHoldingPrep, _.filter(holdingListPrep, (a) => a.date >= params.dateFrom));
+            const holdingListPrepFiltered = _.filter(holdingListPrep, a => a.date > params.dateFrom);
+            holdingListPrep = previousHoldingPrep.concat(holdingListPrepFiltered);
         }
 
         // share aggregation
