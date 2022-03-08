@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { OfiKycService } from '../../ofi-req-services/ofi-kyc/service';
 import { OfiKycObservablesService } from '../../ofi-req-services/ofi-kyc/kyc-observable';
 import { FileDownloader, SagaHelper, mDateHelper, NumberConverterService } from '@setl/utils';
@@ -101,6 +101,22 @@ export class OfiClientReferentialComponent implements OnInit, OnDestroy {
     investorKycIds = {};
     allKycIds = [];
 
+    transcodificationTable = [
+        { portfolioName: 'Generali Vie UC IZNES', thirdPartyRegister: 'BPSS France', transcodificationCode: 'GVUCIZN' }
+    ];
+
+    transcodificationThirdParties = [
+        { id: 1, text: 'BPSS France' },
+        { id: 2, text: 'BPSS Luxembourg' },
+    ];
+
+    isTranscodificationModalDisplayed: boolean = false;
+    transcodificationModal: any = {
+        type: 0,  
+    };
+
+    transcodificationForm: FormGroup;
+
     investorForm: FormGroup;
     currentInvestor: any = {};
     showInfo: boolean = false;
@@ -184,6 +200,11 @@ export class OfiClientReferentialComponent implements OnInit, OnDestroy {
             email: { value: '', disabled: true },
             phoneNumber: { value: '', disabled: true },
             approvalDateRequest: { value: '', disabled: true },
+        });
+
+        this.transcodificationForm = this.fb.group({
+            thirdPartyId: new FormControl('', Validators.required),
+            transcodificationCode: new FormControl('', [Validators.required, Validators.maxLength(25)]),
         });
 
         this.ofiKycService.setRequestedClientReferential(false);
@@ -670,6 +691,57 @@ export class OfiClientReferentialComponent implements OnInit, OnDestroy {
         if (!requested) {
             OfiFundShareService.defaultRequestIznesShareList(this.ofiFundShareService, this.ngRedux);
         }
+    }
+
+    /**
+     * Create transcodification modal
+     */
+    createTranscodificationModal() {
+        this.transcodificationModal.type = 0;
+        this.isTranscodificationModalDisplayed = true;
+    }
+
+    /**
+     * Update transcodification modal
+     */
+    updateTranscodificationModal() {
+        this.transcodificationModal.type = 1;
+        this.isTranscodificationModalDisplayed = true;
+    }
+
+    /**
+     * Delete transcodification
+     */
+     handleDeleteTranscodification() {
+         console.log('delete transcodification');
+     }
+
+    /**
+     * Close transcodification modal
+     */
+    closeTranscodificationModal() {
+        this.isTranscodificationModalDisplayed = false;
+    }
+
+    /**
+     * Create transcodification
+     */
+    handleCreateTranscodification() {
+
+    }
+
+    /**
+     * Update transcodification
+     */
+    handleUpdateTranscodification() {
+
+    }
+
+    /**
+     * On dropdown transcodification selection
+     */
+    handleDropdownThirdPartySelect(event) {
+        console.log(event);
     }
 
     /**
