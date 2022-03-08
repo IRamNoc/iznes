@@ -609,9 +609,12 @@ export class MyHoldingsHistoryComponent implements OnInit, OnDestroy {
                 // already exist in array, check if date is more recent
                 if (alreadyExist > -1) {
                     const foundItem = previousHoldingPrep[alreadyExist];
-                    if (foundItem.realDate >= it.date) return;
+                    if (foundItem.realDate >= it.date) {
+                        foundItem.quantity = it.quantity + foundItem.quantity;
+                        return;
+                    }
                     foundItem.realDate = it.date;
-                    foundItem.quantity = it.quantity;
+                    foundItem.quantity = it.quantity + foundItem.quantity;
                     foundItem.navDate = it.navDate;
                     foundItem.navPrice = it.navPrice;
                     foundItem.AUI = it.navPrice * it.quantity;
