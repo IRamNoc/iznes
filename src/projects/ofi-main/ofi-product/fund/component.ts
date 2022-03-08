@@ -199,7 +199,7 @@ export class FundComponent implements OnInit, OnDestroy {
         this.UcitsVersionItems = this.fundItems.UCITSVersionItems;
         this.legalFormItems = this.sortingList(this.fundItems.fundLegalFormItems);
         this.portfolioCurrencyHedgeItems =  this.sortingList(this.fundItems.portfolioCurrencyHedgeItems);
-        this.classificationItems = this.sortingList(this.fundItems.classificationItems);
+        this.classificationItems = this.sortingListByKey(this.fundItems.classificationItems, 'id');
         this.auditorItems = this.sortingList(this.fundItems.auditorItems);
         this.taxAuditorItems = this.sortingList(this.fundItems.taxAuditorItems);
         this.legalAdvisorItems = this.sortingList(this.fundItems.legalAdvisorItems);
@@ -655,6 +655,9 @@ export class FundComponent implements OnInit, OnDestroy {
         });
     }
 
+    sortingListByKey(list, key) {
+        return _.sortBy(list, key);
+    }
     sortingList(updateList){
         return _.sortBy(updateList, 'text');
     }
