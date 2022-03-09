@@ -544,6 +544,7 @@ export class OfiClientReferentialComponent implements OnInit, OnDestroy {
                     }
                 });
             }, (error) => {
+                this.toasterService.pop('error', this.translate.translate('Unable to get register transcodification list'));
                 console.log(error);
             });
         }
@@ -803,10 +804,11 @@ export class OfiClientReferentialComponent implements OnInit, OnDestroy {
 
         this.ofiTranscodificationService.defaultRequestCreateRegisterTranscodification(params, (success) => {
             const result = get(success, '[1].Data', []);
-            const status = get(result, '[0]Status', 'Fail');
+            const status = get(result, '[0].Status', 'Fail');
+            const errorMessage = get(result, '[0].Message', '');
 
             if (status !== 'OK') {
-                return this.toasterService.pop('error', this.translate.translate(`Unable to create transcodification : ${result[0].Message}`));
+                return this.toasterService.pop('error', this.translate.translate(`Unable to create transcodification : ${errorMessage}`));
             }
 
             this.transcodificationTable = map(result, (it) => {
@@ -824,9 +826,9 @@ export class OfiClientReferentialComponent implements OnInit, OnDestroy {
             this.closeTranscodificationModal();
         }, (error) => {
             const result = get(error, '[1].Data', []);
-            this.toasterService.pop('error', this.translate.translate(`Unable to create transcodification : ${result[0].Message}`));
+            const errorMessage = get(result, '[0].Message', '');
+            this.toasterService.pop('error', this.translate.translate(`Unable to create transcodification : ${errorMessage}`));
             console.error(`[Transcodification Create] ${error}`);
-            console.log(error);
         });
     }
 
