@@ -10,7 +10,7 @@ import { debounceTime } from 'rxjs/operators';
 import { combineLatest as observableCombineLatest } from 'rxjs';
 import { Router, ActivatedRoute } from '@angular/router';
 import { ToasterService } from 'angular2-toaster';
-import { get, isEmpty } from 'lodash';
+import { get, isEmpty, map, findIndex as findIdx, filter as lodashFilter } from 'lodash';
 import { MultilingualService } from '@setl/multilingual';
 import { AppObservableHandler } from '@setl/utils/decorators/app-observable-handler';
 import { OfiFundShareService } from '../../ofi-req-services/ofi-product/fund-share/service';
@@ -21,6 +21,7 @@ import { Location } from '@angular/common';
 import { PortfolioManagerDetail } from '../../ofi-store/ofi-portfolio-manager/portfolio-manage-list/model';
 import { InvestorType, isRetail, isMandate, isPortfolioManager } from '../../shared/investor-types';
 import { PermissionsService } from '@setl/utils/services/permissions';
+import { OfiRegisterTranscodificationService } from '../../ofi-req-services/ofi-register-transcodification/service';
 
 const values = (o: object) => Object.keys(o).map(i => o[i]);
 
@@ -30,6 +31,7 @@ const values = (o: object) => Object.keys(o).map(i => o[i]);
     styleUrls: ['./component.scss'],
     templateUrl: './component.html',
     providers: [OfiKycObservablesService],
+    
 })
 export class OfiClientReferentialComponent implements OnInit, OnDestroy {
     searchForm: FormGroup;
@@ -105,10 +107,7 @@ export class OfiClientReferentialComponent implements OnInit, OnDestroy {
         { portfolioName: 'Generali Vie UC IZNES', thirdPartyRegister: 'BPSS France', transcodificationCode: 'GVUCIZN' }
     ];
 
-    transcodificationThirdParties = [
-        { id: 1, text: 'BPSS France' },
-        { id: 2, text: 'BPSS Luxembourg' },
-    ];
+    transcodificationThirdParties = [];
 
     isTranscodificationModalDisplayed: boolean = false;
     transcodificationModal: any = {
@@ -116,6 +115,7 @@ export class OfiClientReferentialComponent implements OnInit, OnDestroy {
     };
 
     transcodificationForm: FormGroup;
+    selectedTranscodificationId: number;
 
     investorForm: FormGroup;
     currentInvestor: any = {};
@@ -155,9 +155,24 @@ export class OfiClientReferentialComponent implements OnInit, OnDestroy {
                 private location: Location,
                 private numberConverterService: NumberConverterService,
                 public permissionsService: PermissionsService,
+                private ofiTranscodificationService: OfiRegisterTranscodificationService,
     ) { }
 
     ngOnInit(): void {
+        // get third parties list
+        this.ofiTranscodificationService.defaultRequestListThirdParties((data) => {
+            const result = get(data, '[1].Data', []);
+            this.transcodificationThirdParties = map(result, (it) => {
+                return {
+                    id: it.thirdPartyId,
+                    text: it.thirdPartyName,
+                }
+            });
+        }, (error) => {
+            console.error('Unable to get Third Parties (Register Transcodifications)', error);
+        });
+        
+
         this.permissionsService.hasPermission('manageClientReferential', 'canUpdate').then(
             (hasPermission) => {
                 this.hasPermissionClientReferentialUpdate = hasPermission;
@@ -203,8 +218,10 @@ export class OfiClientReferentialComponent implements OnInit, OnDestroy {
         });
 
         this.transcodificationForm = this.fb.group({
-            thirdPartyId: new FormControl('', Validators.required),
-            transcodificationCode: new FormControl('', [Validators.required, Validators.maxLength(25)]),
+            thirdPartyId: ['', Validators.required],
+            transcodificationCode: ['', [Validators.required, Validators.maxLength(25)]],
+            thirdPartyName: [{ value: '', disabled: true }, null],
+            subportfolioName: [{ value: '', disabled: true }, null],
         });
 
         this.ofiKycService.setRequestedClientReferential(false);
@@ -512,6 +529,23 @@ export class OfiClientReferentialComponent implements OnInit, OnDestroy {
                 this.changeDetectorRef.markForCheck();
             }).catch((e) => {
             });
+        } else if (tab == 4) {
+            this.ofiTranscodificationService.defaultRequestListRegisterTranscodification(Number(this.kycId), (data) => {
+                const result = get(data, '[1].Data', []);
+
+                this.transcodificationTable = map(result, (it) => {
+                    return {
+                        transcodificationId: it.transcodificationId,
+                        subportfolioId: it.subportfolioId,
+                        subportfolioName: it.subportfolioName,
+                        thirdPartyId: it.thirdPartyId,
+                        thirdPartyName: it.thirdPartyName,
+                        transcodificationCode: it.transcodificationCode,
+                    }
+                });
+            }, (error) => {
+                console.log(error);
+            });
         }
     }
 
@@ -704,7 +738,16 @@ export class OfiClientReferentialComponent implements OnInit, OnDestroy {
     /**
      * Update transcodification modal
      */
-    updateTranscodificationModal() {
+    updateTranscodificationModal(item) {
+        this.transcodificationModal.item = item;
+
+        this.transcodificationForm.patchValue({
+            transcodificationCode: item.transcodificationCode,
+        });
+
+        this.transcodificationForm.controls['thirdPartyName'].setValue(item.thirdPartyName);
+        this.transcodificationForm.controls['subportfolioName'].setValue(item.subportfolioName);
+
         this.transcodificationModal.type = 1;
         this.isTranscodificationModalDisplayed = true;
     }
@@ -712,8 +755,32 @@ export class OfiClientReferentialComponent implements OnInit, OnDestroy {
     /**
      * Delete transcodification
      */
-     handleDeleteTranscodification() {
-         console.log('delete transcodification');
+     handleDeleteTranscodification(item) {
+         this.ofiTranscodificationService.defaultRequestDeleteRegisterTranscodification(item.transcodificationId, (success) => {
+            const result = get(success, '[1].Data[0]', []);
+            const status = get(result, 'Status', 'Fail');
+
+            if (status === 'Fail') {
+                return this.toasterService.pop('error', this.translate.translate('Unable to delete transcodification'));
+            }
+            
+            // get transcodification index in order to update data
+            const itemIndex = findIdx(this.transcodificationTable, { transcodificationId: item.transcodificationId });
+            
+            // unable to find transcodification id in table
+            if(itemIndex < 0) {
+                this.toasterService.pop('error', this.translate.translate('Unable to update current table data'));
+                return;
+            }
+            
+            // delete informations in current table
+            this.transcodificationTable = lodashFilter(this.transcodificationTable, (it) => it.transcodificationId !== item.transcodificationId);
+
+            this.toasterService.pop('success', this.translate.translate('Transcodification deleted'));
+         }, (error) => {
+            this.toasterService.pop('error', this.translate.translate('Unable to delete transcodification'));
+            console.error(`[Transcodification Delete] ${error}`);
+         });
      }
 
     /**
@@ -721,27 +788,91 @@ export class OfiClientReferentialComponent implements OnInit, OnDestroy {
      */
     closeTranscodificationModal() {
         this.isTranscodificationModalDisplayed = false;
+        this.transcodificationModal.item = null;
     }
 
     /**
      * Create transcodification
      */
     handleCreateTranscodification() {
+        const params = {
+            kycId: Number(this.kycId),
+            thirdPartyId: this.selectedTranscodificationId,
+            transcodificationCode: this.transcodificationForm.controls['transcodificationCode'].value,
+        }
 
+        this.ofiTranscodificationService.defaultRequestCreateRegisterTranscodification(params, (success) => {
+            const result = get(success, '[1].Data', []);
+            const status = get(result, '[0]Status', 'Fail');
+
+            if (status !== 'OK') {
+                return this.toasterService.pop('error', this.translate.translate(`Unable to create transcodification : ${result[0].Message}`));
+            }
+
+            this.transcodificationTable = map(result, (it) => {
+                return {
+                    transcodificationId: it.transcodificationId,
+                    subportfolioId: it.subportfolioId,
+                    subportfolioName: it.subportfolioName,
+                    thirdPartyId: it.thirdPartyId,
+                    thirdPartyName: it.thirdPartyName,
+                    transcodificationCode: it.transcodificationCode,
+                }
+            });
+
+            this.toasterService.pop('success', this.translate.translate('New transcodification(s) created'));
+            this.closeTranscodificationModal();
+        }, (error) => {
+            const result = get(error, '[1].Data', []);
+            this.toasterService.pop('error', this.translate.translate(`Unable to create transcodification : ${result[0].Message}`));
+            console.error(`[Transcodification Create] ${error}`);
+            console.log(error);
+        });
     }
 
     /**
      * Update transcodification
      */
     handleUpdateTranscodification() {
+        const params = {
+            transcodificationId: this.transcodificationModal.item.transcodificationId,
+            transcodificationCode: this.transcodificationForm.controls['transcodificationCode'].value,
+        }
 
+        this.ofiTranscodificationService.defaultRequestUpdateRegisterTranscodification(params, (success) => {
+            const result = get(success, '[1].Data[0]', []);
+            const status = get(result, 'Status', 'Fail');
+
+            if (status === 'Fail') {
+                return this.toasterService.pop('error', this.translate.translate('Unable to update transcodification'));
+            }
+            
+            // get transcodification index in order to update data
+            const itemIndex = findIdx(this.transcodificationTable, { transcodificationId: params.transcodificationId });
+            
+            // unable to find transcodification id in table
+            if(itemIndex < 0) {
+                this.toasterService.pop('error', this.translate.translate('Unable to update current table data'));
+                return;
+            }
+            
+            // update informations in current table
+            this.transcodificationTable[itemIndex].transcodificationCode = params.transcodificationCode;
+            
+            this.toasterService.pop('success', this.translate.translate('Transcodification updated'));
+            return this.closeTranscodificationModal();
+
+        }, (error) => {
+            this.toasterService.pop('error', this.translate.translate('Unable to update transcodification'));
+            console.error(`[Transcodification Update] ${error}`);
+        });
     }
 
     /**
      * On dropdown transcodification selection
      */
     handleDropdownThirdPartySelect(event) {
-        console.log(event);
+        this.selectedTranscodificationId = event.id;
     }
 
     /**

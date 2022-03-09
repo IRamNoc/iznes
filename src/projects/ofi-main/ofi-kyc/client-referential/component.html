@@ -386,8 +386,8 @@
 
                     <clr-dg-row *clrDgItems="let item of transcodificationTable">
                         <ng-container>
-                            <clr-dg-cell>{{ item.portfolioName }}</clr-dg-cell>
-                            <clr-dg-cell>{{ item.thirdPartyRegister }}</clr-dg-cell>
+                            <clr-dg-cell>{{ item.subportfolioName }}</clr-dg-cell>
+                            <clr-dg-cell>{{ item.thirdPartyName }}</clr-dg-cell>
                             <clr-dg-cell>{{ item.transcodificationCode }}</clr-dg-cell>
                             <clr-dg-cell id="action_row_{{i}}" class="right">
                                 <div class="btn-group">
@@ -421,16 +421,27 @@
                       <div class="modal-body">
                         <form [formGroup]="transcodificationForm">
                             <section class="form-group">
-                                <div class="col-md-12">
-                                    <label class="clr-col-12 col-col-md-12">{{ 'Third Party' | translate }}</label>
-                                    <ng-select appendTo=".modal-dialog" id="thirdParties" [placeholder]="translate.translate('Select Third Party in the list')"
-                                        [items]="transcodificationThirdParties" [allowClear]="false"
-                                        formControlName="thirdPartyId"
-                                        (selected)="handleDropdownThirdPartySelect($event)">
-                                    </ng-select>
+                                <div *ngIf="transcodificationModal.type" class="mt-1 col-md-12">
+                                    <label class="clr-col-12 clr-col-md-12">{{ 'Portfolio Name' | translate }}</label>
+                                    <input id="portfolioName" class="form-control" type="text" formControlName="subportfolioName" disabled>
                                 </div>
 
-                                <div class="col-md-12">
+                                <div class="mt-1 col-md-12">
+                                    <label class="clr-col-12 col-col-md-12">{{ 'Third Party' | translate }}</label>
+                                    <ng-select
+                                        *ngIf="!transcodificationModal.type"
+                                        id="thirdParties"
+                                        [placeholder]="translate.translate('Select Third Party in the list')"
+                                        [items]="transcodificationThirdParties"
+                                        [allowClear]="false"
+                                        formControlname="thirdPartyId"
+                                        (selected)="handleDropdownThirdPartySelect($event)">
+                                    </ng-select>
+
+                                    <input *ngIf="transcodificationModal.type" id="transcodificationName" class="form-control" type="text" formControlName="thirdPartyName" disabled>
+                                </div>
+
+                                <div class="mt-1 mb-1 col-md-12">
                                     <label class="clr-col-12 clr-col-md-12">{{ 'Code (25 characters maximum)' | translate }}</label>
                                     <input id="transcodificationCode" maxlength="25" class="form-control" type="text" formControlName="transcodificationCode">
                                 </div>
