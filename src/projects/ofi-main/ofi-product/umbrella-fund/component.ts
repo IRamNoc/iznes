@@ -55,6 +55,7 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
     umbrellaListItems = [];
     umbrellaControl = new FormControl([]);
     managementCompanyList = [];
+    subManagementCompanyList = [];
 
     umbrellaFund: any;
     umbrellaFundID: string;
@@ -226,6 +227,9 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
                     Validators.required,
                 ]),
             ],
+            subCompanyOrder:[
+                [],
+            ],
             fundAdministratorID: [
                 [],
                 Validators.compose([
@@ -320,6 +324,7 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
                     return;
                 }
                 this.getManagementCompanyList(b);
+                this.getSubManagementCompanyList(b);
                 this.getUmbrellaFundList(a);
                 if (queryParams.prefill) {
                     this.umbrellaControl.setValue(
@@ -505,13 +510,12 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
      * @param {any} list
      * @return {any|void}
      */
-    getUmbrellaFundList(list: any): any|void {
+    getUmbrellaFundList(list: any): any | void {
         if (!Object.keys(list).length) {
             this.umbrellaFundList = [];
             this.umbrellaListItems = [];
             return;
         }
-
         this.umbrellaListItems = Object.keys(list).map((key) => {
             return {
                 id: key,
@@ -544,6 +548,10 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
                 custodianBankID: UmbrellaFundComponent.getListItem(u.custodianBankID, this.custodianBankOptions),
 
                 // optional on save
+                subCompanyOrder: UmbrellaFundComponent.getListItem(
+                    u.subCompanyOrder,
+                    this.subManagementCompanyList,
+                ),
                 investmentAdvisorID,
                 payingAgentID: this.getListItems(
                     u.payingAgentID,
@@ -577,9 +585,8 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
      * Initialise the managementCompanyList
      *
      * @param {any} list
-     * @return {any|void}
      */
-    getManagementCompanyList(list: any): any|void {
+    getManagementCompanyList(list: any) {
         if (!Object.keys(list).length) {
             this.managementCompanyList = [];
             return;
@@ -587,11 +594,32 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
 
         this.managementCompanyList = Object.keys(list).map((key) => {
             const item = list[key];
-            if (!item.companyID) return null;
+            if (!item.companyID) return;
             return {
                 id: item.companyID,
                 text: item.companyName,
             };
+        });
+    }
+
+    /**
+     * Initialise the subManagementCompanyList
+     *
+     * @param {any} list
+     */
+    getSubManagementCompanyList(list: any) {
+        this.subManagementCompanyList = [];
+        if (!Object.keys(list).length) {
+            return;
+        };
+        Object.keys(list).map((key) => {
+            const item = list[key];
+            if (!item.companyID) return;
+            this.subManagementCompanyList.push(
+                { id: 0, text: item.subManagementCompany1 },
+                { id: 1, text: item.subManagementCompany2 },
+                { id: 2, text: item.subManagementCompany3 },
+                { id: 3, text: item.subManagementCompany4 });
         });
     }
 
@@ -691,6 +719,7 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
             domicile: (formValues.domicile.length > 0) ? formValues.domicile[0].id : null,
             umbrellaFundCreationDate: (formValues.umbrellaFundCreationDate != '') ? formValues.umbrellaFundCreationDate : null,
             managementCompanyID: (formValues.managementCompanyID.length > 0) ? formValues.managementCompanyID[0].id : null,
+            subCompanyOrder: (formValues.subCompanyOrder.length > 0) ? formValues.subCompanyOrder[0].id : null,
             fundAdministratorID: (formValues.fundAdministratorID.length > 0) ? formValues.fundAdministratorID[0].id : null,
             custodianBankID: (formValues.custodianBankID.length > 0) ? formValues.custodianBankID[0].id : null,
             investmentAdvisorID: formValues.investmentAdvisorID,
