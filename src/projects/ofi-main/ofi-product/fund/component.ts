@@ -259,7 +259,7 @@ export class FundComponent implements OnInit, OnDestroy {
             legalAdvisorID: { value: '', disabled: true },
             legalEntityIdentifier: { value: '', disabled: true },
             managementCompanyID: { value: '', disabled: true },
-            subCompanyOrder: { value: '', disabled: true },
+            subManagementCompanyItem: { value: '', disabled: true },
             payingAgentID: { value: '', disabled: true },
             principlePromoterID: { value: '', disabled: true },
             registerOffice: { value: '', disabled: true },
@@ -307,7 +307,7 @@ export class FundComponent implements OnInit, OnDestroy {
             fiscalYearEnd: [null, this.validators.date.monthday],
             isFundOfFund: [null, Validators.required],
             managementCompanyID: [[], this.validators.ngSelectRequired],
-            subCompanyOrder: [[], this.validators.ngSelectRequired],
+            subManagementCompanyItem: [[], this.validators.ngSelectRequired],
             fundAdministratorID: [[], this.validators.ngSelectRequired],
             custodianBankID: [[], this.validators.ngSelectRequired],
             investmentManagerID: [[]],
@@ -410,7 +410,7 @@ export class FundComponent implements OnInit, OnDestroy {
                 .setValue(newUmbrella.legalEntityIdentifier);
                 this.umbrellaEditForm.controls['managementCompanyID']
                 .setValue(FundComponent.getListItemText(newUmbrella.managementCompanyID, this.managementCompanyItems));
-                this.umbrellaEditForm.controls['subCompanyOrder']
+                this.umbrellaEditForm.controls['subManagementCompanyItem']
                 .setValue(FundComponent.getListItemText(newUmbrella.subCompanyOrder, this.subManagementCompanyItems));
                 this.umbrellaEditForm.controls['payingAgentID']
                 .setValue(this.getListItems(newUmbrella.payingAgentID, this.payingAgentItems));
@@ -455,7 +455,8 @@ export class FundComponent implements OnInit, OnDestroy {
                 .setValue(FundComponent.getListItem(newUmbrella.domicile, this.domicileItems));
                 this.fundForm.controls['managementCompanyID']
                 .setValue(FundComponent.getListItem(newUmbrella.managementCompanyID, this.managementCompanyItems));
-                this.fundForm.controls['subCompanyOrder'].setValue(FundComponent.getListItem(newUmbrella.subCompanyOrder, this.subManagementCompanyItems));
+                this.fundForm.controls['subManagementCompanyItem']
+                .setValue(FundComponent.getListItem(this.fundList.subCompanyOrder, this.subManagementCompanyItems));
                 this.fundForm.controls['fundAdministratorID']
                 .setValue(FundComponent.getListItem(newUmbrella.fundAdministratorID, this.fundAdministratorItems));
                 this.fundForm.controls['custodianBankID']
@@ -615,7 +616,7 @@ export class FundComponent implements OnInit, OnDestroy {
                 return;
             }
             this.setManagementCompanyItems(m);
-            this.setSubManagementCompanyList(m);
+            this.setSubManagementCompanyItems(m);
             this.setFundList(funds);
             this.param = params.id;
             this.prefill = queryParams.prefill;
@@ -736,6 +737,9 @@ export class FundComponent implements OnInit, OnDestroy {
                 this.hasPermissionUpdateFund = hasPermission;
             },
         );
+        // const fund = _.find(this.fundList, { fundID: Number(this.param) });
+        // this.fundForm.controls['subManagementCompanyItem'].setValue(FundComponent.getListItem(fund.subCompanyOrder, this.subManagementCompanyItems));
+        console.log('this', this);
     }
 
     ngOnDestroy() {
@@ -809,7 +813,7 @@ export class FundComponent implements OnInit, OnDestroy {
             principlePromoterID: this.getIdsFromList(this.fundForm.controls['principlePromoterID'].value),
             payingAgentID: this.getIdsFromList(this.fundForm.controls['payingAgentID'].value),
             managementCompanyID: _.get(this.fundForm.controls['managementCompanyID'].value, ['0', 'id'], null),
-            subCompanyOrder: _.get(this.fundForm.controls['subCompanyOrder'].value, ['0', 'id'], null),
+            subManagementOrder: _.get(this.fundForm.controls['subManagementCompanyItem'].value, ['0', 'id'], null),
             delegatedManagementCompany: !_.isNull(_.get(this.fundForm.controls['delegatedManagementCompany'].value, ['0', 'id'], null))
                 ? Number(_.get(this.fundForm.controls['delegatedManagementCompany'].value, ['0', 'id'], null))
                 : null,
@@ -975,8 +979,9 @@ export class FundComponent implements OnInit, OnDestroy {
      *
      * @param {any} list
      */
-    setSubManagementCompanyList(list: any) {
-        this.subManagementCompanyItems = [];
+    setSubManagementCompanyItems(list: any) {
+        if (this.subManagementCompanyItems.length)
+            return;
         if (!Object.keys(list).length) {
             return;
         };
@@ -1041,7 +1046,7 @@ export class FundComponent implements OnInit, OnDestroy {
                     fund.managementCompanyID,
                     this.managementCompanyItems,
                 ),
-                subCompanyOrder: FundComponent.getListItem(
+                subManagementCompanyItem: FundComponent.getListItem(
                     fund.subCompanyOrder,
                     this.subManagementCompanyItems,
                 ),
@@ -1109,6 +1114,8 @@ export class FundComponent implements OnInit, OnDestroy {
 
         this.currDraft = fund.draft;
 
+        console.log("Fund", fund);
+
         this.fundForm.setValue({
             ..._.omit(fund, [
                 'fundID',
@@ -1118,9 +1125,11 @@ export class FundComponent implements OnInit, OnDestroy {
                 'draft',
                 'draftUser',
                 'draftDate',
+                'subCompanyOrder'
             ]),
             fundName: this.param ? fund.fundName : '',
             legalEntityIdentifier: this.param ? fund.legalEntityIdentifier : '',
+            subManagementCompanyItem: FundComponent.getListItem(fund.subCompanyOrder, this.subManagementCompanyItems),
 
             // formatting for radio inputs
             isFundStructure: fund.isFundStructure.toString(),
@@ -1144,7 +1153,7 @@ export class FundComponent implements OnInit, OnDestroy {
             hasDurationHedge: !_.isNull(fund.hasDurationHedge) ? fund.hasDurationHedge.toString() : null,
         });
         this.toggleLeiSwitch(!!fund.legalEntityIdentifier);
-
+        console.log("FUND FORM", this.fundForm);
         this.currentLei = fund.legalEntityIdentifier;
 
         if (this.isAdmin()) {
@@ -1203,12 +1212,15 @@ export class FundComponent implements OnInit, OnDestroy {
         if (!this.fundForm.valid) {
             return;
         }
-
+        const formValues = this.fundFormValue();
+        delete formValues.subManagementCompanyItem;
         const payload: Fund = {
             draft: 0,
-            ...this.fundFormValue(),
+            ...formValues,
         };
-
+        payload.ucitsVersion = 0;
+        payload.subCompanyOrder = 0;
+        console.log('log payload', payload);
         if (!this.param) {
             this.fundService.iznCreateFund(payload)
             .then((fund) => {
@@ -1279,11 +1291,12 @@ export class FundComponent implements OnInit, OnDestroy {
      * @return {void}
      */
     saveDraft() {
+        const formValues = this.fundFormValue();
+        delete formValues.subManagementCompanyItem;
         const payload: Fund = {
             draft: 1,
-            ...this.fundFormValue(),
+            ...formValues,
         };
-
         if (!this.param) {
 
             this.fundService.iznCreateFund(payload)
@@ -1333,7 +1346,7 @@ export class FundComponent implements OnInit, OnDestroy {
                 this.toasterService.pop(
                     'error',
                     this.translate.translate(
-                        'Failed to create the Fund. @errMsg@',
+                        'Failed to update the Fund. @errMsg@',
                         { 'errMsg': errMsg },
                     ),
                 );

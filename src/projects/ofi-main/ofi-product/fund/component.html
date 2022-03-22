@@ -362,7 +362,7 @@
                                                 <input type="text"
                                                     id="uf_subManagementCompany"
                                                     class="form-control"
-                                                    formControlName="subCompanyOrder"
+                                                    formControlName="subManagementCompanyItem"
                                                     [disabled]="isAdmin()">
                                             </div>
                                         </div>
@@ -1003,15 +1003,15 @@
 
                                             <div class="form-group required-field  col-sm-6">
                                                 <div>
-                                                    <label class="control-label" for="subCompanyOrder">{{ 'Management Company' | translate }}</label>
-                                                    <ng-select id="subCompanyOrder"
+                                                    <label class="control-label" for="subManagementCompanyItem">{{ 'Management Company' | translate }}</label>
+                                                    <ng-select id="subManagementCompanyItem"
                                                         [items]="subManagementCompanyItems"
                                                         [allowClear]="true"
                                                         [placeholder]="translate.translate('Select')"
-                                                        [formControlName]="fundForm.controls['subCompanyOrder']"
+                                                        [formControl]="fundForm.controls['subManagementCompanyItem']"
                                                         [isDisabled]="isAdmin()">
                                                     </ng-select>
-                                                    <span class="field-error" *ngIf="fundForm.controls['subCompanyOrder'].hasError('required') && fundForm.controls['subCompanyOrder'].touched">{{ 'Field is required' | translate }}</span>
+                                                    <span class="field-error" *ngIf="fundForm.controls['subManagementCompanyItem'].hasError('required') && fundForm.controls['subManagementCompanyItem'].touched">{{ 'Field is required' | translate }}</span>
                                                 </div>
                                             </div>
 
