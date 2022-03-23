@@ -167,6 +167,9 @@ export class ManagagementCompanyService {
             mt502Email: [
                 '',
             ],
+            subManagementCompany0: [
+                '',
+            ],
             subManagementCompany1: [
                 '',
             ],
@@ -174,9 +177,6 @@ export class ManagagementCompanyService {
                 '',
             ],
             subManagementCompany3: [
-                '',
-            ],
-            subManagementCompany4: [
                 '',
             ],
             managementCompanyType: [[{id: 'common', 'text': 'Common'}]]

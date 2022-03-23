@@ -49,7 +49,7 @@ export interface Fund {
     fiscalYearEnd: string; // date
     isFundOfFund: isFundOfFund;
     managementCompanyID: number;
-    subCompanyOrder: number;
+    subManagementCompanyItem: number;
     fundAdministrator: number;
     custodianBankID: number;
     investmentManagerID: number;

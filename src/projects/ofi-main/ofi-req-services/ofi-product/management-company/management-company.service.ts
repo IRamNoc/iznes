@@ -166,10 +166,10 @@ export class OfiManagementCompanyService {
             externalEmail: mcData.externalEmail,
             emailValidation: mcData.emailValidation,
             mt502Email: mcData.mt502Email,
+            subManagementCompany0: mcData.subManagementCompany0,
             subManagementCompany1: mcData.subManagementCompany1,
             subManagementCompany2: mcData.subManagementCompany2,
-            subManagementCompany3: mcData.subManagementCompany3,
-            subManagementCompany4: mcData.subManagementCompany4
+            subManagementCompany3: mcData.subManagementCompany3
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
@@ -210,10 +210,10 @@ export class OfiManagementCompanyService {
             externalEmail: mcData.externalEmail,
             emailValidation: mcData.emailValidation,
             mt502Email: mcData.mt502Email,
+            subManagementCompany0: mcData.subManagementCompany0,
             subManagementCompany1: mcData.subManagementCompany1,
             subManagementCompany2: mcData.subManagementCompany2,
-            subManagementCompany3: mcData.subManagementCompany3,
-            subManagementCompany4: mcData.subManagementCompany4
+            subManagementCompany3: mcData.subManagementCompany3
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);

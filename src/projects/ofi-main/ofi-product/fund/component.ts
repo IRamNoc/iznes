@@ -737,9 +737,6 @@ export class FundComponent implements OnInit, OnDestroy {
                 this.hasPermissionUpdateFund = hasPermission;
             },
         );
-        // const fund = _.find(this.fundList, { fundID: Number(this.param) });
-        // this.fundForm.controls['subManagementCompanyItem'].setValue(FundComponent.getListItem(fund.subCompanyOrder, this.subManagementCompanyItems));
-        console.log('this', this);
     }
 
     ngOnDestroy() {
@@ -813,7 +810,7 @@ export class FundComponent implements OnInit, OnDestroy {
             principlePromoterID: this.getIdsFromList(this.fundForm.controls['principlePromoterID'].value),
             payingAgentID: this.getIdsFromList(this.fundForm.controls['payingAgentID'].value),
             managementCompanyID: _.get(this.fundForm.controls['managementCompanyID'].value, ['0', 'id'], null),
-            subManagementOrder: _.get(this.fundForm.controls['subManagementCompanyItem'].value, ['0', 'id'], null),
+            subManagementCompanyItem: _.get(this.fundForm.controls['subManagementCompanyItem'].value, ['0', 'id'], null),
             delegatedManagementCompany: !_.isNull(_.get(this.fundForm.controls['delegatedManagementCompany'].value, ['0', 'id'], null))
                 ? Number(_.get(this.fundForm.controls['delegatedManagementCompany'].value, ['0', 'id'], null))
                 : null,
@@ -988,11 +985,14 @@ export class FundComponent implements OnInit, OnDestroy {
         Object.keys(list).map((key) => {
             const item = list[key];
             if (!item.companyID) return;
-            this.subManagementCompanyItems.push(
-                { id: 0, text: item.subManagementCompany1 },
-                { id: 1, text: item.subManagementCompany2 },
-                { id: 2, text: item.subManagementCompany3 },
-                { id: 3, text: item.subManagementCompany4 });
+            if (item.subManagementCompany0)
+                this.subManagementCompanyItems.push({ id: 0, text: item.subManagementCompany0 });
+            if (item.subManagementCompany1)
+                this.subManagementCompanyItems.push({ id: 1, text: item.subManagementCompany1 });
+            if (item.subManagementCompany2)
+                this.subManagementCompanyItems.push({ id: 2, text: item.subManagementCompany2 });
+            if (item.subManagementCompany3)
+                this.subManagementCompanyItems.push({ id: 3, text: item.subManagementCompany3 });
         });
     }
 
@@ -1114,8 +1114,6 @@ export class FundComponent implements OnInit, OnDestroy {
 
         this.currDraft = fund.draft;
 
-        console.log("Fund", fund);
-
         this.fundForm.setValue({
             ..._.omit(fund, [
                 'fundID',
@@ -1153,7 +1151,6 @@ export class FundComponent implements OnInit, OnDestroy {
             hasDurationHedge: !_.isNull(fund.hasDurationHedge) ? fund.hasDurationHedge.toString() : null,
         });
         this.toggleLeiSwitch(!!fund.legalEntityIdentifier);
-        console.log("FUND FORM", this.fundForm);
         this.currentLei = fund.legalEntityIdentifier;
 
         if (this.isAdmin()) {
@@ -1212,15 +1209,10 @@ export class FundComponent implements OnInit, OnDestroy {
         if (!this.fundForm.valid) {
             return;
         }
-        const formValues = this.fundFormValue();
-        delete formValues.subManagementCompanyItem;
         const payload: Fund = {
             draft: 0,
-            ...formValues,
+            ...this.fundFormValue(),
         };
-        payload.ucitsVersion = 0;
-        payload.subCompanyOrder = 0;
-        console.log('log payload', payload);
         if (!this.param) {
             this.fundService.iznCreateFund(payload)
             .then((fund) => {
@@ -1291,11 +1283,9 @@ export class FundComponent implements OnInit, OnDestroy {
      * @return {void}
      */
     saveDraft() {
-        const formValues = this.fundFormValue();
-        delete formValues.subManagementCompanyItem;
         const payload: Fund = {
             draft: 1,
-            ...formValues,
+            ...this.fundFormValue(),
         };
         if (!this.param) {
 

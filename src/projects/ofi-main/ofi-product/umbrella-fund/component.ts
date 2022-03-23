@@ -228,7 +228,9 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
                 ]),
             ],
             subCompanyOrder:[
-                [],
+                Validators.compose([
+                    Validators.required,
+                ]),
             ],
             fundAdministratorID: [
                 [],
@@ -615,11 +617,14 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
         Object.keys(list).map((key) => {
             const item = list[key];
             if (!item.companyID) return;
-            this.subManagementCompanyList.push(
-                { id: 0, text: item.subManagementCompany1 },
-                { id: 1, text: item.subManagementCompany2 },
-                { id: 2, text: item.subManagementCompany3 },
-                { id: 3, text: item.subManagementCompany4 });
+            if (item.subManagementCompany0)
+                this.subManagementCompanyList.push({ id: 0, text: item.subManagementCompany0 });
+            if (item.subManagementCompany1)
+                this.subManagementCompanyList.push({ id: 1, text: item.subManagementCompany1 });
+            if (item.subManagementCompany2)
+                this.subManagementCompanyList.push({ id: 2, text: item.subManagementCompany2 });
+            if (item.subManagementCompany3)
+                this.subManagementCompanyList.push({ id: 3, text: item.subManagementCompany3 });
         });
     }
 
