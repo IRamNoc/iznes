@@ -551,7 +551,7 @@ export class MyHoldingsHistoryComponent implements OnInit, OnDestroy {
                     investor: list.investorCompanyName,
                     investorWalletName: list.investorWalletName,
                     portfolio: list.subportfolioLabel,
-                    date: targetDate,
+                    date: list.orderDate,
                     quantity: Number(list.quantity),
                     navPrice: Number(list.valuationPrice),
                     navDate: list.valuationDate,
@@ -615,7 +615,90 @@ export class MyHoldingsHistoryComponent implements OnInit, OnDestroy {
         }
 
         this.holdingListFiltered = _.uniq(holdingListPrep);
+
+        const dateList = this.getDaysBetweenDates(moment(params.dateFrom), moment(params.dateTo));
+
+        const formatHoldingListPrep = [];
+        const finalFormat = [];
+
+        _.forEach(this.holdingListFiltered, (it) => {
+            const alreadyExist = _.findIndex(formatHoldingListPrep, {
+                companyName: it.companyName,
+                fundName: it.fundName,
+                fundShareName: it.fundShareName,
+                investorWalletName: it.investorWalletName,
+                portfolio: it.portfolio,
+            });
+
+            if (alreadyExist > -1) return;
+            return formatHoldingListPrep.push({
+                companyName: it.companyName,
+                fundName: it.fundName,
+                fundShareName: it.fundShareName,
+                investorWalletName: it.investorWalletName,
+                portfolio: it.portfolio,
+            });
+        });
+
+        dateList.forEach(currentDate => {
+        // get all positions records for each dates
+            const checkIfDateExists = _.filter(this.holdingListFiltered, {
+                date: currentDate
+            });
+
+            // returns current object if there is all uniques records for the current date
+            if (checkIfDateExists && checkIfDateExists.length === formatHoldingListPrep.length) {
+                finalFormat.push(checkIfDateExists);
+                return;
+            }
+    
+            // check what unique record is missing
+            formatHoldingListPrep.forEach(it => {
+                const isFound = _.find(checkIfDateExists, it);        
+                if (isFound) {
+                    finalFormat.push(isFound);
+                    return;
+                }
+            
+                const previousDate = moment(currentDate).subtract(1, 'day').format('YYYY-MM-DD');
+            
+                const checkIfPreviousDateExists = _.find(finalFormat, {
+                    ...it,
+                    date: previousDate
+                });
+            
+                if (!checkIfPreviousDateExists) return;
+
+                const newData = _.clone(checkIfPreviousDateExists);
+                newData.date = currentDate;
+                finalFormat.push(newData);
+            });
+        });
+
+        this.holdingListFiltered = _.clone(finalFormat);
+
+        if (params.investorInInvestorFunds !== null && params.investorInInvestorFunds) {
+            this.holdingListFiltered = this.holdingListFiltered.map((item) => {
+                if (item.portfolioManager) {
+                    const newItem = _.clone(item);
+                    newItem.investor = item.companyName;
+                    return newItem;
+                }
+                return item;
+            })
+        }
     }
+
+    getDaysBetweenDates(startDate, endDate) {
+        var now = moment(startDate).clone(), dates = [];
+    
+        while (now.isSameOrBefore(endDate)) {
+            dates.push(now.format('YYYY-MM-DD'));
+            now.add(1, 'days');
+        }
+    
+        return dates;
+    };
 
     portfolioAggregation(data, type) {
         let filteredData = data;
@@ -642,7 +725,24 @@ export class MyHoldingsHistoryComponent implements OnInit, OnDestroy {
         }
 
         if (type === 'global') {
+            filteredData = _.reduce(data, (result, value, key) => {
+                const found = _.findIndex(result, {
+                    companyName: value.companyName,
+                    fundName: value.fundName,
+                    fundShareName: value.fundShareName,
+                    date: value.date,
+                });
 
+                if (found < 0) {
+                    value.portfolio = null;
+                    value.investorWalletName = null;
+                    result.push(value);
+                    return result;
+                }
+
+                result[found].quantity += value.quantity;
+                return result;
+            }, []);
         }
 
         return filteredData;
