@@ -972,7 +972,7 @@ export class FundComponent implements OnInit, OnDestroy {
     }
 
     /**
-     * Set the SumbanagementCompanyItems
+     * Set the SubanagementCompanyItems
      *
      * @param {any} list
      */
