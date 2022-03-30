@@ -1,137 +1,151 @@
-<div style="padding: 20px 20px;background: white;">
+<div class="help-page-container">
     <div>
         <p>
             <clr-icon shape="help" size="32"></clr-icon>
-            <span style="font-size: 30px; font-weight: bold;">
+            <span class="help-page-header-span">
                 {{'Help Page & Documentation' | translate}}
             </span>
-            <br> <span style="margin-left: 46px; font-style: italic;"><strong>{{'For any assitance needed, please
-                    contact ops@iznes.io'|
-                    translate }} </strong> </span>
+            <br> <span class="help-page-header-sub-span"><strong>
+                For any assitance needed, please contact <u> ops@iznes.io </u> </strong> </span>
         </p>
     </div>
-    <div class="" style="background: white; margin-top: 15px;">
-        <clr-tabs style="border: 1px solid rgb(158, 155, 155);margin-top: 21px;
-          border-radius: 0.7rem; background: white; max-width: 70em; padding-top: 20px !important; min-height: 30rem;">
+    <div class="help-page-tabs-div" >
+        <clr-tabs class="help-page-tabs">
 
-            <clr-tab style="padding-left: 0px !important;">
-                <button clrTabLink id="link1" style="border-top-left-radius: 13px !important">Documentation</button>
-                <clr-tab-content id="content1" *clrIfActive="true" style="margin: 0px !important;">
+            <clr-tab class="help-page-individual-tab">
+                <button clrTabLink id="link1" class="help-page-individual-tab-button">Documentation</button>
+                <clr-tab-content id="content1" *clrIfActive="true" class="help-page-individual-tab-content">
                     <form>
                         <div class="form-group row">
-                            <label for="staticEmail" class="col-sm-8 col-form-label label-top">{{'KYC OPERATIONAL
+                            <label for="staticFile" class="col-sm-8 col-form-label label-top">{{'KYC OPERATIONAL
                                 PROCESS AND
                                 VALUE
                                 CHAIN' | translate}}</label>
                             <div class="col-sm-4">
                                 <setl-file-viewer
-                                    fileHash="e0b2154ec11a7dfb701714e364354dcf76f5b463dbe094a7976404fd9f827760">
+                                    fileHash="e0b2154ec11a7dfb701714e364354dcf76f5b463dbe094a7976404fd9f827760"
+                                    isHelpDocument=true>
                                 </setl-file-viewer>
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label for="staticEmail" class="col-sm-8 col-form-label label-top">
+                            <label for="staticFile" class="col-sm-8 col-form-label label-top">
                                 {{'CLIENT CLAIMS MANAGEMENT POLICY' | translate }}
                             </label>
                             <div class="col-sm-4">
                                 <setl-file-viewer
-                                    fileHash="1f768de6f555a6c67ecbcb2172def86e6edd91bc7ec700a435fe6c366072526f">
+                                    fileHash="1f768de6f555a6c67ecbcb2172def86e6edd91bc7ec700a435fe6c366072526f"
+                                    isHelpDocument=true>
                                 </setl-file-viewer>
                             </div>
                         </div>
 
                         <div class="form-group row">
-                            <label for="staticEmail" class="col-sm-8 col-form-label label-top">
+                            <label for="staticFile" class="col-sm-8 col-form-label label-top">
                                 {{'POLICY FOR THE PREVENTION AND MANAGEMENT OF CONFLICTS OF INTEREST' | translate }}
                             </label>
                             <div class="col-sm-4">
                                 <setl-file-viewer
-                                    fileHash="59b4f4b5338b89ef6925148f0db33fcae1d7d4fb6fe62af26d2c20519cc9a8d6">
+                                    fileHash="59b4f4b5338b89ef6925148f0db33fcae1d7d4fb6fe62af26d2c20519cc9a8d6"
+                                    isHelpDocument=true>
                                 </setl-file-viewer>
                             </div>
                         </div>
 
                         <div class="form-group row">
-                            <label for="staticEmail" class="col-sm-8 col-form-label label-top">
+                            <label for="staticFile" class="col-sm-8 col-form-label label-top">
                                 {{'DATA PROTECTION STATEMENT' | translate }}
                             </label>
                             <div class="col-sm-4">
                                 <setl-file-viewer
-                                    fileHash="e8d6ba9ecd8d2cd58b71aba4f08745d463ce7fab98b958b3ab8a99d4e5b04866">
+                                    fileHash="e8d6ba9ecd8d2cd58b71aba4f08745d463ce7fab98b958b3ab8a99d4e5b04866"
+                                    isHelpDocument=true>
                                 </setl-file-viewer>
                             </div>
                         </div>
 
                         <div class="form-group row">
-                            <label for="staticEmail" class="col-sm-8 col-form-label label-top">
+                            <label for="staticFile" class="col-sm-8 col-form-label label-top">
                                 {{'FORM W-8BEN-E' | translate }}
                             </label>
                             <div class="col-sm-4">
                                 <setl-file-viewer
-                                    fileHash="38f185903864bd86d718ee68ab759eb7a64d19f4b47677470fd71d66afa7a61b">
+                                    fileHash="38f185903864bd86d718ee68ab759eb7a64d19f4b47677470fd71d66afa7a61b"
+                                    isHelpDocument=true>
                                 </setl-file-viewer>
                             </div>
                         </div>
 
                         <div class="form-group row">
-                            <label for="staticEmail" class="col-sm-8 col-form-label label-top">
+                            <label for="staticFile" class="col-sm-8 col-form-label label-top">
                                 {{'WOLFSBERG QUESTIONNAIRE' | translate }}
                             </label>
                             <div class="col-sm-4">
                                 <setl-file-viewer
-                                    fileHash="893fec6a3971f39e6416777dae69e32f83d906b1b429731eaba81bd411051c1a">
+                                    fileHash="893fec6a3971f39e6416777dae69e32f83d906b1b429731eaba81bd411051c1a"
+                                    isHelpDocument=true>
                                 </setl-file-viewer>
                             </div>
                         </div>
 
                         <div class="form-group row">
-                            <label for="staticEmail" class="col-sm-8 col-form-label label-top">
+                            <label for="staticFile" class="col-sm-8 col-form-label label-top">
                                 {{'CRS-E SELF-CERTIFICATION FORM' | translate }}
                             </label>
                             <div class="col-sm-4">
                                 <setl-file-viewer
-                                    fileHash="a9c7097f1d3b3b5eaf1e99a90307a04340a575993dad026b6185f20d47379003">
+                                    fileHash="a9c7097f1d3b3b5eaf1e99a90307a04340a575993dad026b6185f20d47379003"
+                                    isHelpDocument=true>
                                 </setl-file-viewer>
                             </div>
                         </div>
 
                         <div class="form-group row">
-                            <label for="staticEmail" class="col-sm-8 col-form-label label-top">
+                            <label for="staticFile" class="col-sm-8 col-form-label label-top">
                                 {{'IZNES USER GUIDE FOR INVESTORS' | translate }}
                             </label>
                             <div class="col-sm-4">
-                                <button type="button" class="btn btn-primary">{{ 'View File' | translate
-                                    }}</button>
+
+                                <setl-file-viewer
+                                    fileHash="1526905e946fb9d03b784ad3e35473f4f9b1267407e250852348a4e43bc7ec84"
+                                    isHelpDocument=true>
+                                </setl-file-viewer>
                             </div>
                         </div>
 
                         <div class="form-group row">
-                            <label for="staticEmail" class="col-sm-8 col-form-label label-top">
+                            <label for="staticFile" class="col-sm-8 col-form-label label-top">
                                 {{'IZNES USER GUIDE FOR MANAGEMENT COMPANIES' | translate }}
                             </label>
                             <div class="col-sm-4">
-                                <button type="button" class="btn btn-primary">{{ 'View File' | translate
-                                    }}</button>
+                                <setl-file-viewer
+                                    fileHash="1905b3108b2f354327ac32269eb64b84e9e1dd4d98723a6f7b961b4796847a93"
+                                    isHelpDocument=true>
+                                </setl-file-viewer>
                             </div>
                         </div>
 
                         <div class="form-group row">
-                            <label for="staticEmail" class="col-sm-8 col-form-label label-top">
+                            <label for="staticFile" class="col-sm-8 col-form-label label-top">
                                 {{'API AND RABBITMQ DOCUMENTATION ' | translate }}
                             </label>
                             <div class="col-sm-4">
-                                <button type="button" class="btn btn-primary">{{ 'View File' | translate
-                                    }}</button>
+                                <setl-file-viewer
+                                    fileHash="35bb4a539777f43f0135e242ea93ebd96fd0f1cdaaaae60d849904f70447148f"
+                                    isHelpDocument=true>
+                                </setl-file-viewer>
                             </div>
                         </div>
 
                         <div class="form-group row">
-                            <label for="staticEmail" class="col-sm-8 col-form-label label-top">
+                            <label for="staticFile" class="col-sm-8 col-form-label label-top">
                                 {{'MT DOCUMENTATION' | translate }}
                             </label>
                             <div class="col-sm-4">
-                                <button type="button" class="btn btn-primary">{{ 'View File' | translate
-                                    }}</button>
+                                <setl-file-viewer
+                                    fileHash="eb7524a5d21d81fa242d9fb05241ca6d94b6207d97c9b58c5ff42126c2416961"
+                                    isHelpDocument=true>
+                                </setl-file-viewer>
                             </div>
                         </div>
 
@@ -139,7 +153,7 @@
                 </clr-tab-content>
             </clr-tab>
 
-            <clr-tab style="border-top:  2px solid rgb(158, 155, 155);">
+            <clr-tab class="faq">
                 <button clrTabLink> <strong>FAQs </strong></button>
                 <clr-tab-content *clrIfActive>
 
@@ -147,18 +161,20 @@
                         <strong> How to invite collaborators to the IZNES platform ? </strong>
                         <clr-tree-node [clrExpanded]="true">
                             <p>
-                                As the Administrator of the IZNES platform within your company, you can invite employees to create their account on IZNES. <br>
-                                1- Go to the <button class="btn btn-sm sidenav-button">Administration > Teams</button> module and click on <button class="btn btn-primary btn-sm">Add a new team</button> <br>
+                                As the Administrator of the IZNES platform within your company, you can invite employees
+                                to create their account on IZNES. <br>
+                                1- Go to the <button class="btn btn-sm sidenav-button">Administration > Teams</button>
+                                module and click on <button class="btn btn-primary btn-sm">Add a new team</button> <br>
                                 2- Give a name and a reference to this team then, add a description<br>
                                 3 - At the bottom of this page, you will be able to define the permissions<br>
                                 of the team on the IZNES platform. Then, Click on <button
                                     class="btn btn-primary btn-sm">Create Team</button>when you are done.<br>
                                 A pop-up will appear to confirm the creation of this team.<br>
-                             
+
                                 You will be able to change the permissions of the different teams by going
                                 back to them and clicking on <button class="btn btn-primary btn-sm">Update
                                     team</button>after modification.<br>
-                               <strong> You can now add a new user to this team. </strong><br>
+                                <strong> You can now add a new user to this team. </strong><br>
                                 4- Go to the <button class="btn btn-sm sidenav-button">Administration > Users</button>
                                 module and click on <button class="btn btn-primary btn-sm">Add a new user</button> <br>
                                 Note: you can create several users at the same time by attaching them to the same
@@ -388,7 +404,7 @@
                                     Manager</button> <br>
                                 2- Fill in the email address that will be used to create the User, then select the type
                                 of Portfolio Manager "Fund of Funds Manager". <br>
-                                <span style="coloe: red"> The e-mail address filled-in must not already be used for
+                                <span style="color: red"> The e-mail address filled-in must not already be used for
                                     another user account. </span> <br>
                                 3- Then select the funds on whose behalf the Manager will be able to act <br>
                                 4- Click on <button class="btn btn-success btn-sm">Create Mandate
@@ -477,7 +493,7 @@
             <clr-tab>
                 <button clrTabLink>Tutorials</button>
                 <clr-tab-content *clrIfActive>
-                    <div style="margin-left: 40px;">
+                    <div class="Tutorials">
                         <p><a href="https://youtu.be/Z6G5AgRkIs0" target="_new">How to invite collaborators to the IZNES
                                 platform?</a></p>
                         <p><a href="https://youtu.be/_vF0QjAaT4E" target="_new">[Investors] How to change my bank
