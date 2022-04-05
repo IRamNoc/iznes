@@ -36,6 +36,7 @@ export class OfiSubPortfolioComponent implements OnDestroy {
     public showAddress: boolean = false;
     public currentAddress: string;
     public editForm: boolean = false;
+    public editDraft: boolean = false;
     public countries: any[] = this.translate.translate(fundItems.domicileItems);
     currenciesItems = [];
     custodianPaymentItems = [
@@ -162,7 +163,7 @@ export class OfiSubPortfolioComponent implements OnDestroy {
                 hashIdentifierCode: new FormControl({ value: '', disabled: true }),
                 investorReference: new FormControl('', [Validators.maxLength(255)]),
                 accountLabel: new FormControl('', [Validators.required, Validators.maxLength(35), CustomValidators.swiftNameAddressValidator]),
-                accountCurrency: new FormControl('', [Validators.required]),
+                accountCurrency: new FormControl(0),
                 custodianPayment: new FormControl(0),
                 custodianPosition: new FormControl(0),
                 custodianTransactionNotices: new FormControl(0),
@@ -223,6 +224,7 @@ export class OfiSubPortfolioComponent implements OnDestroy {
 
         this.currentAddress = address;
         this.editForm = true;
+        this.editDraft = true;
         this.showFormModal = true;
     }
 
@@ -243,6 +245,7 @@ export class OfiSubPortfolioComponent implements OnDestroy {
         };
         this.setupFormGroup();
         this.editForm = false;
+        this.editDraft = false;
         this.showFormModal = !this.showFormModal;
     }
 
@@ -284,6 +287,39 @@ export class OfiSubPortfolioComponent implements OnDestroy {
             }));
     }
 
+      /**
+     * Save a new Sub-portfolio
+     * @return void
+     */
+       saveSubPortfolioDraft() {
+        const payload = this.getSubPortfolioFormValue();
+        const asyncTaskPipe = this.ofiSubPortfolioReqService.insertSubPortfolioDraft(payload);
+
+        this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
+            asyncTaskPipe,
+            (labelResponse) => {
+                const message = _.get(labelResponse, '[1].Data[0].Message', 'OK');
+                this.ofiSubPortfolioService.resetRequestedFlags();
+                if (message === 'OK') {
+                    this.handleLabelResponse(message, 'created');
+                    this.toggleFormModal();
+
+                    // update the default home page to '/home'
+                    if (this.isFirstAddress()) {
+                        this.myUserService.updateHomePage('/home');
+                    }
+                }
+            },
+            (response) => {
+                const message = _.get(response, '[1].Data[0].Message', 'Fail');
+                if (message === 'Duplicate Label') {
+                    this.handleLabelResponse(message, 'created');
+                } else {
+                    this.alertsService.generate('error', this.translate.translate('Error creating draft'));
+                }
+            }));
+    }
+
     /**
      * Update an existing Sub-portfolio
      * @return void
@@ -309,6 +345,34 @@ export class OfiSubPortfolioComponent implements OnDestroy {
             },
             () => {
                 this.alertsService.generate('error', this.translate.translate('Error updating sub-portfolio'));
+            }));
+    }
+
+    /**
+     * Update an existing Sub-portfolio
+     * @return void
+     */
+     updateSubPortfolioDraft() {
+        const payload = {
+            ...this.getSubPortfolioFormValue(),
+            option: this.currentAddress,
+            oldSubportfolio: this.oldsubPortfolioData,
+        };
+
+        const asyncTaskPipe = this.ofiSubPortfolioReqService.updateSubPortfolioDraft(payload);
+
+        this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
+            asyncTaskPipe,
+            (labelResponse) => {
+                const message = _.get(labelResponse, '[1].Data[0].Message', 'OK');
+                this.ofiSubPortfolioService.resetRequestedFlags();
+                if (message === 'OK') {
+                    this.handleLabelResponse(message, 'updated');
+                    this.toggleFormModal();
+                }
+            },
+            () => {
+                this.alertsService.generate('error', this.translate.translate('Error updating draft'));
             }));
     }
 
@@ -436,6 +500,7 @@ export class OfiSubPortfolioComponent implements OnDestroy {
             for (const addr of this.addressList) {
                 if (addr.label === control.value) {
                     if (!this.editForm) return { duplicatedLabel: true };
+                    if (!this.editDraft) return { duplicatedLabel: false };
                     if (this.currentAddress !== addr.addr) return { duplicatedLabel: true };
                 }
             }
