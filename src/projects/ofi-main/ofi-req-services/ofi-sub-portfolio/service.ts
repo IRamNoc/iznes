@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 
 import { MemberSocketService } from '@setl/websocket-service';
-import { createMemberNodeSagaRequest } from '@setl/utils/common';
+import { createMemberNodeRequest, createMemberNodeSagaRequest } from '@setl/utils/common';
 
 import {
     Subportfolio,
@@ -10,6 +10,7 @@ import {
     OfiGetSubPortfolioBankingDetailsData,
     OfiDeleteSubPortfolioRequestBody,
     OfiGetSubPortfolioBankingDetailsBody,
+    SubPortfolioDataDraft,
 } from './model';
 
 @Injectable()
@@ -58,5 +59,41 @@ export class OfiSubPortfolioReqService {
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+    }
+
+    getSubPortfolioBankingDetailsDraft(walletId) {
+        const messageBody = {
+            RequestName: 'izngetsubportfoliodetailsdraft',
+            token: this.memberSocketService.token,
+            walletId: walletId,
+        };
+        return createMemberNodeRequest(this.memberSocketService, messageBody);
+    }
+
+    insertSubPortfolioDraft(data: SubPortfolioDataDraft) {
+        const messageBody = {
+            ...data,
+            RequestName: 'izninsertsubportfoliodetailsdraft',
+            token: this.memberSocketService.token,
+        };
+        return createMemberNodeRequest(this.memberSocketService, messageBody);
+    }
+
+    updateSubPortfolioDraft(data: SubPortfolioDataDraft) {
+        const messageBody = {
+            ...data,
+            RequestName: 'iznupdatesubportfoliodetailsdraft',
+            token: this.memberSocketService.token,
+        };
+        return createMemberNodeRequest(this.memberSocketService, messageBody);
+    }
+
+    deleteSubPortfolioDraft(RN) {
+        const messageBody = {
+            RequestName: 'izndeletesubportfoliodetailsdraft',
+            token: this.memberSocketService.token,
+            RN: RN,
+        };
+        return createMemberNodeRequest(this.memberSocketService, messageBody);
     }
 }

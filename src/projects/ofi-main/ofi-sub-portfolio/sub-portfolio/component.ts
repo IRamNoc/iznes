@@ -29,8 +29,9 @@ import { FileDropComponent } from '@setl/core-filedrop';
 export class OfiSubPortfolioComponent implements OnDestroy {
     private connectedWalletId: number = 0;
     public addressList: Array<any>;
+    public addressListDraft: Array<any>;
     public tabDetail: Array<object>;
-    public oldsubProtifolioData: Array<object>;
+    public oldsubPortfolioData: Array<object>;
     public showFormModal: boolean = false;
     public showAddress: boolean = false;
     public currentAddress: string;
@@ -141,6 +142,17 @@ export class OfiSubPortfolioComponent implements OnDestroy {
 
                 this.currenciesItems = data;
             });
+
+        this.addressListDraft = [];
+        this.ofiSubPortfolioReqService
+        .getSubPortfolioBankingDetailsDraft(this.connectedWalletId)
+        .then(result => {
+            console.log('result', result);
+            _.each(result[1].Data, data => this.addressListDraft.push(data));
+        });
+        console.log(`this.connectedWalletId`, this.connectedWalletId);
+        console.log(`this.addressListDraft`, this.addressListDraft);
+
     }
 
     setupFormGroup() {
@@ -187,12 +199,12 @@ export class OfiSubPortfolioComponent implements OnDestroy {
     }
 
     handleEdit(address): void {
-        this.oldsubProtifolioData = [];
+        this.oldsubPortfolioData = [];
         this.setupFormGroup();
         const subPortfolio = this.addressList.find((subPortfolio) => {
             return subPortfolio.addr === address;
         });
-        this.oldsubProtifolioData = subPortfolio;
+        this.oldsubPortfolioData = subPortfolio;
 
         Object.keys(subPortfolio).forEach((item) => {
             if (this.tabDetail[0]['formControl'].controls[item]) {
@@ -280,7 +292,7 @@ export class OfiSubPortfolioComponent implements OnDestroy {
         const payload = {
             ...this.getSubPortfolioFormValue(),
             option: this.currentAddress,
-            oldSubportifolio: this.oldsubProtifolioData,
+            oldSubportfolio: this.oldsubPortfolioData,
         };
 
         const asyncTaskPipe = this.ofiSubPortfolioReqService.updateSubPortfolio(payload);
