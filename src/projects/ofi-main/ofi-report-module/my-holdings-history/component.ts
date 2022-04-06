@@ -249,7 +249,6 @@ export class MyHoldingsHistoryComponent implements OnInit, OnDestroy {
             const data = d.toJS();
 
             this.holdingList = data;
-            this.holdingListPreFiltered = this.createArrayForEachCalendarDay(data);
             this.holdingListFiltered = [];
             
             // get investor list from holding list
@@ -471,6 +470,7 @@ export class MyHoldingsHistoryComponent implements OnInit, OnDestroy {
             investorInInvestorFunds: this.searchForm.controls['investorInInvestorFunds'].value,
         }
 
+        this.holdingListPreFiltered = this.createArrayForEachCalendarDay(this.holdingList, params.dateTo);
         const holdingList = this.holdingListPreFiltered;
         
         holdingListPrep = _.reduce(holdingList, (result, list) => {
@@ -566,7 +566,7 @@ export class MyHoldingsHistoryComponent implements OnInit, OnDestroy {
         }
     }
 
-    createArrayForEachCalendarDay(holdingList) {
+    createArrayForEachCalendarDay(holdingList, dateTo) {
         if (!holdingList.length) return [];
 
         const formatHoldingListPrep = [];
@@ -574,10 +574,11 @@ export class MyHoldingsHistoryComponent implements OnInit, OnDestroy {
 
         // get lowest and highest order dates
         const firstOrder = _.minBy(holdingList, 'orderDate');
-        const lastOrder = _.maxBy(holdingList, 'orderDate');
+
+        const lastDate = dateTo !== null ? moment(dateTo) : moment(Date.now());
 
         // get all dates between dateFrom and dateTo
-        const dateList = this.getDaysBetweenDates(moment(firstOrder.orderDate), moment(lastOrder.orderDate));
+        const dateList = this.getDaysBetweenDates(moment(firstOrder.orderDate), lastDate);
 
         // get unique list of differents investors
         holdingList.forEach(it => {
