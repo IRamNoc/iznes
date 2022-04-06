@@ -416,28 +416,30 @@ export class MyHoldingsHistoryComponent implements OnInit, OnDestroy {
     }
 
     exportHolding() {
-        const exportData = _.map(this.holdingListFiltered, (item) => {
-            const parsedNavPrice = item.navPrice ? this.moneyValue.transform(item.navPrice, 4) : '';
-            const parsedQuantity = this.moneyValue.transform(item.quantity, 5);
-            return {
-                'Asset Management Company': item.companyName,
-                'Fund Name': item.fundName,
-                'Share Name': item.fundShareName,
-                'ISIN': item.isin,
-                'Currency': item.currency,
-                'Portfolio Manager': item.portfolioManager,
-                'Investor': item.investor,
-                'Portfolio': item.investorWalletName,
-                'Date': item.date,
-                'Quantity': this.decimalSeparator === 'dot' ? parsedQuantity : parsedQuantity.replace('.', ','),
-                'NAV': this.decimalSeparator === 'dot' ? parsedNavPrice : parsedNavPrice.replace('.', ','),
-                'NAV Date': item.navDate,
-                'AUI': item.navPrice ? (item.navPrice * item.quantity) : '',
-            }
-        });
+       const header = 'Asset Management Company;Fund Name;Share Name;ISIN;Currency;Portfolio Manager;Investor;Portfolio;Date;Quantity;NAV;NAV Date;AUI\n';
+       let exportData = header;
 
-        const separator = this.dataSeparator === 'semicolon' ? ';' : ',';        
-        const data = json2csv.parse(exportData, { delimiter: separator, quote: '' });
+       this.holdingListFiltered.forEach(item => {
+            const parsedNavPrice = item.navPrice ? (item.navPrice).toString() : '';
+            const parsedQuantity = (item.quantity).toString()  || '';
+
+            exportData += `${item.companyName || ''};`;
+            exportData += `${item.fundName  || ''};`;
+            exportData += `${item.fundShareName || ''};`;
+            exportData += `${item.isin || ''};`;
+            exportData += `${item.currency || ''};`;
+            exportData += `${item.portfolioManager || ''};`;
+            exportData += `${item.investor || ''};`;
+            exportData += `${item.investorWalletName || ''};`;
+            exportData += `${item.date || ''};`;
+            exportData += `${this.decimalSeparator === 'dot' ? parsedQuantity : parsedQuantity.replace('.', ',')};`;
+            exportData += `${this.decimalSeparator === 'dot' ? parsedNavPrice : parsedNavPrice.replace('.', ',')};`;
+            exportData += `${item.navDate || ''};`;
+            exportData += `${item.navPrice ? (item.navPrice * item.quantity) : ''}`;
+            exportData += `\n`;
+       });
+
+        const data = this.dataSeparator === 'semicolon' ? exportData : exportData.replace(';', ',');        
         const element = document.createElement('a');
 
         element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(data));
