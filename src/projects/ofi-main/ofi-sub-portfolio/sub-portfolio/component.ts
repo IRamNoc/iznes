@@ -288,36 +288,12 @@ export class OfiSubPortfolioComponent implements OnDestroy {
     }
 
       /**
-     * Save a new Sub-portfolio
+     * Save a new Draft
      * @return void
      */
        saveSubPortfolioDraft() {
         const payload = this.getSubPortfolioFormValue();
         const asyncTaskPipe = this.ofiSubPortfolioReqService.insertSubPortfolioDraft(payload);
-
-        this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
-            asyncTaskPipe,
-            (labelResponse) => {
-                const message = _.get(labelResponse, '[1].Data[0].Message', 'OK');
-                this.ofiSubPortfolioService.resetRequestedFlags();
-                if (message === 'OK') {
-                    this.handleLabelResponse(message, 'created');
-                    this.toggleFormModal();
-
-                    // update the default home page to '/home'
-                    if (this.isFirstAddress()) {
-                        this.myUserService.updateHomePage('/home');
-                    }
-                }
-            },
-            (response) => {
-                const message = _.get(response, '[1].Data[0].Message', 'Fail');
-                if (message === 'Duplicate Label') {
-                    this.handleLabelResponse(message, 'created');
-                } else {
-                    this.alertsService.generate('error', this.translate.translate('Error creating draft'));
-                }
-            }));
     }
 
     /**
@@ -349,7 +325,7 @@ export class OfiSubPortfolioComponent implements OnDestroy {
     }
 
     /**
-     * Update an existing Sub-portfolio
+     * Update an existing Draft
      * @return void
      */
      updateSubPortfolioDraft() {
@@ -360,20 +336,6 @@ export class OfiSubPortfolioComponent implements OnDestroy {
         };
 
         const asyncTaskPipe = this.ofiSubPortfolioReqService.updateSubPortfolioDraft(payload);
-
-        this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
-            asyncTaskPipe,
-            (labelResponse) => {
-                const message = _.get(labelResponse, '[1].Data[0].Message', 'OK');
-                this.ofiSubPortfolioService.resetRequestedFlags();
-                if (message === 'OK') {
-                    this.handleLabelResponse(message, 'updated');
-                    this.toggleFormModal();
-                }
-            },
-            () => {
-                this.alertsService.generate('error', this.translate.translate('Error updating draft'));
-            }));
     }
 
     /**
