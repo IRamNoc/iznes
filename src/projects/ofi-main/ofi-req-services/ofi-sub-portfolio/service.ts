@@ -76,7 +76,7 @@ export class OfiSubPortfolioReqService {
             RequestName: 'izninsertsubportfoliodetailsdraft',
             token: this.memberSocketService.token,
         };
-        return createMemberNodeRequest(this.memberSocketService, messageBody);
+        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
     }
 
     updateSubPortfolioDraft(data: SubPortfolioDataDraft) {
@@ -85,7 +85,7 @@ export class OfiSubPortfolioReqService {
             RequestName: 'iznupdatesubportfoliodetailsdraft',
             token: this.memberSocketService.token,
         };
-        return createMemberNodeRequest(this.memberSocketService, messageBody);
+        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
     }
 
     deleteSubPortfolioDraft(RN) {
@@ -94,6 +94,6 @@ export class OfiSubPortfolioReqService {
             token: this.memberSocketService.token,
             RN: RN,
         };
-        return createMemberNodeRequest(this.memberSocketService, messageBody);
+        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
     }
 }
