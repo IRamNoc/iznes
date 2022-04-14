@@ -228,11 +228,11 @@ export class OfiSubPortfolioComponent implements OnDestroy {
         this.showFormModal = true;
     }
 
-    handleEditDraft(address): void {
+    handleEditDraft(RN): void {
         this.oldsubPortfolioData = [];
         this.setupFormGroup();
         const subPortfolio = this.addressListDraft.find((subPortfolio) => {
-            return subPortfolio.addr === address;
+            return subPortfolio.addr === RN;
         });
         this.oldsubPortfolioData = subPortfolio;
 
@@ -241,7 +241,7 @@ export class OfiSubPortfolioComponent implements OnDestroy {
                 this.tabDetail[0]['formControl'].controls[item].patchValue(subPortfolio[item]);
             }
         });
-        this.tabDetail[0]['formControl'].controls.hashIdentifierCode.patchValue(address);
+        this.tabDetail[0]['formControl'].controls.hashIdentifierCode.patchValue(RN); 
         this.tabDetail[0]['formControl'].controls.emailtransactionnotice.patchValue(subPortfolio.emailtransactnotice);
         this.tabDetail[0]['formControl'].controls.emailcertificationbookentry.patchValue(subPortfolio.emailcertificationbookentry);
         this.tabDetail[0]['formControl'].controls.accountCurrency.patchValue([_.find(this.currenciesItems, { id: subPortfolio.accountCurrency })]);
@@ -251,7 +251,7 @@ export class OfiSubPortfolioComponent implements OnDestroy {
         this.file.fileData = subPortfolio.bankIdentificationStatement;
         this.file.control.patchValue(subPortfolio.bankIdentificationStatement.fileID);
 
-        this.currentAddress = address;
+        this.currentAddress = RN;
         this.editForm = false;
         this.editDraft = true;
         this.showFormModal = true;
@@ -461,17 +461,17 @@ export class OfiSubPortfolioComponent implements OnDestroy {
 
      /**
      * Handles deleting an existing Draft
-     * @param address
+     * @param RN
      * @return void
      */
-      handleDeleteDraft(address) {
-        const index = this.addressListDraft.findIndex(x => x.addr === address);
+      handleDeleteDraft(RN) {
+        const index = this.addressListDraft.findIndex(x => x.addr === RN);
         const addressLabel = this.addressListDraft[index].label;
         if (index > -1) {
             this.confirmationService.create(
                 this.translate.translate(
                     'Delete @label@ - @iban@',
-                    { label: this.addressList[index].label, iban: this.addressListDraft[index].iban },
+                    { label: this.addressListDraft[index].label, iban: this.addressListDraft[index].iban },
                 ),
                 this.translate.translate('Are you sure you want to delete this draft?'),
                 {
@@ -482,8 +482,7 @@ export class OfiSubPortfolioComponent implements OnDestroy {
             ).subscribe((ans) => {
                 if (ans.resolved) {
                     const asyncTaskPipe = this.ofiSubPortfolioReqService.deleteSubPortfolioDraft({
-                        walletId: this.connectedWalletId,
-                        address,
+                        RN,
                     });
 
                     this.ngRedux.dispatch(SagaHelper.runAsync(

@@ -7,10 +7,13 @@ import {
     Subportfolio,
     OfiUpdateSubPortfolioData,
     OfiDeleteSubPortfolioData,
+    OfiDeleteSubPortfolioDraftData,
+    OfiDeleteSubPortfolioDraftRequestBody,
     OfiGetSubPortfolioBankingDetailsData,
     OfiDeleteSubPortfolioRequestBody,
     OfiGetSubPortfolioBankingDetailsBody,
     SubPortfolioDataDraft,
+    OfiUpdateSubPortfolioDraftData,
 } from './model';
 
 @Injectable()
@@ -79,7 +82,7 @@ export class OfiSubPortfolioReqService {
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
     }
 
-    updateSubPortfolioDraft(data: SubPortfolioDataDraft) {
+    updateSubPortfolioDraft(data: OfiUpdateSubPortfolioDraftData) {
         const messageBody = {
             ...data,
             RequestName: 'iznupdatesubportfoliodetailsdraft',
@@ -88,12 +91,22 @@ export class OfiSubPortfolioReqService {
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
     }
 
-    deleteSubPortfolioDraft(RN) {
-        const messageBody = {
+    // deleteSubPortfolioDraft(RN) {
+    //     const messageBody = {
+    //         RequestName: 'izndeletesubportfoliodetailsdraft',
+    //         token: this.memberSocketService.token,
+    //         RN: RN,
+    //     };
+    //     return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+    // }
+
+    deleteSubPortfolioDraft(data: OfiDeleteSubPortfolioDraftData): any {
+        const messageBody: OfiDeleteSubPortfolioDraftRequestBody = {
             RequestName: 'izndeletesubportfoliodetailsdraft',
             token: this.memberSocketService.token,
-            RN: RN,
+            RN: data.RN,
         };
+
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
     }
 }
