@@ -151,7 +151,7 @@
 
 <clr-modal [(clrModalOpen)]="showFormModal" [clrModalSize]="'xl'" id="subportfolio-form-modal">
     <h3 id="override_header" class="modal-title">{{ ((editForm) ?
-            ((editDraft) ? '' : 'Edit Sub-portfolio')
+            ('Edit Sub-portfolio')
             : ((editDraft) ? 'Edit Draft' : 'Create New Sub-portfolio'))}} </h3>
     <div class="modal-body">
         <form class="p-0" [formGroup]="this.tabDetail[0]['formControl']">
