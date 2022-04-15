@@ -115,25 +115,25 @@
                     <span>{{ 'Actions' | translate }}</span>
                 </clr-dg-column>
 
-                <clr-dg-row *clrDgItems="let address of addressListDraft;">
-                    <clr-dg-cell class="clickable" (click)="showAddress = true; currentAddress = address.addr">
-                        {{ address.label }}
+                <clr-dg-row *clrDgItems="let item of addressListDraft;">
+                    <clr-dg-cell class="clickable" (click)="show_a(item);showAddress = true; currentAddress = item.RN">
+                        {{ item.label }}
                     </clr-dg-cell>
                     <clr-dg-cell>
-                        {{ address.accountLabel }}
+                        {{ item.accountLabel }}
                     </clr-dg-cell>
                     <clr-dg-cell>
-                        {{ address.userDraftName }}
+                        {{ item.userDraftName }}
                     </clr-dg-cell>
                     <clr-dg-cell>
-                        {{ address.dateEntered }}
+                        {{ item.dateEntered }}
                     </clr-dg-cell>
                     <clr-dg-cell class="actions">
                         <div class="btn-group btn-sm">
-                            <button (click)="handleEditDraft(address.addr)" class="btn btn-success">
+                            <button (click)="handleEditDraft(item)" class="btn btn-success">
                                 <i class="fa fa-edit"></i> <span>{{ 'Edit Draft' | translate }}</span>
                             </button>
-                            <button (click)="handleDeleteDraft(address.addr)" class="btn btn-danger">
+                            <button (click)="handleDeleteDraft(item)" class="btn btn-danger">
                                 <i class="fa fa-trash-o"></i> <span>{{ 'Delete Draft' | translate }}</span>
                             </button>
                         </div>

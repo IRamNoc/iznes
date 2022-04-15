@@ -32,6 +32,7 @@ export class OfiSubPortfolioComponent implements OnDestroy {
     public addressListDraft: Array<any>;
     public tabDetail: Array<object>;
     public oldsubPortfolioData: Array<object>;
+    public oldsubPortfolioDataDraft: Array<object>;
     public showFormModal: boolean = false;
     public showAddress: boolean = false;
     public currentAddress: string;
@@ -228,20 +229,20 @@ export class OfiSubPortfolioComponent implements OnDestroy {
         this.showFormModal = true;
     }
 
-    handleEditDraft(RN): void {
-        this.oldsubPortfolioData = [];
+    handleEditDraft(address): void {
+        this.oldsubPortfolioDataDraft = [];
         this.setupFormGroup();
         const subPortfolio = this.addressListDraft.find((subPortfolio) => {
-            return subPortfolio.addr === RN;
+            return subPortfolio.addr === address;
         });
-        this.oldsubPortfolioData = subPortfolio;
+        this.oldsubPortfolioDataDraft = subPortfolio;
 
         Object.keys(subPortfolio).forEach((item) => {
             if (this.tabDetail[0]['formControl'].controls[item]) {
                 this.tabDetail[0]['formControl'].controls[item].patchValue(subPortfolio[item]);
             }
         });
-        this.tabDetail[0]['formControl'].controls.hashIdentifierCode.patchValue(RN); 
+        this.tabDetail[0]['formControl'].controls.hashIdentifierCode.patchValue(RN);
         this.tabDetail[0]['formControl'].controls.emailtransactionnotice.patchValue(subPortfolio.emailtransactnotice);
         this.tabDetail[0]['formControl'].controls.emailcertificationbookentry.patchValue(subPortfolio.emailcertificationbookentry);
         this.tabDetail[0]['formControl'].controls.accountCurrency.patchValue([_.find(this.currenciesItems, { id: subPortfolio.accountCurrency })]);
@@ -347,7 +348,7 @@ export class OfiSubPortfolioComponent implements OnDestroy {
                 if (message === 'Duplicate Label') {
                     this.handleLabelResponse(message, 'created');
                 } else {
-                    this.alertsService.generate('error', this.translate.translate('Error creating draft, please fill out the Sub-Portfolio Name')); 
+                    this.alertsService.generate('error', this.translate.translate('Error creating draft, please fill out the Sub-Portfolio Name'));
 
                 }
             }));
@@ -389,7 +390,7 @@ export class OfiSubPortfolioComponent implements OnDestroy {
         const payload = {
             ...this.getSubPortfolioFormValue(),
             option: this.currentAddress,
-            oldSubportifolio: this.oldsubPortfolioData,
+            oldSubportifolioDraft: this.oldsubPortfolioDataDraft,
         };
         const asyncTaskPipe = this.ofiSubPortfolioReqService.updateSubPortfolioDraft(payload);
 
@@ -461,17 +462,16 @@ export class OfiSubPortfolioComponent implements OnDestroy {
 
      /**
      * Handles deleting an existing Draft
-     * @param RN
+     * @param address
      * @return void
      */
-      handleDeleteDraft(RN) {
-        const index = this.addressListDraft.findIndex(x => x.addr === RN);
-        const addressLabel = this.addressListDraft[index].label;
-        if (index > -1) {
+      handleDeleteDraft(item) {
+        // const index = this.addressListDraft.findIndex(x => x.addr === address);
+        // const addressLabel = this.addressListDraft[index].label;
+        if (item) {
             this.confirmationService.create(
                 this.translate.translate(
-                    'Delete @label@ - @iban@',
-                    { label: this.addressListDraft[index].label, iban: this.addressListDraft[index].iban },
+                    'Delete Draft'
                 ),
                 this.translate.translate('Are you sure you want to delete this draft?'),
                 {
@@ -480,27 +480,28 @@ export class OfiSubPortfolioComponent implements OnDestroy {
                     btnClass: 'error',
                 },
             ).subscribe((ans) => {
+                console.log('after confirmation', item)
                 if (ans.resolved) {
-                    const asyncTaskPipe = this.ofiSubPortfolioReqService.deleteSubPortfolioDraft({
-                        RN,
-                    });
+                    const asyncTaskPipe = this.ofiSubPortfolioReqService.deleteSubPortfolioDraft(
+                        item.RN,
+                    );
 
-                    this.ngRedux.dispatch(SagaHelper.runAsync(
-                        [DELETE_WALLET_LABEL, DELETE_SUB_PORTFOLIO_BANKING_DETAIL],
-                        [],
-                        asyncTaskPipe,
-                        {},
-                        (response) => {
-                             (String(_.get(response, '[1].Data.balance', '0')) === '0') 
-                                this.ofiSubPortfolioService.resetRequestedFlags();
-                                this.alertsService.generate('success', this.translate.translate(
-                                    'Your draft @addressLabel@ has been successfully deleted. This may take a moment to update.',
-                                    { addressLabel }));
-                            
-                        },
-                        (labelResponse) => {
-                            this.alertsService.generate('error', this.translate.translate('Error deleting draft'));
-                        }));
+                    // this.ngRedux.dispatch(SagaHelper.runAsync(
+                    //     [DELETE_WALLET_LABEL, DELETE_SUB_PORTFOLIO_BANKING_DETAIL],
+                    //     [],
+                    //     asyncTaskPipe,
+                    //     {},
+                    //     (response) => {
+                    //          (String(_.get(response, '[1].Data.balance', '0')) === '0')
+                    //             this.ofiSubPortfolioService.resetRequestedFlags();
+                    //             this.alertsService.generate('success', this.translate.translate(
+                    //                 'Your draft @addressLabel@ has been successfully deleted. This may take a moment to update.',
+                    //                 { addressLabel }));
+
+                    //     },
+                    //     (labelResponse) => {
+                    //         this.alertsService.generate('error', this.translate.translate('Error deleting draft'));
+                    //     }));
                 }
             });
         }
@@ -610,4 +611,6 @@ export class OfiSubPortfolioComponent implements OnDestroy {
         }
         return null;
     }
+
+    show_a(a){console.log(a)}
 }

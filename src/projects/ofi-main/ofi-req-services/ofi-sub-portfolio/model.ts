@@ -56,12 +56,6 @@ export interface OfiDeleteSubPortfolioRequestBody extends OfiMemberNodeBody {
     address: string;
 }
 
-export interface OfiDeleteSubPortfolioDraftRequestBody extends OfiMemberNodeBody {
-    token: string;
-    walletId: number;
-    RN: string;
-}
-
 export interface OfiGetSubPortfolioBankingDetailsBody extends OfiMemberNodeBody {
     token: string;
     walletId: number;
@@ -72,20 +66,9 @@ export interface OfiUpdateSubPortfolioData extends Subportfolio {
     oldSubportifolio: any;
 }
 
-export interface OfiUpdateSubPortfolioDraftData extends Subportfolio {
-    option: string;
-    oldSubportifolio: any;
-    RN: string;
-}
-
 export interface OfiDeleteSubPortfolioData {
     walletId: number;
     address: string;
-}
-
-export interface OfiDeleteSubPortfolioDraftData {
-    walletId: number;
-    RN: string;
 }
 
 export interface OfiGetSubPortfolioBankingDetailsData {
