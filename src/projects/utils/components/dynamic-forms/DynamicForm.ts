@@ -23,6 +23,8 @@ export interface FormItem {
     required: boolean;
     allowClear?: boolean;
     title?: string;
+    hasHelpbox?: boolean;
+    helpboxContent?: string;
 
     listItems?: {
         id: string | number;
@@ -59,6 +61,7 @@ export enum FormItemStyle {
     BreakOnAfter,
     WidthThird,
     WidthFourth,
+    TitleMargin,
 }
 
 export interface FormItemDropdown {

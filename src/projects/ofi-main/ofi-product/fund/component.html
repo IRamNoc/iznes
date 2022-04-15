@@ -765,6 +765,37 @@
                                                     <label for="isEuDirective2">{{ 'No' | translate }}</label>
                                                 </div>
                                             </div>
+
+                                            <div class="form-group required-field col-sm-6">
+                                                <label class="control-label">{{ 'Transmission of the collection to an external aggregator' | translate }}</label>
+                                                <div class="radio-inline">
+                                                    <input type="radio"
+                                                            name="externalTransmissionCollection"
+                                                            id="externalTransmissionCollection"
+                                                            formControlName="externalTransmissionCollection"
+                                                            value="{{enums.externalTransmissionCollection.None}}"
+                                                            [disabled]="isAdmin()">
+                                                    <label for="externalTransmissionCollection">{{ 'None' | translate }}</label>
+                                                </div>
+                                                <div class="radio-inline">
+                                                    <input type="radio"
+                                                            name="externalTransmissionCollection"
+                                                            id="externalTransmissionCollection2"
+                                                            formControlName="externalTransmissionCollection"
+                                                            value="{{enums.externalTransmissionCollection.Global}}"
+                                                            [disabled]="isAdmin()">
+                                                    <label for="externalTransmissionCollection2">{{ 'Global' | translate }}</label>
+                                                </div>
+                                                <div class="radio-inline">
+                                                    <input type="radio"
+                                                            name="externalTransmissionCollection"
+                                                            id="externalTransmissionCollection3"
+                                                            formControlName="externalTransmissionCollection"
+                                                            value="{{enums.externalTransmissionCollection.Detailled}}"
+                                                            [disabled]="isAdmin()">
+                                                    <label for="externalTransmissionCollection3">{{ 'Detailled' | translate }}</label>
+                                                </div>
+                                            </div>
                                         </div>
                                         <div class="row" *ngIf="fundForm.controls['isEuDirective'].value === enums.isEuDirective.YES.toString()">
                                             <div class="form-group required-field col-sm-6">
@@ -1095,7 +1126,7 @@
 
                                             <div class="form-group col-sm-6">
                                                 <label class="control-label" for="investmentObjective">{{ 'Investment Objective' | translate }}</label>
-                                                <textarea name="investmentObjective" id="investmentObjective"
+                                                <textarea name="investmentObjective" id="investmentObjective" maxlength="2500"
                                                     formControlName="investmentObjective" [disabled]="isAdmin()"></textarea>
                                             </div>
                                         </div>

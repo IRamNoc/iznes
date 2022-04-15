@@ -164,6 +164,9 @@ export class ManagagementCompanyService {
             emailValidation: [
                 '',
             ],
+            mt502Email: [
+                '',
+            ],
             managementCompanyType: [[{id: 'common', 'text': 'Common'}]]
         });
     }

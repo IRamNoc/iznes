@@ -15,6 +15,8 @@ export const orderStatuses: SelectedItem[] = [
 
 export const orderTypes: SelectedItem[] = [
     { id: 0, text: 'All' },
+    { id: 1, text: 'Transfer In' },
+    { id: 2, text: 'Transfer Out' },
     { id: 3, text: 'Subscription' },
     { id: 4, text: 'Redemption' },
 ];

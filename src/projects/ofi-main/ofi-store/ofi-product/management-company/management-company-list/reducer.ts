@@ -87,6 +87,7 @@ function formatManagementCompanyDataResponse(rawCompanyData: Array<any>): Array<
                 signatureHash: item.get('signatureHash'),
                 externalEmail: item.get('externalEmail'),
                 emailValidation: item.get('emailValidation'),
+                mt502Email: item.get('mt502Email'),
             };
 
 
@@ -192,6 +193,7 @@ function handleGetInvestorManagementCompanyList(state: InvManagementCompanyListS
                 managementCompanyType: it.managementCompanyType,
                 externalEmail: it.externalEmail,
                 emailValidation: it.emailValidation,
+                mt502Email: it.mt502Email,
             });
 
             investorManagementCompanyList = investorManagementCompanyList.push(item);

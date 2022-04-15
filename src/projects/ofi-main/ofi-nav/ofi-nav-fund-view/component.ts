@@ -538,7 +538,7 @@ export class OfiNavFundView implements OnInit, OnDestroy {
     }
 
     navToFrontEndString(nav: number): string {
-        return this.moneyPipe.transform(this.numberConverterService.toFrontEnd(nav));
+        return this.moneyPipe.transform(this.numberConverterService.toFrontEnd(nav), 4);
     }
 
     private generateExportURL(url: string, isProd: boolean = true): string {

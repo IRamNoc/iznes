@@ -52,7 +52,7 @@ export class InvestFundFormService {
         const settlementDateTimeStr = immutableHelper.get(formValue, 'settlementDate', '') + ' ' +
             immutableHelper.get(shareMetaData, 'settlementTime', '');
         const settleTimeStamp = mDateHelper.dateStrToUnixTimestamp(settlementDateTimeStr, 'DD/MM/YYYY HH:mm') / 1000;
-        // should use settlement plus 30 day
+        // should use settlement plus 6 months
         const expirySecond = 2592000;
         const expiryTimeStamp = settleTimeStamp + expirySecond; // + 1min from settlement.
         const issuerAddress = immutableHelper.get(formValue, 'shareIssuerAddress', '');

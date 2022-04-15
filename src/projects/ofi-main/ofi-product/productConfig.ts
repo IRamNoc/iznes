@@ -130,6 +130,12 @@ export enum useDefaultHolidayMgmt {
     YES,
 }
 
+export enum externalTransmissionCollection {
+    None,
+    Global,
+    Detailled,
+}
+
 export const enums = {
     typeOfEuDirective,
     isFundStructure,
@@ -150,6 +156,7 @@ export const enums = {
     hasSwap,
     hasDurationHedge,
     useDefaultHolidayMgmt,
+    externalTransmissionCollection,
 };
 
 export const fundItems = {
@@ -644,10 +651,11 @@ export const fundItems = {
         ],
     },
     portfolioCurrencyHedgeItems: [
-        { id: 1, text: 'No Hedge' },
-        { id: 2, text: 'Full Portfolio Hedge' },
-        { id: 3, text: 'Currency overlay' },
-        { id: 4, text: 'Partial Hedge' },
+        { id: 1, text: 'No' },
+        { id: 2, text: 'Yes' },
+        { id: 3, text: 'Yes, full portfolio Hedge' },
+        { id: 4, text: 'Yes, partial Hedge' },
+        { id: 5, text: 'Yes, currency overlay' },
     ],
     classificationItems: [
         { id: 1, text: 'Equity' },
@@ -669,6 +677,7 @@ export const fundItems = {
         { id: 9, text: 'State Street Global Services France' },
         { id: 10, text: 'Arkéa Investment Services' },
         { id: 11, text: 'FI Partners' },
+        { id: 12, text: 'JP Morgan Administration Services (Ireland) Limited' },
     ],
     custodianBankItems: [
         { id: 1, text: 'Société Générale Securities Services France' },
@@ -683,6 +692,8 @@ export const fundItems = {
         // 10 => Generali
         // 11 => OFI AM
         { id: 12, text: 'CACEIS PERES' },
+        { id: 13, text: 'JP Morgan Bank (Ireland) plc' },
+        
     ],
     investmentManagerItems: [
         { id: 1, text: 'Allianz Global Investors' },
@@ -711,6 +722,7 @@ export const fundItems = {
         { id: 24, text: 'SMA Gestion' },
         { id: 25, text: 'Sycomore Asset Management' },
         { id: 26, text: 'Unigestion' },
+        { id: 27, text: 'BlackRock Investment Management (UK) Limited' },
     ],
     principalPromoterItems: [
         { id: 1, text: 'Allianz Global Investors' },
@@ -739,6 +751,7 @@ export const fundItems = {
         { id: 24, text: 'SMA Gestion' },
         { id: 25, text: 'Sycomore Asset Management' },
         { id: 26, text: 'Unigestion' },
+        { id: 27, text: 'BlackRock Investment Management (UK) Limited' },
     ],
     payingAgentItems: [
         { id: 1, text: 'Société Générale Securities Services France' },
@@ -751,6 +764,8 @@ export const fundItems = {
         { id: 8, text: 'State Street Bank Luxembourg' },
         { id: 9, text: 'State Street Global Services France' },
         { id: 10, text: 'Arkéa Banque Entreprises et Institutionnels' },
+        { id: 11, text: 'JP Morgan Administration Services (Ireland) Limited' },
+        { id: 12, text: 'IZNES' },
     ],
     investmentAdvisorItems: [
         { id: 1, text: 'Investment Advisor 1' },
@@ -767,6 +782,7 @@ export const fundItems = {
         { id: 1, text: 'PricewaterhouseCoopers France' },
         { id: 2, text: 'PricewaterhouseCoopers Luxembourg' },
         { id: 3, text: 'Grant Thornton' },
+        { id: 4, text: 'Ernst & Young' },
     ],
     taxAuditorItems: [
         { id: 1, text: 'Deloitte Luxembourg' },
@@ -777,6 +793,7 @@ export const fundItems = {
     legalAdvisorItems: [
         { id: 1, text: 'Arendt' },
         { id: 2, text: 'Elvinger Hoss Prussen' },
+        { id: 3, text: 'Matheson' },
     ],
     capitalPreservationPeriodItems: [
         { id: 1, text: 'Daily' },
@@ -790,9 +807,10 @@ export const fundItems = {
         { id: 9, text: 'None' },
     ],
     transferAgentItems: [
-        { id: 1, text: 'transfer agent 1' },
-        { id: 2, text: 'transfer agent 2' },
-        { id: 3, text: 'transfer agent 3' },
+        { id: 1, text: 'J.P Morgan Ireland' },
+        { id: 2, text: 'SGSS Luxembourg' },
+        { id: 3, text: 'CACEIS Bank Luxembourg' },
+        { id: 4, text: 'BPSS Luxembourg' },
     ],
     centralizingAgentItems: [
         { id: 1, text: 'Société Générale Securities Services France' },
@@ -806,6 +824,7 @@ export const fundItems = {
         { id: 9, text: 'State Street Global Services France' },
         { id: 10, text: 'Arkéa Investment Services' },
         { id: 11, text: 'La Française Asset Management' },
+        { id: 12, text: 'JP Morgan Administration Services (Ireland) Limited' },
     ],
 };
 

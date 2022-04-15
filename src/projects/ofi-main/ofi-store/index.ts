@@ -112,6 +112,9 @@ export {
     ofiSetHolderDetailRequested,
     ofiClearHolderDetailRequested,
     OFI_GET_SHARE_HOLDER_DETAIL,
+    OFI_SET_HOLDING_HISTORY_LIST,
+    ofiClearRequestedHoldingHistory,
+    ofiSetRequestedHoldingHistory,
 } from './ofi-reports';
 
 export {

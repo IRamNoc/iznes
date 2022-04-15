@@ -15,6 +15,7 @@ import { RequestCallback } from '../base/model';
 import { AccountAdminBaseService } from '../base/service';
 
 import {
+    GetMyUserTeamsRequest,
     ReadUserTeamsRequest,
     CreateUserTeamRequest,
     UpdateUserTeamRequest,
@@ -29,6 +30,29 @@ export class UserTeamsService extends AccountAdminBaseService {
                 private memberSocketService: MemberSocketService) {
         super(redux);
     }
+
+    /**
+     * Get My User Teams
+     *
+     * @param onSuccess
+     * @param onError
+     */
+    getMyUserTeams(onSuccess: RequestCallback, onError: RequestCallback): void {
+        const request: GetMyUserTeamsRequest = {
+          RequestName: 'getuserteams',
+          token: this.memberSocketService.token,
+        };
+
+        const asyncTaskPipe = createMemberNodeSagaRequest(this.memberSocketService, request);
+
+        this.callAccountAdminAPI(
+            asyncTaskPipe,
+            undefined,
+            undefined,
+            onSuccess,
+            onError
+        );
+}
 
     /**
      * Read User Teams
