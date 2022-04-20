@@ -296,13 +296,12 @@ export class OfiSubPortfolioComponent implements OnDestroy {
         const payload = this.getSubPortfolioFormValue();
         console.log("subPortfolio-Payload", payload);
         const asyncTaskPipe = this.ofiSubPortfolioReqService.saveNewSubPortfolio(payload);
-        // const item = //get the data of draft object here
+        const item =  //get the data of draft object here
         this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
             asyncTaskPipe,
             (labelResponse) => {
                 const message = _.get(labelResponse, '[1].Data[0].Message', 'OK');
-                payload.confirmation = 1;
-                this.confirmDeleteDraft(payload);
+                this.handleDeleteDraft(item);
                 this.ofiSubPortfolioService.resetRequestedFlags();
                 if (message === 'OK') {
                     this.handleLabelResponse(message, 'created');
@@ -475,7 +474,7 @@ export class OfiSubPortfolioComponent implements OnDestroy {
      * @param address
      * @return void
      */
-      confirmDeleteDraft(item) {
+      handleDeleteDraft(item) {
         // const index = this.addressListDraft.findIndex(x => x.addr === address);
         // const addressLabel = this.addressList[index].label;
         if (item) {
@@ -515,10 +514,8 @@ export class OfiSubPortfolioComponent implements OnDestroy {
                 }
             });
         }
-        handleDeleteDraft(item){
-            
-        }
     }
+    
 
     /**
      * Handles displaying alerts based on the request response
