@@ -242,7 +242,7 @@ export class OfiSubPortfolioComponent implements OnDestroy {
                 this.tabDetail[0]['formControl'].controls[item].patchValue(subPortfolio[item]);
             }
         });
-        this.tabDetail[0]['formControl'].controls.hashIdentifierCode.patchValue(RN);
+        this.tabDetail[0]['formControl'].controls.hashIdentifierCode.patchValue(address);
         this.tabDetail[0]['formControl'].controls.emailtransactionnotice.patchValue(subPortfolio.emailtransactnotice);
         this.tabDetail[0]['formControl'].controls.emailcertificationbookentry.patchValue(subPortfolio.emailcertificationbookentry);
         this.tabDetail[0]['formControl'].controls.accountCurrency.patchValue([_.find(this.currenciesItems, { id: subPortfolio.accountCurrency })]);
@@ -252,7 +252,7 @@ export class OfiSubPortfolioComponent implements OnDestroy {
         this.file.fileData = subPortfolio.bankIdentificationStatement;
         this.file.control.patchValue(subPortfolio.bankIdentificationStatement.fileID);
 
-        this.currentAddress = RN;
+        this.currentAddress = address;
         this.editForm = false;
         this.editDraft = true;
         this.showFormModal = true;
@@ -336,7 +336,7 @@ export class OfiSubPortfolioComponent implements OnDestroy {
                 if (message === 'OK') {
                     this.handleLabelResponseDraft(message, 'created');
                     this.toggleFormModal();
-
+                    this.initSubscriptions();
                     // update the default home page to '/home'
                     if (this.isFirstAddress()) {
                         this.myUserService.updateHomePage('/home');
@@ -344,6 +344,7 @@ export class OfiSubPortfolioComponent implements OnDestroy {
                 }
             },
             (response) => {
+                this.initSubscriptions();
                 const message = _.get(response, '[1].Data[0].Message', 'Fail');
                 if (message === 'Duplicate Label') {
                     this.handleLabelResponse(message, 'created');
@@ -467,7 +468,7 @@ export class OfiSubPortfolioComponent implements OnDestroy {
      */
       handleDeleteDraft(item) {
         // const index = this.addressListDraft.findIndex(x => x.addr === address);
-        // const addressLabel = this.addressListDraft[index].label;
+        // const addressLabel = this.addressList[index].label;
         if (item) {
             this.confirmationService.create(
                 this.translate.translate(
@@ -485,23 +486,23 @@ export class OfiSubPortfolioComponent implements OnDestroy {
                     const asyncTaskPipe = this.ofiSubPortfolioReqService.deleteSubPortfolioDraft(
                         item.RN,
                     );
+                    this.ngRedux.dispatch(SagaHelper.runAsync(
+                        [DELETE_WALLET_LABEL, DELETE_SUB_PORTFOLIO_BANKING_DETAIL],
+                        [],
+                        asyncTaskPipe,
+                        {},
+                        (response) => {
+                            this.initSubscriptions();
+                             (String(_.get(response, '[1].Data.balance', '0')) === '0')
+                                this.ofiSubPortfolioService.resetRequestedFlags();
+                                this.alertsService.generate('success', this.translate.translate(
+                                    'Your draft has been successfully deleted. This may take a moment to update.',
+                                    ));
 
-                    // this.ngRedux.dispatch(SagaHelper.runAsync(
-                    //     [DELETE_WALLET_LABEL, DELETE_SUB_PORTFOLIO_BANKING_DETAIL],
-                    //     [],
-                    //     asyncTaskPipe,
-                    //     {},
-                    //     (response) => {
-                    //          (String(_.get(response, '[1].Data.balance', '0')) === '0')
-                    //             this.ofiSubPortfolioService.resetRequestedFlags();
-                    //             this.alertsService.generate('success', this.translate.translate(
-                    //                 'Your draft @addressLabel@ has been successfully deleted. This may take a moment to update.',
-                    //                 { addressLabel }));
-
-                    //     },
-                    //     (labelResponse) => {
-                    //         this.alertsService.generate('error', this.translate.translate('Error deleting draft'));
-                    //     }));
+                        },
+                        (labelResponse) => {
+                            this.alertsService.generate('error', this.translate.translate('Error deleting draft'));
+                        }));
                 }
             });
         }

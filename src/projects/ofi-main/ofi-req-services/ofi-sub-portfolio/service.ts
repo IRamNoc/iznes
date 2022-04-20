@@ -94,7 +94,7 @@ export class OfiSubPortfolioReqService {
             token: this.memberSocketService.token,
             RN: RN,
         };
-        return createMemberNodeRequest(this.memberSocketService, messageBody);
+        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
     }
 
 }
