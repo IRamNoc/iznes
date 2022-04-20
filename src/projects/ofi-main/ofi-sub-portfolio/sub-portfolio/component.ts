@@ -36,6 +36,7 @@ export class OfiSubPortfolioComponent implements OnDestroy {
     public showFormModal: boolean = false;
     public showAddress: boolean = false;
     public currentAddress: string;
+    public currentAddressDraft: string;
     public editForm: boolean = false;
     public editDraft: boolean = false;
     public countries: any[] = this.translate.translate(fundItems.domicileItems);
@@ -230,11 +231,14 @@ export class OfiSubPortfolioComponent implements OnDestroy {
     }
 
     handleEditDraft(address): void {
+        console.log("test", address);
         this.oldsubPortfolioDataDraft = [];
         this.setupFormGroup();
+        console.log("addressDraft", this.addressListDraft);
         const subPortfolio = this.addressListDraft.find((subPortfolio) => {
-            return subPortfolio.addr === address;
+            return subPortfolio.RN === address.RN;
         });
+
         this.oldsubPortfolioDataDraft = subPortfolio;
 
         Object.keys(subPortfolio).forEach((item) => {
@@ -252,7 +256,7 @@ export class OfiSubPortfolioComponent implements OnDestroy {
         this.file.fileData = subPortfolio.bankIdentificationStatement;
         this.file.control.patchValue(subPortfolio.bankIdentificationStatement.fileID);
 
-        this.currentAddress = address;
+        this.currentAddressDraft = subPortfolio.RN;
         this.editForm = false;
         this.editDraft = true;
         this.showFormModal = true;
@@ -290,12 +294,15 @@ export class OfiSubPortfolioComponent implements OnDestroy {
      */
     saveSubPortfolio() {
         const payload = this.getSubPortfolioFormValue();
+        console.log("subPortfolio-Payload", payload);
         const asyncTaskPipe = this.ofiSubPortfolioReqService.saveNewSubPortfolio(payload);
-
+        // const item = //get the data of draft object here
         this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
             asyncTaskPipe,
             (labelResponse) => {
                 const message = _.get(labelResponse, '[1].Data[0].Message', 'OK');
+                payload.confirmation = 1;
+                this.confirmDeleteDraft(payload);
                 this.ofiSubPortfolioService.resetRequestedFlags();
                 if (message === 'OK') {
                     this.handleLabelResponse(message, 'created');
@@ -390,14 +397,16 @@ export class OfiSubPortfolioComponent implements OnDestroy {
      updateSubPortfolioDraft() {
         const payload = {
             ...this.getSubPortfolioFormValue(),
-            option: this.currentAddress,
-            oldSubportifolioDraft: this.oldsubPortfolioDataDraft,
+            RN: this.currentAddressDraft,
+            // oldSubportifolioDraft: this.oldsubPortfolioDataDraft,
         };
+        console.log("payload", payload);
         const asyncTaskPipe = this.ofiSubPortfolioReqService.updateSubPortfolioDraft(payload);
 
         this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
             asyncTaskPipe,
             (labelResponse) => {
+                this.initSubscriptions();
                 const message = _.get(labelResponse, '[1].Data[0].Message', 'OK');
                 this.ofiSubPortfolioService.resetRequestedFlags();
                 if (message === 'OK') {
@@ -466,7 +475,7 @@ export class OfiSubPortfolioComponent implements OnDestroy {
      * @param address
      * @return void
      */
-      handleDeleteDraft(item) {
+      confirmDeleteDraft(item) {
         // const index = this.addressListDraft.findIndex(x => x.addr === address);
         // const addressLabel = this.addressList[index].label;
         if (item) {
@@ -505,6 +514,9 @@ export class OfiSubPortfolioComponent implements OnDestroy {
                         }));
                 }
             });
+        }
+        handleDeleteDraft(item){
+            
         }
     }
 
