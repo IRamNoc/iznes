@@ -116,7 +116,7 @@
                 </clr-dg-column>
 
                 <clr-dg-row *clrDgItems="let item of addressListDraft;">
-                    <clr-dg-cell class="clickable" (click)="show_a(item);showAddress = true; currentAddressDraft = item.RN">
+                    <clr-dg-cell class="clickable" (click)="show_a(item);showAddress = false; currentAddressDraft = item.RN">
                         {{ item.label }}
                     </clr-dg-cell>
                     <clr-dg-cell>
