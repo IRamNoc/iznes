@@ -46,7 +46,6 @@ export class DynamicFormComponent implements OnInit {
     }
 
     ngOnInit() {
-        console.log(this.typeData,"typeData")
     }
 
     private generateForm(): void {

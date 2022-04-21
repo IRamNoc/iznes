@@ -8,7 +8,7 @@
                         <div *ngIf="model[item].title">
                             <p><strong>{{ model[item].title | translate }}</strong></p>
                         </div>
-                        <div style="display: flex;">
+                        <div [ngClass]="(typeData=='sub' && model[item].label=='Reimbursement of the odd lots') ? 'labelIcon' : ''">
                         <label *ngIf="!model[item].noLabel" class="control-label" [class.hasTitle]="model[item].title" [class.required-field]="model[item].required" for="{{item}}">{{ model[item].label | translate }} 
                            <clr-signpost *ngIf="model[item].hasHelpbox" style="position: absolute !important; top: -15px !important; margin-left: 10px !important;">
                                 <clr-signpost-content *clrIfOpen>
@@ -16,8 +16,8 @@
                                 </clr-signpost-content>
                             </clr-signpost>
                         </label>
-                        <clr-icon class="alert-icon status_info" shape="info-standard" *ngIf="model[item].label=='Reimbursement of the odd lots'" (click)="showReimbursementInfo()"></clr-icon>
-                        <div class="alert alert-info alert-sm flex-items-xs-middle" *ngIf="isShowReimbursement && model[item].label=='Reimbursement of the odd lots'">
+                        <clr-icon class="status_info" size="md" shape="info-standard" *ngIf="model[item].label=='Reimbursement of the odd lots'" (click)="showReimbursementInfo()"></clr-icon>
+                        <div class="alert alert-info alert-sm flex-items-xs-middle alert-popup" *ngIf="isShowReimbursement && model[item].label=='Reimbursement of the odd lots'">
                             <div class="alert-items">
                                 <div class="alert-item static">
                                     <div class="alert-text">{{'Available only for subscriptions in amount, when instruction payments are sent on the cut-off date (unknown NAV).' | translate }}</div>
@@ -204,10 +204,9 @@
                                             <ng-container *ngFor="let radiobutton of model[item].radioOptions">
                                                 <div class="reimbursement-radio">
                                             <input type="radio"
-                                                   id="opt_{{radiobutton.key}}"
+                                                   name="{{item}}"
                                                    formControlName="{{item}}" 
-                                                   value="{{radiobutton.value}}"
-                                                   [checked]="radiobutton.value=='No' ? 'true' : 'false'"                                                  
+                                                   value="{{radiobutton.value}}"                                                  
                                                    >
                                             <label>
                                                 {{radiobutton.key | translate}}

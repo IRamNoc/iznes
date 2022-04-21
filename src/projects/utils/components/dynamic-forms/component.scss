@@ -141,4 +141,21 @@
 }
 .status_info{
     color: #24a0ed;
+    margin-left: 0.6rem;
+}
+.labelIcon{
+    display: flex;
+    width: auto;
+    position: relative;
+    & label{
+        white-space: nowrap;
+    }
+}
+.alert-popup{
+    position: absolute;
+    top:50%;
+    left: 100%;
+    transform: translateY(-50%);
+    width: 13.2rem;
+    background-color: #fff;
 }
