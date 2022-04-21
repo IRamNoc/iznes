@@ -150,11 +150,8 @@ export class OfiSubPortfolioComponent implements OnDestroy {
         this.ofiSubPortfolioReqService
         .getSubPortfolioBankingDetailsDraft(this.connectedWalletId)
         .then(result => {
-            console.log('result', result);
             _.each(result[1].Data, data => this.addressListDraft.push(data));
         });
-        console.log(`this.connectedWalletId`, this.connectedWalletId);
-        console.log(`this.addressListDraft`, this.addressListDraft);
 
     }
 
@@ -231,10 +228,8 @@ export class OfiSubPortfolioComponent implements OnDestroy {
     }
 
     handleEditDraft(address): void {
-        console.log("test", address);
         this.oldsubPortfolioDataDraft = [];
         this.setupFormGroup();
-        console.log("addressDraft", this.addressListDraft);
         const subPortfolio = this.addressListDraft.find((subPortfolio) => {
             return subPortfolio.RN === address.RN;
         });
@@ -297,16 +292,12 @@ export class OfiSubPortfolioComponent implements OnDestroy {
             ...this.getSubPortfolioFormValue(),
             RN: this.currentAddressDraft,
         };
-        console.log("subPortfolio-Payload", payload);
         const asyncTaskPipe = this.ofiSubPortfolioReqService.saveNewSubPortfolio(payload);
-        // const item = this.addressListDraft; //get the data of draft object here
         this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
             asyncTaskPipe,
             (labelResponse) => {
                 const message = _.get(labelResponse, '[1].Data[0].Message', 'OK');
                 this.handleDeleteDraftValidation(payload);
-                console.log("draftData", payload);
-
                 this.ofiSubPortfolioService.resetRequestedFlags();
                 if (message === 'OK') {
                     this.handleLabelResponse(message, 'created');
@@ -329,14 +320,13 @@ export class OfiSubPortfolioComponent implements OnDestroy {
     }
 
    /**
-     * Save Draft
+     * Save a new Draft
      * @return void
      */
     saveSubPortfolioDraft() {
         const payload = {
             ...this.getSubPortfolioFormValue(),
         };
-        console.log("payload", payload);
         const asyncTaskPipe = this.ofiSubPortfolioReqService.insertSubPortfolioDraft(payload);
 
         this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
@@ -402,9 +392,7 @@ export class OfiSubPortfolioComponent implements OnDestroy {
         const payload = {
             ...this.getSubPortfolioFormValue(),
             RN: this.currentAddressDraft,
-            // oldSubportifolioDraft: this.oldsubPortfolioDataDraft,
         };
-        console.log("payload", payload);
         const asyncTaskPipe = this.ofiSubPortfolioReqService.updateSubPortfolioDraft(payload);
 
         this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
@@ -480,8 +468,6 @@ export class OfiSubPortfolioComponent implements OnDestroy {
      * @return void
      */
       handleDeleteDraft(item) {
-        // const index = this.addressListDraft.findIndex(x => x.addr === address);
-        // const addressLabel = this.addressList[index].label;
         if (item) {
             this.confirmationService.create(
                 this.translate.translate(
@@ -494,7 +480,6 @@ export class OfiSubPortfolioComponent implements OnDestroy {
                     btnClass: 'error',
                 },
             ).subscribe((ans) => {
-                console.log('after confirmation', item)
                 if (ans.resolved) {
                     const asyncTaskPipe = this.ofiSubPortfolioReqService.deleteSubPortfolioDraft(
                         item.RN,
@@ -522,15 +507,12 @@ export class OfiSubPortfolioComponent implements OnDestroy {
     }
 
      /**
-     * Handles deleting an existing Draft
+     * Handles deleting automatically a draft after validation
      * @param address
      * @return void
      */
       handleDeleteDraftValidation(item) {
-        // const index = this.addressListDraft.findIndex(x => x.addr === address);
-        // const addressLabel = this.addressList[index].label;
         if (item) {
-            
                     const asyncTaskPipe = this.ofiSubPortfolioReqService.deleteSubPortfolioDraft(
                         item.RN,
                     );
@@ -543,15 +525,10 @@ export class OfiSubPortfolioComponent implements OnDestroy {
                             this.initSubscriptions();
                              (String(_.get(response, '[1].Data.balance', '0')) === '0')
                                 this.ofiSubPortfolioService.resetRequestedFlags();
-                                // this.alertsService.generate('success', this.translate.translate(
-                                //     'Your draft has been successfully deleted. This may take a moment to update.',
-                                //     ));
-
                         },
                         (labelResponse) => {
                             this.alertsService.generate('error', this.translate.translate('Error deleting draft'));
                         }));
-                
         }
     }
     
