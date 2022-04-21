@@ -293,15 +293,20 @@ export class OfiSubPortfolioComponent implements OnDestroy {
      * @return void
      */
     saveSubPortfolio() {
-        const payload = this.getSubPortfolioFormValue();
+        const payload = {
+            ...this.getSubPortfolioFormValue(),
+            RN: this.currentAddressDraft,
+        };
         console.log("subPortfolio-Payload", payload);
         const asyncTaskPipe = this.ofiSubPortfolioReqService.saveNewSubPortfolio(payload);
-        const item =  //get the data of draft object here
+        // const item = this.addressListDraft; //get the data of draft object here
         this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
             asyncTaskPipe,
             (labelResponse) => {
                 const message = _.get(labelResponse, '[1].Data[0].Message', 'OK');
-                this.handleDeleteDraft(item);
+                this.handleDeleteDraftValidation(payload);
+                console.log("draftData", payload);
+
                 this.ofiSubPortfolioService.resetRequestedFlags();
                 if (message === 'OK') {
                     this.handleLabelResponse(message, 'created');
@@ -513,6 +518,40 @@ export class OfiSubPortfolioComponent implements OnDestroy {
                         }));
                 }
             });
+        }
+    }
+
+     /**
+     * Handles deleting an existing Draft
+     * @param address
+     * @return void
+     */
+      handleDeleteDraftValidation(item) {
+        // const index = this.addressListDraft.findIndex(x => x.addr === address);
+        // const addressLabel = this.addressList[index].label;
+        if (item) {
+            
+                    const asyncTaskPipe = this.ofiSubPortfolioReqService.deleteSubPortfolioDraft(
+                        item.RN,
+                    );
+                    this.ngRedux.dispatch(SagaHelper.runAsync(
+                        [DELETE_WALLET_LABEL, DELETE_SUB_PORTFOLIO_BANKING_DETAIL],
+                        [],
+                        asyncTaskPipe,
+                        {},
+                        (response) => {
+                            this.initSubscriptions();
+                             (String(_.get(response, '[1].Data.balance', '0')) === '0')
+                                this.ofiSubPortfolioService.resetRequestedFlags();
+                                // this.alertsService.generate('success', this.translate.translate(
+                                //     'Your draft has been successfully deleted. This may take a moment to update.',
+                                //     ));
+
+                        },
+                        (labelResponse) => {
+                            this.alertsService.generate('error', this.translate.translate('Error deleting draft'));
+                        }));
+                
         }
     }
     
