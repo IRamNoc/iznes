@@ -33,6 +33,8 @@ export interface Subportfolio {
     bankIdentificationStatement: string;
     securityAccount: string;
     cashAccount: string;
+    emailtransactnotice: string;
+    emailcertificationbookentry: string;
 }
 
 export interface OfiUpdateSubPortfolioRequestBody extends OfiMemberNodeBody {
