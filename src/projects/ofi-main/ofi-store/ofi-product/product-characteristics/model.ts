@@ -24,6 +24,7 @@ export interface productCharacteristics {
     navPeriodForSubscription: number;
     subscriptionSettlementPeriod: number;
     subscriptionSettlementPivotDate: number;
+    subscriptionPaymentInstructionTrigger: number;
     subscriptionValuationReference: number;
     subscriptionCategory: number;
     subscriptionQuantityRoundingRule: number;

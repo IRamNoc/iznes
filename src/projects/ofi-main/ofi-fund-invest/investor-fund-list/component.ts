@@ -279,7 +279,6 @@ export class OfiInvestorFundListComponent implements OnInit, AfterViewInit, OnDe
         const newTabControlImu = tabControlImu.map((item, thisIndex) => {
             return item.set('active', thisIndex === Number(this.routeTabId));
         });
-
         this.tabsControl = newTabControlImu.toJS();
     }
 
@@ -553,8 +552,11 @@ export class OfiInvestorFundListComponent implements OnInit, AfterViewInit, OnDe
      * @param {{allowSellBuy: boolean}} share
      * @return {boolean}
      */
-    allowSellBuy(share: { allowSellBuy: number }): boolean {
-        return (share.allowSellBuy === 1);
+    allowSellBuy(  allowSellBuy: number ): boolean {
+        if (allowSellBuy=== 1){
+            return true;
+        }
+        return false;
     }
 
     private setNewActiveTab(i: number): void {

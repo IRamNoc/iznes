@@ -107,9 +107,13 @@
                                 <button class="btn btn-danger btn-sm" style="margin: 0px;" (click)="handleRedeem(fund.id)" [attr.disabled]="disableReedemShareclass(fund)"> <!-- disableRedeem((fund.isin + '|' + fund.shareName)) &&-->
                                     <i class="fa fa-sign-out"></i> {{ 'Redeem' | translate }}
                                 </button>
-                                <button class="btn btn-orange btn-sm" style="margin: 0px;" (click)="handleBuySell(fund.id)" [attr.disabled]="disableSellShareclass(fund)"> <!-- disableRedeem((fund.isin + '|' + fund.shareName)) && !allowSellBuy(fund) -->
+                                <button class="btn btn-orange btn-sm" style="margin: 0px;" (click)="handleBuySell(fund.id)" *ngIf="allowSellBuy(fund.allowSellBuy)">
                                     <i class="fa fa-circle-o-notch"></i>
                                     <span> {{ 'Sell/Buy' | translate }}</span></button>
+
+                                    <button class="btn btn-orange btn-sm" style="margin: 0px;" (click)="handleBuySell(fund.id)" *ngIf="!allowSellBuy(fund.allowSellBuy)" [attr.disabled] = "true" >
+                                        <i class="fa fa-circle-o-notch"></i>
+                                        <span> {{ 'Sell/Buy' | translate }}</span></button>
                             </div>
                         </clr-dg-cell>
                     </clr-dg-row>
