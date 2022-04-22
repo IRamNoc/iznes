@@ -364,6 +364,110 @@
                 </div>
             </clr-tab-content>
         </clr-tab>
+
+        <clr-tab *ngIf="isCommonAM">
+            <button clrTabLink (click)="loadTab(4);">{{ 'Register Transcodifications' | translate }}</button>
+            <clr-tab-content>
+                <div class="row">
+                    <div class="col-sm-6" style="margin-top: 0.5rem">
+                        <p>{{ 'List of registers transcodifications - @companyName@\'s' | translate: { 'companyName':
+                            companyName} }}</p>
+                    </div>
+                    <div class="col-sm-6" align="right">
+                        <button class="btn btn-primary" (click)="createTranscodificationModal()">{{ 'Add new transcodification'
+                            | translate }}</button>
+                    </div>
+                </div>
+                <clr-datagrid #holdingDataGrid>
+                    <clr-dg-column [clrDgField]="'portfolio'">{{ 'Portfolio' | translate }}</clr-dg-column>
+                    <clr-dg-column [clrDgField]="'thirdPartyRegister'">{{ 'Third Party Register' | translate }}</clr-dg-column>
+                    <clr-dg-column [clrDgField]="'code'">{{ 'Code' | translate }}</clr-dg-column>
+                    <clr-dg-column [clrDgField]="'actions'">{{ 'Actions' | translate }}</clr-dg-column>
+
+                    <clr-dg-row *clrDgItems="let item of transcodificationTable">
+                        <ng-container>
+                            <clr-dg-cell>{{ item.subportfolioName }}</clr-dg-cell>
+                            <clr-dg-cell>{{ item.thirdPartyName }}</clr-dg-cell>
+                            <clr-dg-cell>{{ item.transcodificationCode }}</clr-dg-cell>
+                            <clr-dg-cell id="action_row_{{i}}" class="right">
+                                <div class="btn-group">
+                                    <button class="btn btn-success btn-sm" style="margin: 0px;" (click)="updateTranscodificationModal(item)">
+                                        <i class="fa fa-edit"></i> {{ 'Edit' | translate }}
+                                    </button>
+                                    <button class="btn btn-danger btn-sm" style="margin: 0px;" (click)="handleDeleteTranscodification(item)">
+                                        <i class="fa fa-trash"></i> {{ 'Delete' | translate }}
+                                    </button>
+                                </div>
+                            </clr-dg-cell>
+                        </ng-container>
+                    </clr-dg-row>
+
+                    <clr-dg-footer>{{holdingPagination.firstItem + 1}} - {{holdingPagination.lastItem + 1}}
+                        <clr-dg-pagination #holdingPagination [clrDgPageSize]="20"></clr-dg-pagination>
+                    </clr-dg-footer>
+                </clr-datagrid>
+
+                <div align="middle" style="margin-top: 20px;">
+                    <button class="btn btn-info" (click)="changePage('list')">{{ 'Back' | translate }}</button>
+                </div>
+
+                <clr-modal [(clrModalOpen)]="isTranscodificationModalDisplayed" [clrModalClosable]="false">
+                    <h3 class="modal-title" *ngIf="!transcodificationModal.type; else transcodificationUpdate">{{ 'Create Register Transcodification' | translate }}</h3>
+                    
+                    <ng-template #transcodificationUpdate>
+                        {{ 'Update Register Transcodification' | translate }}
+                      </ng-template>
+                                    
+                      <div class="modal-body">
+                        <form [formGroup]="transcodificationForm">
+                            <section class="form-group">
+                                <div *ngIf="transcodificationModal.type" class="mt-1 col-md-12">
+                                    <label class="clr-col-12 clr-col-md-12">{{ 'Portfolio Name' | translate }}</label>
+                                    <input id="portfolioName" class="form-control" type="text" formControlName="subportfolioName" disabled>
+                                </div>
+
+                                <div class="mt-1 col-md-12">
+                                    <label class="clr-col-12 col-col-md-12">{{ 'Third Party' | translate }}</label>
+                                    <ng-select
+                                        *ngIf="!transcodificationModal.type"
+                                        id="thirdParties"
+                                        [placeholder]="translate.translate('Select Third Party in the list')"
+                                        [items]="transcodificationThirdParties"
+                                        [allowClear]="false"
+                                        formControlname="thirdPartyId"
+                                        (selected)="handleDropdownThirdPartySelect($event)">
+                                    </ng-select>
+
+                                    <input *ngIf="transcodificationModal.type" id="transcodificationName" class="form-control" type="text" formControlName="thirdPartyName" disabled>
+                                </div>
+
+                                <div class="mt-1 mb-1 col-md-12">
+                                    <label class="clr-col-12 clr-col-md-12">{{ 'Code (25 characters maximum)' | translate }}</label>
+                                    <input id="transcodificationCode" maxlength="25" class="form-control" type="text" formControlName="transcodificationCode">
+                                </div>
+                            </section>
+                        </form>
+                    </div>
+                
+                    <div class="modal-footer">
+                        <button id='cancelModalBackButton' type="button" class="btn btn-danger" (click)="closeTranscodificationModal()">
+                            {{ 'Cancel' | translate }}
+                        </button>
+                
+                        <button *ngIf="transcodificationModal.type === 0" id='createModalConfirmButton' type="button" class="btn btn-success"
+                            (click)="handleCreateTranscodification()">
+                            {{ 'Create' | translate }}
+                        </button>
+
+                        <button *ngIf="transcodificationModal.type === 1" id='updateModalConfirmButton' type="button" class="btn btn-success"
+                            (click)="handleUpdateTranscodification()">
+                            {{ 'Update' | translate }}
+                        </button>
+                    </div>
+                </clr-modal>
+
+            </clr-tab-content>
+        </clr-tab>
     </clr-tabs>
 
 </ng-container>
