@@ -230,7 +230,7 @@ export class OfiInvestorFundListComponent implements OnInit, AfterViewInit, OnDe
 
                 const nav = this.numberConverterService.toFrontEnd(item.get('price', 0));
                 const isin = item.get('isin', '');
-                const investStatus =item.get('shareClassInvestmentStatus', '');
+                const investStatus = item.get('shareClassInvestmentStatus', '');
                 const shareName = item.get('fundShareName', '');
 
                 let position = _.get(this.walletBalances, [`${item.get('isin')}|${item.get('fundShareName')}`, 'free'], 'N/A');
@@ -243,7 +243,6 @@ export class OfiInvestorFundListComponent implements OnInit, AfterViewInit, OnDe
                 if (!isNaN(totalPosition)) {
                     totalPosition = this.numberConverterService.toFrontEnd(totalPosition);
                 }
-              
                 result.push({
                     id: item.get('fundShareID', 0),
                     isin,
@@ -503,44 +502,50 @@ export class OfiInvestorFundListComponent implements OnInit, AfterViewInit, OnDe
     disableRedeem(assetName): any {
             const hasShare = this.hasShareBalanceInAnyAddress(assetName);
             return hasShare ? null : '';
-        
     }
-    disableSubscribeShareclass(fund){
-        let subscribeShare=false;
-       if(fund.shareClassInvestmentStatus==2 || fund.shareClassInvestmentStatus==4){
-        subscribeShare=true;
-       }else if(fund.shareClassInvestmentStatus==0 || fund.shareClassInvestmentStatus==3){
-        subscribeShare=false;
-       }else if(fund.shareClassInvestmentStatus==1){
-        subscribeShare=true;
-        if((fund.avlposition !=='N/A' && fund.avlposition!==0) &&  (fund.totalPosition !=='N/A' && fund.totalPosition!==0)){
-            subscribeShare=false;
+
+    disableSubscribeShareclass(fund) {
+        let subscribeShare = false;
+
+       if (fund.shareClassInvestmentStatus === 2 || fund.shareClassInvestmentStatus === 4) {
+        subscribeShare = true;
+       } else if (fund.shareClassInvestmentStatus === 0 || fund.shareClassInvestmentStatus === 3) {
+        subscribeShare = false;
+       } else if (fund.shareClassInvestmentStatus === 1) {
+        subscribeShare = true;
+        if((fund.avlposition !== 'N/A' && fund.avlposition!== 0) && (fund.totalPosition !== 'N/A' && fund.totalPosition !== 0)) {
+            subscribeShare = false;
         }
        }
        return subscribeShare ? '' : null;
-    }  
-    disableReedemShareclass(fund){
-        let reedemShare=false;
-       if(fund.shareClassInvestmentStatus==3 || fund.shareClassInvestmentStatus==4){
-         reedemShare=true;
-       }else if(fund.shareClassInvestmentStatus==0 || fund.shareClassInvestmentStatus==1 || fund.shareClassInvestmentStatus==2){
-        reedemShare=true;
-        if((fund.avlposition !=='N/A' && fund.avlposition!==0) &&  (fund.totalPosition !=='N/A' && fund.totalPosition!==0)){
-            reedemShare=false;
+    }
+
+    disableReedemShareclass(fund) {
+        let reedemShare = false;
+
+        if ( fund.shareClassInvestmentStatus === 3 || fund.shareClassInvestmentStatus === 4) {
+            reedemShare = true;
+        } else if (fund.shareClassInvestmentStatus === 0 || fund.shareClassInvestmentStatus === 1 || fund.shareClassInvestmentStatus === 2) {
+        reedemShare = true;
+
+        if((fund.avlposition !== 'N/A' && fund.avlposition !== 0) &&  (fund.totalPosition !== 'N/A' && fund.totalPosition !== 0)) {
+            reedemShare = false;
         }
        }
        return reedemShare ? '' : null;
     }  
-    disableSellShareclass(fund){
-        let sellShare=false;
-        if(fund.shareClassInvestmentStatus==0 || fund.shareClassInvestmentStatus==3){
-            sellShare=false;
-        }else if(fund.shareClassInvestmentStatus==4){
-        sellShare=true;
-       }else if(fund.shareClassInvestmentStatus==1 || fund.shareClassInvestmentStatus==2){
-        sellShare=true;
-        if((fund.avlposition !=='N/A' && fund.avlposition!==0) &&  (fund.totalPosition !=='N/A' && fund.totalPosition!==0)){
-            sellShare=false;
+    disableSellShareclass(fund) {
+        let sellShare = false;
+
+        if (fund.shareClassInvestmentStatus === 0 || fund.shareClassInvestmentStatus === 3) {
+            sellShare = false;
+        } else if (fund.shareClassInvestmentStatus === 4) {
+            sellShare = true;
+        } else if (fund.shareClassInvestmentStatus === 1 || fund.shareClassInvestmentStatus == 2) {
+            sellShare = true;
+
+        if((fund.avlposition !== 'N/A' && fund.avlposition !== 0) &&  (fund.totalPosition !=='N/A' && fund.totalPosition !== 0)) {
+            sellShare = false;
         }
        }
        return sellShare ? '' : null;
