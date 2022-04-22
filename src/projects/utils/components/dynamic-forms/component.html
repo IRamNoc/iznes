@@ -202,15 +202,36 @@
                                     <ng-container *ngSwitchCase="11">
                                         <div class="radio-inline reimbursement-radio-align  flex-items-xs-middle ">
                                             <ng-container *ngFor="let radiobutton of model[item].radioOptions">
-                                                <div class="reimbursement-radio">
+                                                <div class="reimbursement-radio" *ngIf="radiobutton.value=='Yes'">
+                                                    <clr-radio-container clrInline>
+                                                        <clr-radio-wrapper>
                                             <input type="radio"
                                                    name="{{item}}"
                                                    formControlName="{{item}}" 
-                                                   value="{{radiobutton.value}}"                                                  
+                                                   value="{{radiobutton.value}}"                                                   
+                                                   clrRadio                                                  
                                                    >
                                             <label>
                                                 {{radiobutton.key | translate}}
                                             </label>
+                                            </clr-radio-wrapper>
+                                            </clr-radio-container>
+                                            </div>
+                                                <div class="reimbursement-radio" *ngIf="radiobutton.value=='No'">
+                                                    <clr-radio-container clrInline>
+                                                        <clr-radio-wrapper>
+                                            <input type="radio"
+                                                   name="{{item}}"
+                                                   formControlName="{{item}}" 
+                                                   value="{{radiobutton.value}}"
+                                                   [checked]="true"
+                                                   clrRadio                                                  
+                                                   >
+                                            <label>
+                                                {{radiobutton.key | translate}}
+                                            </label>
+                                            </clr-radio-wrapper>
+                                            </clr-radio-container>
                                             </div>
                                             </ng-container>
                                         </div>                      
