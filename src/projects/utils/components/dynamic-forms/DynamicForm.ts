@@ -23,6 +23,8 @@ export interface FormItem {
     required: boolean;
     allowClear?: boolean;
     title?: string;
+    hasHelpbox?: boolean;
+    helpboxContent?: string;
 
     listItems?: {
         id: string | number;
