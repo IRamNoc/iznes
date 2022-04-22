@@ -344,3 +344,8 @@ export enum ValuationReferenceDate {
     CalculationDay,
     NextWorkingDay,
 }
+
+export enum PaymentInstructionTrigger {
+    NavDate,
+    CutoffDate,
+}

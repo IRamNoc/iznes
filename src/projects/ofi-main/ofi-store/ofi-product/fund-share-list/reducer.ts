@@ -155,6 +155,7 @@ function handleGetIznesShareList(state: OfiFundShareListState, action: Action) {
             subscriptionCutOffTimeZone: share.subscriptionCutOffTimeZone,
             subscriptionSettlementPeriod: share.subscriptionSettlementPeriod,
             subscriptionSettlementPivotDate: share.subscriptionSettlementPivotDate,
+            subscriptionPaymentInstructionTrigger: share.subscriptionPaymentInstructionTrigger,
             subscriptionValuationReference: share.subscriptionValuationReference,
             redemptionCutOffTime: share.redemptionCutOffTime,
             redemptionCutOffTimeZone: share.redemptionCutOffTimeZone,

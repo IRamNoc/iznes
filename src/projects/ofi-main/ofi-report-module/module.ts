@@ -13,6 +13,7 @@ import { MultilingualModule } from '@setl/multilingual';
 import { CentralisationReportComponent } from './centralisation/component';
 import { PrecentralisationReportComponent } from './precentralisation/component';
 import { MyHoldingsComponent } from './my-holdings/component';
+import { MyHoldingsHistoryComponent } from './my-holdings-history/component';
 
 @NgModule({
     imports: [
@@ -35,6 +36,7 @@ import { MyHoldingsComponent } from './my-holdings/component';
         CentralisationReportComponent,
         PrecentralisationReportComponent,
         MyHoldingsComponent,
+        MyHoldingsHistoryComponent,
     ],
     providers: [],
 })
