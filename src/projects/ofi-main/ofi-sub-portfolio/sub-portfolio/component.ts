@@ -171,8 +171,6 @@ export class OfiSubPortfolioComponent implements OnDestroy {
                 emailtransactnotice: new FormControl(''),
                 emailcertificationbookentry: new FormControl(''),
                 bic: new FormControl('', [Validators.required, CustomValidators.bicValidator]),
-                emailtransactionnotice: new FormControl(''),
-                emailcertificationbookentry: new FormControl(''),
                 securityAccount: new FormControl('', [Validators.required, Validators.maxLength(16)]),
                 cashAccount: new FormControl('', [Validators.maxLength(16)]),
                 useCBDC: new FormControl(''),
