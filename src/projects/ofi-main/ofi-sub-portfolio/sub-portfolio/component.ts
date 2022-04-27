@@ -262,8 +262,8 @@ export class OfiSubPortfolioComponent implements OnDestroy {
                     }
                 }
             },
-            (response) => {
-                const message = _.get(response, '[1].Data[0].Message', 'Fail');
+            (labelResponse) => {
+                const message = _.get(labelResponse, '[1].Data[0].Message', 'Fail');
                 const errorTypes = ['Duplicate Label', 'Duplicate Security Account']
                 if (errorTypes.includes(message)) {
                     this.handleLabelResponse(message, 'created');
@@ -296,9 +296,14 @@ export class OfiSubPortfolioComponent implements OnDestroy {
                     this.toggleFormModal();
                 }
             },
-            () => {
-                this.alertsService.generate('error', this.translate.translate('Error updating sub-portfolio'));
-            }));
+            (labelResponse) => {
+                const message = _.get(labelResponse, '[1].Data[0].Message', 'Fail');
+                if (message === 'Duplicate Security Account') {
+                    this.handleLabelResponse(message, 'updated');
+                } else {
+                    this.alertsService.generate('error',
+                    this.translate.translate('Error updating sub-portfolio'));
+            }}));
     }
 
     /**
