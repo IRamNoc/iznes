@@ -19,6 +19,8 @@ import { OfiCorpActionService } from './ofi-corp-actions/service';
 import { OfiMemberNodeChannelService } from './ofi-member-node-channel/service';
 import { OfiSubPortfolioReqService } from './ofi-sub-portfolio/service';
 
+import { OfiRegisterTranscodificationService } from './ofi-register-transcodification/service';
+
 @NgModule({
     exports: [],
     providers: [
@@ -39,6 +41,7 @@ import { OfiSubPortfolioReqService } from './ofi-sub-portfolio/service';
         OfiKycService,
         OfiReportsService,
         OfiSubPortfolioReqService,
+        OfiRegisterTranscodificationService,
     ],
 })
 

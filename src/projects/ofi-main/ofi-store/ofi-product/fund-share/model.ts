@@ -52,6 +52,7 @@ export interface OfiFundShare {
     subscriptionCutOffTimeZone: number;
     subscriptionSettlementPeriod: number;
     subscriptionSettlementPivotDate: number;
+    subscriptionPaymentInstructionTrigger: number;
     subscriptionValuationReference: number;
     redemptionCutOffTime: string;
     redemptionCutOffTimeZone: number;

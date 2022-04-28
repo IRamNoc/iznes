@@ -140,6 +140,7 @@ export class FundShare {
             subscriptionCutOffTimeZone: this.getSelectValue(this.calendarSubscription.mandatory.subscriptionCutOffTimeZone),
             subscriptionSettlementPeriod: this.getSelectValue(this.calendarSubscription.mandatory.subscriptionSettlementPeriod),
             subscriptionSettlementPivotDate: this.getSelectValue(this.calendarSubscription.mandatory.subscriptionSettlementPivotDate),
+            subscriptionPaymentInstructionTrigger: this.getSelectValue(this.calendarSubscription.mandatory.subscriptionPaymentInstructionTrigger),
             subscriptionValuationReference: this.getSelectValue(this.calendarSubscription.mandatory.subscriptionValuationReference),
             redemptionCutOffTime: this.calendarRedemption.mandatory.redemptionCutOffTime.value(),
             redemptionCutOffTimeZone: this.getSelectValue(this.calendarRedemption.mandatory.redemptionCutOffTimeZone),
@@ -308,6 +309,10 @@ export class FundShare {
             fundShare.subscriptionSettlementPivotDate,
         );
         this.setListItemPreset(
+            this.calendarSubscription.mandatory.subscriptionPaymentInstructionTrigger,
+            fundShare.subscriptionPaymentInstructionTrigger,
+        )
+        this.setListItemPreset(
             this.calendarSubscription.mandatory.subscriptionValuationReference,
             fundShare.subscriptionValuationReference,
         );
@@ -408,6 +413,10 @@ export class FundShare {
         this.setListItemValue(
             this.calendarSubscription.mandatory.subscriptionSettlementPivotDate,
             fundShare.subscriptionSettlementPivotDate,
+        );
+        this.setListItemValue(
+            this.calendarSubscription.mandatory.subscriptionPaymentInstructionTrigger,
+            fundShare.subscriptionPaymentInstructionTrigger,
         );
         this.setListItemValue(
             this.calendarSubscription.mandatory.subscriptionValuationReference,
