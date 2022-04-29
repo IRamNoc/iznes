@@ -83,7 +83,7 @@
                                 {{ 'Email Address of the Super Admin' | translate }}
                             </label>
                             <input type="text" id="emailAddress" class="form-control" formControlName="emailAddress"
-                                placeholder="{{ 'Please fill in the email address of the super admin of the company' | translate }}">
+                                placeholder="{{ 'Please fill in the company name or legal name' | translate }}">
                             <span
                                 *ngIf="managementCompanyForm.controls.emailAddress.hasError('required') && managementCompanyForm.controls.emailAddress.touched"
                                 class="field-error">{{ 'Field is required' | translate }}</span>
@@ -93,8 +93,8 @@
                             <label class="control-label" for="idManagementCompany1">
                                 {{ ('Management Company Name' | translate) + ' #1' }}
                             </label>
-                            <input type="text" id="idManagementCompany1" class="form-control" formControlName="subManagementCompany1"
-                                placeholder="{{ 'Please fill in the email address of the super admin of the company' | translate }}">
+                            <input type="text" id="idManagementCompany1" class="form-control" formControlName="subManagementCompany0"
+                                placeholder="{{ 'Please fill in the company name or legal name' | translate }}">
                             <span
                                 *ngIf="managementCompanyForm.controls.emailAddress.hasError('required') && managementCompanyForm.controls.emailAddress.touched"
                                 class="field-error">{{ 'Field is required' | translate }}</span>
@@ -104,8 +104,8 @@
                             <label class="control-label" for="idManagementCompany2">
                                 {{ ('Management Company Name' | translate) + ' #2' }}
                             </label>
-                            <input type="text" id="emailAddress" class="form-control" formControlName="subManagementCompany2"
-                                placeholder="{{ 'Please fill in the email address of the super admin of the company' | translate }}">
+                            <input type="text" id="idManagementCompany2" class="form-control" formControlName="subManagementCompany1"
+                                placeholder="{{ 'Please fill in the company name or legal name' | translate }}">
                             <span
                                 *ngIf="managementCompanyForm.controls.emailAddress.hasError('required') && managementCompanyForm.controls.emailAddress.touched"
                                 class="field-error">{{ 'Field is required' | translate }}</span>
@@ -115,8 +115,8 @@
                             <label class="control-label" for="idManagementCompany3">
                                 {{ ('Management Company Name' | translate) + ' #3' }}
                             </label>
-                            <input type="text" id="emailAddress" class="form-control" formControlName="subManagementCompany3"
-                                placeholder="{{ 'Please fill in the email address of the super admin of the company' | translate }}">
+                            <input type="text" id="idManagementCompany3" class="form-control" formControlName="subManagementCompany2"
+                                placeholder="{{ 'Please fill in the company name or legal name' | translate }}">
                             <span
                                 *ngIf="managementCompanyForm.controls.emailAddress.hasError('required') && managementCompanyForm.controls.emailAddress.touched"
                                 class="field-error">{{ 'Field is required' | translate }}</span>
@@ -126,8 +126,8 @@
                             <label class="control-label" for="idManagementCompany4">
                                 {{ ('Management Company Name' | translate) + ' #4' }}
                             </label>
-                            <input type="text" id="emailAddress" class="form-control" formControlName="subManagementCompany4"
-                                placeholder="{{ 'Please fill in the email address of the super admin of the company' | translate }}">
+                            <input type="text" id="idManagementCompany4" class="form-control" formControlName="subManagementCompany3"
+                                placeholder="{{ 'Please fill in the company name or legal name' | translate }}">
                             <span
                                 *ngIf="managementCompanyForm.controls.emailAddress.hasError('required') && managementCompanyForm.controls.emailAddress.touched"
                                 class="field-error">{{ 'Field is required' | translate }}</span>
@@ -487,6 +487,3 @@
             translate }}</button>
     </div>
 </clr-modal>
-
-
-{{managementCompanyList | json}}

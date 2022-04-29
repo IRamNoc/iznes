@@ -88,10 +88,10 @@ function formatManagementCompanyDataResponse(rawCompanyData: Array<any>): Array<
                 externalEmail: item.get('externalEmail'),
                 emailValidation: item.get('emailValidation'),
                 mt502Email: item.get('mt502Email'),
+                subManagementCompany0: item.get('subManagementCompany0'),
                 subManagementCompany1: item.get('subManagementCompany1'),
                 subManagementCompany2: item.get('subManagementCompany2'),
-                subManagementCompany3: item.get('subManagementCompany3'),
-                subManagementCompany4: item.get('subManagementCompany4')
+                subManagementCompany3: item.get('subManagementCompany3')
             };
 
 
