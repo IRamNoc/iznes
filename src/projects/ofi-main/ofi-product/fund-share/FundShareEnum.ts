@@ -349,3 +349,9 @@ export enum PaymentInstructionTrigger {
     NavDate,
     CutoffDate,
 }
+
+export enum FeeInFavourOfFundCalculation {
+    None,
+    Unitary,
+    Global,
+}

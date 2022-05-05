@@ -1,4 +1,5 @@
 import { FormItem, FormItemType, FormItemStyle, DynamicFormsValidator } from '@setl/utils';
+import * as E from '../FundShareEnum';
 
 export class ShareFeesMandatory extends DynamicFormsValidator {
     maxManagementFee: FormItem = {
@@ -19,6 +20,41 @@ export class ShareFeesMandatory extends DynamicFormsValidator {
         label: 'Redemption Fee Maximum',
         required: true,
         isBlockchainValue: true,
+        style: [FormItemStyle.BreakOnAfter],
+    };
+    subscriptionFeeInFavourOfFund: FormItem = {
+        type: FormItemType.number,
+        label: 'Subscription Fee In Favour Of Fund',
+        required: true,
+        isBlockchainValue: true,
+    };
+    subscriptionFeeInFavourOfFundCalculation: FormItem = {
+        type: FormItemType.list,
+        label: 'Calculation Method For Subscription Fee In Favour Of Fund',
+        listItems: [
+            { id: E.FeeInFavourOfFundCalculation.None, text: 'None' },
+            { id: E.FeeInFavourOfFundCalculation.Unitary, text: 'Unitary on NAV to 2 decimal' },
+            { id: E.FeeInFavourOfFundCalculation.Global, text: 'Global on the order amount' },
+        ],
+        style: [FormItemStyle.BreakOnAfter],
+        required: true,
+    };
+    redemptionFeeInFavourOfFund: FormItem = {
+        type: FormItemType.number,
+        label: 'Redemption Fee In Favour Of Fund',
+        required: true,
+        isBlockchainValue: true,
+    };
+    redemptionFeeInFavourOfFundCalculation: FormItem = {
+        type: FormItemType.list,
+        label: 'Calculation Method For Subscription Fee In Favour Of Fund',
+        listItems: [
+            { id: E.FeeInFavourOfFundCalculation.None, text: 'None' },
+            { id: E.FeeInFavourOfFundCalculation.Unitary, text: 'Unitary on NAV to 2 decimal' },
+            { id: E.FeeInFavourOfFundCalculation.Global, text: 'Global on the order amount' },
+        ],
+        style: [FormItemStyle.BreakOnAfter],
+        required: true,
     };
     mifiidChargesOngoing: FormItem = {
         type: FormItemType.number,
@@ -191,12 +227,6 @@ export class ShareFeesOptional {
         label: 'Subscription Fee Minimum',
         required: false,
     };
-    subscriptionFeeInFavourOfFund: FormItem = {
-        type: FormItemType.number,
-        label: 'Subscription Fee In Favour Of Fund',
-        required: false,
-        style: [FormItemStyle.BreakOnAfter],
-    };
     hasContingentDeferredSalesChargeFee: FormItem = {
         type: FormItemType.boolean,
         label: 'Has Contingent Deferred Sales Charge Fee',
@@ -206,11 +236,6 @@ export class ShareFeesOptional {
     redemptionFeeMinimum: FormItem = {
         type: FormItemType.number,
         label: 'Redemption Fee Minimum',
-        required: false,
-    };
-    redemptionFeeInFavourOfFund: FormItem = {
-        type: FormItemType.number,
-        label: 'Redemption Fee In Favour Of Fund',
         required: false,
     };
     managementFeeApplied: FormItem = {
