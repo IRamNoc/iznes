@@ -243,8 +243,8 @@ export class MyHoldingsComponent implements OnInit, OnDestroy {
 
         this.ofiReportsService.requestGenerateAICInvestor(payload).then((result) => {
             const data = result[1].Data;
-            
-            if (data.error) {
+
+            if (data[0].data.Status === 'Fail') {
                 return this.toaster.pop('error', this.translate.translate('There is a problem with the request.'));
             }
 
