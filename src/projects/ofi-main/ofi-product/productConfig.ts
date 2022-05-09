@@ -690,13 +690,13 @@ export const fundItems = {
         { id: 5, text: 'Yes, currency overlay' },
     ],
     classificationItems: [
-        { id: 1, text: 'Absolute Return Innovative Strategies - ARIS' },
+        { id: 1, text: 'Equity' },
         { id: 2, text: 'Bond' },
-        { id: 3, text: 'Equity' },
+        { id: 3, text: 'Multi-Asset' },
         { id: 4, text: 'Money Market or Cash Equivalent' },
-        { id: 5, text: 'Multi-Asset' },
-        { id: 6, text: 'Real Estate' },
-        { id: 7, text: 'Other' }
+        { id: 5, text: 'Absolute Return Innovative Strategies - ARIS' },
+        { id: 6, text: 'Other' },
+        { id: 7, text: 'Real Estate' },
     ],
     fundAdministratorItems: [
         { id: 1, text: 'Société Générale Securities Services France' },
