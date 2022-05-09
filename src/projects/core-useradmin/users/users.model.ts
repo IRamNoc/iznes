@@ -38,3 +38,12 @@ export const usersListActions: {}[] = [
         onClick: 'deleteUser',
     }),
 ];
+export const usersListActionsNonsuperAdmin: {}[] = [
+    new DatagridListActionModel({
+        id: { text: 'edit-', data: 'userID' },
+        label: 'Edit',
+        class: 'btn btn-sm btn-success',
+        icon: 'fa-pencil-square-o',
+        onClick: 'editUser',
+    }),
+];

@@ -168,9 +168,9 @@ export class OfiSubPortfolioComponent implements OnDestroy {
                 ownerCity: new FormControl('', [Validators.required, Validators.maxLength(45), CustomValidators.swiftNameAddressValidator]),
                 ownerCountry: new FormControl('', [Validators.required]),
                 iban: new FormControl('', [Validators.required, CustomValidators.ibanValidator]),
-                bic: new FormControl('', [Validators.required, CustomValidators.bicValidator]),
-                emailtransactionnotice: new FormControl(''),
+                emailtransactnotice: new FormControl(''),
                 emailcertificationbookentry: new FormControl(''),
+                bic: new FormControl('', [Validators.required, CustomValidators.bicValidator]),
                 securityAccount: new FormControl('', [Validators.required, Validators.maxLength(16)]),
                 cashAccount: new FormControl('', [Validators.maxLength(16)]),
                 useCBDC: new FormControl(''),
@@ -200,7 +200,7 @@ export class OfiSubPortfolioComponent implements OnDestroy {
             }
         });
         this.tabDetail[0]['formControl'].controls.hashIdentifierCode.patchValue(address);
-        this.tabDetail[0]['formControl'].controls.emailtransactionnotice.patchValue(subPortfolio.emailtransactnotice);
+        this.tabDetail[0]['formControl'].controls.emailtransactnotice.patchValue(subPortfolio.emailtransactnotice);
         this.tabDetail[0]['formControl'].controls.emailcertificationbookentry.patchValue(subPortfolio.emailcertificationbookentry);
         this.tabDetail[0]['formControl'].controls.accountCurrency.patchValue([_.find(this.currenciesItems, { id: subPortfolio.accountCurrency })]);
         this.tabDetail[0]['formControl'].controls.custodianPayment.patchValue([_.find(this.custodianPaymentItems, { id: subPortfolio.custodianPaymentID })]);

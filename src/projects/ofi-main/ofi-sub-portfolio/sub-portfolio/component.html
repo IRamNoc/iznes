@@ -99,7 +99,7 @@
 
                 <div class="form-group col-sm-6">
                     <label class="control-label">
-                        {{ 'BIC Investor with branch code (8 characters) - Mandatory if orders are placed via MT files' | translate}}
+                        {{ 'BIC Investor with branch code (11 characters) - Mandatory if orders are placed via MT files' | translate}}
                     </label>
                     <input type="text" formControlName="bicInvestorCode" class="form-control">
                 </div>
@@ -108,15 +108,14 @@
                 <div class="form-group col-sm-6 ">
                     <label class="control-label ">Email addresses to receive Transaction Notices in pdf (use the semicolon as a separator)</label>
                     <input type="text" placeholder="{{ 'Email addresses to receive Transaction Notices' | translate }}" class="form-control"
-                        formControlName="emailtransactionnotice" maxlength="300">
-                </div>
-    
+                        formControlName="emailtransactnotice" maxlength="300">
+                </div>    
                 <div class="form-group col-sm-6 ">
                     <label class="control-label ">Email addresses to receive Certifications of Book Entry in pdf (use the semicolon as a separator)</label>
                     <input type="text" placeholder="{{ 'Email addresses to receive Certifications of Book Entry' | translate }}" class="form-control"
                         formControlName="emailcertificationbookentry" maxlength="300">
                 </div>
-            </div>            
+            </div>    
             <div class="row">
                 <div class="form-group col-sm-4">
                     <label class="control-label">
