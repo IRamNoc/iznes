@@ -9,7 +9,7 @@ import { immutableHelper } from '@setl/utils';
 import { fromJS } from 'immutable';
 import { get, merge } from 'lodash';
 import { calculateFigures } from '@ofi/ofi-main/ofi-product/fund-share/helper/order-calculations';
-import { OrderStatus } from '../../../ofi-product/fund-share/helper/order-view-helper';
+import { OrderStatus, getFeePercentageType } from '../../../ofi-product/fund-share/helper/order-view-helper';
 
 /* Initial state. */
 const initialState: ManageOrders = {
@@ -146,6 +146,8 @@ function handleUpdateNav(state: ManageOrders, action: PayloadAction): ManageOrde
                     value: (order.byAmountOrQuantity === 1) ? order.quantity : order.amount,
                     nav: price,
                     feePercentage: order.feePercentage,
+                    managementFeePercentage: order.managementFeePercentage,
+                    managementFeeType: order.managementFeeType,
                 },
                 order.maximumNumDecimal,
                 false,
@@ -252,6 +254,8 @@ function formatManageOrderDataResponse(rawData: any[]): ManageOrderDetails[] {
                 valuationDate: item.get('valuationDate'),
                 paymentMsgStatus: item.get('paymentMsgStatus'),
                 useCBDC: item.get('useCBDC'),
+                managementFeeType: item.get('managementFeeType'),
+                managementFeePercentage: item.get('managementFeePercentage'),
             };
 
             if (order.price > 0) {
@@ -268,6 +272,8 @@ function formatManageOrderDataResponse(rawData: any[]): ManageOrderDetails[] {
                     value: (order.byAmountOrQuantity === 1) ? order.quantity : order.amount,
                     nav: order.latestNav,
                     feePercentage: order.feePercentage,
+                    managementFeePercentage: order.managementFeePercentage,
+                    managementFeeType: order.managementFeeType,
                 },
                 order.maximumNumDecimal,
                 order.isKnownNav, // PHILZ [2018-11-06]

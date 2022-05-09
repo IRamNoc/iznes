@@ -16,7 +16,8 @@ export const calculateFigures = (
         value: number,
         nav: number,
         feePercentage: number,
-        managementFee: any
+        managementFeeType: number,
+        managementFeePercentage: number;
     },
     maxDecimalisation: number,
     knownNav: boolean,
@@ -27,7 +28,7 @@ export const calculateFigures = (
     let estimatedQuantity;
     let estimatedAmount;
     let fee;
-    let managementFee;
+    let managementFeeCalc;
     let estimatedAmountWithCost;
     let amountWithCost;
     const validatedPrice = knownNav ? order.nav : 0;
@@ -55,10 +56,10 @@ export const calculateFigures = (
         fee = calFee(estimatedAmount, order.feePercentage);
 
         // calculate management fee
-        managementFee = calManagementFee(estimatedAmount, order.managementFee.managementFeePercentage, estimatedQuantity, order.managementFee.managementFeeType, order.nav);
+        managementFeeCalc = calManagementFee(estimatedAmount, order.managementFeePercentage, estimatedQuantity, order.managementFeeType, order.nav);
 
         // net amount change to 2 decimal place
-        fee = getAmountTwoDecimal(fee + managementFee);
+        fee = getAmountTwoDecimal(fee + managementFeeCalc);
 
         // net amount
         estimatedAmountWithCost = calNetAmount(estimatedAmount, fee, orderTypeToString[order.orderType]);
@@ -107,10 +108,10 @@ export const calculateFigures = (
         fee = calFee(estimatedAmount, order.feePercentage);
 
         // calculate management fee
-        managementFee = calManagementFee(estimatedAmount, order.managementFee.managementFeePercentage, estimatedQuantity, order.managementFee.managementFeeType, order.nav);
+        managementFeeCalc = calManagementFee(estimatedAmount, order.managementFeePercentage, estimatedQuantity, order.managementFeeType, order.nav);
 
         // change to 2 decimal place
-        fee = getAmountTwoDecimal(fee + managementFee);
+        fee = getAmountTwoDecimal(fee + managementFeeCalc);
 
         // net amount
         estimatedAmountWithCost = calNetAmount(estimatedAmount, fee, orderTypeToString[order.orderType]);

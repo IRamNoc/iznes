@@ -119,8 +119,16 @@ export class OrderHelper {
     }
 
     get managementFeeInFavourOfFund() {
-        const managementFeeType = this.orderType === OrderType.Subscription ? this.fundShare.subscriptionFeeInFavourOfFundCalculation : this.fundShare.redemptionFeeInFavourOfFundCalculation;
-        const managementFeePercentage = this.orderType === OrderType.Subscription ? this.fundShare.subscriptionFeeInFavourOfFund : this.fundShare.redemptionFeeInFavourOfFund;
+        let managementFeeType = this.orderType === OrderType.Subscription ? this.fundShare.subscriptionFeeInFavourOfFundCalculation : this.fundShare.redemptionFeeInFavourOfFundCalculation;
+        let managementFeePercentage = this.orderType === OrderType.Subscription ? this.fundShare.subscriptionFeeInFavourOfFund : this.fundShare.redemptionFeeInFavourOfFund;
+
+        if (!managementFeeType) {
+            managementFeeType = 0;
+        }
+
+        if (!managementFeePercentage) {
+            managementFeePercentage = 0;
+        }
 
         return {
             managementFeeType,
@@ -951,7 +959,8 @@ export class OrderHelper {
                     orderBy: this.orderBy,
                     orderType: this.orderType,
                     value: this.orderValue,
-                    managementFee: this.managementFeeInFavourOfFund,
+                    managementFeePercentage: this.managementFeeInFavourOfFund.managementFeePercentage,
+                    managementFeeType: this.managementFeeInFavourOfFund.managementFeeType,
                 },
                 +this.fundShare.maximumNumDecimal,
                 this.isKnownNav(),

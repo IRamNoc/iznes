@@ -45,6 +45,10 @@ export interface IznShareDetailWithNav extends IznesShareDetail {
     sellCentralizationCalendar: string [];
     sellNAVCalendar: string [];
     sellSettlementCalendar: string [];
+    subscriptionFeeInFavourOfFundCalculation: number;
+    redemptionFeeInFavourOfFundCalculation: number;
+    subscriptionFeeInFavourOfFund: number;
+    redemptionFeeInFavourOfFund: number;
 }
 
 export interface VerifyResponse {
