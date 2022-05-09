@@ -618,6 +618,38 @@ export const fundItems = {
         ],
         25: [ // Other
             { id: 96, text: 'Other' },
+            {
+                id: 97,
+                text: 'Société Civile de Placement Immobilier (SCPI)',
+            },
+            {
+                id: 98,
+                text: 'Société à Prépondérance Immobilière à Capital Variable (SPPICAV)',
+            },
+            {
+                id: 99,
+                text: 'Fonds de Placement Immobilier (FPI)',
+            },
+            {
+                id: 100,
+                text: 'Fonds Professionnel de Placement Immobilier (FPPI)',
+            },
+            {
+                id: 101,
+                text: 'Société Civile Immobilière (SCI)',
+            },
+            {
+                id: 102,
+                text: 'Organisme de Placement Collectif Immobilier (OPCI)',
+            },
+            {
+                id: 103,
+                text: 'Organisme Professionnel de Placement Collectif Immobilier (OPPCI)',
+            },
+            {
+                id: 104,
+                text: 'Société Coopérative (SC)',
+            }
         ],
     },
     homeCountryLegalTypeItems: {
@@ -664,6 +696,7 @@ export const fundItems = {
         { id: 4, text: 'Money Market or Cash Equivalent' },
         { id: 5, text: 'Absolute Return Innovative Strategies - ARIS' },
         { id: 6, text: 'Other' },
+        { id: 7, text: 'Real Estate' },
     ],
     fundAdministratorItems: [
         { id: 1, text: 'Société Générale Securities Services France' },
