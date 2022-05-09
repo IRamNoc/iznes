@@ -168,9 +168,9 @@ export class OfiSubPortfolioComponent implements OnDestroy {
                 ownerCity: new FormControl('', [Validators.required, Validators.maxLength(45), CustomValidators.swiftNameAddressValidator]),
                 ownerCountry: new FormControl('', [Validators.required]),
                 iban: new FormControl('', [Validators.required, CustomValidators.ibanValidator]),
-                bic: new FormControl('', [Validators.required, CustomValidators.bicValidator]),
-                emailtransactionnotice: new FormControl(''),
+                emailtransactnotice: new FormControl(''),
                 emailcertificationbookentry: new FormControl(''),
+                bic: new FormControl('', [Validators.required, CustomValidators.bicValidator]),
                 securityAccount: new FormControl('', [Validators.required, Validators.maxLength(16)]),
                 cashAccount: new FormControl('', [Validators.maxLength(16)]),
                 useCBDC: new FormControl(''),
@@ -200,7 +200,7 @@ export class OfiSubPortfolioComponent implements OnDestroy {
             }
         });
         this.tabDetail[0]['formControl'].controls.hashIdentifierCode.patchValue(address);
-        this.tabDetail[0]['formControl'].controls.emailtransactionnotice.patchValue(subPortfolio.emailtransactnotice);
+        this.tabDetail[0]['formControl'].controls.emailtransactnotice.patchValue(subPortfolio.emailtransactnotice);
         this.tabDetail[0]['formControl'].controls.emailcertificationbookentry.patchValue(subPortfolio.emailcertificationbookentry);
         this.tabDetail[0]['formControl'].controls.accountCurrency.patchValue([_.find(this.currenciesItems, { id: subPortfolio.accountCurrency })]);
         this.tabDetail[0]['formControl'].controls.custodianPayment.patchValue([_.find(this.custodianPaymentItems, { id: subPortfolio.custodianPaymentID })]);
@@ -262,9 +262,10 @@ export class OfiSubPortfolioComponent implements OnDestroy {
                     }
                 }
             },
-            (response) => {
-                const message = _.get(response, '[1].Data[0].Message', 'Fail');
-                if (message === 'Duplicate Label') {
+            (labelResponse) => {
+                const message = _.get(labelResponse, '[1].Data[0].Message', 'Fail');
+                const errorTypes = ['Duplicate Label', 'Duplicate Security Account']
+                if (errorTypes.includes(message)) {
                     this.handleLabelResponse(message, 'created');
                 } else {
                     this.alertsService.generate('error', this.translate.translate('Error creating sub-portfolio'));
@@ -295,9 +296,14 @@ export class OfiSubPortfolioComponent implements OnDestroy {
                     this.toggleFormModal();
                 }
             },
-            () => {
-                this.alertsService.generate('error', this.translate.translate('Error updating sub-portfolio'));
-            }));
+            (labelResponse) => {
+                const message = _.get(labelResponse, '[1].Data[0].Message', 'Fail');
+                if (message === 'Duplicate Security Account') {
+                    this.handleLabelResponse(message, 'updated');
+                } else {
+                    this.alertsService.generate('error',
+                    this.translate.translate('Error updating sub-portfolio'));
+            }}));
     }
 
     /**
@@ -361,6 +367,11 @@ export class OfiSubPortfolioComponent implements OnDestroy {
         switch (message) {
             case 'Duplicate Label':
                 this.alertsService.generate('error', this.translate.translate('Sub-portfolio name already exists'));
+                break;
+
+            case 'Duplicate Security Account':
+                this.alertsService.generate('error',
+                this.translate.translate('This account number is already used by another sub-portfolio'));
                 break;
 
             default:

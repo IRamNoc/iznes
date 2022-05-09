@@ -54,6 +54,7 @@ export interface IznesShareDetail {
     subscriptionCutOffTimeZone: string;
     subscriptionSettlementPeriod: string;
     subscriptionSettlementPivotDate: number;
+    subscriptionPaymentInstructionTrigger: number;
     subscriptionValuationReference: number;
     redemptionCutOffTime: string;
     redemptionCutOffTimeZone: string;

@@ -123,6 +123,7 @@ function handleSetFundAccessMy(state: OfiFundAccessMyState, action: Action): Ofi
             subscriptionCutOffTimeZone: item.get('subscriptionCutOffTimeZone', 0),
             subscriptionSettlementPeriod: item.get('subscriptionSettlementPeriod', 0),
             subscriptionSettlementPivotDate: item.get('subscriptionSettlementPivotDate', 0),
+            subscriptionPaymentInstructionTrigger: item.get('subscriptionPaymentInstructionTrigger', 0),
             subscriptionValuationReference: item.get('subscriptionValuationReference', 0),
             redemptionCutOffTime: item.get('redemptionCutOffTime', 0),
             redemptionCutOffTimeZone: item.get('redemptionCutOffTimeZone', 0),

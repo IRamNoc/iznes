@@ -129,3 +129,10 @@ export interface CentralisationHistoryRequestData {
     dateTo: any;
     dateRange: any;
 }
+
+export interface myHoldingHistoryRequestBody extends MemberNodeMessageBody {
+    token: string;
+}
+
+export interface myHoldingHistoryRequestData {
+}
