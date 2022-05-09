@@ -345,11 +345,11 @@ export class FundShare {
         );
         this.setListItemPreset(
             this.fees.mandatory.subscriptionFeeInFavourOfFundCalculation,
-            fundShare.subscriptionFeeInFavourOfFundCalculationn
+            fundShare.subscriptionFeeInFavourOfFundCalculation,
         );
         this.setListItemPreset(
             this.fees.mandatory.redemptionFeeInFavourOfFundCalculation,
-            fundShare.redemptionFeeInFavourOfFundCalculation
+            fundShare.redemptionFeeInFavourOfFundCalculation,
         );
         // removed by PZ 28/06/2018
         // this.calendar.mandatory.subscriptionRedemptionCalendar.preset = fundShare.subscriptionRedemptionCalendar;

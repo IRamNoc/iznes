@@ -1,4 +1,4 @@
-import { OrderType, OrderByType } from '../../../ofi-orders/order.model';
+import { OrderType, OrderByType, FeeInFavourOfFundCalculation } from '../../../ofi-orders/order.model';
 import { fixToDecimal, lowerRoundedQuantity as lowerRoundedFct } from '@setl/utils/helper/common/math-helper'; //notcompile
 //import { fixToDecimal, lowerRoundedQuantity as lowerRoundedFct } from '../../../../utils/helper/common/math-helper'; //compile
 import { BlockchainNumberDecimal, NormalNumberDecimal, NumberMultiplier, ExpirySecond } from './config';
@@ -16,6 +16,7 @@ export const calculateFigures = (
         value: number,
         nav: number,
         feePercentage: number,
+        managementFee: any
     },
     maxDecimalisation: number,
     knownNav: boolean,
@@ -26,6 +27,7 @@ export const calculateFigures = (
     let estimatedQuantity;
     let estimatedAmount;
     let fee;
+    let managementFee;
     let estimatedAmountWithCost;
     let amountWithCost;
     const validatedPrice = knownNav ? order.nav : 0;
@@ -52,8 +54,11 @@ export const calculateFigures = (
         // calculate fee
         fee = calFee(estimatedAmount, order.feePercentage);
 
+        // calculate management fee
+        managementFee = calManagementFee(estimatedAmount, order.managementFee.managementFeePercentage, estimatedQuantity, order.managementFee.managementFeeType, order.nav);
+
         // net amount change to 2 decimal place
-        fee = getAmountTwoDecimal(fee);
+        fee = getAmountTwoDecimal(fee + managementFee);
 
         // net amount
         estimatedAmountWithCost = calNetAmount(estimatedAmount, fee, orderTypeToString[order.orderType]);
@@ -101,15 +106,18 @@ export const calculateFigures = (
         // calculate fee
         fee = calFee(estimatedAmount, order.feePercentage);
 
+        // calculate management fee
+        managementFee = calManagementFee(estimatedAmount, order.managementFee.managementFeePercentage, estimatedQuantity, order.managementFee.managementFeeType, order.nav);
+
         // change to 2 decimal place
-        fee = getAmountTwoDecimal(fee);
+        fee = getAmountTwoDecimal(fee + managementFee);
 
         // net amount
         estimatedAmountWithCost = calNetAmount(estimatedAmount, fee, orderTypeToString[order.orderType]);
 
         amountWithCost = calNetAmount(estimatedAmount, fee, orderTypeToString[order.orderType]);
 
-        break;
+        break;  
 
     default:
         throw new Error('Invalid orderBy type');
@@ -138,6 +146,30 @@ export function calFee(amount: number | string, feePercent: number | string): nu
     amount = Number(amount);
     feePercent = Number(feePercent) / NumberMultiplier;
     return fixToDecimal((amount * (feePercent)), BlockchainNumberDecimal, 'floor');
+}
+
+/**
+ * Calculate order management fee.
+ *
+ * @param amount
+ * @param feePercent
+ * @return {number}
+ */
+ export function calManagementFee(amount: number | string, feePercent: number | string, quantity: number | string, type: number, nav: number | string): number {
+    amount = Number(amount);
+    quantity = Number(quantity);
+    nav = Number(nav);
+    feePercent = Number(feePercent) / NumberMultiplier;
+
+    if (type === FeeInFavourOfFundCalculation.Unitary) {
+        return fixToDecimal(quantity * (nav * (feePercent / 100)), BlockchainNumberDecimal, 'floor');
+    }
+
+    if (type === FeeInFavourOfFundCalculation.Global) {
+        return fixToDecimal(amount * (feePercent / 100), BlockchainNumberDecimal, 'floor');
+    }
+
+    return 0;
 }
 
 

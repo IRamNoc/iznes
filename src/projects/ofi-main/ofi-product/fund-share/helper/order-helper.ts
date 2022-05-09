@@ -118,6 +118,16 @@ export class OrderHelper {
             }[this.orderType]);
     }
 
+    get managementFeeInFavourOfFund() {
+        const managementFeeType = this.orderType === OrderType.Subscription ? this.fundShare.subscriptionFeeInFavourOfFundCalculation : this.fundShare.redemptionFeeInFavourOfFundCalculation;
+        const managementFeePercentage = this.orderType === OrderType.Subscription ? this.fundShare.subscriptionFeeInFavourOfFund : this.fundShare.redemptionFeeInFavourOfFund;
+
+        return {
+            managementFeeType,
+            managementFeePercentage,
+        }
+    }
+
     get currency() {
         return Number({
             [OrderType.Subscription]: this.fundShare.shareClassCurrency || 0,
@@ -941,6 +951,7 @@ export class OrderHelper {
                     orderBy: this.orderBy,
                     orderType: this.orderType,
                     value: this.orderValue,
+                    managementFee: this.managementFeeInFavourOfFund,
                 },
                 +this.fundShare.maximumNumDecimal,
                 this.isKnownNav(),

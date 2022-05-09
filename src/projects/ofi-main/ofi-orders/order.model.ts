@@ -16,3 +16,10 @@ const labelMap = {
 export const labelForOrder = (order: { orderType: number }): string => {
     return labelMap[order.orderType] || 'Not found!';
 };
+
+export enum FeeInFavourOfFundCalculation {
+    None,
+    Unitary,
+    Global,
+}
+
