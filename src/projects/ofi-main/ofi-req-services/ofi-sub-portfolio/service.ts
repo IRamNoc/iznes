@@ -3,9 +3,6 @@ import { Injectable } from '@angular/core';
 import { MemberSocketService } from '@setl/websocket-service';
 import { createMemberNodeSagaRequest } from '@setl/utils/common';
 
-import { NgRedux } from '@angular-redux/store';
-import { SagaHelper } from '@setl/utils';
-
 import {
     Subportfolio,
     OfiUpdateSubPortfolioData,
@@ -19,7 +16,6 @@ import {
 export class OfiSubPortfolioReqService {
     constructor(
         private memberSocketService: MemberSocketService,
-        private ngRedux: NgRedux<any>,
     ) {
     }
 
@@ -63,27 +59,4 @@ export class OfiSubPortfolioReqService {
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
     }
-
-    defaultRequestGetInvestorSubportfolio(walletID: number, successCallback: (res) => void, errorCallback: (res) => void) {
-        const asyncTaskPipe = this.requestGetInvestorSubportfolio(walletID);
-
-        this.ngRedux.dispatch(SagaHelper.runAsync(
-            [],
-            [],
-            asyncTaskPipe,
-            {},
-            res => successCallback(res),
-            res => errorCallback(res),
-        ));
-    }
-
-    requestGetInvestorSubportfolio(walletId) {
-        const messageBody = {
-            RequestName: 'izngetsubportfoliodetails',
-            token: this.memberSocketService.token,
-            walletId,
-        };
-
-        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
-    }    
 }
