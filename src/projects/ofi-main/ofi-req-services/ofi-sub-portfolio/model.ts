@@ -8,8 +8,6 @@ export interface Subportfolio {
     walletId: number;
     investorReference: string;
     accountLabel: string;
-    emailtransactionnotice: string;
-    emailcertificationbookentry: string;
     accountCurrency: number;
     custodianPayment: number;
     custodianPosition: number;
@@ -33,6 +31,8 @@ export interface Subportfolio {
     bankIdentificationStatement: string;
     securityAccount: string;
     cashAccount: string;
+    emailtransactnotice: string;
+    emailcertificationbookentry: string;
 }
 
 export interface OfiUpdateSubPortfolioRequestBody extends OfiMemberNodeBody {

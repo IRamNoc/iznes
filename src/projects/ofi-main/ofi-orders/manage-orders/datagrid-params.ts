@@ -11,7 +11,7 @@ abstract class DatagridParamsData {
     fundName: string;
     shareName: string;
     isin: string;
-    status: number;
+    status: string;
     orderType: number;
     pageSize: number;
     rowOffSet: number;
@@ -63,8 +63,7 @@ export class DatagridParams {
         this.data.fundName = get(searchValues, 'fundname', null);
         this.data.shareName = get(searchValues, 'sharename', null);
         this.data.isin = get(searchValues, 'isin', null);
-
-        this.data.status = get(searchValues, ['status', '0', 'id'], -3);
+        this.data.status = get(searchValues, 'status', null).map(item => `${item.id}`).join(',');
         let orderType = get(searchValues, ['type', '0', 'id'], null);
         this.data.orderType = orderType === 0 ? null : orderType;
         let isTransfer = null;
@@ -73,7 +72,7 @@ export class DatagridParams {
             let newOrderType = orderType === 1 ? 3 : 4;
             orderType = newOrderType;
             this.data.orderType = newOrderType;
-            isTransfer = 1;   
+            isTransfer = 1;
         } else {
             isTransfer = orderType !== null ? 0 : null;
         }
