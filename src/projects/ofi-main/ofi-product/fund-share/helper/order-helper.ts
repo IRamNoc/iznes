@@ -309,6 +309,7 @@ export class OrderHelper {
             data: {
                 pdfType: 'share',
                 pdfMetadata: {
+                    orderType:order.orderType,
                     fundName: order.fundShareName,
                     isinCode: order.isin,
                     fundsForm: 'Fonds commun de placement',
