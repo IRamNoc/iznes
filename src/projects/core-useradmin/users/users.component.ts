@@ -19,7 +19,7 @@ import { AdminUsersService } from '@setl/core-req-services';
 import { LogService } from '@setl/utils';
 import { ClrDatagridStateInterface } from '@clr/angular';
 import { MyUserService } from '@setl/core-req-services';
-import { usersListActions, usersListFields } from './users.model';
+import { usersListActions, usersListActionsNonsuperAdmin, usersListFields } from './users.model';
 import { actionChannel } from 'redux-saga/effects';
 
 /* Decorator. */
@@ -78,6 +78,7 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
     public currentPage: number = 1;
     public usersListModel: {} = usersListFields;
     public usersListActions: {}[] = usersListActions;
+    public usersListActionsNonsuperadmin: {}[] = usersListActionsNonsuperAdmin;
 
     /* User list cache */
     private totalRecords: number = 0;
@@ -118,6 +119,7 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     onAction(action) {
+        console.log(action)
         if (action.type === 'editUser') this.handleEdit(action.data.userID);
         if (action.type === 'deleteUser') this.handleDelete(action.data.userID);
     }
@@ -728,6 +730,7 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
             const walletName = response[1].Data[0].emailAddress.toString();
 
             /* Create default wallet if option has been checked */
+            /*
             if (thisTab.formControl.controls.createDefaultWallet.value) {
                 this.userAdminService.createDefaultWallet({
                     userID: Number(userId),
@@ -735,13 +738,13 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
                     walletType,
                     walletName,
                 }).catch((error) => {
-                    /* Handle Error. */
                     this.alertsService.generate(
                         'error',
                         this.translate.translate('Failed to create default wallet for user.'),
                     );
                 });
             }
+            */
 
             /* Save admin group access. */
             this.userAdminService.updateUserGroups({
@@ -899,21 +902,21 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
                 const walletType = 3;
                 const walletName = userData.emailAddress.toString();
 
+                /*
                 this.userAdminService.createDefaultWallet({
                     userID: Number(userId),
                     accountID,
                     walletType,
                     walletName,
                 }).then((res) => {
-                    /* Default wallet successfully created for the user */
                     this.hasDefaultWallet = true;
                 }).catch((error) => {
-                    /* Handle Error. */
                     this.alertsService.generate(
                         'error',
                         this.translate.translate('Failed to create default wallet for user.'),
                     );
                 });
+                */
             }
 
             /* Now we've edited the user, we need to send any changes to the groups. */
@@ -1310,8 +1313,9 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
      * @return {void}
      */
     public handleEdit(userId: number): void {
+        console.log(this.usersList,userId)
         const userIndex = _.findIndex(this.usersList, (user) => {
-            return user.userID === userId;
+            return user.userID === userId 
         });
 
         /* Check if the tab is already open. */

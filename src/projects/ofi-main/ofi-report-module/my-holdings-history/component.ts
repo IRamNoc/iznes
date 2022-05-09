@@ -68,6 +68,7 @@ export class MyHoldingsHistoryComponent implements OnInit, OnDestroy {
     dataSeparator: any;
 
     holdingList: Array<any>;
+    holdingListPreFiltered: Array<any>;
     holdingListFiltered: Array<any>;
     searchForm: FormGroup;
     unSubscribe: Subject<any> = new Subject();
@@ -415,28 +416,30 @@ export class MyHoldingsHistoryComponent implements OnInit, OnDestroy {
     }
 
     exportHolding() {
-        const exportData = _.map(this.holdingListFiltered, (item) => {
-            const parsedNavPrice = item.navPrice ? this.moneyValue.transform(item.navPrice, 4) : '';
-            const parsedQuantity = this.moneyValue.transform(item.quantity, 5);
-            return {
-                'Asset Management Company': item.companyName,
-                'Fund Name': item.fundName,
-                'Share Name': item.fundShareName,
-                'ISIN': item.isin,
-                'Currency': item.currency,
-                'Portfolio Manager': item.portfolioManager,
-                'Investor': item.investor,
-                'Portfolio': item.investorWalletName,
-                'Date': item.date,
-                'Quantity': this.decimalSeparator === 'dot' ? parsedQuantity : parsedQuantity.replace('.', ','),
-                'NAV': this.decimalSeparator === 'dot' ? parsedNavPrice : parsedNavPrice.replace('.', ','),
-                'NAV Date': item.navDate,
-                'AUI': item.navPrice ? (item.navPrice * item.quantity) : '',
-            }
-        });
+       const header = 'Asset Management Company;Fund Name;Share Name;ISIN;Currency;Portfolio Manager;Investor;Portfolio;Date;Quantity;NAV;NAV Date;AUI\n';
+       let exportData = header;
 
-        const separator = this.dataSeparator === 'semicolon' ? ';' : ',';        
-        const data = json2csv.parse(exportData, { delimiter: separator, quote: '' });
+       this.holdingListFiltered.forEach(item => {
+            const parsedNavPrice = item.navPrice ? (item.navPrice).toString() : '';
+            const parsedQuantity = (item.quantity).toString()  || '';
+
+            exportData += `${item.companyName || ''};`;
+            exportData += `${item.fundName  || ''};`;
+            exportData += `${item.fundShareName || ''};`;
+            exportData += `${item.isin || ''};`;
+            exportData += `${item.currency || ''};`;
+            exportData += `${item.portfolioManager || ''};`;
+            exportData += `${item.investor || ''};`;
+            exportData += `${item.investorWalletName || ''};`;
+            exportData += `${item.date || ''};`;
+            exportData += `${this.decimalSeparator === 'dot' ? parsedQuantity : parsedQuantity.replace('.', ',')};`;
+            exportData += `${this.decimalSeparator === 'dot' ? parsedNavPrice : parsedNavPrice.replace('.', ',')};`;
+            exportData += `${item.navDate || ''};`;
+            exportData += `${item.navPrice ? (item.navPrice * item.quantity) : ''}`;
+            exportData += `\n`;
+       });
+
+        const data = this.dataSeparator === 'semicolon' ? exportData : exportData.replace(';', ',');        
         const element = document.createElement('a');
 
         element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(data));
@@ -469,22 +472,25 @@ export class MyHoldingsHistoryComponent implements OnInit, OnDestroy {
             investorInInvestorFunds: this.searchForm.controls['investorInInvestorFunds'].value,
         }
 
-        _.forEach(this.holdingList, (list) => {
+        this.holdingListPreFiltered = this.createArrayForEachCalendarDay(this.holdingList, params.dateTo);
+        const holdingList = this.holdingListPreFiltered;
+        
+        holdingListPrep = _.reduce(holdingList, (result, list) => {
             let targetDate;
             let holidayCalendar;
 
             switch (params.dateType) {
                 case 2:
                     targetDate = moment(list.cutoffDate).format('YYYY-MM-DD');
-                    holidayCalendar = list.orderType === 3 ? list.buyCentralizationCalendar : list.sellCentralizationCalendar;
+                    holidayCalendar = list.centralizationCalendar;
                     break;
                 case 3:
                     targetDate = moment(list.settlementDate).format('YYYY-MM-DD');
-                    holidayCalendar = list.orderType === 3 ? list.buySettlementCalendar : list.sellSettlementCalendar;
+                    holidayCalendar = list.settlementCalendar;
                     break;
                 case 4:
                     targetDate = moment(list.valuationDate).format('YYYY-MM-DD');
-                    holidayCalendar = list.orderType === 3 ? list.buyNAVCalendar : list.sellNAVCalendar;
+                    holidayCalendar = list.navCalendar;
                     break;
                 case 1:
                 default:
@@ -493,142 +499,48 @@ export class MyHoldingsHistoryComponent implements OnInit, OnDestroy {
                     break;
             }
 
+            // removes dates after
             if (params.dateTo !== null && targetDate > params.dateTo) {
-                return;
+                return result;
+            }
+
+            // removes dates before
+            if (params.dateFrom !== null && targetDate < params.dateFrom) {
+                return result;
             }
 
             // removes holiday orders
             if (params.includeHoliday === 'non-holiday' && holidayCalendar !== null) {
-                if (holidayCalendar.includes(targetDate)) return;
+                if (holidayCalendar.includes(targetDate)) return result;
             }
 
             // removes non-selected management companies
             if (params.managementCompanyId !== null && params.managementCompanyId !== list.companyID)
-                return;
+                return result;
             
             // removes non-selected funds
             if (params.fundId !== null && params.fundId !== list.fundID)
-                return;
+                return result;
             
             // removes non-selected fund shares
             if (params.shareId !== null && params.shareId !== list.fundShareID)
-                return;
-            
+                return result;
             // removes non-selected isin
             if (params.isin !== '' && !list.isin.includes(params.isin))
-                return;
+                return result;
 
             // removes non-selected investors
             if (params.investorId !== null && params.investorId !== list.investorWalletID)
-                return;
+                return result;
             
             // removes non-selected subportfolios
             if (params.subportfolioId !== null && params.subportfolioId !== list.subportfolioID)
-                return;
+                return result;
             
-            const foundParams = {
-                companyName: list.companyName,
-                fundShareName: list.fundShareName,
-                investorWalletName: list.investorWalletName,
-                portfolio: list.subportfolioLabel,
-            };
-
-            if (params.dateFrom !== null) {
-                switch (params.dateType) {
-                    case 2:
-                        foundParams['cutoffDate'] = targetDate;
-                        break;
-                    case 3:
-                        foundParams['settlementDate'] = targetDate;
-                        break;
-                    case 4:
-                        foundParams['valuationDate'] = targetDate; 
-                        break;
-                    case 1:
-                    default:
-                        foundParams['orderDate'] = targetDate;
-                        break;
-                }
-            }
-
-            const found = _.findIndex(holdingListPrep, foundParams);
-            
-            if (found < 0) {
-                return holdingListPrep.push({
-                    companyName: list.companyName,
-                    fundName: list.fundName,
-                    fundShareName: list.fundShareName,
-                    isin: list.isin,
-                    currency: list.currency,
-                    portfolioManager: list.investorCompanyName === null ? list.investorWalletName : '',
-                    investor: list.investorCompanyName,
-                    investorWalletName: list.investorWalletName,
-                    portfolio: list.subportfolioLabel,
-                    date: targetDate,
-                    quantity: Number(list.quantity),
-                    navPrice: Number(list.valuationPrice),
-                    navDate: list.valuationDate,
-                    AUI: (list.valuationPrice * list.quantity),
-                });
-            }
-
-            if (list.orderType === 3) {
-                holdingListPrep[found].quantity += list.quantity;
-            } else {
-                holdingListPrep[found].quantity -= list.quantity;
-            }
-        });
-    
-        // removes previous dates
-        if (params.dateFrom !== null) {
-            // add default holders                        
-            const previousHolding = _.filter(holdingListPrep, (a) => a.date < params.dateFrom);
-            
-            const previousHoldingPrep = [];
-            _.forEach(previousHolding, (it) => {
-                const alreadyExist = _.findIndex(previousHoldingPrep, {
-                    companyName: it.companyName,
-                    fundName: it.fundName,
-                    fundShareName: it.fundShareName,
-                    investorWalletName: it.investorWalletName,
-                    portfolio: it.portfolio,
-                });
-
-                // check duplicate in filtered array
-                const foundDuplicateDate = _.findIndex(holdingListPrep, {
-                    companyName: it.companyName,
-                    fundName: it.fundName,
-                    fundShareName: it.fundShareName,
-                    investorWalletName: it.investorWalletName,
-                    portfolio: it.portfolio,
-                    date: params.dateFrom,
-                });
-
-                if (foundDuplicateDate !== -1) return;
-
-                // already exist in array, check if date is more recent
-                if (alreadyExist > -1) {
-                    const foundItem = previousHoldingPrep[alreadyExist];
-                    if (foundItem.realDate >= it.date) {
-                        foundItem.quantity = it.quantity + foundItem.quantity;
-                        return;
-                    }
-                    foundItem.realDate = it.date;
-                    foundItem.quantity = it.quantity + foundItem.quantity;
-                    foundItem.navDate = it.navDate;
-                    foundItem.navPrice = it.navPrice;
-                    foundItem.AUI = it.navPrice * it.quantity;
-                    return;
-                }
-
-                it.realDate = it.date;
-                it.date = params.dateFrom;
-                previousHoldingPrep.push(it);
-                return;
-            });
-
-            holdingListPrep = _.merge(previousHoldingPrep, _.filter(holdingListPrep, (a) => a.date >= params.dateFrom));
-        }
+            list.date = targetDate;
+            result.push(list);
+            return result;
+        }, []);
 
         // share aggregation
         holdingListPrep = this.shareAggregation(holdingListPrep, params.aggregationShare);
@@ -642,7 +554,166 @@ export class MyHoldingsHistoryComponent implements OnInit, OnDestroy {
         }
 
         this.holdingListFiltered = _.uniq(holdingListPrep);
+
+        // Display management company name instead of portfolio wallet name
+        if (params.investorInInvestorFunds !== null && params.investorInInvestorFunds) {
+            this.holdingListFiltered = this.holdingListFiltered.map((item) => {
+                if (item.portfolioManager) {
+                    const newItem = _.clone(item);
+                    newItem.investor = item.companyName;
+                    return newItem;
+                }
+                return item;
+            })
+        }
     }
+
+    createArrayForEachCalendarDay(holdingList, dateTo) {
+        if (!holdingList.length) return [];
+
+        const formatHoldingListPrep = [];
+        const finalFormat = [];
+
+        // get lowest and highest order dates
+        const firstOrder = _.minBy(holdingList, 'orderDate');
+
+        const lastDate = dateTo !== null ? moment(dateTo) : moment(Date.now());
+
+        // get all dates between dateFrom and dateTo
+        const dateList = this.getDaysBetweenDates(moment(firstOrder.orderDate), lastDate);
+
+        // get unique list of differents investors
+        holdingList.forEach(it => {
+            const alreadyExist = _.findIndex(formatHoldingListPrep, {
+                companyName: it.companyName,
+                fundName: it.fundName,
+                fundShareName: it.fundShareName,
+                investorWalletName: it.investorWalletName,
+                subportfolioLabel: it.subportfolioLabel,
+            });
+
+            if (alreadyExist > -1) return;
+            return formatHoldingListPrep.push({
+                companyName: it.companyName,
+                fundName: it.fundName,
+                fundShareName: it.fundShareName,
+                investorWalletName: it.investorWalletName,
+                subportfolioLabel: it.subportfolioLabel,
+            });
+        });
+
+        dateList.forEach(currentDate => {
+        // get all positions records for each dates
+            const orders = _.filter(holdingList, {
+                orderDate: currentDate
+            });
+    
+            // check what unique record is missing
+            formatHoldingListPrep.forEach(it => {
+                const isFound = _.filter(orders, it);
+                if (isFound && isFound.length) {
+                    // insert each orders into array
+                    const curOrder = _.reduce(isFound, (result, value, key) => {
+                        if (Object.keys(result).length === 0 ) {
+                            result = {
+                                companyID: value.companyID,
+                                fundID: value.fundID,
+                                fundShareID: value.fundShareID,
+                                investorWalletID: value.investorWalletID,
+                                subportfolioID: value.subportfolioID,
+                                companyName: value.companyName,
+                                fundName: value.fundName,
+                                fundShareName: value.fundShareName,
+                                isin: value.isin,
+                                currency: value.currency,
+                                portfolioManager: value.investorCompanyName === null ? value.investorWalletName : '',
+                                investor: value.investorCompanyName,
+                                investorWalletName: value.investorWalletName,
+                                portfolio: value.subportfolioLabel,
+                                orderDate: value.orderDate,
+                                settlementDate: value.settlementDate,
+                                cutoffDate: value.cutoffDate,
+                                valuationDate: value.valuationDate,
+                                quantity: value.orderType === 3 ? Number(value.quantity) : -Number(value.quantity),
+                                navPrice: Number(value.valuationPrice),
+                                navDate: value.valuationDate,
+                                AUI: (Number(value.valuationPrice) * Number(value.quantity)),
+                                centralizationCalendar: _.merge(value.buyCentralizationCalendar, value.sellCentralizationCalendar),
+                                settlementCalendar: _.merge(value.buySettlementCalendar, value.sellSettlementCalendar),
+                                navCalendar: _.merge(value.buyNAVCalendar, value.sellNAVCalendar),
+                            };
+                            return result;
+                        }
+
+                        const quantity = value.orderType === 3 ? Number(value.quantity) : -Number(value.quantity);
+                        result.quantity = result.quantity + quantity;
+
+                        return result;
+                    }, {});
+                    finalFormat.push(curOrder);
+                    return;
+                }
+            
+                const previousDate = moment(currentDate).subtract(1, 'day').format('YYYY-MM-DD');
+            
+                const previousPositionIndex = _.findIndex(finalFormat, {
+                    companyName: it.companyName,
+                    fundName: it.fundName,
+                    fundShareName: it.fundShareName,
+                    investorWalletName: it.investorWalletName,
+                    portfolio: it.subportfolioLabel,
+                    orderDate: previousDate,
+                });
+            
+                if (!finalFormat[previousPositionIndex]) return;
+
+                const newData = _.clone(finalFormat[previousPositionIndex]);
+                newData.orderDate = currentDate;
+                newData.noExists = true;
+                finalFormat.push(newData);
+            });
+        });
+
+        const totalPositions = [];
+
+        // calculate positions
+        formatHoldingListPrep.forEach(it => {
+            const filteredPositions = _.filter(finalFormat, {
+                companyName: it.companyName,
+                fundName: it.fundName,
+                fundShareName: it.fundShareName,
+                investorWalletName: it.investorWalletName,
+                portfolio: it.subportfolioLabel,
+            })
+
+            const orderedPositions = _.orderBy(filteredPositions, ['orderDate'], ['asc']);
+
+            let latestPosition = 0;
+
+            orderedPositions.forEach((pos) => {
+                if (!pos.noExists) {
+                    pos.quantity = latestPosition + pos.quantity;
+                    latestPosition = pos.quantity;
+                } else {
+                    pos.quantity = latestPosition;
+                }
+                totalPositions.push(pos);
+            })
+        });
+
+        return _.orderBy(totalPositions, ['orderDate'], ['asc']);;
+    }
+
+    getDaysBetweenDates(startDate, endDate) {
+        var now = moment(startDate).clone(), dates = [];
+    
+        while (now.isSameOrBefore(endDate)) {
+            dates.push(now.format('YYYY-MM-DD'));
+            now.add(1, 'days');
+        }
+    
+        return dates;
+    };
 
     portfolioAggregation(data, type) {
         let filteredData = data;
@@ -669,7 +740,24 @@ export class MyHoldingsHistoryComponent implements OnInit, OnDestroy {
         }
 
         if (type === 'global') {
+            filteredData = _.reduce(data, (result, value, key) => {
+                const found = _.findIndex(result, {
+                    companyName: value.companyName,
+                    fundName: value.fundName,
+                    fundShareName: value.fundShareName,
+                    date: value.date,
+                });
 
+                if (found < 0) {
+                    value.portfolio = null;
+                    value.investorWalletName = null;
+                    result.push(value);
+                    return result;
+                }
+
+                result[found].quantity += value.quantity;
+                return result;
+            }, []);
         }
 
         return filteredData;
