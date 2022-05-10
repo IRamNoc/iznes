@@ -40,6 +40,7 @@ import { FileViewerModule } from '@setl/core-fileviewer';
 
 import { AlertsComponent } from './alerts/alerts.component';
 import { DatagridListModule } from '@setl/utils/components/datagrid-list/datagrid-list-module';
+import { HelpPageComponent } from './help-page/help-page.component';
 
 @NgModule({
     imports: [
@@ -65,7 +66,6 @@ import { DatagridListModule } from '@setl/utils/components/datagrid-list/datagri
     declarations: [
         /* Directives. */
         DropdownDirective,
-
         /* Components. */
         BlankLayoutComponent,
         BasicLayoutComponent,
@@ -77,6 +77,7 @@ import { DatagridListModule } from '@setl/utils/components/datagrid-list/datagri
         BasicTileComponent,
         HomeComponent,
         AlertsComponent,
+        HelpPageComponent
     ],
     exports: [
         /* Directives. */
@@ -91,10 +92,12 @@ import { DatagridListModule } from '@setl/utils/components/datagrid-list/datagri
         DashboardComponent,
         CounterTileComponent,
         HomeComponent,
+        ClarityModule
     ],
     providers: [
         /* Services. */
         MenuDropdownService,
+    
     ],
 })
 
