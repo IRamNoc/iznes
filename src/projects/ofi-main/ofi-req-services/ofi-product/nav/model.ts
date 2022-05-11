@@ -1,5 +1,5 @@
-import { MemberNodeMessageBody }from '@setl/utils/common'; //notcompile
-//import { MemberNodeMessageBody } from '../../../../utils/common'; //compile
+//import { MemberNodeMessageBody }from '@setl/utils/common'; //notcompile
+import { MemberNodeMessageBody } from '../../../../utils/common'; //compile
 
 export enum NavStatus {
     FINAL = -1,

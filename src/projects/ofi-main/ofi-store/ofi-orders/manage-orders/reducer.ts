@@ -9,7 +9,7 @@ import { immutableHelper } from '@setl/utils';
 import { fromJS } from 'immutable';
 import { get, merge } from 'lodash';
 import { calculateFigures } from '@ofi/ofi-main/ofi-product/fund-share/helper/order-calculations';
-import { OrderStatus, getFeePercentageType } from '../../../ofi-product/fund-share/helper/order-view-helper';
+import { OrderStatus } from '../../../ofi-product/fund-share/helper/order-view-helper';
 
 /* Initial state. */
 const initialState: ManageOrders = {
@@ -256,6 +256,7 @@ function formatManageOrderDataResponse(rawData: any[]): ManageOrderDetails[] {
                 useCBDC: item.get('useCBDC'),
                 managementFeeType: item.get('managementFeeType'),
                 managementFeePercentage: item.get('managementFeePercentage'),
+                feeInFavorOfFund: item.get('feeInFavorOfFund'),
             };
 
             if (order.price > 0) {
@@ -289,6 +290,7 @@ function formatManageOrderDataResponse(rawData: any[]): ManageOrderDetails[] {
                 order.estimatedAmountWithCost = +math
                     .chain(+figures.estimatedAmount)
                     .multiply(1 + (order.feePercentage / 100000))
+                    .add(order.feeInFavorOfFund)
                     .done();
             } else {
                 // Amount - Calculate quantity

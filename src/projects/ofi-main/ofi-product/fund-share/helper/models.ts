@@ -1,7 +1,7 @@
 import {
     ContractData,
-} from '@setl/utils/services/blockchain-contract/model'; //notcompile
-//} from '../../../../utils/services/blockchain-contract/model'; //compile
+//} from '@setl/utils/services/blockchain-contract/model'; //notcompile
+} from '../../../../utils/services/blockchain-contract/model'; //compile
 import { IznesShareDetail } from '../../../ofi-store/ofi-product/fund-share-list/model';
 import { NavStatus } from "../../../ofi-req-services/ofi-product/nav/model";
 
@@ -71,6 +71,7 @@ export interface OrderFigures {
     estimatedAmountWithCost: number;
     knownNav: boolean;
     validatedPrice: number;
+    feeInFavorOfFund: number;
 }
 
 export interface OrderTimeStamps {
@@ -100,6 +101,7 @@ export interface OrderRequestBody {
     estimatedAmount: number;
     amountWithCost: number;
     estimatedAmountWithCost: number;
+    feeInFavorOfFund: number;
     feePercentage: number;
     platFormFee: number;
     classificationFee: number;

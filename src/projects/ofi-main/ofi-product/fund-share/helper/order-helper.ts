@@ -14,8 +14,8 @@ import {
 
 // ** please don't remove this below commented import please,
 // as i use it for building the compiled version
-// import {BlockchainContractService} from '../../../../utils/services/blockchain-contract/service'; //compile
-import { BlockchainContractService } from '@setl/utils/services/blockchain-contract/service'; //notcompile
+import {BlockchainContractService} from '../../../../utils/services/blockchain-contract/service'; //compile
+//import { BlockchainContractService } from '@setl/utils/services/blockchain-contract/service'; //notcompile
 import {
     Contract,
     ContractData,
@@ -25,11 +25,11 @@ import {
 
     // ** please don't remove this below commented import please,
     // as i use it for building the compiled version
-//} from '../../../../utils/services/blockchain-contract/model'; //compile
-} from '@setl/utils/services/blockchain-contract/model'; //notcompile
+} from '../../../../utils/services/blockchain-contract/model'; //compile
+//} from '@setl/utils/services/blockchain-contract/model'; //notcompile
 
-//import { fixToDecimal, lowerRoundedQuantity } from '../../../../utils/helper/common/math-helper'; //compile
-import { fixToDecimal, lowerRoundedQuantity } from '@setl/utils/helper/common/math-helper'; //notcompile
+import { fixToDecimal, lowerRoundedQuantity } from '../../../../utils/helper/common/math-helper'; //compile
+//import { fixToDecimal, lowerRoundedQuantity } from '@setl/utils/helper/common/math-helper'; //notcompile
 
 import { Base64 } from './base64';
 import {
@@ -667,6 +667,7 @@ export class OrderHelper {
         const estimatedAmountWithCost = orderFigure.estimatedAmountWithCost;
         const price = orderFigure.validatedPrice;
         const feePercentage = this.feePercentage;
+        const feeInFavorOfFund = orderFigure.feeInFavorOfFund;
         const platFormFee = this.fundShare.platFormFee || 0;
         const classificationFee = getFundClassificationFee((this.fundShare.fundClassificationId ) || 1);
 
@@ -705,6 +706,7 @@ export class OrderHelper {
             estimatedQuantity,
             amount,
             estimatedAmount,
+            feeInFavorOfFund,
             amountWithCost,
             estimatedAmountWithCost,
             feePercentage,
