@@ -80,6 +80,7 @@
                                         <label>{{ 'Status' | translate }}</label>
                                         <div>
                                             <ng-select
+                                                [multiple]="true"
                                                 id="orders-search-status"
                                                 class="fluid-width"
                                                 [active]="[orderStatuses[0]]"

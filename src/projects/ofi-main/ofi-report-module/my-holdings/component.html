@@ -10,7 +10,7 @@
         <clr-tab-content *clrIfActive>
             <section class="form-block">
 
-                <form [formGroup]="searchForm" id="search-orders-form">
+                <form [formGroup]="searchForm" id="search-orders-form" (ngSubmit)="onSubmit(searchForm.value)">
                     <div class="form-horizontal">
                         <div class="row bordered">
                             <div class="form-group col-sm-6">
@@ -24,8 +24,75 @@
                                     </ng-select>
                                 </div>
                             </div>
+                            <div class="col-sm-4 offset-sm-2 text-right">
+                                <button id="aic" class="btn btn-primary action-button"
+                                    (click)=" showGenerateAIC = true">{{ 'Generate AIC' | translate }}
+                                </button>
+                            </div>
                         </div>
+
                     </div>
+
+
+                </form>
+
+
+                <form autocomplete="off" (ngSubmit)="onSubmit()" [formGroup]="aicForm">
+
+
+                    <clr-modal [(clrModalOpen)]="showGenerateAIC" [clrModalSize]="'l'">
+                        <h3 id="override_header" class="modal-title">{{ 'Generate AIC' | translate }}</h3>
+                        <div class="modal-body">
+                            <section class="form-block">
+                                <div class="col-lg-12 form-group">
+                                    <label>{{ 'Share Name' | translate }}</label>
+                                    <div class="input-button-group">
+                                        <ng-select id="holders-list-shares-search-field" [items]="sharesList"
+                                            [allowClear]="true" (selected)="onChange($event)"
+                                            [placeholder]="translate.translate('Choose a Share name')"
+                                            formControlName="fundShare"
+                                        >
+                                        </ng-select>
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-4 form-group" *ngIf="shareISIN">
+                                    <label class="control-label">
+                                        <b>{{ 'ISIN' | translate }}</b> {{ shareISIN }}
+                                    </label>
+                                </div>
+
+                                <div class="col-lg-12 form-group">
+                                    <label>{{ 'Client Sub-portfolio' | translate }}</label>
+                                    <div class="input-button-group">
+                                        <ng-select id="holders-list-shares-search-field" [items]="subportfolioListData"
+                                            (selected)="onSubportfolioChange($event)"
+                                            [allowClear]="true" formControlName="subportfolio"
+                                            [placeholder]="translate.translate('Choose a subportfolio')"
+                                          >
+                                        </ng-select>
+                                    </div>
+                                </div>
+                                <div class="form-group col-lg-6">
+                                    <label class="control-label" for="date">
+                                        {{ 'Date' | translate }}
+                                    </label>
+                                    <div class="input-group date-pick-wrapper">
+                                        <span class="fa fa-calendar" aria-hidden="true"></span>
+                                        <input id="fromDate" formControlName="fromDate" [dpDayPicker]="fromConfigDate" [maxDate]="validationMaxDate"
+                                            [placeholder]="(!isPeriod) ? translate.translate('Choose a date') : translate.translate('Date From')"
+                                            mode="day" theme="dp-material">
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <button id="aic" class="btn btn-primary action-button" type="button" (click)="handleGenerateAIC()"
+                                        [disabled]="aicForm.invalid">{{ 'Generate AIC' | translate }}
+                                    </button>
+                                </div>
+                            </section>
+                        </div>
+                    </clr-modal>
                 </form>
 
                 <div class="hr-line-dashed"></div>

@@ -34,6 +34,8 @@
             <!-- Translations button -->
             <a *ngIf="!appConfig.production" (click)="getMissingTranslations()" id="translation-report-button" class="nav-link nav-icon blink_me">
                 <clr-icon shape="warning-standard" class="text-warning"></clr-icon>
+
+                
             </a>
 
             <!-- Mobile wallet picker -->
@@ -70,6 +72,11 @@
                 <clr-icon shape="email"><span *ngIf="unreadMessageCount > 0">{{unreadMessageCount}}</span></clr-icon>
             </a>
 
+            <a [routerLink]="['/help']" class="nav-link nav-icon ">
+                <clr-icon shape="help" 
+                class=""></clr-icon>
+            </a>
+            
             <!-- User Dropdown -->
             <clr-dropdown id="dropdown-user">
                 <button class="nav-icon" clrDropdownTrigger>
