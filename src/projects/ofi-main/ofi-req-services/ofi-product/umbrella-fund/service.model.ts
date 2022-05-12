@@ -19,6 +19,7 @@ export interface SaveUmbrellaFundRequestBody extends MemberNodeMessageBody {
     domicile: string;
     umbrellaFundCreationDate: string;
     managementCompanyID: number;
+    subCompanyOrder: number;
     fundAdministratorID: number;
     custodianBankID: number;
     investmentAdvisorID: string;

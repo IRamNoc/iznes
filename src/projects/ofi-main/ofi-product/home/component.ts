@@ -217,7 +217,7 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
                         domicile: domicile.text,
                         lawStatus: lawStatus.text,
                         umbrellaFundName: fund.umbrellaFundName,
-                        internalReference: fund.internalReference, 
+                        internalReference: fund.internalReference,
                         fundCurrency: (fundCurrency) ? fundCurrency.text : '',
                     });
                 }
@@ -277,7 +277,7 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
                             status,
                             shareCurrency: (shareCurrency) ? shareCurrency.text : '',
                             umbrellaFundName: this.getUmbrellaFundName(share.umbrellaFundID),
-                        });    
+                        });
                     }
                 }
             });
@@ -576,7 +576,7 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
                 sortable: true,
             },
             managementCompany: {
-                label: this.translate.translate('Management Company'),
+                label: this.translate.translate('Operating Company'),
                 dataSource: 'managementCompany',
                 sortable: true,
             },

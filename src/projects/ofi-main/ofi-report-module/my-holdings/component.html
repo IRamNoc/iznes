@@ -14,12 +14,13 @@
                     <div class="form-horizontal">
                         <div class="row bordered">
                             <div class="form-group col-sm-6">
-                                <label>{{ 'Asset Management Company' | translate }}</label>
+                                <label>{{ 'Operating Company' | translate }}</label>
                                 <div class="input-button-group">
-                                    <ng-select id="my-holdings-search-field" [items]="investorManagementCompanyList"
-                                        [allowClear]="false"
-                                        [placeholder]="translate.translate('Select Asset Management Company')"
-                                        [formControl]="searchForm.controls['search']">
+                                    <ng-select id="my-holdings-search-field"
+                                                [items]="investorManagementCompanyList"
+                                                [allowClear]="false"
+                                                [placeholder]="translate.translate('Select Operating Company')"
+                                                [formControl]="searchForm.controls['search']">
                                     </ng-select>
                                 </div>
                             </div>
@@ -98,7 +99,7 @@
 
                 <clr-datagrid>
                     <clr-dg-column [clrDgField]="'companyName'" clrDgSortIcon>
-                        <span>{{ 'Asset Management Company' | translate }}</span> <span class="column-label"></span>
+                        <span>{{ 'Operating Company' | translate }}</span> <span class="column-label"></span>
                     </clr-dg-column>
                     <clr-dg-column [clrDgField]="'portfolioLabel'" clrDgSortIcon>
                         {{ 'Portfolio' | translate }} <span class="column-label"></span>
