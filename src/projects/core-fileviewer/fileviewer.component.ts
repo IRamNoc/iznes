@@ -36,6 +36,8 @@ export class FileViewerComponent implements OnInit, OnChanges, OnDestroy {
     @Input() viewType: ViewType = ViewType.Button;
     @Input() secure: boolean = false;
     @Input() securePath: string = '';
+    @Input() isHelpDocument: boolean = false;
+
     public token: string = null;
     public userId: string = null;
     public walletId: string = null;
@@ -50,15 +52,15 @@ export class FileViewerComponent implements OnInit, OnChanges, OnDestroy {
      * Constructor
      */
     public constructor(private alertsService: AlertsService,
-                       private memberSocketService: MemberSocketService,
-                       public sanitizer: DomSanitizer,
-                       private pdfService: PdfService,
-                       private changeDetectorRef: ChangeDetectorRef,
-                       private ngRedux: NgRedux<any>,
-                       private previewModalService: FileViewerPreviewService,
-                       private fileDownloader: FileDownloader,
-                       private translate: MultilingualService,
-                       @Inject(APP_CONFIG) private appConfig: AppConfig,
+                    private memberSocketService: MemberSocketService,
+                    public sanitizer: DomSanitizer,
+                    private pdfService: PdfService,
+                    private changeDetectorRef: ChangeDetectorRef,
+                    private ngRedux: NgRedux<any>,
+                    private previewModalService: FileViewerPreviewService,
+                    private fileDownloader: FileDownloader,
+                    private translate: MultilingualService,
+                    @Inject(APP_CONFIG) private appConfig: AppConfig,
     ) {
         this.appConfig = appConfig;
         this.baseUrl = 'http';
@@ -106,10 +108,46 @@ export class FileViewerComponent implements OnInit, OnChanges, OnDestroy {
         });
     }
 
+    public getHelpPageDocument() {
+        this.fileDownloader.getHelpPageDocument(
+            Number(this.fileId),
+            this.fileHash,
+            this.secure,
+            this.securePath,
+            true
+        ).then((result: any) => {
+            const data = result[1].Data;
+            const { fileName, downloadId } = data;
+            const request = {
+                method: 'retrieve',
+                walletId: this.walletId,
+                fileHash: this.fileHash,
+                downloadId,
+                secure: false,
+                isHelpDocument : true
+            };
+
+            this.fileDownloader.getDownLoaderUrl(
+                request,
+                this.secure,
+            ).subscribe((downloadData) => { 
+                const downloadUrl = downloadData.url;
+                this.previewModalService.open({
+                    name: downloadData.filename,
+                    url: this.sanitizer.bypassSecurityTrustResourceUrl(downloadUrl) as string,
+                });
+            })
+        })
+    }
+
     public openFileModal() {
-        this.setFileHash().then(() => {
-            this.validateFileExists();
-        });
+        if (this.isHelpDocument) {
+            this.getHelpPageDocument();
+        } else {
+            this.setFileHash().then(() => {
+                this.validateFileExists();
+            });
+        }
     }
 
     public validateFileExists() {
@@ -118,6 +156,7 @@ export class FileViewerComponent implements OnInit, OnChanges, OnDestroy {
             this.fileHash,
             this.secure,
             this.securePath,
+            false
         ).then((result: any) => {
             const data = result[1].Data;
             if (data.error) {
@@ -127,17 +166,18 @@ export class FileViewerComponent implements OnInit, OnChanges, OnDestroy {
                 const { fileName, downloadId } = data;
                 const request = this.secure ?
                     this.getSecureFileRequest(downloadId) :
-                {
-                    method: 'retrieve',
-                    walletId: this.walletId,
-                    downloadId,
-                    secure: false,
-                };
+                    {
+                        method: 'retrieve',
+                        walletId: this.walletId,
+                        downloadId,
+                        secure: false,
+                    };
 
                 this.fileDownloader.getDownLoaderUrl(
                     request,
                     this.secure,
                 ).subscribe((downloadData) => {
+
                     const downloadUrl = downloadData.url;
                     this.previewModalService.open({
                         name: fileName ? fileName : downloadData.filename,

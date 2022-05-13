@@ -80,6 +80,7 @@
                                         <label>{{ 'Status' | translate }}</label>
                                         <div>
                                             <ng-select
+                                                [multiple]="true"
                                                 id="orders-search-status"
                                                 class="fluid-width"
                                                 [active]="[orderStatuses[0]]"
@@ -130,7 +131,7 @@
                                         </div>
                                     </div>
                                 </div>
-      
+
                                 <!-- Panel body -->
                                 <div class="panel-body" [class.hidden]="!isOptionalFiltersVisible">
                                     <div class="row">
@@ -149,14 +150,14 @@
                                         </div>
                                         <ng-container *ngIf="isIznesAdmin">
                                             <div class="form-group col-sm-3">
-                                                <label>{{ 'Asset Management Company' | translate}}
+                                                <label>{{ 'Operating Company' | translate}}
 
                                                 </label>
                                                 <div class="input-button-group">
                                                     <input id="orders-search-amcomp"
                                                            [formControl]="tabsControl[0].searchForm.controls['assetManagementCompany']"
                                                            name="search-amComp" type="text"
-                                                           [placeholder]="translate.translate('Asset Management Company')"
+                                                           [placeholder]="translate.translate('Operating Company')"
                                                            style="width: 100% !important">
                                                 </div>
                                             </div>
@@ -301,7 +302,7 @@
                         </ng-container>
                     </clr-dg-column>
                     <clr-dg-column [clrDgField]="'assetManagementCompany'" clrDgSortIcon clrDgSortNoSearch id="Order-Asset-Manager-Company">
-                        <ng-container *clrDgHideableColumn="{hidden: true}">{{ 'Asset Management Company' | translate }}
+                        <ng-container *clrDgHideableColumn="{hidden: true}">{{ 'Operating Company' | translate }}
                             <span class="column-label"></span>
                         </ng-container>
                     </clr-dg-column>
@@ -532,7 +533,7 @@
                                             <tbody>
                                             <tr>
                                                 <td>
-                                                    <b>{{ 'Asset Management Company' | translate }}</b>
+                                                    <b>{{ 'Operating Company' | translate }}</b>
                                                 </td>
                                                 <td>{{order.amCompanyName}}</td>
                                             </tr>
@@ -545,20 +546,20 @@
                                             <tr>
                                                 <td>
                                                     <b>{{ 'Latest NAV' | translate }}</b>
-                                                </td>                                                
-                                                <td [class]="getPriceStatusCss(order)">{{order.price | moneyValue: 4}}</td>                                                                                              
+                                                </td>
+                                                <td [class]="getPriceStatusCss(order)">{{order.price | moneyValue: 4}}</td>
                                             </tr>
                                             </tbody>
                                         </table>
-                                    </div>                                    
+                                    </div>
                                     <div class="form-group col-sm-2">
                                         <table>
                                             <tbody>
                                             <tr>
                                                 <td>
                                                     <b>{{ 'Latest NAV Date' | translate }}</b>
-                                                </td> 
-                                                <td>{{getOnlyDate(order.latestNavDate)}}</td>                                                                                               
+                                                </td>
+                                                <td>{{getOnlyDate(order.latestNavDate)}}</td>
                                             </tr>
                                             </tbody>
                                         </table>
@@ -586,7 +587,7 @@
                                             </tr>
                                             </tbody>
                                         </table>
-                                    </div>                                    
+                                    </div>
                                 </div>
                             </div>
                         </clr-dg-row-detail>
@@ -700,7 +701,7 @@
                 <div class="panel-body" [class.hidden]="!generalInvestmentInformation">
                     <div class="row mb-1">
                         <div class="form-group col-sm-6">
-                            <label>{{ 'Asset Management Company' | translate }}</label>
+                            <label>{{ 'Operating Company' | translate }}</label>
                             <div>
                                 <span class="readonly-field">{{orderData.amCompanyName}}</span>
                             </div>
