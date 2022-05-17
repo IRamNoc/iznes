@@ -136,6 +136,7 @@ function handleGetIznesShareList(state: OfiFundShareListState, action: Action) {
             master: share.master,
             feeder: share.feeder,
             allowSellBuy: share.allowSellBuy,
+            visibleByAll:share.visibleByAll,
             sellBuyCalendar: share.sellBuyCalendar,
             maximumNumDecimal: share.maximumNumDecimal,
             subscriptionCategory: share.subscriptionCategory,
