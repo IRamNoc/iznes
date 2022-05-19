@@ -105,7 +105,7 @@ export interface IznesMarkOrderSettleRequestBody extends MemberNodeMessageBody {
 export interface ManageOrdersRequestData {
     fundName?: string;
     shareName?: string;
-    status?: number;
+    status?: string;
     orderType?: number;
     isin?: any;
     orderID?: number;
