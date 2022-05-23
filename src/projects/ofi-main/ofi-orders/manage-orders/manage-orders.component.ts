@@ -820,6 +820,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         } else {
             asyncTaskPipe = this.ofiOrdersService.requestManageOrdersList(this.datagridParams.get());
         }
+
         this.ngRedux.dispatch(SagaHelper.runAsync(
             [ofiManageOrderActions.OFI_SET_MANAGE_ORDER_LIST],
             [],
