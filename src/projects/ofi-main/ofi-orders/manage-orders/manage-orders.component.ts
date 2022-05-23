@@ -556,7 +556,6 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         this.showColumnSpacer = true;
         this.detectChanges(true);
         this.resizeDatagridRemoveSpacers();
-        console.log("OrderlList", this.ordersList);
     }
 
     subEstimated(order, field: string, estimatedField: string): number {
