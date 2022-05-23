@@ -36,17 +36,20 @@
     </div>
   </div>
   <div class="row mt-1">
-    <div class="col-lg-4">
+    <div class="clr-col-6">
       <div class="form-group">
         <label class="control-label" for="Share Name">
           {{ 'Share Name' | translate }}
         </label>
-        <div>
-          <ng-select id="precentra-funds-list" [allowClear]="true" [items]="shareNameList"
-            [formControl]="placeFiltersFormGroup.controls['shareName']"
-            [placeholder]="translate.translate('Select Share Name')"
-          >
-          </ng-select>
+
+        <div class= "input-button-group" style="min-width: 500px;">
+          <ng-select id="precentra-funds-list"
+                [items]="shareNameList"
+                 bindLabel="name"
+                 [multiple]="true"
+                 [formControl]="placeFiltersFormGroup.controls['shareName']"
+                 [placeholder]="translate.translate('Select Share Name')">
+                </ng-select>
         </div>
       </div>
     </div>
