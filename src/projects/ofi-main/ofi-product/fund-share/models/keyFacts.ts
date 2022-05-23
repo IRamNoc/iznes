@@ -68,6 +68,18 @@ export class ShareKeyFactsMandatory extends DynamicFormsValidator {
             validateBic,
         ]),
     };
+    cashAccountIznesScope: FormItem = {
+        type: FormItemType.list,
+        label: `Fund's IBAN dedicated to IZNES use for :`,
+        required: true,
+        listItems: [
+            { id: E.CashAccountIznesScope.None, text: 'Nothing' },
+            { id: E.CashAccountIznesScope.Subscription, text: 'Subscription only' },
+            { id: E.CashAccountIznesScope.Redemption, text: 'Redemption only' },
+            { id: E.CashAccountIznesScope.Both, text: 'Both'},            
+        ],
+        style: [FormItemStyle.PullRightTwoCol],
+    };
     // conditional - status
     feeder: FormItem = {
         type: FormItemType.list,
@@ -84,10 +96,12 @@ export class ShareKeyFactsMandatory extends DynamicFormsValidator {
         label: 'Share Currency Hedge',
         required: true,
         listItems: [
-            { id: E.CurrencyHedgeEnum.NoHedge, text: 'No Hedge' },
-            { id: E.CurrencyHedgeEnum.FullPortfolioHedge, text: 'Full Portfolio Hedge' },
-            { id: E.CurrencyHedgeEnum.CurrencyOverlay, text: 'Currency overlay' },
-            { id: E.CurrencyHedgeEnum.PartialHedge, text: 'Partial Hedge' },
+            { id: E.sharePortfolioCurrencyHedge.No, text: 'No' },
+            { id: E.sharePortfolioCurrencyHedge.Yes, text: 'Yes' },
+            { id: E.sharePortfolioCurrencyHedge.YesMultiCurrencyHedge, text: 'Yes, multi-currency hedge' },
+            { id: E.sharePortfolioCurrencyHedge.YesPartialNAVHedge, text: 'Yes, partial NAV Hedge'},
+            { id: E.sharePortfolioCurrencyHedge.YesFullNAVHedge, text: 'Yes, full NAV hedge' },
+            
         ],
         style: [FormItemStyle.BreakOnBefore],
     };

@@ -39,6 +39,21 @@ export interface InvestorHoldingRequestData {
     accountID: number;
 }
 
+export interface InvestorGenerateAICRequestData {
+    fromDate: string;
+    isin: string;
+    subportfolio: string;
+    walletId: number;
+}
+
+export interface InvestorGenerateAICRequestBody extends MemberNodeMessageBody {
+    token: string;
+    fromDate: string;
+    isin: string;
+    subportfolio: string;
+    walletId: number;
+}
+
 export interface InvestorHoldingRequestBody extends MemberNodeMessageBody {
     token: string;
     walletID: number;
@@ -113,4 +128,11 @@ export interface CentralisationHistoryRequestData {
     dateFrom: any;
     dateTo: any;
     dateRange: any;
+}
+
+export interface myHoldingHistoryRequestBody extends MemberNodeMessageBody {
+    token: string;
+}
+
+export interface myHoldingHistoryRequestData {
 }

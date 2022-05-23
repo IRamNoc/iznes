@@ -45,7 +45,9 @@ export interface IznesFundDetail {
     openOrCloseEnded: string;
     fiscalYearEnd: string;
     isFundOfFund: string;
+    externalTransmissionCollection: string;
     managementCompanyID: number;
+    subCompanyOrder: number;
     managementCompanyName: string;
     fundAdministrator: string;
     custodianBank: string;

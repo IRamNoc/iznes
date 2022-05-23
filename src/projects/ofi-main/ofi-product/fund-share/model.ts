@@ -114,6 +114,7 @@ export class FundShare {
             mainIban: this.keyFacts.mandatory.mainIban.value(),
             valuationFrequency: this.getSelectValue(this.keyFacts.mandatory.valuationFrequency),
             historicOrForwardPricing: this.getSelectValue(this.keyFacts.mandatory.historicOrForwardPricing),
+            cashAccountIznesScope: this.getSelectValue(this.keyFacts.mandatory.cashAccountIznesScope),
             hasCoupon: this.keyFacts.mandatory.hasCoupon.value(),
             couponType: this.getSelectValue(this.keyFacts.mandatory.couponType),
             freqOfDistributionDeclaration: this.getSelectValue(this.keyFacts.mandatory.freqOfDistributionDeclaration),
@@ -140,6 +141,7 @@ export class FundShare {
             subscriptionCutOffTimeZone: this.getSelectValue(this.calendarSubscription.mandatory.subscriptionCutOffTimeZone),
             subscriptionSettlementPeriod: this.getSelectValue(this.calendarSubscription.mandatory.subscriptionSettlementPeriod),
             subscriptionSettlementPivotDate: this.getSelectValue(this.calendarSubscription.mandatory.subscriptionSettlementPivotDate),
+            subscriptionPaymentInstructionTrigger: this.getSelectValue(this.calendarSubscription.mandatory.subscriptionPaymentInstructionTrigger),
             subscriptionValuationReference: this.getSelectValue(this.calendarSubscription.mandatory.subscriptionValuationReference),
             redemptionCutOffTime: this.calendarRedemption.mandatory.redemptionCutOffTime.value(),
             redemptionCutOffTimeZone: this.getSelectValue(this.calendarRedemption.mandatory.redemptionCutOffTimeZone),
@@ -267,6 +269,7 @@ export class FundShare {
         this.keyFacts.mandatory.mainIban.preset = fundShare.mainIban;
         this.setListItemPreset(this.keyFacts.mandatory.valuationFrequency, fundShare.valuationFrequency);
         this.setListItemPreset(this.keyFacts.mandatory.historicOrForwardPricing, fundShare.historicOrForwardPricing);
+        this.setListItemPreset(this.keyFacts.mandatory.cashAccountIznesScope, fundShare.cashAccountIznesScope);
         this.keyFacts.mandatory.hasCoupon.preset = fundShare.hasCoupon;
         this.setListItemPreset(this.keyFacts.mandatory.couponType, fundShare.couponType);
         this.setListItemPreset(
@@ -307,6 +310,10 @@ export class FundShare {
             this.calendarSubscription.mandatory.subscriptionSettlementPivotDate,
             fundShare.subscriptionSettlementPivotDate,
         );
+        this.setListItemPreset(
+            this.calendarSubscription.mandatory.subscriptionPaymentInstructionTrigger,
+            fundShare.subscriptionPaymentInstructionTrigger,
+        )
         this.setListItemPreset(
             this.calendarSubscription.mandatory.subscriptionValuationReference,
             fundShare.subscriptionValuationReference,
@@ -372,6 +379,7 @@ export class FundShare {
         this.keyFacts.mandatory.mainIban.control.setValue(fundShare.mainIban);
         this.setListItemValue(this.keyFacts.mandatory.valuationFrequency, fundShare.valuationFrequency);
         this.setListItemValue(this.keyFacts.mandatory.historicOrForwardPricing, fundShare.historicOrForwardPricing);
+        this.setListItemValue(this.keyFacts.mandatory.cashAccountIznesScope, fundShare.cashAccountIznesScope);
         this.keyFacts.mandatory.hasCoupon.control.setValue(fundShare.hasCoupon);
         this.setListItemValue(this.keyFacts.mandatory.couponType, fundShare.couponType);
         this.setListItemValue(
@@ -408,6 +416,10 @@ export class FundShare {
         this.setListItemValue(
             this.calendarSubscription.mandatory.subscriptionSettlementPivotDate,
             fundShare.subscriptionSettlementPivotDate,
+        );
+        this.setListItemValue(
+            this.calendarSubscription.mandatory.subscriptionPaymentInstructionTrigger,
+            fundShare.subscriptionPaymentInstructionTrigger,
         );
         this.setListItemValue(
             this.calendarSubscription.mandatory.subscriptionValuationReference,
@@ -592,6 +604,7 @@ export class FundShare {
         this.fund.fundRegisteredOfficeAddress.preset = fund.registerOfficeAddress;
         this.setListItemPreset(this.fund.domicile, fund.domicile);
         this.fund.isEUDirectiveRelevant.preset = fund.isEuDirective;
+        this.fund.externalTransmissionCollection.preset = fund.externalTransmissionCollection;
         this.setListItemPreset(this.fund.legalForm, fund.legalForm);
         this.fund.nationalNomenclature.listItems = PC.fundItems.nationalNomenclatureOfLegalFormItems[fund.legalForm];
         this.setListItemPreset(this.fund.nationalNomenclature, fund.nationalNomenclatureOfLegalForm);
@@ -650,6 +663,7 @@ export class FundShare {
         this.fund.fundRegisteredOfficeAddress.control.setValue(fund.registerOfficeAddress);
         this.setListItemValue(this.fund.domicile, fund.domicile);
         this.fund.isEUDirectiveRelevant.control.setValue(fund.isEuDirective);
+        this.fund.externalTransmissionCollection.control.setValue(fund.externalTransmissionCollection);
         this.setListItemValue(this.fund.legalForm, fund.legalForm);
         this.fund.nationalNomenclature.listItems = PC.fundItems.nationalNomenclatureOfLegalFormItems[fund.legalForm];
         this.setListItemValue(this.fund.nationalNomenclature, fund.nationalNomenclatureOfLegalForm);

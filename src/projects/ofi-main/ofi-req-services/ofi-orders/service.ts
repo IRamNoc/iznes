@@ -158,6 +158,7 @@ export class OfiOrdersService {
             sortByField: data.sortByField,
             sortOrder: data.sortOrder,
             portfolioLabel: data.portfolioLabel,
+            isTransfer: data.isTransfer,
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
@@ -183,7 +184,11 @@ export class OfiOrdersService {
             rowOffset: (data.rowOffSet * data.pageSize),
             sortByField: data.sortByField,
             sortOrder: data.sortOrder,
+<<<<<<< HEAD
             portfolioLabel: data.portfolioLabel,
+=======
+            isTransfer: data.isTransfer,
+>>>>>>> 7785c505e36e6e0631bf9470355c97822b9998b2
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
@@ -212,6 +217,7 @@ export class OfiOrdersService {
             assetManagementCompany: data.assetManagementCompany,
             investorCompanyName: data.investorCompanyName,
             portfolioLabel: data.portfolioLabel,
+            isTransfer: data.isTransfer,
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);

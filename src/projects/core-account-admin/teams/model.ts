@@ -51,6 +51,10 @@ export interface ReadUserTeamsRequest extends MemberNodeMessageBody {
     isCSVRequest: boolean;
 }
 
+export interface GetMyUserTeamsRequest extends MemberNodeMessageBody {
+    token: string;
+}
+
 export interface CreateUserTeamRequest extends MemberNodeMessageBody {
     token: string;
     accountID: number;

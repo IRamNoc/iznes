@@ -28,7 +28,7 @@ export class OfiManagementCompanyService {
     accountId = 0;
     isManagementCompanyRequested: boolean;
     isInvestorManagementCompanyRequested: boolean;
-    
+
 
     unSubscribe: Subject<any> = new Subject();
 
@@ -87,7 +87,6 @@ export class OfiManagementCompanyService {
 
     fetchManagementCompanyList() {
         const asyncTaskPipe = this.requestManagementCompanyList();
-
         this.ngRedux.dispatch(SagaHelper.runAsync(
             [SET_MANAGEMENT_COMPANY_LIST],
             [],
@@ -166,6 +165,11 @@ export class OfiManagementCompanyService {
             managementCompanyType: get(mcData.managementCompanyType, '[0].id', 'common'),
             externalEmail: mcData.externalEmail,
             emailValidation: mcData.emailValidation,
+            mt502Email: mcData.mt502Email,
+            subManagementCompany0: mcData.subManagementCompany0,
+            subManagementCompany1: mcData.subManagementCompany1,
+            subManagementCompany2: mcData.subManagementCompany2,
+            subManagementCompany3: mcData.subManagementCompany3
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
@@ -205,6 +209,11 @@ export class OfiManagementCompanyService {
             logoHash: mcData.logoHash,
             externalEmail: mcData.externalEmail,
             emailValidation: mcData.emailValidation,
+            mt502Email: mcData.mt502Email,
+            subManagementCompany0: mcData.subManagementCompany0,
+            subManagementCompany1: mcData.subManagementCompany1,
+            subManagementCompany2: mcData.subManagementCompany2,
+            subManagementCompany3: mcData.subManagementCompany3
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);

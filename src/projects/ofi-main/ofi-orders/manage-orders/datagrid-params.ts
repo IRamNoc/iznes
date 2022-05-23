@@ -11,7 +11,7 @@ abstract class DatagridParamsData {
     fundName: string;
     shareName: string;
     isin: string;
-    status: number;
+    status: string;
     orderType: number;
     pageSize: number;
     rowOffSet: number;
@@ -23,6 +23,7 @@ abstract class DatagridParamsData {
     assetManagementCompany: string;
     investorCompanyName: string;
     portfolioLabel: string;
+    isTransfer: number;
 }
 
 export class DatagridParams {
@@ -50,6 +51,7 @@ export class DatagridParams {
             assetManagementCompany: null,
             investorCompanyName: null,
             portfolioLabel: null,
+            isTransfer: null,
         };
         this.data = this.defaults;
     }
@@ -61,10 +63,21 @@ export class DatagridParams {
         this.data.fundName = get(searchValues, 'fundname', null);
         this.data.shareName = get(searchValues, 'sharename', null);
         this.data.isin = get(searchValues, 'isin', null);
-
-        this.data.status = get(searchValues, ['status', '0', 'id'], -3);
-        const orderType = get(searchValues, ['type', '0', 'id'], null);
+        this.data.status = get(searchValues, 'status', null).map(item => `${item.id}`).join(',');
+        let orderType = get(searchValues, ['type', '0', 'id'], null);
         this.data.orderType = orderType === 0 ? null : orderType;
+        let isTransfer = null;
+
+        if (orderType === 1 || orderType === 2) {
+            let newOrderType = orderType === 1 ? 3 : 4;
+            orderType = newOrderType;
+            this.data.orderType = newOrderType;
+            isTransfer = 1;
+        } else {
+            isTransfer = orderType !== null ? 0 : null;
+        }
+
+        this.data.isTransfer = isTransfer;
 
         this.data.dateSearchField = get(searchValues, ['dateType', '0', 'id'], false);
         const fromDate = moment(get(searchValues, ['fromDate'], null), 'YYYY-MM-DD');
@@ -112,6 +125,7 @@ export class DatagridParams {
             latestNAV: 'latestNAV',
             feesAmount: 'feesAmount',
             navDate: 'navDate',
+            isTransfer: 'isTransfer',
         };
 
         this.data.sortByField = get(fieldMap, get(state, 'sort.by'), this.data.sortByField);

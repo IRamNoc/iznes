@@ -108,6 +108,7 @@ export class FundComponent implements OnInit, OnDestroy {
     principalPromoterItems = [];
     payingAgentItems = [];
     managementCompanyItems = [];
+    subManagementCompanyItems = [];
     transferAgentItems = [];
     centralizingAgentItems = [];
 
@@ -258,6 +259,7 @@ export class FundComponent implements OnInit, OnDestroy {
             legalAdvisorID: { value: '', disabled: true },
             legalEntityIdentifier: { value: '', disabled: true },
             managementCompanyID: { value: '', disabled: true },
+            subManagementCompanyItem: { value: '', disabled: true },
             payingAgentID: { value: '', disabled: true },
             principlePromoterID: { value: '', disabled: true },
             registerOffice: { value: '', disabled: true },
@@ -292,6 +294,7 @@ export class FundComponent implements OnInit, OnDestroy {
             domicile: [[], this.validators.ngSelectRequired],
             tradingAccount: [],
             isEuDirective: [null, Validators.required],
+            externalTransmissionCollection: [null, Validators.required],
             typeOfEuDirective: [[]],
             UcitsVersion: [[]],
             legalForm: [[], this.validators.ngSelectRequired],
@@ -304,6 +307,7 @@ export class FundComponent implements OnInit, OnDestroy {
             fiscalYearEnd: [null, this.validators.date.monthday],
             isFundOfFund: [null, Validators.required],
             managementCompanyID: [[], this.validators.ngSelectRequired],
+            subManagementCompanyItem: [[], this.validators.ngSelectRequired],
             fundAdministratorID: [[], this.validators.ngSelectRequired],
             custodianBankID: [[], this.validators.ngSelectRequired],
             investmentManagerID: [[]],
@@ -406,6 +410,8 @@ export class FundComponent implements OnInit, OnDestroy {
                 .setValue(newUmbrella.legalEntityIdentifier);
                 this.umbrellaEditForm.controls['managementCompanyID']
                 .setValue(FundComponent.getListItemText(newUmbrella.managementCompanyID, this.managementCompanyItems));
+                this.umbrellaEditForm.controls['subManagementCompanyItem']
+                .setValue(FundComponent.getListItemText(newUmbrella.subCompanyOrder, this.subManagementCompanyItems));
                 this.umbrellaEditForm.controls['payingAgentID']
                 .setValue(this.getListItems(newUmbrella.payingAgentID, this.payingAgentItems));
                 this.umbrellaEditForm.controls['principlePromoterID']
@@ -449,6 +455,8 @@ export class FundComponent implements OnInit, OnDestroy {
                 .setValue(FundComponent.getListItem(newUmbrella.domicile, this.domicileItems));
                 this.fundForm.controls['managementCompanyID']
                 .setValue(FundComponent.getListItem(newUmbrella.managementCompanyID, this.managementCompanyItems));
+                this.fundForm.controls['subManagementCompanyItem']
+                .setValue(FundComponent.getListItem(this.fundList.subCompanyOrder, this.subManagementCompanyItems));
                 this.fundForm.controls['fundAdministratorID']
                 .setValue(FundComponent.getListItem(newUmbrella.fundAdministratorID, this.fundAdministratorItems));
                 this.fundForm.controls['custodianBankID']
@@ -608,6 +616,7 @@ export class FundComponent implements OnInit, OnDestroy {
                 return;
             }
             this.setManagementCompanyItems(m);
+            this.setSubManagementCompanyItems(m);
             this.setFundList(funds);
             this.param = params.id;
             this.prefill = queryParams.prefill;
@@ -740,6 +749,7 @@ export class FundComponent implements OnInit, OnDestroy {
             ...this.fundForm.getRawValue(),
             isFundStructure: Number(this.fundForm.controls.isFundStructure.value),
             isEuDirective: Number(this.fundForm.controls.isEuDirective.value),
+            externalTransmissionCollection: Number(this.fundForm.controls.externalTransmissionCollection.value),
             openOrCloseEnded: Number(this.fundForm.controls.openOrCloseEnded.value),
             isFundOfFund: Number(this.fundForm.controls.isFundOfFund.value),
             isDedicatedFund: Number(this.fundForm.controls.isDedicatedFund.value),
@@ -800,6 +810,7 @@ export class FundComponent implements OnInit, OnDestroy {
             principlePromoterID: this.getIdsFromList(this.fundForm.controls['principlePromoterID'].value),
             payingAgentID: this.getIdsFromList(this.fundForm.controls['payingAgentID'].value),
             managementCompanyID: _.get(this.fundForm.controls['managementCompanyID'].value, ['0', 'id'], null),
+            subManagementCompanyItem: _.get(this.fundForm.controls['subManagementCompanyItem'].value, ['0', 'id'], null),
             delegatedManagementCompany: !_.isNull(_.get(this.fundForm.controls['delegatedManagementCompany'].value, ['0', 'id'], null))
                 ? Number(_.get(this.fundForm.controls['delegatedManagementCompany'].value, ['0', 'id'], null))
                 : null,
@@ -961,6 +972,31 @@ export class FundComponent implements OnInit, OnDestroy {
     }
 
     /**
+     * Set the SubanagementCompanyItems
+     *
+     * @param {any} list
+     */
+    setSubManagementCompanyItems(list: any) {
+        if (this.subManagementCompanyItems.length)
+            return;
+        if (!Object.keys(list).length) {
+            return;
+        };
+        Object.keys(list).map((key) => {
+            const item = list[key];
+            if (!item.companyID) return;
+            if (item.subManagementCompany0)
+                this.subManagementCompanyItems.push({ id: 0, text: item.subManagementCompany0 });
+            if (item.subManagementCompany1)
+                this.subManagementCompanyItems.push({ id: 1, text: item.subManagementCompany1 });
+            if (item.subManagementCompany2)
+                this.subManagementCompanyItems.push({ id: 2, text: item.subManagementCompany2 });
+            if (item.subManagementCompany3)
+                this.subManagementCompanyItems.push({ id: 3, text: item.subManagementCompany3 });
+        });
+    }
+
+    /**
      * Set the fundList and fundListItems
      *
      * @param {any} funds
@@ -1009,6 +1045,10 @@ export class FundComponent implements OnInit, OnDestroy {
                 managementCompanyID: FundComponent.getListItem(
                     fund.managementCompanyID,
                     this.managementCompanyItems,
+                ),
+                subManagementCompanyItem: FundComponent.getListItem(
+                    fund.subCompanyOrder,
+                    this.subManagementCompanyItems,
                 ),
                 fundAdministratorID: FundComponent.getListItem(
                     fund.fundAdministratorID,
@@ -1083,13 +1123,16 @@ export class FundComponent implements OnInit, OnDestroy {
                 'draft',
                 'draftUser',
                 'draftDate',
+                'subCompanyOrder'
             ]),
             fundName: this.param ? fund.fundName : '',
             legalEntityIdentifier: this.param ? fund.legalEntityIdentifier : '',
+            subManagementCompanyItem: FundComponent.getListItem(fund.subCompanyOrder, this.subManagementCompanyItems),
 
             // formatting for radio inputs
             isFundStructure: fund.isFundStructure.toString(),
             isEuDirective: fund.isEuDirective.toString(),
+            externalTransmissionCollection: fund.externalTransmissionCollection.toString(),
             openOrCloseEnded: fund.openOrCloseEnded.toString(),
             isFundOfFund: fund.isFundOfFund.toString(),
             isDedicatedFund: fund.isDedicatedFund.toString(),
@@ -1108,7 +1151,6 @@ export class FundComponent implements OnInit, OnDestroy {
             hasDurationHedge: !_.isNull(fund.hasDurationHedge) ? fund.hasDurationHedge.toString() : null,
         });
         this.toggleLeiSwitch(!!fund.legalEntityIdentifier);
-
         this.currentLei = fund.legalEntityIdentifier;
 
         if (this.isAdmin()) {
@@ -1167,12 +1209,10 @@ export class FundComponent implements OnInit, OnDestroy {
         if (!this.fundForm.valid) {
             return;
         }
-
         const payload: Fund = {
             draft: 0,
             ...this.fundFormValue(),
         };
-
         if (!this.param) {
             this.fundService.iznCreateFund(payload)
             .then((fund) => {
@@ -1247,7 +1287,6 @@ export class FundComponent implements OnInit, OnDestroy {
             draft: 1,
             ...this.fundFormValue(),
         };
-
         if (!this.param) {
 
             this.fundService.iznCreateFund(payload)
@@ -1297,7 +1336,7 @@ export class FundComponent implements OnInit, OnDestroy {
                 this.toasterService.pop(
                     'error',
                     this.translate.translate(
-                        'Failed to create the Fund. @errMsg@',
+                        'Failed to update the Fund. @errMsg@',
                         { 'errMsg': errMsg },
                     ),
                 );

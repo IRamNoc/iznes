@@ -130,6 +130,12 @@ export enum useDefaultHolidayMgmt {
     YES,
 }
 
+export enum externalTransmissionCollection {
+    None,
+    Global,
+    Detailled,
+}
+
 export const enums = {
     typeOfEuDirective,
     isFundStructure,
@@ -150,6 +156,7 @@ export const enums = {
     hasSwap,
     hasDurationHedge,
     useDefaultHolidayMgmt,
+    externalTransmissionCollection,
 };
 
 export const fundItems = {
@@ -611,6 +618,38 @@ export const fundItems = {
         ],
         25: [ // Other
             { id: 96, text: 'Other' },
+            {
+                id: 97,
+                text: 'Société Civile de Placement Immobilier (SCPI)',
+            },
+            {
+                id: 98,
+                text: 'Société à Prépondérance Immobilière à Capital Variable (SPPICAV)',
+            },
+            {
+                id: 99,
+                text: 'Fonds de Placement Immobilier (FPI)',
+            },
+            {
+                id: 100,
+                text: 'Fonds Professionnel de Placement Immobilier (FPPI)',
+            },
+            {
+                id: 101,
+                text: 'Société Civile Immobilière (SCI)',
+            },
+            {
+                id: 102,
+                text: 'Organisme de Placement Collectif Immobilier (OPCI)',
+            },
+            {
+                id: 103,
+                text: 'Organisme Professionnel de Placement Collectif Immobilier (OPPCI)',
+            },
+            {
+                id: 104,
+                text: 'Société Coopérative (SC)',
+            }
         ],
     },
     homeCountryLegalTypeItems: {
@@ -644,10 +683,11 @@ export const fundItems = {
         ],
     },
     portfolioCurrencyHedgeItems: [
-        { id: 1, text: 'No Hedge' },
-        { id: 2, text: 'Full Portfolio Hedge' },
-        { id: 3, text: 'Currency overlay' },
-        { id: 4, text: 'Partial Hedge' },
+        { id: 1, text: 'No' },
+        { id: 2, text: 'Yes' },
+        { id: 3, text: 'Yes, full portfolio Hedge' },
+        { id: 4, text: 'Yes, partial Hedge' },
+        { id: 5, text: 'Yes, currency overlay' },
     ],
     classificationItems: [
         { id: 1, text: 'Equity' },
@@ -656,6 +696,7 @@ export const fundItems = {
         { id: 4, text: 'Money Market or Cash Equivalent' },
         { id: 5, text: 'Absolute Return Innovative Strategies - ARIS' },
         { id: 6, text: 'Other' },
+        { id: 7, text: 'Real Estate' },
     ],
     fundAdministratorItems: [
         { id: 1, text: 'Société Générale Securities Services France' },

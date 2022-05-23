@@ -5,6 +5,7 @@ import {
     isEuDirective,
     openOrCloseEnded,
     isFundOfFund,
+    externalTransmissionCollection,
     isDedicatedFund,
     hasEmbeddedDirective,
     hasCapitalPreservation,
@@ -34,6 +35,7 @@ export interface Fund {
     registerOfficeAddressCountry: string;
     domicile: string;
     tradingAccount: string;
+    externalTransmissionCollection: externalTransmissionCollection;
     isEuDirective: any;
     typeOfEuDirective: isEuDirective;
     ucitsVersion: number;
@@ -47,6 +49,7 @@ export interface Fund {
     fiscalYearEnd: string; // date
     isFundOfFund: isFundOfFund;
     managementCompanyID: number;
+    subManagementCompanyItem: number;
     fundAdministrator: number;
     custodianBankID: number;
     investmentManagerID: number;

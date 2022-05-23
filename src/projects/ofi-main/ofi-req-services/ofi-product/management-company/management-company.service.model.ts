@@ -36,6 +36,11 @@ export interface ManagementCompanyRequestData {
     managementCompanyType: string;
     externalEmail: string;
     emailValidation: string;
+    mt502Email: string;
+    subManagementCompany0: string;
+    subManagementCompany1: string;
+    subManagementCompany2: string;
+    subManagementCompany3: string;
 }
 
 export interface SaveManagementCompanyRequestBody extends MemberNodeMessageBody {
@@ -69,6 +74,11 @@ export interface SaveManagementCompanyRequestBody extends MemberNodeMessageBody 
     logoHash: any;
     externalEmail: string;
     emailValidation: string;
+    mt502Email: string;
+    subManagementCompany0: string;
+    subManagementCompany1: string;
+    subManagementCompany2: string;
+    subManagementCompany3: string;
 }
 
 export interface UpdateManagementCompanyRequestBody extends MemberNodeMessageBody {
@@ -103,6 +113,11 @@ export interface UpdateManagementCompanyRequestBody extends MemberNodeMessageBod
     logoHash: any;
     externalEmail: string;
     emailValidation: string;
+    mt502Email: string;
+    subManagementCompany0: string;
+    subManagementCompany1: string;
+    subManagementCompany2: string;
+    subManagementCompany3: string;
 }
 
 export interface DeleteManagementCompanyRequestData {
