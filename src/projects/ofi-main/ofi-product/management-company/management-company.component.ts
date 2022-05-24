@@ -15,6 +15,7 @@ import { ManagementCompanyFileMetadata, ManagementCompanyFileMetadataField } fro
 import { legalFormList } from '../../ofi-kyc/my-requests/requests.config';
 import { FileDropEvent } from '@setl/core-filedrop';
 import { MultilingualService } from '@setl/multilingual';
+import * as moment from 'moment-timezone';
 
 const AM_USERTYPE = 36;
 
@@ -35,12 +36,14 @@ export class OfiManagementCompanyComponent implements OnInit, OnDestroy {
     isProduction = true;
     editForm = false;
     showSearchTab = false;
+    securityTab = false;
     showModal = false;
     modalTitle = '';
     modalText = '';
 
+    securityInformationsData: any = {};
     managementCompanySecurityRestrictionActivated: boolean = false;
-    managementCompanyRestrictedPort: number = 0;
+    managementCompanyRestrictedPort: number = 443;
     showAddIpAddressModal = false;
 
     panelDef: any = {};
@@ -131,6 +134,27 @@ export class OfiManagementCompanyComponent implements OnInit, OnDestroy {
             .subscribe((managementCompanyList) => {
                 if (this.isAssetManager) {
                     this.editCompany(_.values(managementCompanyList)[0]);
+                    this.mcService.getSecurityInformations().then((result) => {
+                        const data = result[1].Data;
+                        if (data.error) {
+                            return this.toasterSevice.pop('error', this.translate.translate(`Unable to get security informations : ${data}`));
+                        } else {
+                            this.managementCompanySecurityRestrictionActivated = data[0].apiEnableSecurity || false;
+                            this.managementCompanyRestrictedPort = data[0].apiRestrictionPort || undefined;
+
+                            if (data[0].ipAddresses && data[0].ipAddresses !== []) {
+                                const ipAddresses = _.map(data[0].ipAddresses, ip => {
+                                    return {
+                                        ...ip,
+                                        dateEntered: moment(ip.dateEntered).tz(moment.tz.guess()).format('YYYY-MM-DD HH:mm'),
+                                    }
+                                });
+
+                                this.panelDef.data = ipAddresses || [];   
+                                this.detectChanges(true);                             
+                            }
+                        }
+                    });
                 }
             });
     }
@@ -212,6 +236,7 @@ export class OfiManagementCompanyComponent implements OnInit, OnDestroy {
         });
 
         this.showSearchTab = false;
+        this.securityTab = false;
         this.editForm = true;
         this.markForCheck();
     }
@@ -219,6 +244,7 @@ export class OfiManagementCompanyComponent implements OnInit, OnDestroy {
     resetForm(): void {
         this.editForm = false;
         this.showSearchTab = false;
+        this.securityTab = false;
         this.managementCompanyForm = this.service.generateForm();
         this.fileMetadata.reset();
     }
@@ -342,6 +368,10 @@ export class OfiManagementCompanyComponent implements OnInit, OnDestroy {
                 label: this.translate.translate('Description'),
                 dataSource: 'description',
             },
+            userEntered: {
+                label: this.translate.translate('Created by'),
+                dataSource: 'userEntered',
+            },
             action: {
                 label: this.translate.translate('Action'),
                 dataSource: 'RN',
@@ -356,38 +386,41 @@ export class OfiManagementCompanyComponent implements OnInit, OnDestroy {
             this.panelColumns['ipAddress'],
             this.panelColumns['date'],
             this.panelColumns['description'],
+            this.panelColumns['userEntered'],
             this.panelColumns['action'],
           ],
           open: true,
-          data: [
-            {
-                RN: 10,
-                ipAddress: '127.0.0.1',
-                dateEntered: '2022-04-12',
-                description: 'Gateway bâtiment A LBPAM'
-            },
-            {
-                RN: 12,
-                ipAddress: '35.0.23.12',
-                dateEntered: '2022-04-13',
-                description: 'Gateway bâtiment SupCo LBPAM Tech'
-            },
-        ]
+          data: [],
         };
     }
 
-    refresh(state) {
-        console.log(state);
-    }
+    /* unused for now */
+    refresh(state) {}
 
-    deleteIPAddress(data) {
-        console.log('delete ip address')
-        console.log(data);
+    deleteIPAddress(id) {
+        if (!id) return;
+
+        this.mcService.deleteSecurityIpAddressManagementCompany(id).then((result) => {
+            const data = result[1].Data;
+
+            if (data.error) {
+                return this.toasterSevice.pop('error', this.translate.translate('There is a problem with the request.'));
+            } else {
+                if (data[0].Status === 'OK') {
+                    _.remove(this.panelDef.data, item => item.RN === id);
+                    this.changeDetectorRef.detectChanges();
+                    return this.toasterSevice.pop('success', this.translate.translate('IP Address deleted.'));
+                } else {
+                    return this.toasterSevice.pop('error', this.translate.translate(`There is a problem with the request: ${data[0].Message}`));
+                }
+            }
+        });
     }
 
     closeAddIpAddressModal() {
-        this.managemementCompanySecurityAddIpForm = this.service.generateAddIpAddressForm();
         this.showAddIpAddressModal = false;
+        this.managemementCompanySecurityAddIpForm = this.service.generateAddIpAddressForm();
+        this.changeDetectorRef.detectChanges();
     }
 
     addIPAddress() {
@@ -401,18 +434,34 @@ export class OfiManagementCompanyComponent implements OnInit, OnDestroy {
             description: this.managemementCompanySecurityAddIpForm.controls['description'].value,
         }
 
-        console.log(request);
-
         this.mcService.addSecurityIpAddressManagementCompany(request).then((result) => {
             const data = result[1].Data;
+
             if (data.error) {
-                console.log(data);
-                //return this.toaster.pop('error', this.translate.translate('There is a problem with the request.'));
+                this.closeAddIpAddressModal();
+                return this.toasterSevice.pop('error', this.translate.translate('There is a problem with the request.'));
             } else {
-                console.log(data);
+                if (data[0].Status === 'OK') {
+                    this.panelDef.data.push({
+                        ...data[0],
+                        dateEntered: moment(data[0].dateEntered).tz(moment.tz.guess()).format('YYYY-MM-DD HH:mm'), 
+                    });
+                    this.closeAddIpAddressModal();
+                    return this.toasterSevice.pop('success', this.translate.translate('New IP Address added.'));
+
+                } else {
+                    this.closeAddIpAddressModal();
+                    return this.toasterSevice.pop('error', this.translate.translate(`There is a problem with the request: ${data[0].Message}`));
+                }
             }
         });
+    }
 
-        console.log('add ip address')
+    detectChanges(detect = false) {
+        this.changeDetectorRef.markForCheck();
+
+        if (detect) {
+          this.changeDetectorRef.detectChanges();
+        }
     }
 }

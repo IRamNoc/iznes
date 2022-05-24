@@ -467,7 +467,7 @@
                 {{ 'Security' | translate }}
             </button>
         </div>
-        <clr-tab-content>
+        <clr-tab-content *clrIfActive="securityTab">
             <div class="col-xs-12">
                 <div>{{ 'Activate security control' | translate }}
                     <label class="switch">
@@ -484,12 +484,14 @@
             <section *ngIf="managementCompanySecurityRestrictionActivated" class="form-block">
                 <div class="row mt-2"> 
                     <div class="form-group col-sm-6">
-                        <label class="control-label" for="managementCompanyRestrictedPort">
-                            {{ 'Restricted port' | translate }}
-                            <small>({{ 'Not modifiable, assigned by IZNES' | translate }})</small>
-                        </label>
-                        <input type="number" id="managementCompanyRestrictedPort" class="form-control" [ngModel]="managementCompanyRestrictedPort"
-                            placeholder="{{ 'Please fill the restricted port' | translate }}" disabled>
+                        <h3>
+                            <label class="control-label" style="font-weight: 400">
+                                {{ 'Restricted port assigned by IZNES : ' | translate }}
+                            </label>
+                            {{ managementCompanyRestrictedPort }}
+
+                        </h3>
+                        
                     </div>
                 </div>
                 <div class="well">

@@ -131,6 +131,25 @@ export class OfiManagementCompanyService {
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
     }
 
+    getSecurityInformations(): any {
+        const messageBody: { RequestName: string, token: string } = {
+            RequestName: 'iznamsecuritygetinformations',
+            token: this.memberSocketService.token,
+          };
+      
+          return createMemberNodeRequest(this.memberSocketService, messageBody); 
+    }
+
+    deleteSecurityIpAddressManagementCompany(identifier): any {
+        const messageBody: { RequestName: string, token: string, identifier: number } = {
+            RequestName: 'iznamsecuritydeleteipaddress',
+            token: this.memberSocketService.token,
+            identifier,
+        };
+
+        return createMemberNodeRequest(this.memberSocketService, messageBody);
+    }
+
     addSecurityIpAddressManagementCompany(data: { ipAddress: string, description: string }): any {
         const messageBody: { RequestName: string, token: string, ipAddress: string, description: string } = {
           RequestName: 'iznamsecurityaddipaddress',
