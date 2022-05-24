@@ -30,6 +30,8 @@ export class OfiManagementCompanyComponent implements OnInit, OnDestroy {
     private usertype: number;
 
     managementCompanyForm: FormGroup;
+    managemementCompanySecurityAddIpForm: FormGroup;
+    displaySecurityTab: boolean = false;
     isProduction = true;
     editForm = false;
     showSearchTab = false;
@@ -37,6 +39,12 @@ export class OfiManagementCompanyComponent implements OnInit, OnDestroy {
     modalTitle = '';
     modalText = '';
 
+    managementCompanySecurityRestrictionActivated: boolean = false;
+    managementCompanyRestrictedPort: number = 0;
+    showAddIpAddressModal = false;
+
+    panelDef: any = {};
+    panelColumns = {};
 
     showConfirmModal = false;
     companyToDelete: any;
@@ -77,6 +85,10 @@ export class OfiManagementCompanyComponent implements OnInit, OnDestroy {
         this.legalFormList = this.translate.translate(legalFormList);
 
         this.managementCompanyForm = this.service.generateForm();
+        this.managemementCompanySecurityAddIpForm = this.service.generateAddIpAddressForm();
+
+        this.initPanelColumns();
+        this.initPanelDefinition();
     }
 
     ngOnInit() {
@@ -310,5 +322,97 @@ export class OfiManagementCompanyComponent implements OnInit, OnDestroy {
         );
     }
 
+    handleSecurityControlToggleClick() {
+        this.managementCompanySecurityRestrictionActivated = !this.managementCompanySecurityRestrictionActivated;
+    }
 
+    initPanelColumns(): void {
+        this.panelColumns = {
+            ipAddress: {
+                label: this.translate.translate('IP Address'),
+                dataSource: 'ipAddress',
+                sortable: true,
+            },
+            date: {
+                label: this.translate.translate('Date Entered'),
+                dataSource: 'dateEntered',
+                sortable: true,
+            },
+            description: {
+                label: this.translate.translate('Description'),
+                dataSource: 'description',
+            },
+            action: {
+                label: this.translate.translate('Action'),
+                dataSource: 'RN',
+                type: 'button',
+            },
+        };
+    }
+
+    initPanelDefinition() {
+        this.panelDef = {
+          columns: [
+            this.panelColumns['ipAddress'],
+            this.panelColumns['date'],
+            this.panelColumns['description'],
+            this.panelColumns['action'],
+          ],
+          open: true,
+          data: [
+            {
+                RN: 10,
+                ipAddress: '127.0.0.1',
+                dateEntered: '2022-04-12',
+                description: 'Gateway bâtiment A LBPAM'
+            },
+            {
+                RN: 12,
+                ipAddress: '35.0.23.12',
+                dateEntered: '2022-04-13',
+                description: 'Gateway bâtiment SupCo LBPAM Tech'
+            },
+        ]
+        };
+    }
+
+    refresh(state) {
+        console.log(state);
+    }
+
+    deleteIPAddress(data) {
+        console.log('delete ip address')
+        console.log(data);
+    }
+
+    closeAddIpAddressModal() {
+        this.managemementCompanySecurityAddIpForm = this.service.generateAddIpAddressForm();
+        this.showAddIpAddressModal = false;
+    }
+
+    addIPAddress() {
+        // prevent sending data if invalid fields
+        if (!this.managemementCompanySecurityAddIpForm.valid) {
+            return;
+        }
+        
+        const request = {
+            ipAddress: this.managemementCompanySecurityAddIpForm.controls['ipAddress'].value,
+            description: this.managemementCompanySecurityAddIpForm.controls['description'].value,
+        }
+
+        console.log(request);
+
+        this.mcService.addSecurityIpAddressManagementCompany(request).then((result) => {
+            const data = result[1].Data;
+            if (data.error) {
+                console.log(data);
+                //return this.toaster.pop('error', this.translate.translate('There is a problem with the request.'));
+            } else {
+                console.log(data);
+            }
+        });
+
+        console.log('add ip address')
+    }
 }

@@ -459,16 +459,119 @@
             </form>
         </clr-tab-content>
     </clr-tab>
+
+
+    <clr-tab *ngIf="editForm && isAssetManager">
+        <div>
+            <button id="mcTabEditSecurity" clrTabLink><i class="fa fa-lock"></i>
+                {{ 'Security' | translate }}
+            </button>
+        </div>
+        <clr-tab-content>
+            <div class="col-xs-12">
+                <div>{{ 'Activate security control' | translate }}
+                    <label class="switch">
+                        <input type="checkbox"
+                                class="form-control"
+                                id="switchActiveSecurity"
+                                [ngModel]="managementCompanySecurityRestrictionActivated"
+                                (click)="handleSecurityControlToggleClick()">
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+            </div>
+
+            <section *ngIf="managementCompanySecurityRestrictionActivated" class="form-block">
+                <div class="row mt-2"> 
+                    <div class="form-group col-sm-6">
+                        <label class="control-label" for="managementCompanyRestrictedPort">
+                            {{ 'Restricted port' | translate }}
+                            <small>({{ 'Not modifiable, assigned by IZNES' | translate }})</small>
+                        </label>
+                        <input type="number" id="managementCompanyRestrictedPort" class="form-control" [ngModel]="managementCompanyRestrictedPort"
+                            placeholder="{{ 'Please fill the restricted port' | translate }}" disabled>
+                    </div>
+                </div>
+                <div class="well">
+                    <div class="form-group col-sm-3">
+                        <button class="btn btn-primary" (click)="showAddIpAddressModal = true">
+                            <i class="fa fa-plus"></i> {{ 'Add new IP Address' | translate }}
+                        </button>
+                    </div>
+                    <clr-datagrid (clrDgRefresh)="refresh($event)" #myDataGrid>
+                        <clr-dg-column [clrDgField]="column.dataSource" *ngFor="let column of panelDef.columns">
+                          {{column.label}}
+                        </clr-dg-column>
+                  
+                        <ng-container *ngIf="!panelDef.buttons">
+                          <clr-dg-row *clrDgItems="let row of panelDef.data; index as i" id="{{'row[panelDef.linkIdent]'}}">
+                            <clr-dg-cell *ngFor="let dataCol of panelDef.columns" data-id="{{row.id}}" id="{{'dataCol.dataSource'}}">
+                              <span *ngIf="dataCol.dataSource == panelDef.columnLink && dataCol.type !== 'button'" id="{{panelDef.linkIdent}}">
+                                {{row[dataCol.dataSource]}}
+                              </span>
+                              <span *ngIf="dataCol.dataSource != panelDef.columnLink && dataCol.type !== 'button'">{{row[dataCol.dataSource]}}</span>
+                              <button *ngIf="dataCol.type === 'button'" class="btn btn-sm btn-danger nomargin" (click)="deleteIPAddress(row[dataCol.dataSource])">
+                                <i class="fa fa-trash"></i> {{ 'Delete' | translate }}
+                            </button>
+                            </clr-dg-cell>
+                          </clr-dg-row>
+                        </ng-container>
+                  
+                        <clr-dg-footer>Total {{ this.panelDef.data.length }} Entries
+                        </clr-dg-footer>
+                      </clr-datagrid>
+                </div>
+            </section>
+        </clr-tab-content>
+    </clr-tab>
 </clr-tabs>
 
 <!--CUSTOM TEXT MODALS-->
 <clr-modal [(clrModalOpen)]="showModal">
     <h3 class="modal-title text-success"><i class="fa fa-info-circle" aria-hidden="true"></i> {{modalTitle}}</h3>
     <div class="modal-body text-success text-center">
-        <p>{{modalText}}</p>
     </div>
     <div class="modal-footer">
         <button type="button" class="btn btn-outline" (click)="showModal = false">{{ 'Close' | translate }}</button>
+    </div>
+</clr-modal>
+
+<!-- ADD IP ADDRESS MODAL-->
+<clr-modal [(clrModalOpen)]="showAddIpAddressModal">
+    <h3 class="modal-title text-success"><i class="fa fa-plus" aria-hidden="true"></i> {{ 'Add new IP Address' | translate }}</h3>
+    
+    <div class="modal-body">
+        <form [formGroup]="managemementCompanySecurityAddIpForm">
+            <section class="form-group">
+                <div class="col-md-12">
+                    <label class="control-label" for="ipAddress">
+                        {{ 'IP Address' | translate }}
+                        <small>({{ 'Must respect format : XXX.XXX.XXX.XXX (IPv4)' | translate }})</small>
+                    </label>
+                    <input type="text" id="ipAddress" class="form-control" formControlName="ipAddress"
+                        placeholder="{{ 'Please fill IP Address' | translate }}">
+                    <span *ngIf="managemementCompanySecurityAddIpForm.controls['ipAddress'].hasError('required') && managemementCompanySecurityAddIpForm.controls['ipAddress'].touched"
+                        class="field-error">{{ 'Field is required' | translate }}</span>
+                    <span *ngIf="managemementCompanySecurityAddIpForm.controls['ipAddress'].hasError('pattern') && managemementCompanySecurityAddIpForm.controls['ipAddress'].touched"
+                        class="field-error">{{ 'Format incorrect, expected XXX.XXX.XXX.XXX' | translate }}</span>
+                </div>
+
+                <div class="col-md-12 mt-1">
+                    <label class="control-label" for="description">
+                        {{ 'Description' | translate }}
+                        <small>({{ 'Maximum 255 characters' | translate }})</small>
+                    </label>
+                    <input type="text" id="description" class="form-control" formControlName="description"
+                        placeholder="{{ 'Please fill desription' | translate }}">
+                    <span *ngIf="managemementCompanySecurityAddIpForm.controls['description'].hasError('required') && managemementCompanySecurityAddIpForm.controls['description'].touched"
+                        class="field-error">{{ 'Field is required' | translate }}</span>
+                </div>
+            </section>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-outline" (click)="closeAddIpAddressModal()">{{ 'Close' | translate }}</button>
+        <button type="button" class="btn btn-primary" [disabled]="!managemementCompanySecurityAddIpForm.valid" (click)="addIPAddress()">{{ 'Save' | translate }}</button>
     </div>
 </clr-modal>
 

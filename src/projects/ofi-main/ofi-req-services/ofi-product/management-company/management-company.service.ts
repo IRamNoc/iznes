@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { MemberSocketService } from '@setl/websocket-service';
 import { SagaHelper } from '@setl/utils';
 import { NgRedux, select } from '@angular-redux/store';
-import { createMemberNodeSagaRequest } from '@setl/utils/common';
+import { createMemberNodeSagaRequest, createMemberNodeRequest } from '@setl/utils/common';
 import { Subject } from 'rxjs/Subject';
 import { takeUntil } from 'rxjs/operators';
 import { get } from 'lodash';
@@ -129,6 +129,17 @@ export class OfiManagementCompanyService {
             accountID: this.accountId,
         }
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+    }
+
+    addSecurityIpAddressManagementCompany(data: { ipAddress: string, description: string }): any {
+        const messageBody: { RequestName: string, token: string, ipAddress: string, description: string } = {
+          RequestName: 'iznamsecurityaddipaddress',
+          token: this.memberSocketService.token,
+          ipAddress: data.ipAddress,
+          description: data.description,
+        };
+    
+        return createMemberNodeRequest(this.memberSocketService, messageBody);
     }
 
     saveManagementCompany(mcData: ManagementCompanyRequestData): any {
