@@ -42,9 +42,11 @@ export class OfiManagementCompanyComponent implements OnInit, OnDestroy {
     modalText = '';
 
     securityInformationsData: any = {};
+    managementCompanySecurityRestrictionToggle: boolean = false;
     managementCompanySecurityRestrictionActivated: boolean = false;
     managementCompanyRestrictedPort: number = 443;
     showAddIpAddressModal = false;
+    securityToggleDisabled: boolean = false;
 
     panelDef: any = {};
     panelColumns = {};
@@ -136,10 +138,12 @@ export class OfiManagementCompanyComponent implements OnInit, OnDestroy {
                     this.editCompany(_.values(managementCompanyList)[0]);
                     this.mcService.getSecurityInformations().then((result) => {
                         const data = result[1].Data;
+
                         if (data.error) {
                             return this.toasterSevice.pop('error', this.translate.translate(`Unable to get security informations : ${data}`));
                         } else {
                             this.managementCompanySecurityRestrictionActivated = data[0].apiEnableSecurity || false;
+                            this.managementCompanySecurityRestrictionToggle = this.managementCompanySecurityRestrictionActivated;
                             this.managementCompanyRestrictedPort = data[0].apiRestrictionPort || undefined;
 
                             if (data[0].ipAddresses && data[0].ipAddresses !== []) {
@@ -151,8 +155,9 @@ export class OfiManagementCompanyComponent implements OnInit, OnDestroy {
                                 });
 
                                 this.panelDef.data = ipAddresses || [];   
-                                this.detectChanges(true);                             
                             }
+
+                            this.detectChanges(true);
                         }
                     });
                 }
@@ -349,7 +354,32 @@ export class OfiManagementCompanyComponent implements OnInit, OnDestroy {
     }
 
     handleSecurityControlToggleClick() {
-        this.managementCompanySecurityRestrictionActivated = !this.managementCompanySecurityRestrictionActivated;
+        this.securityToggleDisabled = true;
+
+        this.mcService.toggleSecurityRestriction(this.managementCompanySecurityRestrictionToggle)
+        .then((result) => {
+            const data = result[1].Data;
+
+            if (data.error) {
+                this.toasterSevice.pop('error', this.translate.translate('There is a problem with the request.'));
+                // back to previous status
+                this.managementCompanySecurityRestrictionToggle = !this.managementCompanySecurityRestrictionToggle;
+            } else {
+                if (data[0].Status === 'OK') {
+                    this.managementCompanySecurityRestrictionActivated = data[0].apiEnableSecurity;
+                    this.managementCompanySecurityRestrictionToggle = data[0].apiEnableSecurity;
+                    this.toasterSevice.pop('success', this.translate.translate('Updated Security Control Status'));
+                } else {
+                    // back to previous status
+                    this.managementCompanySecurityRestrictionToggle = !this.managementCompanySecurityRestrictionToggle;
+                    this.toasterSevice.pop('error', this.translate.translate(`There is a problem with the request: ${data[0].Message}`));
+                }
+            }
+        })
+        .finally(() => {
+            this.securityToggleDisabled = false;
+            this.changeDetectorRef.detectChanges();
+        })
     }
 
     initPanelColumns(): void {

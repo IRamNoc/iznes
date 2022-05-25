@@ -140,6 +140,16 @@ export class OfiManagementCompanyService {
           return createMemberNodeRequest(this.memberSocketService, messageBody); 
     }
 
+    toggleSecurityRestriction(status: boolean): any {
+        const messageBody: { RequestName: string, token: string, status: boolean } = {
+            RequestName: 'iznamsecuritytogglerestriction',
+            token: this.memberSocketService.token,
+            status,
+        };
+
+        return createMemberNodeRequest(this.memberSocketService, messageBody);
+    }
+
     deleteSecurityIpAddressManagementCompany(identifier): any {
         const messageBody: { RequestName: string, token: string, identifier: number } = {
             RequestName: 'iznamsecuritydeleteipaddress',

@@ -474,8 +474,10 @@
                         <input type="checkbox"
                                 class="form-control"
                                 id="switchActiveSecurity"
-                                [ngModel]="managementCompanySecurityRestrictionActivated"
-                                (click)="handleSecurityControlToggleClick()">
+                                [(ngModel)]="managementCompanySecurityRestrictionToggle"
+                                (change)="handleSecurityControlToggleClick()"
+                                [disabled]="securityToggleDisabled"
+                                >
                         <span class="slider round"></span>
                     </label>
                 </div>
