@@ -468,7 +468,16 @@
             </button>
         </div>
         <clr-tab-content *clrIfActive="securityTab">
-            <div class="col-xs-12">
+            <div class="col-sm-8">
+                <div class="card">
+                    <div class="card-block">
+                        <h4 class="card-title mt-1"><i class="fa fa-info"></i>Information note</h4>
+                        <p>{{ 'This module was created to meet security restriction needs to limit the use of the IZNES API to a specific port and/or IP addresses. The default port is 443. If you need a dedicated port, please contact the IZNES team.' | translate }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xs-12 mt-2">
                 <div>{{ 'Activate security control' | translate }}
                     <label class="switch">
                         <input type="checkbox"
