@@ -63,6 +63,7 @@ export enum FormItemStyle {
     WidthThird,
     WidthFourth,
     TitleMargin,
+    PullRightTwoCol,
 }
 
 export interface FormItemDropdown {

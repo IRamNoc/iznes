@@ -41,7 +41,7 @@
                 </ng-container>
             </clr-dg-column>
             <clr-dg-column [clrDgField]="'assetManagementCompany'" clrDgSortIcon clrDgSortNoSearch id="Order-ISIN">
-                <ng-container *clrDgHideableColumn="{hidden: false}">{{ 'Management Company' | translate }}
+                <ng-container *clrDgHideableColumn="{hidden: false}">{{ 'Operating Company' | translate }}
                     <span class="column-label"></span>
                 </ng-container>
             </clr-dg-column>
@@ -265,7 +265,7 @@
             <section class="form-group">
                 <h3>{{ 'General Informations' | translate }}</h3>
                 <div class="col-md-12">
-                    <label class="clr-col-12 clr-col-md-12" for="amCompany">{{ 'Management Company' | translate }}</label>
+                    <label class="clr-col-12 clr-col-md-12" for="amCompany">{{ 'Operating Company' | translate }}</label>
                     <input id="investorWalletReference" class="form-control" type="text"
                         value="{{ detailModal.assetManagementCompany }}" disabled>
                 </div>
