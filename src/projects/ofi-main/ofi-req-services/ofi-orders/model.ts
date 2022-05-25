@@ -33,6 +33,8 @@ export interface OfiAmOrdersRequestBody extends OfiMemberNodeBody {
     sortByField?: any;
     sortOrder?: any;
     isTransfer?: any;
+    investorCompanyName?: any;
+    portfolioLabel?: any;
 }
 
 export interface OfiIznAdminOrdersRequestBody extends OfiMemberNodeBody {
