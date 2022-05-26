@@ -138,6 +138,11 @@ export class DynamicFormService {
                     break;
                 case FormItemStyle.TitleMargin:
                     cssClass += 'title-margin '; 
+                    break;
+                case FormItemStyle.PullRightTwoCol:
+                    cssClass = cssClass.replace('col-sm-6 ', '');
+                    cssClass += 'offset-sm-6 col-sm-6 ';
+                    break;
                 }
             });
         }

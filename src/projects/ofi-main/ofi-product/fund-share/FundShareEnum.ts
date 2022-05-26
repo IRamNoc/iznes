@@ -349,3 +349,10 @@ export enum PaymentInstructionTrigger {
     NavDate,
     CutoffDate,
 }
+
+export enum CashAccountIznesScope {
+    None,
+    Subscription,
+    Redemption,
+    Both,
+}
