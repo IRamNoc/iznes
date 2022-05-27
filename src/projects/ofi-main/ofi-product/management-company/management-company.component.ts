@@ -356,8 +356,7 @@ export class OfiManagementCompanyComponent implements OnInit, OnDestroy {
     handleSecurityControlToggleClick() {
         this.securityToggleDisabled = true;
 
-        this.mcService.toggleSecurityRestriction(this.managementCompanySecurityRestrictionToggle)
-        .then((result) => {
+        this.mcService.defaultToggleSecurityRestriction(this.managementCompanySecurityRestrictionToggle, (result) => {
             const data = result[1].Data;
 
             if (data.error) {
@@ -370,13 +369,25 @@ export class OfiManagementCompanyComponent implements OnInit, OnDestroy {
                     this.managementCompanySecurityRestrictionToggle = data[0].apiEnableSecurity;
                     this.toasterSevice.pop('success', this.translate.translate('Updated Security Control Status'));
                 } else {
+                    console.log(data[0]);
                     // back to previous status
                     this.managementCompanySecurityRestrictionToggle = !this.managementCompanySecurityRestrictionToggle;
                     this.toasterSevice.pop('error', this.translate.translate(`There is a problem with the request: ${data[0].Message}`));
                 }
             }
-        })
-        .finally(() => {
+            
+            // update frontend state
+            this.securityToggleDisabled = false;
+            this.changeDetectorRef.detectChanges();
+        }, (error) => {
+            const data = error[1].Data;
+            const errorMessage = _.get(data, '0.Message', 'There is a problem with the request');
+
+            // display error message if exist
+            this.toasterSevice.pop('error', this.translate.translate(errorMessage));
+            this.managementCompanySecurityRestrictionToggle = !this.managementCompanySecurityRestrictionToggle;
+            
+            // update frontend state
             this.securityToggleDisabled = false;
             this.changeDetectorRef.detectChanges();
         })

@@ -140,6 +140,19 @@ export class OfiManagementCompanyService {
           return createMemberNodeRequest(this.memberSocketService, messageBody); 
     }
 
+    defaultToggleSecurityRestriction(status: boolean, successCallback: (res) => void, errorCallback: (res) => void) {
+        const asyncTaskPipe = this.toggleSecurityRestriction(status);
+
+        this.ngRedux.dispatch(SagaHelper.runAsync(
+            [],
+            [],
+            asyncTaskPipe,
+            {},
+            res => successCallback(res),
+            res => errorCallback(res),
+        ));
+    }
+
     toggleSecurityRestriction(status: boolean): any {
         const messageBody: { RequestName: string, token: string, status: boolean } = {
             RequestName: 'iznamsecuritytogglerestriction',
@@ -147,7 +160,7 @@ export class OfiManagementCompanyService {
             status,
         };
 
-        return createMemberNodeRequest(this.memberSocketService, messageBody);
+        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
     }
 
     deleteSecurityIpAddressManagementCompany(identifier): any {
