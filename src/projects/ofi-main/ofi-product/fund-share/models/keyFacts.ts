@@ -218,6 +218,13 @@ export class ShareKeyFactsMandatory extends DynamicFormsValidator {
         required: false,
     };
 
+    //Visibile by all field initialisation
+    visibleByAll: FormItem = {
+        type: FormItemType.boolean,
+        label: 'Visible By All',
+        required: false,
+    };
+
     // Calendar of public holidays for the centralization dates for subscriptions
     buyCentralizationCalendar: FormItem = {
         type: FormItemType.list,
