@@ -158,6 +158,8 @@ export class OfiOrdersService {
             sortByField: data.sortByField,
             sortOrder: data.sortOrder,
             isTransfer: data.isTransfer,
+            investorCompanyName: data.investorCompanyName,
+            portfolioLabel: data.portfolioLabel,
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
@@ -184,6 +186,8 @@ export class OfiOrdersService {
             sortByField: data.sortByField,
             sortOrder: data.sortOrder,
             isTransfer: data.isTransfer,
+            investorCompanyName: data.investorCompanyName,
+            portfolioLabel: data.portfolioLabel,
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);

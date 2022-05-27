@@ -147,6 +147,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
     productInformation = true;
     datesInformation = true;
     orderInformation = true;
+    details = true;
 
     currencyList = [];
 

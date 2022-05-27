@@ -67,6 +67,9 @@ export class FundShareComponent implements OnInit, OnDestroy {
     model: FundShare;
     mode: FundShareMode = FundShareMode.Create;
 
+    typeDataSub="sub";
+    typeDataRedemp="redemp";
+    typeDataNormal="normal";
     productConfig;
     // ID of the share to hydrate the model with
     prefill: number = null;
