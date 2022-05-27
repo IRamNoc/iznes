@@ -375,7 +375,6 @@ export class FundShare {
         this.keyFacts.mandatory.cashAccountBic.control.setValue(isPrefill ? null : fundShare.cashAccountBic);
         this.keyFacts.mandatory.isin.control.setValue(isPrefill ? null : fundShare.isin);
         this.keyFacts.mandatory.shareClassCode.control.setValue(fundShare.shareClassCode);
-       // this.keyFacts.mandatory.visibleByAll.control.setValue({primary:false}) //preset the value of field
         this.setListItemValue(this.keyFacts.status.shareClassInvestmentStatus, fundShare.shareClassInvestmentStatus);
         this.keyFacts.mandatory.subscriptionStartDate.control.setValue(fundShare.subscriptionStartDate);
         this.keyFacts.mandatory.shareLaunchDate.control.setValue(fundShare.launchDate);

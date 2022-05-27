@@ -17,7 +17,7 @@ export interface OfiFundShare {
     status: number;
     master: boolean;
     feeder: number;
-    visibleByAll:boolean;
+    visibleByAll: boolean;
     hasCoupon: number;
     couponType: number;
     freqOfDistributionDeclaration: number;
