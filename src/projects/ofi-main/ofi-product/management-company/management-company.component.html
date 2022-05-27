@@ -543,6 +543,7 @@
 <clr-modal [(clrModalOpen)]="showModal">
     <h3 class="modal-title text-success"><i class="fa fa-info-circle" aria-hidden="true"></i> {{modalTitle}}</h3>
     <div class="modal-body text-success text-center">
+        <p>{{modalText}}</p>
     </div>
     <div class="modal-footer">
         <button type="button" class="btn btn-outline" (click)="showModal = false">{{ 'Close' | translate }}</button>
