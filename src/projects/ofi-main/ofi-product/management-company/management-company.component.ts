@@ -15,6 +15,7 @@ import { ManagementCompanyFileMetadata, ManagementCompanyFileMetadataField } fro
 import { legalFormList } from '../../ofi-kyc/my-requests/requests.config';
 import { FileDropEvent } from '@setl/core-filedrop';
 import { MultilingualService } from '@setl/multilingual';
+import * as moment from 'moment-timezone';
 
 const AM_USERTYPE = 36;
 
@@ -30,13 +31,25 @@ export class OfiManagementCompanyComponent implements OnInit, OnDestroy {
     private usertype: number;
 
     managementCompanyForm: FormGroup;
+    managemementCompanySecurityAddIpForm: FormGroup;
+    displaySecurityTab: boolean = false;
     isProduction = true;
     editForm = false;
     showSearchTab = false;
+    securityTab = false;
     showModal = false;
     modalTitle = '';
     modalText = '';
 
+    securityInformationsData: any = {};
+    managementCompanySecurityRestrictionToggle: boolean = false;
+    managementCompanySecurityRestrictionActivated: boolean = false;
+    managementCompanyRestrictedPort: number = 443;
+    showAddIpAddressModal = false;
+    securityToggleDisabled: boolean = false;
+
+    panelDef: any = {};
+    panelColumns = {};
 
     showConfirmModal = false;
     companyToDelete: any;
@@ -77,6 +90,10 @@ export class OfiManagementCompanyComponent implements OnInit, OnDestroy {
         this.legalFormList = this.translate.translate(legalFormList);
 
         this.managementCompanyForm = this.service.generateForm();
+        this.managemementCompanySecurityAddIpForm = this.service.generateAddIpAddressForm();
+
+        this.initPanelColumns();
+        this.initPanelDefinition();
     }
 
     ngOnInit() {
@@ -119,6 +136,30 @@ export class OfiManagementCompanyComponent implements OnInit, OnDestroy {
             .subscribe((managementCompanyList) => {
                 if (this.isAssetManager) {
                     this.editCompany(_.values(managementCompanyList)[0]);
+                    this.mcService.getSecurityInformations().then((result) => {
+                        const data = result[1].Data;
+
+                        if (data.error) {
+                            return this.toasterSevice.pop('error', this.translate.translate(`Unable to get security informations : ${data}`));
+                        } else {
+                            this.managementCompanySecurityRestrictionActivated = data[0].apiEnableSecurity || false;
+                            this.managementCompanySecurityRestrictionToggle = this.managementCompanySecurityRestrictionActivated;
+                            this.managementCompanyRestrictedPort = data[0].apiRestrictionPort || undefined;
+
+                            if (data[0].ipAddresses && data[0].ipAddresses !== []) {
+                                const ipAddresses = _.map(data[0].ipAddresses, ip => {
+                                    return {
+                                        ...ip,
+                                        dateEntered: moment(ip.dateEntered).tz(moment.tz.guess()).format('YYYY-MM-DD HH:mm'),
+                                    }
+                                });
+
+                                this.panelDef.data = ipAddresses || [];   
+                            }
+
+                            this.detectChanges(true);
+                        }
+                    });
                 }
             });
     }
@@ -200,6 +241,7 @@ export class OfiManagementCompanyComponent implements OnInit, OnDestroy {
         });
 
         this.showSearchTab = false;
+        this.securityTab = false;
         this.editForm = true;
         this.markForCheck();
     }
@@ -207,6 +249,7 @@ export class OfiManagementCompanyComponent implements OnInit, OnDestroy {
     resetForm(): void {
         this.editForm = false;
         this.showSearchTab = false;
+        this.securityTab = false;
         this.managementCompanyForm = this.service.generateForm();
         this.fileMetadata.reset();
     }
@@ -310,5 +353,156 @@ export class OfiManagementCompanyComponent implements OnInit, OnDestroy {
         );
     }
 
+    handleSecurityControlToggleClick() {
+        this.securityToggleDisabled = true;
 
+        this.mcService.defaultToggleSecurityRestriction(this.managementCompanySecurityRestrictionToggle, (result) => {
+            const data = result[1].Data;
+
+            if (data.error) {
+                this.toasterSevice.pop('error', this.translate.translate('There is a problem with the request.'));
+                // back to previous status
+                this.managementCompanySecurityRestrictionToggle = !this.managementCompanySecurityRestrictionToggle;
+            } else {
+                if (data[0].Status === 'OK') {
+                    this.managementCompanySecurityRestrictionActivated = data[0].apiEnableSecurity;
+                    this.managementCompanySecurityRestrictionToggle = data[0].apiEnableSecurity;
+                    this.toasterSevice.pop('success', this.translate.translate('Updated Security Control Status'));
+                } else {
+                    console.log(data[0]);
+                    // back to previous status
+                    this.managementCompanySecurityRestrictionToggle = !this.managementCompanySecurityRestrictionToggle;
+                    this.toasterSevice.pop('error', this.translate.translate(`There is a problem with the request: ${data[0].Message}`));
+                }
+            }
+            
+            // update frontend state
+            this.securityToggleDisabled = false;
+            this.changeDetectorRef.detectChanges();
+        }, (error) => {
+            const data = error[1].Data;
+            const errorMessage = _.get(data, '0.Message', 'There is a problem with the request');
+
+            // display error message if exist
+            this.toasterSevice.pop('error', this.translate.translate(errorMessage));
+            this.managementCompanySecurityRestrictionToggle = !this.managementCompanySecurityRestrictionToggle;
+            
+            // update frontend state
+            this.securityToggleDisabled = false;
+            this.changeDetectorRef.detectChanges();
+        })
+    }
+
+    initPanelColumns(): void {
+        this.panelColumns = {
+            ipAddress: {
+                label: this.translate.translate('IP Address'),
+                dataSource: 'ipAddress',
+                sortable: true,
+            },
+            date: {
+                label: this.translate.translate('Date Entered'),
+                dataSource: 'dateEntered',
+                sortable: true,
+            },
+            description: {
+                label: this.translate.translate('Description'),
+                dataSource: 'description',
+            },
+            userEntered: {
+                label: this.translate.translate('Created by'),
+                dataSource: 'userEntered',
+            },
+            action: {
+                label: this.translate.translate('Action'),
+                dataSource: 'RN',
+                type: 'button',
+            },
+        };
+    }
+
+    initPanelDefinition() {
+        this.panelDef = {
+          columns: [
+            this.panelColumns['ipAddress'],
+            this.panelColumns['date'],
+            this.panelColumns['description'],
+            this.panelColumns['userEntered'],
+            this.panelColumns['action'],
+          ],
+          open: true,
+          data: [],
+        };
+    }
+
+    /* unused for now */
+    refresh(state) {}
+
+    deleteIPAddress(id) {
+        if (!id) return;
+
+        this.mcService.deleteSecurityIpAddressManagementCompany(id).then((result) => {
+            const data = result[1].Data;
+
+            if (data.error) {
+                return this.toasterSevice.pop('error', this.translate.translate('There is a problem with the request.'));
+            } else {
+                if (data[0].Status === 'OK') {
+                    _.remove(this.panelDef.data, item => item.RN === id);
+                    this.changeDetectorRef.detectChanges();
+                    return this.toasterSevice.pop('success', this.translate.translate('IP Address deleted.'));
+                } else {
+                    return this.toasterSevice.pop('error', this.translate.translate(`There is a problem with the request: ${data[0].Message}`));
+                }
+            }
+        });
+    }
+
+    closeAddIpAddressModal() {
+        this.showAddIpAddressModal = false;
+        this.managemementCompanySecurityAddIpForm = this.service.generateAddIpAddressForm();
+        this.changeDetectorRef.detectChanges();
+    }
+
+    addIPAddress() {
+        // prevent sending data if invalid fields
+        if (!this.managemementCompanySecurityAddIpForm.valid) {
+            return;
+        }
+        
+        const request = {
+            ipAddress: this.managemementCompanySecurityAddIpForm.controls['ipAddress'].value,
+            description: this.managemementCompanySecurityAddIpForm.controls['description'].value,
+        }
+
+        this.mcService.addSecurityIpAddressManagementCompany(request).then((result) => {
+            const data = result[1].Data;
+
+            if (data.error) {
+                this.closeAddIpAddressModal();
+                return this.toasterSevice.pop('error', this.translate.translate('There is a problem with the request.'));
+            } else {
+                if (data[0].Status === 'OK') {
+                    this.panelDef.data.push({
+                        ...data[0],
+                        dateEntered: moment(data[0].dateEntered).tz(moment.tz.guess()).format('YYYY-MM-DD HH:mm'), 
+                    });
+                    this.closeAddIpAddressModal();
+                    return this.toasterSevice.pop('success', this.translate.translate('New IP Address added.'));
+
+                } else {
+                    this.closeAddIpAddressModal();
+                    return this.toasterSevice.pop('error', this.translate.translate(`There is a problem with the request: ${data[0].Message}`));
+                }
+            }
+        });
+    }
+
+    detectChanges(detect = false) {
+        this.changeDetectorRef.markForCheck();
+
+        if (detect) {
+          this.changeDetectorRef.detectChanges();
+        }
+    }
 }
