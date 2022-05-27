@@ -57,7 +57,7 @@ export class ShareCharacteristicMandatory extends DynamicFormsValidator {
     subscriptionReimbursement: FormItem = {
         type: FormItemType.radio,
         label: 'Reimbursement of the odd lots',
-        required: true,
+        required: false,
         radioOptions: [
             {key: 'Yes',  value: 'Yes'},
             {key: 'No',  value: 'No'}
