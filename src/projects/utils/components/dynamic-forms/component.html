@@ -2,20 +2,29 @@
     <form [formGroup]="form">
         <section class="form-block">
             <div class="row">
-                <ng-container *ngFor="let item of formKeys; trackBy: trackFormItemByFn">
-                    <div class="form-group {{model[item].cssClass}}" [hidden]="isHidden(item)">
+                <ng-container *ngFor="let item of formKeys; trackBy: trackFormItemByFn;let i=index">
+                <ng-container *ngIf="typeData  ? (typeData=='normal' ? i==0 : typeData=='sub' ? (i>0 && i<10) : typeData=='redemp' ? i>9 : 'i>=0') : 'i>=0'">                   
+                  <div class="form-group {{model[item].cssClass}}" [hidden]="isHidden(item)">
                         <div *ngIf="model[item].title">
                             <p><strong>{{ model[item].title | translate }}</strong></p>
                         </div>
-                        
-                        <label *ngIf="!model[item].noLabel" class="control-label" [class.hasTitle]="model[item].title" [class.required-field]="model[item].required" for="{{item}}">{{ model[item].label | translate }}
-                            <clr-signpost *ngIf="model[item].hasHelpbox" style="position: absolute !important; top: -15px !important; margin-left: 10px !important;">
+                        <div [ngClass]="(typeData=='sub' && model[item].label=='Reimbursement of the odd lots') ? 'labelIcon' : ''">
+                        <label *ngIf="!model[item].noLabel" class="control-label" [class.hasTitle]="model[item].title" [class.required-field]="model[item].required" for="{{item}}">{{ model[item].label | translate }} 
+                           <clr-signpost *ngIf="model[item].hasHelpbox" style="position: absolute !important; top: -15px !important; margin-left: 10px !important;">
                                 <clr-signpost-content *clrIfOpen>
                                   <p>{{ model[item].helpboxContent | translate }}</p>
                                 </clr-signpost-content>
                             </clr-signpost>
                         </label>
-
+                        <clr-icon class="status_info" size="md" shape="info-standard" *ngIf="model[item].label=='Reimbursement of the odd lots'" (click)="showReimbursementInfo()"></clr-icon>
+                        <div class="alert alert-info alert-sm flex-items-xs-middle alert-popup" *ngIf="isShowReimbursement && model[item].label=='Reimbursement of the odd lots'">
+                            <div class="alert-items">
+                                <div class="alert-item static">
+                                    <div class="alert-text">{{'Available only for subscriptions in amount, when instruction payments are sent on the cut-off date (unknown NAV).' | translate }}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                         <ng-container [ngSwitch]="isElementFormItem(model[item])">
                             <ng-container *ngSwitchCase="false">
                                 <ng-container [ngSwitch]="model[item].tag">
@@ -190,6 +199,44 @@
                                         </div>
 
                                     </ng-container>
+                                    <ng-container *ngSwitchCase="11">
+                                        <div class="radio-inline reimbursement-radio-align  flex-items-xs-middle ">
+                                            <ng-container *ngFor="let radiobutton of model[item].radioOptions">
+                                                <div class="reimbursement-radio" *ngIf="radiobutton.value=='Yes'">
+                                                    <clr-radio-container clrInline>
+                                                        <clr-radio-wrapper>
+                                            <input type="radio"
+                                                   name="{{item}}"
+                                                   formControlName="{{item}}" 
+                                                   value="{{radiobutton.value}}"                                                   
+                                                   clrRadio                                                  
+                                                   >
+                                            <label>
+                                                {{radiobutton.key | translate}}
+                                            </label>
+                                            </clr-radio-wrapper>
+                                            </clr-radio-container>
+                                            </div>
+                                                <div class="reimbursement-radio" *ngIf="radiobutton.value=='No'">
+                                                    <clr-radio-container clrInline>
+                                                        <clr-radio-wrapper>
+                                            <input type="radio"
+                                                   name="{{item}}"
+                                                   formControlName="{{item}}" 
+                                                   value="{{radiobutton.value}}"
+                                                   [checked]="true"
+                                                   clrRadio                                                  
+                                                   >
+                                            <label>
+                                                {{radiobutton.key | translate}}
+                                            </label>
+                                            </clr-radio-wrapper>
+                                            </clr-radio-container>
+                                            </div>
+                                            </ng-container>
+                                        </div>                      
+
+                                    </ng-container>
                                 </ng-container>
                             </ng-container>
                         </ng-container>
@@ -201,6 +248,7 @@
 
                     </div>
                     <div class="break" *ngIf="itemHasBreakAfter(model[item])"></div>
+                </ng-container>
                 </ng-container>
             </div>
         </section>

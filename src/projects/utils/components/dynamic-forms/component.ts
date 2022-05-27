@@ -13,6 +13,7 @@ import { MultilingualService } from '@setl/multilingual';
 
 export class DynamicFormComponent implements OnInit {
     private formModel: { [key: string]: FormElement };
+    @Input() typeData?:any;
     @Input() set model(model: { [key: string]: FormElement }) {
         this.formModel = model;
         this.generateForm();
@@ -36,6 +37,7 @@ export class DynamicFormComponent implements OnInit {
 
     form: FormGroup;
     formKeys: string[];
+    isShowReimbursement=false;
 
     constructor(private service: DynamicFormService,
                 private changeDetectorRef: ChangeDetectorRef,
@@ -154,5 +156,9 @@ export class DynamicFormComponent implements OnInit {
 
     isElementFormItem(item: FormElement): boolean {
         return isFormItem(item);
+    }
+
+    showReimbursementInfo(){
+        this.isShowReimbursement=!this.isShowReimbursement;
     }
 }
