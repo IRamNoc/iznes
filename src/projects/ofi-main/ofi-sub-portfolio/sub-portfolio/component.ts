@@ -241,9 +241,8 @@ export class OfiSubPortfolioComponent implements OnDestroy {
                 this.tabDetail[0]['formControl'].controls[item].patchValue(subPortfolio[item]);
             }
         });
-        this.tabDetail[0]['formControl'].controls.hashIdentifierCode.patchValue(address);
-        this.tabDetail[0]['formControl'].controls.emailtransactionnotice.patchValue(subPortfolio.emailtransactnotice);
-        this.tabDetail[0]['formControl'].controls.emailcertificationbookentry.patchValue(subPortfolio.emailcertificationbookentry);
+
+        this.tabDetail[0]['formControl'].controls.hashIdentifierCode.patchValue(address);        
         this.tabDetail[0]['formControl'].controls.accountCurrency.patchValue([_.find(this.currenciesItems, { id: subPortfolio.accountCurrency })]);
         this.tabDetail[0]['formControl'].controls.custodianPayment.patchValue([_.find(this.custodianPaymentItems, { id: subPortfolio.custodianPaymentID })]);
         this.tabDetail[0]['formControl'].controls.custodianPosition.patchValue([_.find(this.custodianPositionItems, { id: subPortfolio.custodianPositionID })]);
