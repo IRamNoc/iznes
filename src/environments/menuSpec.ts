@@ -416,10 +416,10 @@ const accountAdmin = {
 };
 
 const managementCompany = {
-    label: 'Management Companies',
-    label_txt: 'txt_managementcompanies',
+    label: 'Operating Company',
+    label_txt: 'txt_managementcompany',
     icon_class: 'bank',
-    element_id: 'menu-management-companies',
+    element_id: 'menu-management-company',
     router_link: '/management-company',
 };
 

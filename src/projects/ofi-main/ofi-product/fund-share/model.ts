@@ -114,6 +114,7 @@ export class FundShare {
             mainIban: this.keyFacts.mandatory.mainIban.value(),
             valuationFrequency: this.getSelectValue(this.keyFacts.mandatory.valuationFrequency),
             historicOrForwardPricing: this.getSelectValue(this.keyFacts.mandatory.historicOrForwardPricing),
+            cashAccountIznesScope: this.getSelectValue(this.keyFacts.mandatory.cashAccountIznesScope),
             hasCoupon: this.keyFacts.mandatory.hasCoupon.value(),
             couponType: this.getSelectValue(this.keyFacts.mandatory.couponType),
             freqOfDistributionDeclaration: this.getSelectValue(this.keyFacts.mandatory.freqOfDistributionDeclaration),
@@ -271,6 +272,7 @@ export class FundShare {
         this.keyFacts.mandatory.mainIban.preset = fundShare.mainIban;
         this.setListItemPreset(this.keyFacts.mandatory.valuationFrequency, fundShare.valuationFrequency);
         this.setListItemPreset(this.keyFacts.mandatory.historicOrForwardPricing, fundShare.historicOrForwardPricing);
+        this.setListItemPreset(this.keyFacts.mandatory.cashAccountIznesScope, fundShare.cashAccountIznesScope);
         this.keyFacts.mandatory.hasCoupon.preset = fundShare.hasCoupon;
         this.setListItemPreset(this.keyFacts.mandatory.couponType, fundShare.couponType);
         this.setListItemPreset(
@@ -382,6 +384,7 @@ export class FundShare {
         this.keyFacts.mandatory.mainIban.control.setValue(fundShare.mainIban);
         this.setListItemValue(this.keyFacts.mandatory.valuationFrequency, fundShare.valuationFrequency);
         this.setListItemValue(this.keyFacts.mandatory.historicOrForwardPricing, fundShare.historicOrForwardPricing);
+        this.setListItemValue(this.keyFacts.mandatory.cashAccountIznesScope, fundShare.cashAccountIznesScope);
         this.keyFacts.mandatory.hasCoupon.control.setValue(fundShare.hasCoupon);
         this.setListItemValue(this.keyFacts.mandatory.couponType, fundShare.couponType);
         this.setListItemValue(

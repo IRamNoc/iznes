@@ -13,3 +13,5 @@ export {HomeComponent} from './home/home.component';
 export {DashboardComponent} from './dashboard/dashboard.component';
 
 export {AlertsComponent} from './alerts/alerts.component';
+
+export { HelpPageComponent } from './help-page/help-page.component';

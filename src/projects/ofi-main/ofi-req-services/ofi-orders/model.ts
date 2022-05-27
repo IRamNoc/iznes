@@ -33,6 +33,8 @@ export interface OfiAmOrdersRequestBody extends OfiMemberNodeBody {
     sortByField?: any;
     sortOrder?: any;
     isTransfer?: any;
+    investorCompanyName?: any;
+    portfolioLabel?: any;
 }
 
 export interface OfiIznAdminOrdersRequestBody extends OfiMemberNodeBody {
@@ -105,7 +107,7 @@ export interface IznesMarkOrderSettleRequestBody extends MemberNodeMessageBody {
 export interface ManageOrdersRequestData {
     fundName?: string;
     shareName?: string;
-    status?: number;
+    status?: string;
     orderType?: number;
     isin?: any;
     orderID?: number;

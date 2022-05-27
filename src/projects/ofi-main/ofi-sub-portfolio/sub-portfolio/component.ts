@@ -29,12 +29,16 @@ import { FileDropComponent } from '@setl/core-filedrop';
 export class OfiSubPortfolioComponent implements OnDestroy {
     private connectedWalletId: number = 0;
     public addressList: Array<any>;
+    public addressListDraft: Array<any>;
     public tabDetail: Array<object>;
-    public oldsubProtifolioData: Array<object>;
+    public oldsubPortfolioData: Array<object>;
+    public oldsubPortfolioDataDraft: Array<object>;
     public showFormModal: boolean = false;
     public showAddress: boolean = false;
     public currentAddress: string;
+    public currentAddressDraft: string;
     public editForm: boolean = false;
+    public editDraft: boolean = false;
     public countries: any[] = this.translate.translate(fundItems.domicileItems);
     currenciesItems = [];
     custodianPaymentItems = [
@@ -141,6 +145,14 @@ export class OfiSubPortfolioComponent implements OnDestroy {
 
                 this.currenciesItems = data;
             });
+
+        this.addressListDraft = [];
+        this.ofiSubPortfolioReqService
+        .getSubPortfolioBankingDetailsDraft(this.connectedWalletId)
+        .then(result => {
+            _.each(result[1].Data, data => this.addressListDraft.push(data));
+        });
+
     }
 
     setupFormGroup() {
@@ -150,7 +162,7 @@ export class OfiSubPortfolioComponent implements OnDestroy {
                 hashIdentifierCode: new FormControl({ value: '', disabled: true }),
                 investorReference: new FormControl('', [Validators.maxLength(255)]),
                 accountLabel: new FormControl('', [Validators.required, Validators.maxLength(35), CustomValidators.swiftNameAddressValidator]),
-                accountCurrency: new FormControl('', [Validators.required]),
+                accountCurrency: new FormControl(0),
                 custodianPayment: new FormControl(0),
                 custodianPosition: new FormControl(0),
                 custodianTransactionNotices: new FormControl(0),
@@ -187,12 +199,12 @@ export class OfiSubPortfolioComponent implements OnDestroy {
     }
 
     handleEdit(address): void {
-        this.oldsubProtifolioData = [];
+        this.oldsubPortfolioData = [];
         this.setupFormGroup();
         const subPortfolio = this.addressList.find((subPortfolio) => {
             return subPortfolio.addr === address;
         });
-        this.oldsubProtifolioData = subPortfolio;
+        this.oldsubPortfolioData = subPortfolio;
 
         Object.keys(subPortfolio).forEach((item) => {
             if (this.tabDetail[0]['formControl'].controls[item]) {
@@ -211,6 +223,36 @@ export class OfiSubPortfolioComponent implements OnDestroy {
 
         this.currentAddress = address;
         this.editForm = true;
+        this.editDraft = true;
+        this.showFormModal = true;
+    }
+
+    handleEditDraft(address): void {
+        this.oldsubPortfolioDataDraft = [];
+        this.setupFormGroup();
+        const subPortfolio = this.addressListDraft.find((subPortfolio) => {
+            return subPortfolio.RN === address.RN;
+        });
+
+        this.oldsubPortfolioDataDraft = subPortfolio;
+
+        Object.keys(subPortfolio).forEach((item) => {
+            if (this.tabDetail[0]['formControl'].controls[item]) {
+                this.tabDetail[0]['formControl'].controls[item].patchValue(subPortfolio[item]);
+            }
+        });
+
+        this.tabDetail[0]['formControl'].controls.hashIdentifierCode.patchValue(address);        
+        this.tabDetail[0]['formControl'].controls.accountCurrency.patchValue([_.find(this.currenciesItems, { id: subPortfolio.accountCurrency })]);
+        this.tabDetail[0]['formControl'].controls.custodianPayment.patchValue([_.find(this.custodianPaymentItems, { id: subPortfolio.custodianPaymentID })]);
+        this.tabDetail[0]['formControl'].controls.custodianPosition.patchValue([_.find(this.custodianPositionItems, { id: subPortfolio.custodianPositionID })]);
+        this.tabDetail[0]['formControl'].controls.custodianTransactionNotices.patchValue([_.find(this.custodianTransactionNoticesItems, { id: subPortfolio.custodianTransactionNoticesID })]);
+        this.file.fileData = subPortfolio.bankIdentificationStatement;
+        this.file.control.patchValue(subPortfolio.bankIdentificationStatement.fileID);
+
+        this.currentAddressDraft = subPortfolio.RN;
+        this.editForm = false;
+        this.editDraft = true;
         this.showFormModal = true;
     }
 
@@ -231,6 +273,7 @@ export class OfiSubPortfolioComponent implements OnDestroy {
         };
         this.setupFormGroup();
         this.editForm = false;
+        this.editDraft = false;
         this.showFormModal = !this.showFormModal;
     }
 
@@ -244,13 +287,16 @@ export class OfiSubPortfolioComponent implements OnDestroy {
      * @return void
      */
     saveSubPortfolio() {
-        const payload = this.getSubPortfolioFormValue();
+        const payload = {
+            ...this.getSubPortfolioFormValue(),
+            RN: this.currentAddressDraft,
+        };
         const asyncTaskPipe = this.ofiSubPortfolioReqService.saveNewSubPortfolio(payload);
-
         this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
             asyncTaskPipe,
             (labelResponse) => {
                 const message = _.get(labelResponse, '[1].Data[0].Message', 'OK');
+                this.handleDeleteDraftValidation(payload);
                 this.ofiSubPortfolioService.resetRequestedFlags();
                 if (message === 'OK') {
                     this.handleLabelResponse(message, 'created');
@@ -262,12 +308,50 @@ export class OfiSubPortfolioComponent implements OnDestroy {
                     }
                 }
             },
+            (labelResponse) => {
+                const message = _.get(labelResponse, '[1].Data[0].Message', 'Fail');
+                const errorTypes = ['Duplicate Label', 'Duplicate Security Account']
+                if (errorTypes.includes(message)) {
+                    this.handleLabelResponse(message, 'created');
+                } else {
+                    this.alertsService.generate('error', this.translate.translate('Error creating sub-portfolio'));
+                }
+            }));
+    }
+
+   /**
+     * Save a new Draft
+     * @return void
+     */
+    saveSubPortfolioDraft() {
+        const payload = {
+            ...this.getSubPortfolioFormValue(),
+        };
+        const asyncTaskPipe = this.ofiSubPortfolioReqService.insertSubPortfolioDraft(payload);
+
+        this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
+            asyncTaskPipe,
+            (labelResponse) => {
+                const message = _.get(labelResponse, '[1].Data[0].Message', 'OK');
+                this.ofiSubPortfolioService.resetRequestedFlags();
+                if (message === 'OK') {
+                    this.handleLabelResponseDraft(message, 'created');
+                    this.toggleFormModal();
+                    this.initSubscriptions();
+                    // update the default home page to '/home'
+                    if (this.isFirstAddress()) {
+                        this.myUserService.updateHomePage('/home');
+                    }
+                }
+            },
             (response) => {
+                this.initSubscriptions();
                 const message = _.get(response, '[1].Data[0].Message', 'Fail');
                 if (message === 'Duplicate Label') {
                     this.handleLabelResponse(message, 'created');
                 } else {
-                    this.alertsService.generate('error', this.translate.translate('Error creating sub-portfolio'));
+                    this.alertsService.generate('error', this.translate.translate('Error creating draft, please fill out the Sub-Portfolio Name'));
+
                 }
             }));
     }
@@ -280,7 +364,7 @@ export class OfiSubPortfolioComponent implements OnDestroy {
         const payload = {
             ...this.getSubPortfolioFormValue(),
             option: this.currentAddress,
-            oldSubportifolio: this.oldsubProtifolioData,
+            oldSubportfolio: this.oldsubPortfolioData,
         };
 
         const asyncTaskPipe = this.ofiSubPortfolioReqService.updateSubPortfolio(payload);
@@ -295,8 +379,40 @@ export class OfiSubPortfolioComponent implements OnDestroy {
                     this.toggleFormModal();
                 }
             },
+            (labelResponse) => {
+                const message = _.get(labelResponse, '[1].Data[0].Message', 'Fail');
+                if (message === 'Duplicate Security Account') {
+                    this.handleLabelResponse(message, 'updated');
+                } else {
+                    this.alertsService.generate('error',
+                    this.translate.translate('Error updating sub-portfolio'));
+            }}));
+    }
+
+    /**
+     * Update an existing Draft
+     * @return void
+     */
+     updateSubPortfolioDraft() {
+        const payload = {
+            ...this.getSubPortfolioFormValue(),
+            RN: this.currentAddressDraft,
+        };
+        const asyncTaskPipe = this.ofiSubPortfolioReqService.updateSubPortfolioDraft(payload);
+
+        this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
+            asyncTaskPipe,
+            (labelResponse) => {
+                this.initSubscriptions();
+                const message = _.get(labelResponse, '[1].Data[0].Message', 'OK');
+                this.ofiSubPortfolioService.resetRequestedFlags();
+                if (message === 'OK') {
+                    this.handleLabelResponseDraft(message, 'updated');
+                    this.toggleFormModal();
+                }
+            },
             () => {
-                this.alertsService.generate('error', this.translate.translate('Error updating sub-portfolio'));
+                this.alertsService.generate('error', this.translate.translate('Error updating draft'));
             }));
     }
 
@@ -351,6 +467,77 @@ export class OfiSubPortfolioComponent implements OnDestroy {
         }
     }
 
+     /**
+     * Handles deleting an existing Draft
+     * @param address
+     * @return void
+     */
+      handleDeleteDraft(item) {
+        if (item) {
+            this.confirmationService.create(
+                this.translate.translate(
+                    'Delete Draft'
+                ),
+                this.translate.translate('Are you sure you want to delete this draft?'),
+                {
+                    confirmText: this.translate.translate('Delete'),
+                    declineText: this.translate.translate('Cancel'),
+                    btnClass: 'error',
+                },
+            ).subscribe((ans) => {
+                if (ans.resolved) {
+                    const asyncTaskPipe = this.ofiSubPortfolioReqService.deleteSubPortfolioDraft(
+                        item.RN,
+                    );
+                    this.ngRedux.dispatch(SagaHelper.runAsync(
+                        [DELETE_WALLET_LABEL, DELETE_SUB_PORTFOLIO_BANKING_DETAIL],
+                        [],
+                        asyncTaskPipe,
+                        {},
+                        (response) => {
+                            this.initSubscriptions();
+                             (String(_.get(response, '[1].Data.balance', '0')) === '0')
+                                this.ofiSubPortfolioService.resetRequestedFlags();
+                                this.alertsService.generate('success', this.translate.translate(
+                                    'Your draft has been successfully deleted. This may take a moment to update.',
+                                    ));
+
+                        },
+                        (labelResponse) => {
+                            this.alertsService.generate('error', this.translate.translate('Error deleting draft'));
+                        }));
+                }
+            });
+        }
+    }
+
+     /**
+     * Handles deleting automatically a draft after validation
+     * @param address
+     * @return void
+     */
+      handleDeleteDraftValidation(item) {
+        if (item) {
+                    const asyncTaskPipe = this.ofiSubPortfolioReqService.deleteSubPortfolioDraft(
+                        item.RN,
+                    );
+                    this.ngRedux.dispatch(SagaHelper.runAsync(
+                        [DELETE_WALLET_LABEL, DELETE_SUB_PORTFOLIO_BANKING_DETAIL],
+                        [],
+                        asyncTaskPipe,
+                        {},
+                        (response) => {
+                            this.initSubscriptions();
+                             (String(_.get(response, '[1].Data.balance', '0')) === '0')
+                                this.ofiSubPortfolioService.resetRequestedFlags();
+                        },
+                        (labelResponse) => {
+                            this.alertsService.generate('error', this.translate.translate('Error deleting draft'));
+                        }));
+        }
+    }
+    
+
     /**
      * Handles displaying alerts based on the request response
      * @param message
@@ -363,9 +550,36 @@ export class OfiSubPortfolioComponent implements OnDestroy {
                 this.alertsService.generate('error', this.translate.translate('Sub-portfolio name already exists'));
                 break;
 
+            case 'Duplicate Security Account':
+                this.alertsService.generate('error',
+                this.translate.translate('This account number is already used by another sub-portfolio'));
+                break;
+
             default:
                 this.alertsService.generate('success', this.translate.translate(
                     'Your sub-portfolio @subPortfolioName@ has been successfully @actionType@. This may take a moment to update.', {
+                    subPortfolioName: this.tabDetail[0]['formControl'].value.label,
+                    actionType: type,
+                }));
+                break;
+        }
+    }
+
+     /**
+     * Handles displaying alerts based on the request response draft
+     * @param message
+     * @param type
+     * @return void
+     */
+      handleLabelResponseDraft(message, type) {
+        switch (message) {
+            case 'Duplicate Label':
+                this.alertsService.generate('error', this.translate.translate('Draft name already exists'));
+                break;
+
+            default:
+                this.alertsService.generate('success', this.translate.translate(
+                    'Your draft @subPortfolioName@ has been successfully @actionType@. This may take a moment to update.', {
                     subPortfolioName: this.tabDetail[0]['formControl'].value.label,
                     actionType: type,
                 }));
@@ -424,6 +638,7 @@ export class OfiSubPortfolioComponent implements OnDestroy {
             for (const addr of this.addressList) {
                 if (addr.label === control.value) {
                     if (!this.editForm) return { duplicatedLabel: true };
+                    if (!this.editDraft) return { duplicatedLabel: true };
                     if (this.currentAddress !== addr.addr) return { duplicatedLabel: true };
                 }
             }
@@ -432,4 +647,6 @@ export class OfiSubPortfolioComponent implements OnDestroy {
         }
         return null;
     }
+
+    show_a(a){console.log(a)}
 }

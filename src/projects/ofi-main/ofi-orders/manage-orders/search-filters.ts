@@ -87,7 +87,7 @@ export class SearchFilters implements ISearchFilters {
             this.setSearchFormFilter('sharename');
             this.setSearchFormFilter('fundname');
 
-            this.setChoiceFormFilter('status', orderStatuses);
+            this.setChoicesFormFilter('status', orderStatuses);
             this.setChoiceFormFilter('type', orderTypes);
             this.setChoiceFormFilter('dateType', dateTypes);
 
@@ -154,6 +154,10 @@ export class SearchFilters implements ISearchFilters {
         } else {
             this.setSearchFormValue(prop, []);
         }
+    }
+
+    private setChoicesFormFilter(prop: string, choices: SelectedItem[]) {
+        this.setSearchFormValue(prop, get(this.filterStore, prop, []));
     }
 
     private setSearchFormValue(prop: string, value?: any): void {

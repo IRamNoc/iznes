@@ -85,6 +85,7 @@ export interface OfiFundShare {
     sellNAVCalendar: number;
     sellSettlementCalendar: number;
     cashAccountBic: string;
+    cashAccountIznesScope: number;
 }
 
 export interface CurrentRequest {
