@@ -106,6 +106,8 @@ import { SetlMessagesComponent } from '@setl/core-messages';
 import { OfiWaitingApprovalComponent } from '@ofi/ofi-main/ofi-kyc/waiting-approval/component';
 import { SetlLoginComponent, SetlLogoutComponent, SignupComponent, LoginSSOEngieComponent } from '@setl/core-login';
 
+import { HelpPageComponent } from '@setl/core-layout'
+
 /* Portfolio manager */
 import {
     PortfolioManagerListComponent,
@@ -229,6 +231,11 @@ export const ROUTES: Routes = [
                 path: 'messages/:category',
                 component: SetlMessagesComponent,
                 canActivate: [LoginGuardService],
+            },
+            {
+                path: 'help',
+                component: HelpPageComponent,
+              //  canActivate: [LoginGuardService],
             },
             {
                 path: 'messages',

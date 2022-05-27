@@ -25,7 +25,7 @@ export interface FormItem {
     title?: string;
     hasHelpbox?: boolean;
     helpboxContent?: string;
-
+radioOptions?:{key:string;value:string}[];
     listItems?: {
         id: string | number;
         text: string;
@@ -53,6 +53,7 @@ export enum FormItemType {
     extendedDate,
     dateRange,
     checkbox,
+    radio
 }
 
 export enum FormItemStyle {
@@ -62,6 +63,7 @@ export enum FormItemStyle {
     WidthThird,
     WidthFourth,
     TitleMargin,
+    PullRightTwoCol,
 }
 
 export interface FormItemDropdown {

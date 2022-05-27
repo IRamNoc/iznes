@@ -60,7 +60,20 @@ export class FileDownloader {
         });
     }
 
-    validateFile(fileId: number, hash: string, secure: boolean = false, path = '') {
+    getHelpPageDocument(fileId: number, hash: string, secure: boolean = false, path = '', isHelpPage = false) {
+        const messageBody: any = {
+            RequestName: 'helppagedocument',
+            token: this.memberSocketService.token,
+            walletId: `${this.walletId}`,
+            fileHash: hash,
+            fileId,
+            secure,
+            path,
+            isHelpPage,
+        };
+        return createMemberNodeRequest(this.memberSocketService, messageBody);
+    }
+    validateFile(fileId: number, hash: string, secure: boolean = false, path = '', isHelpPage = false) {
         const messageBody: any = {
             RequestName: 'validateFile',
             token: this.memberSocketService.token,
@@ -69,6 +82,7 @@ export class FileDownloader {
             fileId,
             secure,
             path,
+            isHelpPage,
         };
         return createMemberNodeRequest(this.memberSocketService, messageBody);
     }

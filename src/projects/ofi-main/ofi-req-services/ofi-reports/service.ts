@@ -55,6 +55,8 @@ import {
     CentralisationRequestFundsBody,
     CentralisationFundsRequestData,
     CentralisationSharesRequestData,
+    InvestorGenerateAICRequestData,
+    InvestorGenerateAICRequestBody,
     myHoldingHistoryRequestData,
     myHoldingHistoryRequestBody,
 } from './model';
@@ -400,6 +402,35 @@ export class OfiReportsService {
         return createMemberNodeRequest(this.memberSocketService, messageBody);
     }
 
+    /* GENERATE AIC */
+
+    defaultRequestGenerateAICInvestor(data: InvestorGenerateAICRequestData, successCallback: (res) => void, errorCallback: (res) => void) {
+        // Request the list.
+        const asyncTaskPipe = this.requestGenerateAICInvestor(data);
+    
+        this.ngRedux.dispatch(SagaHelper.runAsync(
+          [],
+          [],
+          asyncTaskPipe,
+          {},
+          res => successCallback(res),
+          res => errorCallback(res),
+        ));
+      }
+    
+      requestGenerateAICInvestor(data: InvestorGenerateAICRequestData): any {
+        const messageBody: InvestorGenerateAICRequestBody = {
+          RequestName: 'izngenerateaicinvestor',
+          token: this.memberSocketService.token,
+          fromDate: data.fromDate,
+          isin: data.isin,
+          subportfolio: data.subportfolio,
+          walletId: data.walletId,
+        };
+    
+        return createMemberNodeRequest(this.memberSocketService, messageBody);
+      }
+    
     defaultRequestMyHoldingHistory(data: myHoldingHistoryRequestData) {
         // Set the state flag to true. so we do not request it again.
         this.ngRedux.dispatch(ofiSetRequestedHoldingHistory());
