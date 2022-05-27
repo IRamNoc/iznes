@@ -228,9 +228,11 @@ function formatManageOrderDataResponse(rawData: any[]): ManageOrderDetails[] {
                 investorAddress: item.get('investorAddress'),
                 investorWalletID: item.get('investorWalletID'),
                 investorCompanyName: item.get('investorCompanyName'),
+                portfolioLabel: item.get('label'),
                 isin: item.get('isin'),
                 isKnownNav: item.get('isKnownNav'), // PHILZ [2018-11-06]
                 label: item.get('label'),
+                investorLabel: item.get('label'),
                 lastName: item.get('lastName'),
                 maximumNumDecimal: item.get('maximumNumDecimal'),
                 initialized: item.get('initialized'),
