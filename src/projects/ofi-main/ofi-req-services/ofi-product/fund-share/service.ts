@@ -508,6 +508,8 @@ export class OfiFundShareService {
         request.maxManagementFee = this.numberService.toBlockchain(request.maxManagementFee);
         request.maxSubscriptionFee = this.numberService.toBlockchain(request.maxSubscriptionFee);
         request.maxRedemptionFee = this.numberService.toBlockchain(request.maxRedemptionFee);
+        request.subscriptionFeeInFavourOfFund = this.numberService.toBlockchain(request.subscriptionFeeInFavourOfFund);
+        request.redemptionFeeInFavourOfFund = this.numberService.toBlockchain(request.redemptionFeeInFavourOfFund);
         request.mifiidChargesOneOff = this.numberService.toBlockchain(request.mifiidChargesOneOff);
         request.mifiidChargesOngoing = this.numberService.toBlockchain(request.mifiidChargesOngoing);
         request.mifiidIncidentalCosts = this.numberService.toBlockchain(request.mifiidIncidentalCosts);

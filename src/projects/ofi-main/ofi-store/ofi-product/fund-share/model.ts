@@ -64,6 +64,10 @@ export interface OfiFundShare {
     maxManagementFee: number;
     maxSubscriptionFee: number;
     maxRedemptionFee: number;
+    subscriptionFeeInFavourOfFund: number;
+    subscriptionFeeInFavourOfFundCalculation: number;
+    redemptionFeeInFavourOfFund: number;
+    redemptionFeeInFavourOfFundCalculation: number;
     investorProfile: number;
     mifiidChargesOngoing: number;
     mifiidChargesOneOff: number;

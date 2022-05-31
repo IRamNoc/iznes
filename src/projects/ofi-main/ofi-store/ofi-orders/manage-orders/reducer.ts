@@ -146,6 +146,8 @@ function handleUpdateNav(state: ManageOrders, action: PayloadAction): ManageOrde
                     value: (order.byAmountOrQuantity === 1) ? order.quantity : order.amount,
                     nav: price,
                     feePercentage: order.feePercentage,
+                    managementFeePercentage: order.managementFeePercentage,
+                    managementFeeType: order.managementFeeType,
                 },
                 order.maximumNumDecimal,
                 false,
@@ -254,6 +256,9 @@ function formatManageOrderDataResponse(rawData: any[]): ManageOrderDetails[] {
                 valuationDate: item.get('valuationDate'),
                 paymentMsgStatus: item.get('paymentMsgStatus'),
                 useCBDC: item.get('useCBDC'),
+                managementFeeType: item.get('managementFeeType'),
+                managementFeePercentage: item.get('managementFeePercentage'),
+                feeInFavorOfFund: item.get('feeInFavorOfFund'),
             };
 
             if (order.price > 0) {
@@ -270,6 +275,8 @@ function formatManageOrderDataResponse(rawData: any[]): ManageOrderDetails[] {
                     value: (order.byAmountOrQuantity === 1) ? order.quantity : order.amount,
                     nav: order.latestNav,
                     feePercentage: order.feePercentage,
+                    managementFeePercentage: order.managementFeePercentage,
+                    managementFeeType: order.managementFeeType,
                 },
                 order.maximumNumDecimal,
                 order.isKnownNav, // PHILZ [2018-11-06]
@@ -285,6 +292,7 @@ function formatManageOrderDataResponse(rawData: any[]): ManageOrderDetails[] {
                 order.estimatedAmountWithCost = +math
                     .chain(+figures.estimatedAmount)
                     .multiply(1 + (order.feePercentage / 100000))
+                    .add(order.feeInFavorOfFund)
                     .done();
             } else {
                 // Amount - Calculate quantity

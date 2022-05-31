@@ -154,6 +154,10 @@ export class FundShare {
             maxManagementFee: this.fees.mandatory.maxManagementFee.value(),
             maxSubscriptionFee: this.fees.mandatory.maxSubscriptionFee.value(),
             maxRedemptionFee: this.fees.mandatory.maxRedemptionFee.value(),
+            subscriptionFeeInFavourOfFund: this.fees.mandatory.subscriptionFeeInFavourOfFund.value(),
+            subscriptionFeeInFavourOfFundCalculation: this.getSelectValue(this.fees.mandatory.subscriptionFeeInFavourOfFundCalculation),
+            redemptionFeeInFavourOfFund: this.fees.mandatory.redemptionFeeInFavourOfFund.value(),
+            redemptionFeeInFavourOfFundCalculation: this.getSelectValue(this.fees.mandatory.redemptionFeeInFavourOfFundCalculation),
             investorProfile: this.getSelectValue(this.profile.mandatory.investorProfile),
             mifiidChargesOngoing: this.fees.mandatory.mifiidChargesOngoing.value(),
             mifiidChargesOneOff: this.fees.mandatory.mifiidChargesOneOff.value(),
@@ -345,11 +349,21 @@ export class FundShare {
             this.calendarRedemption.mandatory.navPeriodForRedemption,
             fundShare.navPeriodForRedemption,
         );
+        this.setListItemPreset(
+            this.fees.mandatory.subscriptionFeeInFavourOfFundCalculation,
+            fundShare.subscriptionFeeInFavourOfFundCalculation,
+        );
+        this.setListItemPreset(
+            this.fees.mandatory.redemptionFeeInFavourOfFundCalculation,
+            fundShare.redemptionFeeInFavourOfFundCalculation,
+        );
         // removed by PZ 28/06/2018
         // this.calendar.mandatory.subscriptionRedemptionCalendar.preset = fundShare.subscriptionRedemptionCalendar;
         this.fees.mandatory.maxManagementFee.preset = this.numberConverter.toFrontEnd(fundShare.maxManagementFee);
         this.fees.mandatory.maxSubscriptionFee.preset = this.numberConverter.toFrontEnd(fundShare.maxSubscriptionFee);
         this.fees.mandatory.maxRedemptionFee.preset = this.numberConverter.toFrontEnd(fundShare.maxRedemptionFee);
+        this.fees.mandatory.subscriptionFeeInFavourOfFund.preset = this.numberConverter.toFrontEnd(fundShare.subscriptionFeeInFavourOfFund);
+        this.fees.mandatory.redemptionFeeInFavourOfFund.preset = this.numberConverter.toFrontEnd(fundShare.redemptionFeeInFavourOfFund);
         this.setListItemPreset(this.profile.mandatory.investorProfile, fundShare.investorProfile);
         this.fees.mandatory.mifiidChargesOngoing.preset = this.numberConverter.toFrontEnd(fundShare.mifiidChargesOngoing);
         this.fees.mandatory.mifiidChargesOneOff.preset = this.numberConverter.toFrontEnd(fundShare.mifiidChargesOneOff);
@@ -453,8 +467,20 @@ export class FundShare {
             fundShare.navPeriodForRedemption,
         );
 
+        this.setListItemValue(
+            this.fees.mandatory.subscriptionFeeInFavourOfFundCalculation,
+            fundShare.subscriptionFeeInFavourOfFundCalculation,
+        );
+
+        this.setListItemValue(
+            this.fees.mandatory.redemptionFeeInFavourOfFundCalculation,
+            fundShare.redemptionFeeInFavourOfFundCalculation,
+        )
+
         // removed by PZ 28/06/2018
         // this.calendar.mandatory.subscriptionRedemptionCalendar.control.setValue(fundShare.subscriptionRedemptionCalendar);
+        this.fees.mandatory.subscriptionFeeInFavourOfFund.control.setValue(this.numberConverter.toFrontEnd(fundShare.subscriptionFeeInFavourOfFund));
+        this.fees.mandatory.redemptionFeeInFavourOfFund.control.setValue(this.numberConverter.toFrontEnd(fundShare.redemptionFeeInFavourOfFund));
         this.fees.mandatory.maxManagementFee.control.setValue(this.numberConverter.toFrontEnd(fundShare.maxManagementFee));
         this.fees.mandatory.maxSubscriptionFee.control.setValue(this.numberConverter.toFrontEnd(fundShare.maxSubscriptionFee));
         this.fees.mandatory.maxRedemptionFee.control.setValue(this.numberConverter.toFrontEnd(fundShare.maxRedemptionFee));

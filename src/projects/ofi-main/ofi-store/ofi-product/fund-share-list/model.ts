@@ -66,6 +66,10 @@ export interface IznesShareDetail {
     maxManagementFee: number;
     maxSubscriptionFee: number;
     maxRedemptionFee: number;
+    subscriptionFeeInFavourOfFund: number,
+    subscriptionFeeInFavourOfFundCalculation: number,
+    redemptionFeeInFavourOfFund: number,
+    redemptionFeeInFavourOfFundCalculation: number,
     investorProfile: string;
     keyFactOptionalData: string;
     profileOptionalData: string;

@@ -57,6 +57,8 @@ export interface ManageOrderDetails {
     valuationDate: any;
     maximumNumDecimal: number;
     paymentMsgStatus: string;
+    managementFeeType: number;
+    managementFeePercentage: number;
 }
 
 export interface ManageOrders {

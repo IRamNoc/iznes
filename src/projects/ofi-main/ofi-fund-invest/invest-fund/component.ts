@@ -47,7 +47,7 @@ import { ToasterService, Toast } from 'angular2-toaster';
 import { Router } from '@angular/router';
 import { MultilingualService } from '@setl/multilingual';
 import { MessagesService } from '@setl/core-messages';
-import { SellBuyCalendar, SubscriptionRoundingRuleEnum } from '../../ofi-product/fund-share/FundShareEnum';
+import { SellBuyCalendar, SubscriptionRoundingRuleEnum, FeeInFavourOfFundCalculation } from '../../ofi-product/fund-share/FundShareEnum';
 import { OfiFundShareService } from '@ofi/ofi-main/ofi-req-services/ofi-product/fund-share/service';
 import { DomSanitizer } from '@angular/platform-browser';
 import { FileDownloader } from '@setl/utils/services/file-downloader/service';
@@ -253,6 +253,16 @@ export class InvestFundComponent implements OnInit, OnDestroy {
 
     get feePercentage(): number {
         return this.numberConverterService.toFrontEnd(this.orderHelper.feePercentage);
+    }
+
+    get managementFee(): { type, percentage } {
+        const fees = this.orderHelper.managementFeeInFavourOfFund;
+
+        // apply conversion from blockchain number to human redeable
+        return {
+            type: fees.managementFeeType,
+            percentage: this.numberConverterService.toFrontEnd(fees.managementFeePercentage),
+        }
     }
 
     get cutoffTime(): string {
@@ -1196,18 +1206,51 @@ export class InvestFundComponent implements OnInit, OnDestroy {
 
         // calculate fee
         const fee = calFee(amount, this.feePercentage);
-        const feeStr = this.moneyValuePipe.transform(fee.toString(), 2).toString();
+        let feeStr = this.moneyValuePipe.transform(fee.toString(), 2).toString();
         this.feeAmount.setValue(feeStr);
 
         // net amount for subscription order
-        const netAmountSub = calNetAmount(amount, fee, 's');
-        const netAmountSubStr = this.moneyValuePipe.transform(netAmountSub.toString(), 2).toString();
+        let netAmountSub = calNetAmount(amount, fee, 's');
+        let netAmountSubStr = this.moneyValuePipe.transform(netAmountSub.toString(), 2).toString();
         this.netAmountSub.setValue(netAmountSubStr);
 
         // net amount for redemption order
-        const netAmountRedeem = calNetAmount(amount, fee, 'r');
-        const netAmountRedeemStr = this.moneyValuePipe.transform(netAmountRedeem.toString(), 2).toString();
+        let netAmountRedeem = calNetAmount(amount, fee, 'r');
+        let netAmountRedeemStr = this.moneyValuePipe.transform(netAmountRedeem.toString(), 2).toString();
         this.netAmountRedeem.setValue(netAmountRedeemStr);
+
+        // caculate management fee amount in favor of fund
+        if (this.managementFee.type === FeeInFavourOfFundCalculation.Unitary) {
+            const managementFee = this.moneyValuePipe.parse(quantityParsed * this.moneyValuePipe.parse(this.nav * (this.managementFee.percentage / 100), 2), 2);
+
+            const newFee = fee + managementFee;
+            feeStr = this.moneyValuePipe.transform(newFee.toString(), 2).toString();
+            this.feeAmount.setValue(feeStr);
+
+            netAmountSub += managementFee;
+            netAmountSubStr = this.moneyValuePipe.transform(netAmountSub.toString(), 2).toString();
+            this.netAmountSub.setValue(netAmountSubStr);
+
+            netAmountRedeem -= managementFee;
+            netAmountRedeemStr = this.moneyValuePipe.transform(netAmountRedeem.toString(), 2).toString();
+            this.netAmountRedeem.setValue(netAmountRedeemStr);
+        }
+
+        if (this.managementFee.type === FeeInFavourOfFundCalculation.Global) {
+            const managementFeeGlobal = this.moneyValuePipe.parse(amount * (this.managementFee.percentage / 100), 2);
+            
+            const newFee = fee + managementFeeGlobal;
+            feeStr = this.moneyValuePipe.transform(newFee.toString(), 2).toString();
+            this.feeAmount.setValue(feeStr);
+
+            netAmountSub += managementFeeGlobal;
+            netAmountSubStr = this.moneyValuePipe.transform(netAmountSub.toString(), 2).toString();
+            this.netAmountSub.setValue(netAmountSubStr);
+
+            netAmountRedeem -= managementFeeGlobal;
+            netAmountRedeemStr = this.moneyValuePipe.transform(netAmountRedeem.toString(), 2).toString();
+            this.netAmountRedeem.setValue(netAmountRedeemStr);
+        }
     }
 
     /**

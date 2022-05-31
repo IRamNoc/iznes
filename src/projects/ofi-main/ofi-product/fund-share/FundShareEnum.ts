@@ -350,6 +350,12 @@ export enum PaymentInstructionTrigger {
     CutoffDate,
 }
 
+export enum FeeInFavourOfFundCalculation {
+    None,
+    Unitary,
+    Global,
+}
+
 export enum CashAccountIznesScope {
     None,
     Subscription,
