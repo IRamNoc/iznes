@@ -74,3 +74,7 @@ export interface OfiDeleteSubPortfolioData {
 export interface OfiGetSubPortfolioBankingDetailsData {
     walletId: number;
 }
+
+export interface SubPortfolioDataDraft extends Subportfolio {
+    RN: string;
+}

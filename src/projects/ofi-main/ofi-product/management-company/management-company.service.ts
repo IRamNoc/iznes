@@ -21,6 +21,19 @@ export class ManagagementCompanyService {
         this.validators = productConfig.validators;
     }
 
+    generateAddIpAddressForm(): FormGroup {
+        return this.fb.group({
+            ipAddress: new FormControl('', [
+                Validators.required,
+                Validators.pattern('(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)'),
+            ]),
+            description: [
+                '',
+                Validators.required,
+            ]
+        });
+    }
+
     generateForm(): FormGroup {
         return this.fb.group({
             companyID: [

@@ -46,3 +46,12 @@
 .address {
     width: 100%;
 }
+
+label.switch {
+    position: absolute !important;
+    margin: 4px !important;
+}
+
+.slider {
+    top: inherit !important;
+}

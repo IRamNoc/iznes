@@ -48,11 +48,21 @@ export class ShareCharacteristicMandatory extends DynamicFormsValidator {
         label: 'Currency of Subscription',
         required: true,
         listItems: [],
-        style: [FormItemStyle.BreakOnAfter],
+        style: [FormItemStyle.BreakOnBefore],
         hidden: () => {
             const val = (this.subscriptionCategory.value() as any);
             return (val == undefined) || (val.length == 0) || [E.SubscriptionCategoryEnum.Amount, E.SubscriptionCategoryEnum.Both].indexOf(val[0].id) == -1;
         },
+    };
+    subscriptionReimbursement: FormItem = {
+        type: FormItemType.radio,
+        label: 'Reimbursement of the odd lots',
+        required: false,
+        radioOptions: [
+            {key: 'Yes',  value: 'Yes'},
+            {key: 'No',  value: 'No'}
+          ],
+        style: [FormItemStyle.BreakOnAfter],
     };
     minInitialSubscriptionInShare: FormItem = {
         type: FormItemType.number,

@@ -177,6 +177,11 @@ export class OrderHelper {
         return Number(isAllowSellBuy) === 1;
     }
 
+    get isVisibleByAll(): boolean {
+        const isVisibleByAll = this.fundShare.visibleByAll;
+        return Number(isVisibleByAll) === 1;
+    }
+
     constructor(fundShare: IznShareDetailWithNav, orderRequest: OrderRequest) {
         this.calendarHelper = new CalendarHelper(fundShare);
         this.orderRequest = orderRequest;

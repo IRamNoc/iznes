@@ -114,6 +114,7 @@ export class FundShare {
             mainIban: this.keyFacts.mandatory.mainIban.value(),
             valuationFrequency: this.getSelectValue(this.keyFacts.mandatory.valuationFrequency),
             historicOrForwardPricing: this.getSelectValue(this.keyFacts.mandatory.historicOrForwardPricing),
+            cashAccountIznesScope: this.getSelectValue(this.keyFacts.mandatory.cashAccountIznesScope),
             hasCoupon: this.keyFacts.mandatory.hasCoupon.value(),
             couponType: this.getSelectValue(this.keyFacts.mandatory.couponType),
             freqOfDistributionDeclaration: this.getSelectValue(this.keyFacts.mandatory.freqOfDistributionDeclaration),
@@ -121,6 +122,8 @@ export class FundShare {
             master: this.isStatusMaster(),
             feeder: this.getStatusFeederValue(),
             allowSellBuy: this.keyFacts.mandatory.allowSellBuy.value(),
+            visibleByAll:this.keyFacts.mandatory.visibleByAll.value(),
+
             sellBuyCalendar: this.getSelectValue(this.keyFacts.mandatory.sellBuyCalendar),
             maximumNumDecimal: this.characteristic.mandatory.maximumNumDecimal.value(),
             subscriptionCategory: this.getSelectValue(this.characteristic.mandatory.subscriptionCategory),
@@ -261,6 +264,7 @@ export class FundShare {
         this.fundID = fundShare.fundID;
         this.keyFacts.mandatory.fundShareName.preset = isPrefill ? null : fundShare.fundShareName;
         this.keyFacts.mandatory.ktpCode.preset=isPrefill ? null : fundShare.ktpCode;
+
         this.keyFacts.mandatory.cashAccountBic.preset=isPrefill ? null : fundShare.cashAccountBic;
         this.keyFacts.mandatory.isin.preset = isPrefill ? null : fundShare.isin;
         this.keyFacts.mandatory.shareClassCode.preset = fundShare.shareClassCode;
@@ -272,6 +276,7 @@ export class FundShare {
         this.keyFacts.mandatory.mainIban.preset = fundShare.mainIban;
         this.setListItemPreset(this.keyFacts.mandatory.valuationFrequency, fundShare.valuationFrequency);
         this.setListItemPreset(this.keyFacts.mandatory.historicOrForwardPricing, fundShare.historicOrForwardPricing);
+        this.setListItemPreset(this.keyFacts.mandatory.cashAccountIznesScope, fundShare.cashAccountIznesScope);
         this.keyFacts.mandatory.hasCoupon.preset = fundShare.hasCoupon;
         this.setListItemPreset(this.keyFacts.mandatory.couponType, fundShare.couponType);
         this.setListItemPreset(
@@ -281,6 +286,7 @@ export class FundShare {
         this.setListItemPreset(this.keyFacts.mandatory.status, fundShare.status);
         this.setFeederPreset(fundShare.feeder);
         this.keyFacts.mandatory.allowSellBuy.preset = fundShare.allowSellBuy;
+        this.keyFacts.mandatory.visibleByAll.preset = fundShare.visibleByAll;
         this.setListItemPreset(this.keyFacts.mandatory.sellBuyCalendar, fundShare.sellBuyCalendar);
         this.characteristic.mandatory.maximumNumDecimal.preset = fundShare.maximumNumDecimal;
         this.setListItemPreset(this.characteristic.mandatory.subscriptionCategory, fundShare.subscriptionCategory);
@@ -391,6 +397,7 @@ export class FundShare {
         this.keyFacts.mandatory.mainIban.control.setValue(fundShare.mainIban);
         this.setListItemValue(this.keyFacts.mandatory.valuationFrequency, fundShare.valuationFrequency);
         this.setListItemValue(this.keyFacts.mandatory.historicOrForwardPricing, fundShare.historicOrForwardPricing);
+        this.setListItemValue(this.keyFacts.mandatory.cashAccountIznesScope, fundShare.cashAccountIznesScope);
         this.keyFacts.mandatory.hasCoupon.control.setValue(fundShare.hasCoupon);
         this.setListItemValue(this.keyFacts.mandatory.couponType, fundShare.couponType);
         this.setListItemValue(
@@ -483,7 +490,7 @@ export class FundShare {
         this.fees.mandatory.mifiidTransactionCosts.control.setValue(this.numberConverter.toFrontEnd(fundShare.mifiidTransactionCosts));
         this.fees.mandatory.mifiidServicesCosts.control.setValue(this.numberConverter.toFrontEnd(fundShare.mifiidServicesCosts));
         this.fees.mandatory.mifiidIncidentalCosts.control.setValue(this.numberConverter.toFrontEnd(fundShare.mifiidIncidentalCosts));
-
+        this.keyFacts.mandatory.visibleByAll.control.setValue(fundShare.visibleByAll) //to set the value of field 
         // calendar model implementation
         this.setListItemValue(this.keyFacts.mandatory.buyCentralizationCalendar, fundShare.buyCentralizationCalendar);
         this.setListItemValue(this.keyFacts.mandatory.buyNAVCalendar, fundShare.buyNAVCalendar);

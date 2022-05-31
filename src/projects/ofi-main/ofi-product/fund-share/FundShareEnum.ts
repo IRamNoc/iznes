@@ -355,3 +355,10 @@ export enum FeeInFavourOfFundCalculation {
     Unitary,
     Global,
 }
+
+export enum CashAccountIznesScope {
+    None,
+    Subscription,
+    Redemption,
+    Both,
+}

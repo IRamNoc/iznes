@@ -68,6 +68,18 @@ export class ShareKeyFactsMandatory extends DynamicFormsValidator {
             validateBic,
         ]),
     };
+    cashAccountIznesScope: FormItem = {
+        type: FormItemType.list,
+        label: `Fund's IBAN dedicated to IZNES use for :`,
+        required: true,
+        listItems: [
+            { id: E.CashAccountIznesScope.None, text: 'Nothing' },
+            { id: E.CashAccountIznesScope.Subscription, text: 'Subscription only' },
+            { id: E.CashAccountIznesScope.Redemption, text: 'Redemption only' },
+            { id: E.CashAccountIznesScope.Both, text: 'Both'},            
+        ],
+        style: [FormItemStyle.PullRightTwoCol],
+    };
     // conditional - status
     feeder: FormItem = {
         type: FormItemType.list,
@@ -203,6 +215,13 @@ export class ShareKeyFactsMandatory extends DynamicFormsValidator {
     ktpCode: FormItem = {
         type: FormItemType.text,
         label: 'KTP Code',
+        required: false,
+    };
+
+    //Visibile by all field initialisation
+    visibleByAll: FormItem = {
+        type: FormItemType.boolean,
+        label: 'Visible By All',
         required: false,
     };
 

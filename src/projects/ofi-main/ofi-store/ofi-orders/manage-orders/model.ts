@@ -36,6 +36,7 @@ export interface ManageOrderDetails {
     iban: any;
     investorAddress: any;
     investorCompanyName: any;
+    portfolioLabel: any;
     investorWalletID: any;
     isin: any;
     label: any;

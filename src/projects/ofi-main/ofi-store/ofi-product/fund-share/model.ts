@@ -17,6 +17,7 @@ export interface OfiFundShare {
     status: number;
     master: boolean;
     feeder: number;
+    visibleByAll: boolean;
     hasCoupon: number;
     couponType: number;
     freqOfDistributionDeclaration: number;
@@ -88,6 +89,7 @@ export interface OfiFundShare {
     sellNAVCalendar: number;
     sellSettlementCalendar: number;
     cashAccountBic: string;
+    cashAccountIznesScope: number;
 }
 
 export interface CurrentRequest {

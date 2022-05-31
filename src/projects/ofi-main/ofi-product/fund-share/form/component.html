@@ -238,7 +238,13 @@
                                 </div>
                             </div>
                             <div class="row panel-body" *ngIf="panels['characteristic'].mandatory.open" [class.hidden]="!isPanelOpen(panels['characteristic'].mandatory)">
-                                <app-dynamic-form [presetForm]="model.characteristic.mandatory.formObj" [presetFormKeys]="model.characteristic.mandatory.formKeysObj"  [presetFormModel]="model.characteristic.mandatory"></app-dynamic-form>
+                                <app-dynamic-form [presetForm]="model.characteristic.mandatory.formObj" [presetFormKeys]="model.characteristic.mandatory.formKeysObj"  [presetFormModel]="model.characteristic.mandatory" [typeData]="typeDataNormal"></app-dynamic-form>
+                            </div>
+                            <div class="row panel-body subscription-container" *ngIf="panels['characteristic'].mandatory.open" [class.hidden]="!isPanelOpen(panels['characteristic'].mandatory)">
+                                <app-dynamic-form [presetForm]="model.characteristic.mandatory.formObj" [presetFormKeys]="model.characteristic.mandatory.formKeysObj"  [presetFormModel]="model.characteristic.mandatory" [typeData]="typeDataSub"></app-dynamic-form>
+                            </div>
+                            <div class="row panel-body redemption-container" *ngIf="panels['characteristic'].mandatory.open" [class.hidden]="!isPanelOpen(panels['characteristic'].mandatory)">
+                                <app-dynamic-form [presetForm]="model.characteristic.mandatory.formObj" [presetFormKeys]="model.characteristic.mandatory.formKeysObj"  [presetFormModel]="model.characteristic.mandatory"  [typeData]="typeDataRedemp"></app-dynamic-form>
                             </div>
                         </div>
                     </clr-tab-content>

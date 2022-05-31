@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { MemberSocketService } from '@setl/websocket-service';
 import { SagaHelper } from '@setl/utils';
 import { NgRedux, select } from '@angular-redux/store';
-import { createMemberNodeSagaRequest } from '@setl/utils/common';
+import { createMemberNodeSagaRequest, createMemberNodeRequest } from '@setl/utils/common';
 import { Subject } from 'rxjs/Subject';
 import { takeUntil } from 'rxjs/operators';
 import { get } from 'lodash';
@@ -129,6 +129,59 @@ export class OfiManagementCompanyService {
             accountID: this.accountId,
         }
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+    }
+
+    getSecurityInformations(): any {
+        const messageBody: { RequestName: string, token: string } = {
+            RequestName: 'iznamsecuritygetinformations',
+            token: this.memberSocketService.token,
+          };
+      
+          return createMemberNodeRequest(this.memberSocketService, messageBody); 
+    }
+
+    defaultToggleSecurityRestriction(status: boolean, successCallback: (res) => void, errorCallback: (res) => void) {
+        const asyncTaskPipe = this.toggleSecurityRestriction(status);
+
+        this.ngRedux.dispatch(SagaHelper.runAsync(
+            [],
+            [],
+            asyncTaskPipe,
+            {},
+            res => successCallback(res),
+            res => errorCallback(res),
+        ));
+    }
+
+    toggleSecurityRestriction(status: boolean): any {
+        const messageBody: { RequestName: string, token: string, status: boolean } = {
+            RequestName: 'iznamsecuritytogglerestriction',
+            token: this.memberSocketService.token,
+            status,
+        };
+
+        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+    }
+
+    deleteSecurityIpAddressManagementCompany(identifier): any {
+        const messageBody: { RequestName: string, token: string, identifier: number } = {
+            RequestName: 'iznamsecuritydeleteipaddress',
+            token: this.memberSocketService.token,
+            identifier,
+        };
+
+        return createMemberNodeRequest(this.memberSocketService, messageBody);
+    }
+
+    addSecurityIpAddressManagementCompany(data: { ipAddress: string, description: string }): any {
+        const messageBody: { RequestName: string, token: string, ipAddress: string, description: string } = {
+          RequestName: 'iznamsecurityaddipaddress',
+          token: this.memberSocketService.token,
+          ipAddress: data.ipAddress,
+          description: data.description,
+        };
+    
+        return createMemberNodeRequest(this.memberSocketService, messageBody);
     }
 
     saveManagementCompany(mcData: ManagementCompanyRequestData): any {
